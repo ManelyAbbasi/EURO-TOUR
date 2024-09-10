@@ -10,7 +10,7 @@ var placesToVisitSchema = new Schema({
     tags: { type: Array, required: true },
   });
   
-  // Export the User model
+  // Export the placesToVisit model
   module.exports = mongoose.model('placesToVisit', placesToVisitSchema);
 
   
