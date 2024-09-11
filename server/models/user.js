@@ -10,10 +10,10 @@ var Schema = mongoose.Schema;
 var userSchema = new Schema({
     username: { type: String, required: true, unique: true }, 
     password: { type: String, required: true },
-    id: { type: String, required: true, unique: true },
-    age: { type: Number, required: false },
-    sexuality: { type: String, required: false },
-    gender:{ type: String, required: false },
+    age: { type: Number },
+    sexuality: { type: String },
+    gender:{ type: String },
+    isAdmin:{ type: Boolean, default: false }
 });
 
 module.exports = mongoose.model('user', userSchema);
