@@ -1,5 +1,3 @@
-"use strict";
-
 // imports the mongoose library
 var mongoose = require('mongoose');
 // extracts the Schema constructor from Mongoose
