@@ -6,7 +6,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 
-// new schema named is being defined 
+// new schema is being defined 
 var userSchema = new Schema({
     username: { type: String, required: true, unique: true }, 
     password: { type: String, required: true },
