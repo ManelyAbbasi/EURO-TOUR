@@ -8,7 +8,7 @@ var Schema = mongoose.Schema;
 var userSchema = new Schema({
     username: { type: String, required: true, unique: true }, 
     password: { type: String, required: true },
-    age: { type: Number },
+    birthDate: { type: Date, required: true },
     sexuality: { type: String },
     gender:{ type: String },
     isAdmin:{ type: Boolean, default: false }
