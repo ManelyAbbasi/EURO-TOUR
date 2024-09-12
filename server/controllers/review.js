@@ -19,9 +19,9 @@ router.get("/", async (req, res) => {
 
 router.delete('/', async (req, res) => {
     try {
-        const review = await Review.deleteMany();  // Removes all reviews
+        const result = await Review.deleteMany();  // Removes all reviews
 
-        if (review.deletedCount === 0) {
+        if (result.deletedCount === 0) {
             return res.status(404).json({ "message": "There are no reviews to delete" });
         }
 
