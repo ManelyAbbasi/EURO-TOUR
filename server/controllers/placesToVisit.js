@@ -1,4 +1,4 @@
-const PlacesToVisit = require(".../models/PlacesToVisit");
+const PlacesToVisit = require("server\models\placesToVisit.js");
 const express = require("express");
 const router = express.Router();
 
