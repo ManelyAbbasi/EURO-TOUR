@@ -1,9 +1,9 @@
-const user = require(".../models/user");
+const User = require(".../models/user");
 const express = require("express");
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-    const user = new user({
+router.post("/", async (req, res) => {
+    const user = new User({
         username: req.body.name,
         password: req.body.password,
         birthDate: Date(req.body.birthDate),
