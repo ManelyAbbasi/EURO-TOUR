@@ -1,6 +1,11 @@
-const City = require(".../models/city");
+const City = require("server\models\city.js");
 const express = require("express");
 const router = express.Router();
+
+router.get("/", async (req, res) => {
+    const cities = await City.find();
+    res.send(cities);
+});
 
 router.post("/", async (req, res) => {
     const city = new City({
@@ -13,3 +18,4 @@ router.post("/", async (req, res) => {
     const result = await city.save();
     res.send(result);
 });
+
