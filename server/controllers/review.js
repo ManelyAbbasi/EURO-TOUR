@@ -1,4 +1,4 @@
-const Review = require(".../models/review");
+const Review = require("server/models/review.js");
 const express = require("express");
 const router = express.Router();
 
@@ -10,4 +10,9 @@ router.post("/", async (req, res) => {
     });
     const result = await review.save();
     res.send(result);
+});
+
+router.get("/", async (req, res) => {
+    const reviews = await Review.find();
+    res.send(reviews);
 });
