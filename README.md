@@ -76,9 +76,7 @@ Places to Visit Page: Once a user has clicked on the place that they would like 
 
 Profile: Here the user can edit their creditentials as well as delete their account.
 
-Favourites: When a user favourites a city or a place they would like to visit, it will be saved on this page for easy access and traceability. It can be readjusted to the users' liking. 
-
-Help & Support: This is a page where users can fill out a feedback form if they have any problems with the system, so the admins can be notified and thus improve the issue. 
+Favourites: When a user favourites a city or a place they would like to visit, it will be saved on this page for easy access and traceability. It can be readjusted to the users' liking. git 
 
 ### Entity-Relationship (ER) Diagram
 
