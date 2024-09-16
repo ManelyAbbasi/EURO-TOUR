@@ -1,7 +1,9 @@
 // imports the mongoose library
 var mongoose = require('mongoose');
+const placesToVisit = require('./placesToVisit');
 // extracts the Schema constructor from Mongoose
 var Schema = mongoose.Schema;
+
 
 // new schema is being defined 
 var reviewSchema = new Schema({
@@ -9,6 +11,9 @@ var reviewSchema = new Schema({
    rating: { type: Number, required: true, min: 0.0, max: 5.0},
    content: { type: String, required: true, maxLength: [200, 'Max character length exceeded'] },  
    date: { type: Date, default: Date.now },
+   user: { type: Schema.Types.ObjectId, ref: 'user', required: true },
+   city: { type: Schema.Types.ObjectId, ref: 'city'},
+   placesToVisit: { type: Schema.Types.ObjectId, ref: 'placesToVisit'},
 });
 
 module.exports = mongoose.model('review', reviewSchema);
