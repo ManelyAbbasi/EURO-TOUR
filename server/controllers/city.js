@@ -19,3 +19,7 @@ router.post("/", async (req, res) => {
     res.send(result);
 });
 
+router.get("/:postcode", async (req, res) =>{
+    const city = await City.find({ postcode: req.params.postcode });
+    res.send(city);
+})
