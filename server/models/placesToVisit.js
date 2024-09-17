@@ -9,6 +9,6 @@ var placesToVisitSchema = new Schema({
   });
   
   // Export the placesToVisit model
-  module.exports = mongoose.model('placesToVisit', placesToVisitSchema);
+  module.exports =  placesToVisitSchema;
 
   

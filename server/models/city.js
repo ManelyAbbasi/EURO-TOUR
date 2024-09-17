@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+const placesToVisit = require('./placesToVisit');
 var Schema = mongoose.Schema;
 
 var citySchema = new Schema({ 
@@ -8,6 +9,7 @@ var citySchema = new Schema({
     statistics: { type: String, required: true },
     facts: { type: String, required: true },
     tags: { type: Array, required: true },
+    placesToVisit: [placesToVisitSchema]
   });
   
   // Export the city model
