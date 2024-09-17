@@ -3,22 +3,25 @@ const express = require("express");
 const placesToVisitModell = require("../models/placesToVisitModel");
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-    const allPlacesToVisit = await PlacesToVisitModel.find();
-    res.send(allPlacesToVisit);
-});
 
-router.post("/", async (req, res) => {
-    const placesToVisit = new PlacesToVisitModel({
-        address: req.body.address,
-        rating: req.body.rating,
-        content: req.body.content,
-        tags: req.body.tags,
-        reviews: null,
+router.get("/placesToVisitController", async function(req, res, next) {
+    try {
+    const placesToVisit = await PlacesToVisitModel.find();
+    } catch (err) {
+    return next(err);
+    }
+    res.send({"placesToVisit": placesToVisit});
     });
-    const result = await placesToVisit.save();
-    res.send(result);
-});
+
+router.post("/placesToVisitController", async function(req, res, next) {
+    const placesToVisit = new PlacesToVisitModel(req.body);
+    try {
+    await placesToVisit.save();
+    } catch (err) {
+    return next(err);
+    }
+    res.status(201).send(placesToVisit);
+    });
 
 router.get("/placesToVisitController/:address", async function(req, res, next) {  
     const address = req.params.address; 

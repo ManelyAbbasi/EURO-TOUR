@@ -20,7 +20,7 @@ router.post("/citiesModel/:postcode", async function createCity(req, res, next) 
     } catch (err) {
     return next(err);
     }
-    res.status(201).json(camel);
+    res.status(201).send(cities);
     });
 
 router.get("/citiesController/:postcode", async function getOneCity(req, res, next){
