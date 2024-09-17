@@ -4,7 +4,7 @@ const citiesModel = require("../models/citiesModel");
 const placesToVisitSchema = require("../models/placesToVisitModel");
 const router = express.Router();
 
-router.get("/citiesModel/:postcode", async function(req, res, next) {
+router.get("/citiesModel", async function getAllCities(req, res, next) {
     try {
     const cities = await CitiesModel.find();
     } catch (err) {
@@ -13,7 +13,7 @@ router.get("/citiesModel/:postcode", async function(req, res, next) {
     res.send({"cities": cities});
     });
 
-router.post("/citiesModel/:postcode", async function(req, res, next) {
+router.post("/citiesModel/:postcode", async function createCity(req, res, next) {
     const cities = new CitiesModel(req.body);
     try {
     await cities.save();
@@ -23,7 +23,7 @@ router.post("/citiesModel/:postcode", async function(req, res, next) {
     res.status(201).json(camel);
     });
 
-router.get("/citiesController/:postcode", async function(req, res, next){
+router.get("/citiesController/:postcode", async function getOneCity(req, res, next){
     const postcode = req.params.postcode;
     try{
         const city = await CitiesModel.findById(postcode);
@@ -36,7 +36,7 @@ router.get("/citiesController/:postcode", async function(req, res, next){
     }
 });
 
-router.put("/citiesController/:postcode", async function(req, res, next){
+router.put("/citiesController/:postcode", async function updateCity(req, res, next){
     try{
         const city = await CitiesModel.findById(req.params.postcode);
         if (city == null){
@@ -56,7 +56,7 @@ router.put("/citiesController/:postcode", async function(req, res, next){
     }
 });
 
-router.patch("/citiesController/:postcode", async function(req, res, next){
+router.patch("/citiesController/:postcode", async function patchCity(req, res, next){
     try{
         const city = await CitiesModel.findById(req.params.postcode);
         if (city == null){
@@ -72,7 +72,7 @@ router.patch("/citiesController/:postcode", async function(req, res, next){
     }
 });
 
-router.delete("/citiesController/:postcode", async function(req, res, next) {
+router.delete("/citiesController/:postcode", async function deleteOneCity(req, res, next) {
     const postcode = req.params.postcode;
     try{
         const city = await CitiesModel.findByIdAndDelete(postcode);
