@@ -53,7 +53,6 @@ router.put("/city/:postcode", async function(req, res, next){
     }
 });
 
-
 router.patch("/city/:postcode", async function(req, res, next){
     try{
         const city = await City.findById(req.params.postcode);
@@ -68,4 +67,17 @@ router.patch("/city/:postcode", async function(req, res, next){
     } catch (err) {
         return next(err);
     }
+});
+
+router.delete("/city/:postcode", async function(req, res, next) {
+    const postcode = req.params.postcode;
+    try{
+        const city = await City.findByIdAndDelete(postcode);
+        if (camel==null){
+            return res.status(404).send({"message": "City not found"});
+        }
+        res.send(city);
+    } catch (err) {
+        return next(err);
+    } 
 });
