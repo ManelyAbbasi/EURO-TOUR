@@ -1,6 +1,6 @@
-const City = require("server\models\city.js");
+const CitiesController = require("server\models\citiesController.js");
 const express = require("express");
-const city = require("../models/city");
+const citiesController = require("../models/citiesController");
 const placesToVisitSchema = require("../models/placesToVisit");
 const router = express.Router();
 
@@ -24,7 +24,7 @@ router.post("/", async (req, res) => {
     res.send(result);
 });
 
-router.get("/city/:postcode", async function(req, res, next){
+router.get("/citiesController/:postcode", async function(req, res, next){
     const postcode = req.params.postcode;
     try{
         const city = await city.findById(postcode);
@@ -37,7 +37,7 @@ router.get("/city/:postcode", async function(req, res, next){
     }
 });
 
-router.put("/city/:postcode", async function(req, res, next){
+router.put("/citiesController/:postcode", async function(req, res, next){
     try{
         const city = await City.findById(req.params.postcode);
         if (city == null){
@@ -57,7 +57,7 @@ router.put("/city/:postcode", async function(req, res, next){
     }
 });
 
-router.patch("/city/:postcode", async function(req, res, next){
+router.patch("/citiesController/:postcode", async function(req, res, next){
     try{
         const city = await City.findById(req.params.postcode);
         if (city == null){
@@ -73,7 +73,7 @@ router.patch("/city/:postcode", async function(req, res, next){
     }
 });
 
-router.delete("/city/:postcode", async function(req, res, next) {
+router.delete("/citiesController/:postcode", async function(req, res, next) {
     const postcode = req.params.postcode;
     try{
         const city = await City.findByIdAndDelete(postcode);
