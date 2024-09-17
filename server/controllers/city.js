@@ -23,19 +23,23 @@ router.post("/", async (req, res) => {
 router.get("/:postcode", async (req, res) =>{
     const city = await City.find({ postcode: req.params.postcode });
     res.send(city);
-})
+});
 
-router.put("/:postcode", async (req, res) =>{
+router.put("/city/:postcode", async (req, res) =>{
     const postcode = req.params.postcode;
-    const updatedCity = {
-        "postcode": postcode,
-        "cityName": req.body.cityName,
-        "country": req.body.country,
-        "statistics": req.body.statistics,
-        "facts": req.body.facts,
-        "tags": req.body.tags,
+    try{
+        const city = await City.findById(postcode);
+        if (city == null){
+            return res.status(404).send({"message": "City not found"});
+        }
+        city.cityName = (req.body.cityName || city.cityName);
+        city.country = (req.body.country || city.country);
+        city.statistics = (req.body.statistics || city.statistics);
+        city.facts = (req.body.facts || city.facts);
+        city.tags = (req.body.tags || city.tags);
+        await city.save(city);
+        res.send(city);
+    } catch (err) {
+        return next(err);
     }
-    const cities = await City.find();
-    cities[postcode] = updatedCity;
-    res.send(updatedCity);
-})
+});
