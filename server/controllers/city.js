@@ -72,7 +72,7 @@ router.delete("/city/:postcode", async function(req, res, next) {
     const postcode = req.params.postcode;
     try{
         const city = await City.findByIdAndDelete(postcode);
-        if (camel==null){
+        if (city==null){
             return res.status(404).send({"message": "City not found"});
         }
         res.send(city);

@@ -22,13 +22,13 @@ router.post("/", async (req, res) => {
 router.get("/placesToVisit/:address", async function(req, res, next) {  
     const address = req.params.address; 
     try {
-        const place = await PlacesToVisit.findById(address);
+        const placesToVisit = await PlacesToVisit.findById(address);
 
-        if (place == null) {
+        if (placesToVisit == null) {
             return res.status(404).send({ "message": "Place not found" });
         }
 
-        res.send(place);
+        res.send(placesToVisit);
     } catch (err) {
         res.status(500).send({ "message": "Something went wrong" });
     }
@@ -37,17 +37,17 @@ router.get("/placesToVisit/:address", async function(req, res, next) {
 
 router.put("/placesToVisit/:address", async function(req, res, next) {
     try {
-        const place = await PlacesToVisit.findById(req.params.address);
+        const placesToVisit = await PlacesToVisit.findById(req.params.address);
         
-        if (place == null) {
+        if (placesToVisit == null) {
             return res.status(404).send({"message": "Place not found"});
         }
-        place.address = req.body.address;
-        place.rating = req.body.rating;
-        place.content = req.body.content;
-        place.tags = req.body.tags;
-        await place.save();
-        res.send(place);
+        placesToVisit.address = req.body.address;
+        placesToVisit.rating = req.body.rating;
+        placesToVisit.content = req.body.content;
+        placesToVisit.tags = req.body.tags;
+        await placesToVisit.save();
+        res.send(placesToVisit);
     } catch (err) {
         return next(err);
     }
@@ -55,18 +55,32 @@ router.put("/placesToVisit/:address", async function(req, res, next) {
 
 router.patch("/placesToVisit/:address", async function(req, res, next){
     try{
-        const place = await PlacesToVisitlacesToVisit.findById(req.params.address);
+        const placesToVisit = await PlacesToVisit.findById(req.params.address);
 
-        if (place == null){
+        if (placesToVisit == null){
             return res.status(404).send({"message": "Place not found"});
         }
 
-        place.content = (req.body.content || place.content);
+        placesToVisit.content = (req.body.content || placesToVisit.content);
         await place.save();
-        res.send(place);
+        res.send(placesToVisit);
     } catch (err) {
         return next(err);
     }
+});
+
+router.delete("/placesToVisit/:address", async function(req, res, next) {
+    const address = req.params.address; 
+    try{
+        const placesToVisit = await PlacesToVisit.findByIdAndDelete(address);
+        
+        if (placesToVisit == null){
+            return res.status(404).send({"message": "Place not found"});
+        }
+        res.send(placesToVisit);
+    } catch (err) {
+        return next(err);
+    } 
 });
 
 
