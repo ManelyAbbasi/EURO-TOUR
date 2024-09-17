@@ -46,7 +46,7 @@ router.put("/city/:postcode", async function(req, res, next){
         city.statistics = req.body.statistics;
         city.facts = req.body.facts;
         city.tags = req.body.tags;
-        await city.save(city);
+        await city.save();
         res.send(city);
     } catch (err) {
         return next(err);
@@ -62,7 +62,7 @@ router.patch("/city/:postcode", async function(req, res, next){
         city.statistics = (req.body.statistics || city.statistics);
         city.facts = (req.body.facts || city.facts);
         city.tags = (req.body.tags || city.tags);
-        await city.save(city);
+        await city.save();
         res.send(city);
     } catch (err) {
         return next(err);
