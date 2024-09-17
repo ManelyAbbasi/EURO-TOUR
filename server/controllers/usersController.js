@@ -4,7 +4,7 @@ const router = express.Router();
 const usersModel = require("../models/usersModel");
 
 
-router.post("/usersController", async function (req, res, next) {
+router.post("/usersController", async function createUser(req, res, next) {
     const users = new UsersModel(req.body);
     try {
     await users.save();
@@ -14,7 +14,7 @@ router.post("/usersController", async function (req, res, next) {
     res.status(201).send(users);
     });
 
-router.get("/usersController", async function(req, res, next) {
+router.get("/usersController", async function getAllUsers(req, res, next) {
     try {
     const users = await UsersModel.find();
     } catch (err) {
@@ -23,7 +23,7 @@ router.get("/usersController", async function(req, res, next) {
     res.send({"users": users});
     });
 
-router.put("/usersController/:username", async function(req, res, next) {
+router.put("/usersController/:username", async function updateUser(req, res, next) {
     try {
         const user = await UsersModel.findById(req.params.username);
         if (user == null) {
@@ -37,7 +37,7 @@ router.put("/usersController/:username", async function(req, res, next) {
     } catch (err) { return next (err); }
 });
 
-router.patch("/usersController/:username", async function(req, res, next){
+router.patch("/usersController/:username", async function patchUser(req, res, next){
     try{
         const user = await UsersModel.findById(req.params.username);
         if (user == null){
@@ -51,7 +51,7 @@ router.patch("/usersController/:username", async function(req, res, next){
     }
 });
 
-router.delete("/usersController/:username", async function(req, res, next) {
+router.delete("/usersController/:username", async function deleteOneUser(req, res, next) {
     try {
         const user = await UsersModel.findById(req.params.username);
    if (user == null) {
