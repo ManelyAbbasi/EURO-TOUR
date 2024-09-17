@@ -4,7 +4,7 @@ const citiesModel = require("../models/citiesModel");
 const placesToVisitSchema = require("../models/placesToVisitModel");
 const router = express.Router();
 
-router.get("/citiesModel", async function getAllCities(req, res, next) {
+router.get("/citiesController", async function getAllCities(req, res, next) {
     try {
     const cities = await CitiesModel.find();
     } catch (err) {
@@ -13,7 +13,7 @@ router.get("/citiesModel", async function getAllCities(req, res, next) {
     res.send({"cities": cities});
     });
 
-router.post("/citiesModel", async function createCity(req, res, next) {
+router.post("/citiesController", async function createCity(req, res, next) {
     const cities = new CitiesModel(req.body);
     try {
     await cities.save();
