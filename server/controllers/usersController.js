@@ -20,7 +20,7 @@ router.get("/usersController", async function getAllUsers(req, res, next) {
     } catch (err) {
     return next(err);
     }
-    res.send({"users": users});
+    res.status(201).send({"users": users});
     });
 
 router.put("/usersController/:username", async function updateUser(req, res, next) {
@@ -33,7 +33,7 @@ router.put("/usersController/:username", async function updateUser(req, res, nex
         user.sexuality = req.body.sexuality;
         user.gender = req.body.gender;
         await user.save();
-        res.send(user);
+        res.status(201).send(user);
     } catch (err) { return next (err); }
 });
 
@@ -55,8 +55,8 @@ router.delete("/usersController/:username", async function deleteOneUser(req, re
     try {
         const user = await UsersModel.findById(req.params.username);
    if (user == null) {
-    return res.status(404).json({"message": "User not found"});
+    return res.status(404).send({"message": "User not found"});
    }
-   res.send(user);
+   res.status(201).send(user);
     } catch (err) { return next(err); }
 });

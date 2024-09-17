@@ -10,7 +10,7 @@ router.get("/placesToVisitController", async function getAllPlaces(req, res, nex
     } catch (err) {
     return next(err);
     }
-    res.send({"placesToVisit": placesToVisit});
+    res.status(201).send({"placesToVisit": placesToVisit});
     });
 
 router.post("/placesToVisitController", async function createPlace(req, res, next) {
@@ -32,7 +32,7 @@ router.get("/placesToVisitController/:address", async function getOnePlace(req, 
             return res.status(404).send({ "message": "Place not found" });
         }
 
-        res.send(placesToVisit);
+        res.status(201).send(placesToVisit);
     } catch (err) {
         res.status(500).send({ "message": "Something went wrong" });
     }
@@ -52,7 +52,7 @@ router.put("/placesToVisitController/:address", async function updatePlace(req, 
         placesToVisit.tags = req.body.tags;
         placesToVisit.reviews = null;
         await placesToVisit.save();
-        res.send(placesToVisit);
+        res.status(201).send(placesToVisit);
     } catch (err) {
         return next(err);
     }
@@ -68,7 +68,7 @@ router.patch("/placesToVisitController/:address", async function patchPlace(req,
 
         placesToVisit.content = (req.body.content || placesToVisit.content);
         await place.save();
-        res.send(placesToVisit);
+        res.status(201).send(placesToVisit);
     } catch (err) {
         return next(err);
     }
@@ -82,7 +82,7 @@ router.delete("/placesToVisitController/:address", async function deleteOnePlace
         if (placesToVisit == null){
             return res.status(404).send({"message": "Place not found"});
         }
-        res.send(placesToVisit);
+        res.status(201).send(placesToVisit);
     } catch (err) {
         return next(err);
     } 

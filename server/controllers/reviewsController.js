@@ -20,7 +20,7 @@ router.get("/reviewsController", async function getAllreviews(req, res, next) {
     } catch (err) {
     return next(err);
     }
-    res.send({"reviews": reviews});
+    res.status(201).send({"reviews": reviews});
     });
 
 router.delete("/reviewsController", async function deleteOldReviews(req, res, next) {
@@ -35,9 +35,7 @@ router.delete("/reviewsController", async function deleteOldReviews(req, res, ne
         if (result.deletedCount === 0) {
             return res.status(404).send({ "message": "There are no reviews older than 5 years to delete" });
         }
-
-        return res.status(200).send({ "message": "All reviews older than 5 years deleted successfully" });
-
+        res.status(201).send(result);
     } catch (err) {
         res.status(500).send({ "message": "An error occurred while deleting reviews" });
     }
