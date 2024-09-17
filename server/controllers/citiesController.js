@@ -13,20 +13,15 @@ router.get("/citiesModel/:postcode", async function(req, res, next) {
     res.send({"cities": cities});
     });
 
-router.post("/", async (req, res) => {
-    const city = new CitiesModel({
-        postcode: req.body.postcode,
-        cityName: req.body.cityName,
-        country: req.body.country,
-        statistics: req.body.statistics,
-        facts: req.body.facts,
-        tags: req.body.tags,
-        placesToVisit: null,
-        reviews: null,
+router.post("/citiesModel/:postcode", async function(req, res, next) {
+    const cities = new CitiesModel(req.body);
+    try {
+    await cities.save();
+    } catch (err) {
+    return next(err);
+    }
+    res.status(201).json(camel);
     });
-    const result = await city.save();
-    res.send(result);
-});
 
 router.get("/citiesController/:postcode", async function(req, res, next){
     const postcode = req.params.postcode;
