@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-const reviewSchema = require('./review');
+const reviewsSchema = require('./reviewsModel');
 var Schema = mongoose.Schema;
 
 var placesToVisitSchema = new Schema({
@@ -7,7 +7,7 @@ var placesToVisitSchema = new Schema({
     rating: { type: Number, min: 0.0, max: 5.0},
     content: { type: String, required: true },
     tags: { type: Array, required: true },
-    reviews: [reviewSchema]
+    reviews: [reviewsSchema]
   });
   
   // Export the placesToVisit model
