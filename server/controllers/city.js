@@ -1,5 +1,6 @@
 const City = require("server\models\city.js");
 const express = require("express");
+const city = require("../models/city");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -20,13 +21,20 @@ router.post("/", async (req, res) => {
     res.send(result);
 });
 
-router.get("/:postcode", async (req, res) =>{
-    const city = await City.find({ postcode: req.params.postcode });
-    res.send(city);
+router.get("/city/:postcode", async function(req, res, next){
+    const postcode = req.params.postcode;
+    try{
+        const city = await Camel.findById(city);
+        if (city == null){
+            return res.status(404).send({"message": "City not found"});
+        }
+        res.send(city);
+    } catch (err) {
+        return next(err);
+    }
 });
 
-router.put("/city/:postcode", async (req, res) =>{
-    const postcode = req.params.postcode;
+router.put("/city/:postcode", async function(req, res, next){
     try{
         const city = await City.findById(postcode);
         if (city == null){
