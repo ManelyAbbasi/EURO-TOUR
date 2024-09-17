@@ -18,3 +18,19 @@ router.post("/", async (req, res) => {
     res.send(result);
 });
 
+router.get('/:address', async (req, res) => {
+    try {
+        var place = await PlacesToVisit.find({ address: req.params.address });
+
+        if (place === null) {
+            return res.status(404).send({ "message": "Place not found" });
+        }
+
+        res.send(place);
+    } catch (err) {
+        res.status(500).send({ "message": "Something went wrong" });
+    }
+});
+
+
+
