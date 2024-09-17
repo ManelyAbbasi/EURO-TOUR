@@ -3,29 +3,25 @@ const express = require("express");
 const router = express.Router();
 const usersModel = require("../models/usersModel");
 
-router.post("/", async (req, res) => {
-    const user = new UsersModel({
-        username: req.body.name,
-        password: req.body.password,
-        birthDate: Date(req.body.birthDate),
-        sexuality: body.sexuality,
-        gender: body.gender
-    });
-    const result = await user.save();
-    res.send(result);
-});
 
-// GET a user by their username
-router.get("/usersController/:username", async function(req, res, next){
-    const username = req.params.username;
-    try{
-        const user = await UsersModel.findById(username);
-        if (user == null){
-            return res.status(404).send({"message": "User not found"});
-        }
-        res.send(user);
-    } catch (err) { return next(err); }
-});
+router.post("/usersController", async function (req, res, next) {
+    const users = new UsersModel(req.body);
+    try {
+    await users.save();
+    } catch (err) {
+    return next(err);
+    }
+    res.status(201).send(users);
+    });
+
+router.get("/usersController", async function(req, res, next) {
+    try {
+    const users = await UsersModel.find();
+    } catch (err) {
+    return next(err);
+    }
+    res.send({"users": users});
+    });
 
 router.put("/usersController/:username", async function(req, res, next) {
     try {
