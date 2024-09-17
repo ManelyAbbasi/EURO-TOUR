@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-const placesToVisit = require('./placesToVisitModel');
+const placesToVisitSchema = require('./placesToVisitModel');
 const reviewsSchema = require('./reviewsModel');
 var Schema = mongoose.Schema;
 

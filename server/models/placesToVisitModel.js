@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-const reviewSchema = require('./reviewsModel');
+const reviewsSchema = require('./reviewsModel');
 var Schema = mongoose.Schema;
 
 var placesToVisitSchema = new Schema({
