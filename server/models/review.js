@@ -12,8 +12,6 @@ var reviewSchema = new Schema({
    content: { type: String, required: true, maxLength: [200, 'Max character length exceeded'] },  
    date: { type: Date, default: Date.now },
    user: { type: Schema.Types.ObjectId, ref: 'user', required: true },
-   city: { type: Schema.Types.ObjectId, ref: 'city'},
-   placesToVisit: { type: Schema.Types.ObjectId, ref: 'placesToVisit'},
 });
 
-module.exports = mongoose.model('review', reviewSchema);
+module.exports = reviewSchema;
