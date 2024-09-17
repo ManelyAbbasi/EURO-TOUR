@@ -24,7 +24,7 @@ router.get("/placesToVisit/:address", async function(req, res, next) {
     try {
         const place = await PlacesToVisit.findById(address);
 
-        if (place === null) {
+        if (place == null) {
             return res.status(404).send({ "message": "Place not found" });
         }
 
@@ -39,15 +39,31 @@ router.put("/placesToVisit/:address", async function(req, res, next) {
     try {
         const place = await placesToVisit.findById(req.params.address);
         
-        if (camel == null) {
+        if (place == null) {
             return res.status(404).send({"message": "Place not found"});
         }
         placesToVisit.address = req.body.address;
         placesToVisit.rating = req.body.rating;
         placesToVisit.content = req.body.content;
         placesToVisit.tags = req.body.tags;
-        await place.save(place);
-        res.send(place);
+        await place.save();
+        res.send();
+    } catch (err) {
+        return next(err);
+    }
+});
+
+router.patch("/placesToVisit/:address", async function(req, res, next){
+    try{
+        const place = await placesToVisit.findById(req.params.address);
+
+        if (place == null){
+            return res.status(404).send({"message": "Place not found"});
+        }
+
+        placesToVisit.content = (req.body.content  || placesToVisit.content);
+        await place.save();
+        res.send();
     } catch (err) {
         return next(err);
     }
