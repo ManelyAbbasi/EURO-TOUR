@@ -1,5 +1,6 @@
 const PlacesToVisit = require("server\models\placesToVisit.js");
 const express = require("express");
+const placesToVisit = require("../models/placesToVisit");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -18,9 +19,10 @@ router.post("/", async (req, res) => {
     res.send(result);
 });
 
-router.get('/:address', async (req, res) => {
+router.get("/placesToVisit/:address", async function(req, res, next) {  
+    const address = req.params.address; 
     try {
-        var place = await PlacesToVisit.find({ address: req.params.address });
+        const place = await PlacesToVisit.findById(address);
 
         if (place === null) {
             return res.status(404).send({ "message": "Place not found" });
@@ -32,5 +34,23 @@ router.get('/:address', async (req, res) => {
     }
 });
 
+
+router.put("/placesToVisit/:address", async function(req, res, next) {
+    try {
+        const place = await placesToVisit.findById(req.params.address);
+        
+        if (camel == null) {
+            return res.status(404).send({"message": "Place not found"});
+        }
+        placesToVisit.address = req.body.address;
+        placesToVisit.rating = req.body.rating;
+        placesToVisit.content = req.body.content;
+        placesToVisit.tags = req.body.tags;
+        await place.save(place);
+        res.send(place);
+    } catch (err) {
+        return next(err);
+    }
+});
 
 
