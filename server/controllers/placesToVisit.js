@@ -42,10 +42,10 @@ router.put("/placesToVisit/:address", async function(req, res, next) {
         if (place == null) {
             return res.status(404).send({"message": "Place not found"});
         }
-        placesToVisit.address = req.body.address;
-        placesToVisit.rating = req.body.rating;
-        placesToVisit.content = req.body.content;
-        placesToVisit.tags = req.body.tags;
+        place.address = req.body.address;
+        place.rating = req.body.rating;
+        place.content = req.body.content;
+        place.tags = req.body.tags;
         await place.save();
         res.send(place);
     } catch (err) {
@@ -61,7 +61,7 @@ router.patch("/placesToVisit/:address", async function(req, res, next){
             return res.status(404).send({"message": "Place not found"});
         }
 
-        placesToVisit.content = (req.body.content || placesToVisit.content);
+        place.content = (req.body.content || place.content);
         await place.save();
         res.send(place);
     } catch (err) {
