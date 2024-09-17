@@ -16,7 +16,7 @@ router.post("/", async (req, res) => {
 });
 
 // GET a user by their username
-router.get("/userController/:username", async function(req, res, next){
+router.get("/usersController/:username", async function(req, res, next){
     const username = req.params.username;
     try{
         const user = await User.findById(username);
@@ -27,7 +27,7 @@ router.get("/userController/:username", async function(req, res, next){
     } catch (err) { return next(err); }
 });
 
-router.put("/userController/:username", async function(req, res, next) {
+router.put("/usersController/:username", async function(req, res, next) {
     try {
         const user = await User.findById(req.params.username);
         if (user == null) {
@@ -41,7 +41,7 @@ router.put("/userController/:username", async function(req, res, next) {
     } catch (err) { return next (err); }
 });
 
-router.patch("/userController/:username", async function(req, res, next){
+router.patch("/usersController/:username", async function(req, res, next){
     try{
         const user = await User.findById(req.params.username);
         if (user == null){
@@ -55,7 +55,7 @@ router.patch("/userController/:username", async function(req, res, next){
     }
 });
 
-router.delete("/userController/:username", async function(req, res, next) {
+router.delete("/usersController/:username", async function(req, res, next) {
     try {
         const user = await User.findById(req.params.username);
    if (user == null) {
