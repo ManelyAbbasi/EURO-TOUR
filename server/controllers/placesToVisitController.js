@@ -1,6 +1,6 @@
-const PlacesToVisitController = require("server\models\placesToVisitController.js");
+const PlacesToVisitController = require("server\models\placesToVisitModel.js");
 const express = require("express");
-const placesToVisitController = require("../models/placesToVisitController");
+const placesToVisitController = require("../models/placesToVisitModel");
 const router = express.Router();
 
 router.get("/", async (req, res) => {

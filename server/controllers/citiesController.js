@@ -1,7 +1,7 @@
-const CitiesController = require("server\models\citiesController.js");
+const CitiesController = require("server\models\citiesModel.js");
 const express = require("express");
-const citiesController = require("../models/citiesController");
-const placesToVisitSchema = require("../models/placesToVisit");
+const citiesController = require("../models/citiesModel");
+const placesToVisitSchema = require("../models/placesToVisitModel");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
