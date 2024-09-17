@@ -1,6 +1,7 @@
 const Review = require("server/models/review.js");
 const express = require("express");
 const router = express.Router();
+const review = require("../models/review");
 
 router.post("/", async (req, res) => {
     const review = new Review({

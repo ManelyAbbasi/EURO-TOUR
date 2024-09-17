@@ -1,7 +1,6 @@
 const City = require("server\models\city.js");
 const express = require("express");
 const city = require("../models/city");
-const city = require("../models/city");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
