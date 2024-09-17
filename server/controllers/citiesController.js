@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/citiesModel/:postcode", async function(req, res, next) {
     try {
-    const cities = await citiesModel.find();
+    const cities = await CitiesModel.find();
     } catch (err) {
     return next(err);
     }
@@ -14,7 +14,7 @@ router.get("/citiesModel/:postcode", async function(req, res, next) {
     });
 
 router.post("/", async (req, res) => {
-    const city = new City({
+    const city = new CitiesModel({
         postcode: req.body.postcode,
         cityName: req.body.cityName,
         country: req.body.country,
@@ -31,7 +31,7 @@ router.post("/", async (req, res) => {
 router.get("/citiesController/:postcode", async function(req, res, next){
     const postcode = req.params.postcode;
     try{
-        const city = await city.findById(postcode);
+        const city = await CitiesModel.findById(postcode);
         if (city == null){
             return res.status(404).send({"message": "City not found"});
         }
@@ -43,7 +43,7 @@ router.get("/citiesController/:postcode", async function(req, res, next){
 
 router.put("/citiesController/:postcode", async function(req, res, next){
     try{
-        const city = await City.findById(req.params.postcode);
+        const city = await CitiesModel.findById(req.params.postcode);
         if (city == null){
             return res.status(404).send({"message": "City not found"});
         }
@@ -63,7 +63,7 @@ router.put("/citiesController/:postcode", async function(req, res, next){
 
 router.patch("/citiesController/:postcode", async function(req, res, next){
     try{
-        const city = await City.findById(req.params.postcode);
+        const city = await CitiesModel.findById(req.params.postcode);
         if (city == null){
             return res.status(404).send({"message": "City not found"});
         }
@@ -80,7 +80,7 @@ router.patch("/citiesController/:postcode", async function(req, res, next){
 router.delete("/citiesController/:postcode", async function(req, res, next) {
     const postcode = req.params.postcode;
     try{
-        const city = await City.findByIdAndDelete(postcode);
+        const city = await CitiesModel.findByIdAndDelete(postcode);
         if (city==null){
             return res.status(404).send({"message": "City not found"});
         }

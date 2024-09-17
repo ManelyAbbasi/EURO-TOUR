@@ -4,7 +4,7 @@ const router = express.Router();
 const usersModel = require("../models/usersModel");
 
 router.post("/", async (req, res) => {
-    const user = new User({
+    const user = new UsersModel({
         username: req.body.name,
         password: req.body.password,
         birthDate: Date(req.body.birthDate),
@@ -19,7 +19,7 @@ router.post("/", async (req, res) => {
 router.get("/usersController/:username", async function(req, res, next){
     const username = req.params.username;
     try{
-        const user = await User.findById(username);
+        const user = await UsersModel.findById(username);
         if (user == null){
             return res.status(404).send({"message": "User not found"});
         }
@@ -29,7 +29,7 @@ router.get("/usersController/:username", async function(req, res, next){
 
 router.put("/usersController/:username", async function(req, res, next) {
     try {
-        const user = await User.findById(req.params.username);
+        const user = await UsersModel.findById(req.params.username);
         if (user == null) {
             return res.status(404).send({"message": "User not found"});
         }
@@ -43,7 +43,7 @@ router.put("/usersController/:username", async function(req, res, next) {
 
 router.patch("/usersController/:username", async function(req, res, next){
     try{
-        const user = await User.findById(req.params.username);
+        const user = await UsersModel.findById(req.params.username);
         if (user == null){
             return res.status(404).send({"message": "User not found"});
         }
@@ -57,7 +57,7 @@ router.patch("/usersController/:username", async function(req, res, next){
 
 router.delete("/usersController/:username", async function(req, res, next) {
     try {
-        const user = await User.findById(req.params.username);
+        const user = await UsersModel.findById(req.params.username);
    if (user == null) {
     return res.status(404).json({"message": "User not found"});
    }

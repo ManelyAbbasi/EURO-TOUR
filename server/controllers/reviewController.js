@@ -4,7 +4,7 @@ const router = express.Router();
 const reviewsModel = require("../models/reviewsModel");
 
 router.post("/", async (req, res) => {
-    const review = new Review({
+    const review = new ReviewsModel({
         id: req.body.id,
         rating: req.body.rating,
         content: req.body.content,
@@ -15,7 +15,7 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
-    const reviews = await Review.find();
+    const reviews = await ReviewsModel.find();
     res.send(reviews);
 });
 
@@ -26,7 +26,7 @@ router.delete('/', async (req, res) => {
         fiveYearsAgo.setFullYear(fiveYearsAgo.getFullYear() - 5);
 
         // delete reviews older than 5 years
-        const result = await Review.deleteMany({ date: { $lt: fiveYearsAgo } }); 
+        const result = await ReviewsModel.deleteMany({ date: { $lt: fiveYearsAgo } }); 
 
         if (result.deletedCount === 0) {
             return res.status(404).json({ "message": "There are no reviews older than 5 years to delete" });

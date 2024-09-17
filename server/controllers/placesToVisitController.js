@@ -4,12 +4,12 @@ const placesToVisitModell = require("../models/placesToVisitModel");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-    const allPlacesToVisit = await PlacesToVisit.find();
+    const allPlacesToVisit = await PlacesToVisitModel.find();
     res.send(allPlacesToVisit);
 });
 
 router.post("/", async (req, res) => {
-    const placesToVisit = new PlacesToVisit({
+    const placesToVisit = new PlacesToVisitModel({
         address: req.body.address,
         rating: req.body.rating,
         content: req.body.content,
@@ -23,7 +23,7 @@ router.post("/", async (req, res) => {
 router.get("/placesToVisitController/:address", async function(req, res, next) {  
     const address = req.params.address; 
     try {
-        const placesToVisit = await PlacesToVisit.findById(address);
+        const placesToVisit = await PlacesToVisitModel.findById(address);
 
         if (placesToVisit == null) {
             return res.status(404).send({ "message": "Place not found" });
@@ -38,7 +38,7 @@ router.get("/placesToVisitController/:address", async function(req, res, next) {
 
 router.put("/placesToVisitController/:address", async function(req, res, next) {
     try {
-        const placesToVisit = await PlacesToVisit.findById(req.params.address);
+        const placesToVisit = await PlacesToVisitModel.findById(req.params.address);
         
         if (placesToVisit == null) {
             return res.status(404).send({"message": "Place not found"});
@@ -57,7 +57,7 @@ router.put("/placesToVisitController/:address", async function(req, res, next) {
 
 router.patch("/placesToVisitController/:address", async function(req, res, next){
     try{
-        const placesToVisit = await PlacesToVisit.findById(req.params.address);
+        const placesToVisit = await PlacesToVisitModel.findById(req.params.address);
 
         if (placesToVisit == null){
             return res.status(404).send({"message": "Place not found"});
@@ -74,7 +74,7 @@ router.patch("/placesToVisitController/:address", async function(req, res, next)
 router.delete("/placesToVisitController/:address", async function(req, res, next) {
     const address = req.params.address; 
     try{
-        const placesToVisit = await PlacesToVisit.findByIdAndDelete(address);
+        const placesToVisit = await PlacesToVisitModel.findByIdAndDelete(address);
         
         if (placesToVisit == null){
             return res.status(404).send({"message": "Place not found"});
