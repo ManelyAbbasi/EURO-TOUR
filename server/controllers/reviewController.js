@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const reviewsModel = require("../models/reviewsModel");
 
-router.post("/", async (req, res) => {
+router.post("/", async  (req, res) => {
     const review = new ReviewsModel({
         id: req.body.id,
         rating: req.body.rating,

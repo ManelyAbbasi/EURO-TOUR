@@ -4,7 +4,7 @@ const placesToVisitModell = require("../models/placesToVisitModel");
 const router = express.Router();
 
 
-router.get("/placesToVisitController", async function(req, res, next) {
+router.get("/placesToVisitController", async function getAllPlaces(req, res, next) {
     try {
     const placesToVisit = await PlacesToVisitModel.find();
     } catch (err) {
@@ -13,7 +13,7 @@ router.get("/placesToVisitController", async function(req, res, next) {
     res.send({"placesToVisit": placesToVisit});
     });
 
-router.post("/placesToVisitController", async function(req, res, next) {
+router.post("/placesToVisitController", async function createPlace(req, res, next) {
     const placesToVisit = new PlacesToVisitModel(req.body);
     try {
     await placesToVisit.save();
@@ -23,7 +23,7 @@ router.post("/placesToVisitController", async function(req, res, next) {
     res.status(201).send(placesToVisit);
     });
 
-router.get("/placesToVisitController/:address", async function(req, res, next) {  
+router.get("/placesToVisitController/:address", async function getOnePlace(req, res, next) {  
     const address = req.params.address; 
     try {
         const placesToVisit = await PlacesToVisitModel.findById(address);
@@ -39,7 +39,7 @@ router.get("/placesToVisitController/:address", async function(req, res, next) {
 });
 
 
-router.put("/placesToVisitController/:address", async function(req, res, next) {
+router.put("/placesToVisitController/:address", async function updatePlace(req, res, next) {
     try {
         const placesToVisit = await PlacesToVisitModel.findById(req.params.address);
         
@@ -58,7 +58,7 @@ router.put("/placesToVisitController/:address", async function(req, res, next) {
     }
 });
 
-router.patch("/placesToVisitController/:address", async function(req, res, next){
+router.patch("/placesToVisitController/:address", async function patchPlace(req, res, next){
     try{
         const placesToVisit = await PlacesToVisitModel.findById(req.params.address);
 
@@ -74,7 +74,7 @@ router.patch("/placesToVisitController/:address", async function(req, res, next)
     }
 });
 
-router.delete("/placesToVisitController/:address", async function(req, res, next) {
+router.delete("/placesToVisitController/:address", async function deleteOnePlace(req, res, next) {
     const address = req.params.address; 
     try{
         const placesToVisit = await PlacesToVisitModel.findByIdAndDelete(address);
