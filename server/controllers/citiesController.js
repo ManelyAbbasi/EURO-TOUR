@@ -13,7 +13,7 @@ router.get("/citiesModel", async function getAllCities(req, res, next) {
     res.send({"cities": cities});
     });
 
-router.post("/citiesModel/:postcode", async function createCity(req, res, next) {
+router.post("/citiesModel", async function createCity(req, res, next) {
     const cities = new CitiesModel(req.body);
     try {
     await cities.save();
