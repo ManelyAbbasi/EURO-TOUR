@@ -1,7 +1,7 @@
-const UsersController = require("server/models/usersModel.js");
+const UsersModel = require("server/models/usersModel.js");
 const express = require("express");
 const router = express.Router();
-const usersController = require("../models/usersModel");
+const usersModel = require("../models/usersModel");
 
 router.post("/", async (req, res) => {
     const user = new User({

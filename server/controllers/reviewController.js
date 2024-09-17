@@ -1,7 +1,7 @@
-const ReviewsController = require("server/models/reviewsModel.js");
+const ReviewsModel = require("server/models/reviewsModel.js");
 const express = require("express");
 const router = express.Router();
-const reviewsController = require("../models/reviewsModel");
+const reviewsModel = require("../models/reviewsModel");
 
 router.post("/", async (req, res) => {
     const review = new Review({

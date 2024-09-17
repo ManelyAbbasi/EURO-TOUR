@@ -1,6 +1,6 @@
-const CitiesController = require("server\models\citiesModel.js");
+const CitiesModel = require("server\models\citiesModel.js");
 const express = require("express");
-const citiesController = require("../models/citiesModel");
+const citiesModel = require("../models/citiesModel");
 const placesToVisitSchema = require("../models/placesToVisitModel");
 const router = express.Router();
 
