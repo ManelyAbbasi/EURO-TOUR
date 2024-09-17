@@ -1,9 +1,9 @@
 var mongoose = require('mongoose');
-const placesToVisit = require('./placesToVisit');
-const reviewSchema = require('./review');
+const placesToVisit = require('./placesToVisitModel');
+const reviewsSchema = require('./reviewsModel');
 var Schema = mongoose.Schema;
 
-var citySchema = new Schema({ 
+var citiesSchema = new Schema({ 
     postcode: { type: String, required: true, unique: true },
     cityName: { type: String, required: true },
     country: { type: String, required: true },
@@ -11,8 +11,8 @@ var citySchema = new Schema({
     facts: { type: String, required: true },
     tags: { type: Array, required: true },
     placesToVisit: [placesToVisitSchema],
-    reviews: [reviewSchema]
+    reviews: [reviewsSchema]
   });
   
   // Export the city model
-  module.exports = mongoose.model('city', citySchema);
+  module.exports = mongoose.model('cities', citiesSchema);

@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 
 
 // new schema is being defined 
-var userSchema = new Schema({
+var usersSchema = new Schema({
     username: { type: String, required: true, unique: true }, 
     password: { type: String, required: true },
     birthDate: { type: Date, required: true, min: new Date(1920, 1, 1), max: new Date(2012, 1, 1) },
@@ -14,7 +14,7 @@ var userSchema = new Schema({
     isAdmin:{ type: Boolean, default: false }
 });
 
-module.exports = mongoose.model('user', userSchema);
+module.exports = mongoose.model('users', usersSchema);
 
 
 
