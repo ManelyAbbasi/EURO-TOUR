@@ -4,10 +4,14 @@ const citiesModel = require("../models/citiesModel");
 const placesToVisitSchema = require("../models/placesToVisitModel");
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-    const cities = await City.find();
-    res.send(cities);
-});
+router.get("/citiesModel/:postcode", async function(req, res, next) {
+    try {
+    const cities = await citiesModel.find();
+    } catch (err) {
+    return next(err);
+    }
+    res.send({"cities": cities});
+    });
 
 router.post("/", async (req, res) => {
     const city = new City({
