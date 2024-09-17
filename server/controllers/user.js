@@ -15,19 +15,18 @@ router.post("/", async (req, res) => {
 });
 
 // GET a user by their username
-router.get("/user/:username", async (req, res) => {
-    try {
-        const user = await User.find({ username: req.params.username });
-        if (!user) {
-            return res.status(404).send("User not found");
+router.get("/user/:username", async function(req, res, next){
+    const username = req.params.username;
+    try{
+        const user = await User.findById(username);
+        if (user == null){
+            return res.status(404).send({"message": "User not found"});
         }
         res.send(user);
-    } catch (error) {
-        res.status(404).send("Something went wrong");
-    }
+    } catch (err) { return next(err); }
 });
 
-router.put('/user/:username', async function(req, res, next) {
+router.put("/user/:username", async function(req, res, next) {
     try {
         const user = await User.findById(req.params.username);
         if (user == null) {
