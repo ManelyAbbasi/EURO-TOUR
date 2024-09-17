@@ -47,8 +47,8 @@ router.patch("/user/:username", async function(req, res, next){
             return res.status(404).send({"message": "User not found"});
         }
         user.password = (req.body.password || user.password);
-        await user.save(user);
-        res.send(user);
+        await user.save();
+        res.send();
     } catch (err) {
         return next(err);
     }
