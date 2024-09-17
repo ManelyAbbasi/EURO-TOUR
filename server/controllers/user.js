@@ -33,10 +33,23 @@ router.put("/user/:username", async function(req, res, next) {
             return res.status(404).send({"message": "User not found"});
         }
         user.password = req.body.password;
-        user.birthDate = req.body.birthDate;
         user.sexuality = req.body.sexuality;
         user.gender = req.body.gender;
         await user.save();
         res.send(user);
     } catch (err) { return next (err); }
+});
+
+router.patch("/user/:username", async function(req, res, next){
+    try{
+        const user = await User.findById(req.params.username);
+        if (user == null){
+            return res.status(404).send({"message": "User not found"});
+        }
+        user.password = (req.body.password || user.password);
+        await user.save(user);
+        res.send(user);
+    } catch (err) {
+        return next(err);
+    }
 });
