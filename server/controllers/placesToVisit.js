@@ -14,6 +14,7 @@ router.post("/", async (req, res) => {
         rating: req.body.rating,
         content: req.body.content,
         tags: req.body.tags,
+        reviews: null,
     });
     const result = await placesToVisit.save();
     res.send(result);
@@ -46,6 +47,7 @@ router.put("/placesToVisit/:address", async function(req, res, next) {
         placesToVisit.rating = req.body.rating;
         placesToVisit.content = req.body.content;
         placesToVisit.tags = req.body.tags;
+        placesToVisit.reviews = null;
         await placesToVisit.save();
         res.send(placesToVisit);
     } catch (err) {

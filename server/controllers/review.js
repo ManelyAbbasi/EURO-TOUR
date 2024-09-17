@@ -8,6 +8,7 @@ router.post("/", async (req, res) => {
         id: req.body.id,
         rating: req.body.rating,
         content: req.body.content,
+        user: req.body.user,
     });
     const result = await review.save();
     res.send(result);
@@ -37,11 +38,3 @@ router.delete('/', async (req, res) => {
         res.status(500).json({ "message": "An error occurred while deleting reviews" });
     }
 });
-
-
-
-
-
-
-
-
