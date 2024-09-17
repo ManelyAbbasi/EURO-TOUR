@@ -37,7 +37,7 @@ router.get("/placesToVisit/:address", async function(req, res, next) {
 
 router.put("/placesToVisit/:address", async function(req, res, next) {
     try {
-        const place = await placesToVisit.findById(req.params.address);
+        const place = await PlacesToVisit.findById(req.params.address);
         
         if (place == null) {
             return res.status(404).send({"message": "Place not found"});
@@ -47,7 +47,7 @@ router.put("/placesToVisit/:address", async function(req, res, next) {
         placesToVisit.content = req.body.content;
         placesToVisit.tags = req.body.tags;
         await place.save();
-        res.send();
+        res.send(place);
     } catch (err) {
         return next(err);
     }
@@ -55,15 +55,15 @@ router.put("/placesToVisit/:address", async function(req, res, next) {
 
 router.patch("/placesToVisit/:address", async function(req, res, next){
     try{
-        const place = await placesToVisit.findById(req.params.address);
+        const place = await PlacesToVisitlacesToVisit.findById(req.params.address);
 
         if (place == null){
             return res.status(404).send({"message": "Place not found"});
         }
 
-        placesToVisit.content = (req.body.content  || placesToVisit.content);
+        placesToVisit.content = (req.body.content || placesToVisit.content);
         await place.save();
-        res.send();
+        res.send(place);
     } catch (err) {
         return next(err);
     }
