@@ -8,7 +8,7 @@ router.get("/placesToVisitController", async function getAllPlaces(req, res, nex
     try {
     const placesToVisit = await PlacesToVisitModel.find();
     } catch (err) {
-    return next(err);
+    return res.status(500).next(err);
     }
     res.status(201).send({"placesToVisit": placesToVisit});
     });
@@ -18,7 +18,7 @@ router.post("/placesToVisitController", async function createPlace(req, res, nex
     try {
     await placesToVisit.save();
     } catch (err) {
-    return next(err);
+    return res.status(500).next(err);
     }
     res.status(201).send(placesToVisit);
     });
@@ -42,7 +42,6 @@ router.get("/placesToVisitController/:address", async function getOnePlace(req, 
 router.put("/placesToVisitController/:address", async function updatePlace(req, res, next) {
     try {
         const placesToVisit = await PlacesToVisitModel.findById(req.params.address);
-        
         if (placesToVisit == null) {
             return res.status(404).send({"message": "Place not found"});
         }
@@ -54,7 +53,7 @@ router.put("/placesToVisitController/:address", async function updatePlace(req, 
         await placesToVisit.save();
         res.status(201).send(placesToVisit);
     } catch (err) {
-        return next(err);
+        return res.status(500).next(err);
     }
 });
 
@@ -70,7 +69,7 @@ router.patch("/placesToVisitController/:address", async function patchPlace(req,
         await place.save();
         res.status(201).send(placesToVisit);
     } catch (err) {
-        return next(err);
+        return res.status(500).next(err);
     }
 });
 
@@ -84,7 +83,7 @@ router.delete("/placesToVisitController/:address", async function deleteOnePlace
         }
         res.status(201).send(placesToVisit);
     } catch (err) {
-        return next(err);
+        return res.status(500).next(err);
     } 
 });
 

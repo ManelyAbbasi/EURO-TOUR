@@ -9,7 +9,7 @@ router.post("/usersController", async function createUser(req, res, next) {
     try {
     await users.save();
     } catch (err) {
-    return next(err);
+    return res.status(500).next(err);
     }
     res.status(201).send(users);
     });
@@ -18,7 +18,7 @@ router.get("/usersController", async function getAllUsers(req, res, next) {
     try {
     const users = await UsersModel.find();
     } catch (err) {
-    return next(err);
+    return res.status(500).next(err);
     }
     res.status(201).send({"users": users});
     });
@@ -34,7 +34,7 @@ router.put("/usersController/:username", async function updateUser(req, res, nex
         user.gender = req.body.gender;
         await user.save();
         res.status(201).send(user);
-    } catch (err) { return next (err); }
+    } catch (err) { return res.status(500).next(err); }
 });
 
 router.patch("/usersController/:username", async function patchUser(req, res, next){
@@ -45,9 +45,9 @@ router.patch("/usersController/:username", async function patchUser(req, res, ne
         }
         user.password = (req.body.password || user.password);
         await user.save();
-        res.send(user);
+        res.status(201).res.send(user);
     } catch (err) {
-        return next(err);
+        return res.status(500).next(err);
     }
 });
 
@@ -58,5 +58,5 @@ router.delete("/usersController/:username", async function deleteOneUser(req, re
     return res.status(404).send({"message": "User not found"});
    }
    res.status(201).send(user);
-    } catch (err) { return next(err); }
+    } catch (err) { return res.status(500).next(err); }
 });

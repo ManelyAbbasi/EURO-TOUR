@@ -8,7 +8,7 @@ router.get("/citiesController", async function getAllCities(req, res, next) {
     try {
     const cities = await CitiesModel.find();
     } catch (err) {
-    return next(err);
+    return res.status(500).next(err);
     }
     res.status(201).send({"cities": cities});
     });
@@ -18,7 +18,7 @@ router.post("/citiesController", async function createCity(req, res, next) {
     try {
     await cities.save();
     } catch (err) {
-    return next(err);
+    return res.status(500).next(err);
     }
     res.status(201).send(cities);
     });
@@ -32,7 +32,7 @@ router.get("/citiesController/:postcode", async function getOneCity(req, res, ne
         }
         res.status(201).send(city);
     } catch (err) {
-        return next(err);
+        return res.status(500).next(err);
     }
 });
 
@@ -52,7 +52,7 @@ router.put("/citiesController/:postcode", async function updateCity(req, res, ne
         await city.save();
         res.status(201).send(city);
     } catch (err) {
-        return next(err);
+        return res.status(500).next(err);
     }
 });
 
@@ -68,7 +68,7 @@ router.patch("/citiesController/:postcode", async function patchCity(req, res, n
         await city.save();
         res.status(201).send(city);
     } catch (err) {
-        return next(err);
+        return res.status(500).next(err);
     }
 });
 
@@ -81,6 +81,6 @@ router.delete("/citiesController/:postcode", async function deleteOneCity(req, r
         }
         res.status(201).send(city);
     } catch (err) {
-        return next(err);
+        return res.status(500).next(err);
     } 
 });

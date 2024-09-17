@@ -9,7 +9,7 @@ router.post("/reviewsController", async function createReview(req, res, next) {
     try {
     await reviews.save();
     } catch (err) {
-    return next(err);
+    return res.status(500).next(err);
     }
     res.status(201).send(reviews);
     });
@@ -18,7 +18,7 @@ router.get("/reviewsController", async function getAllreviews(req, res, next) {
     try {
     const reviews = await ReviewsModel.find();
     } catch (err) {
-    return next(err);
+    return res.status(500).next(err);
     }
     res.status(201).send({"reviews": reviews});
     });
