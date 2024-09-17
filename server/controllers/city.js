@@ -1,6 +1,7 @@
 const City = require("server\models\city.js");
 const express = require("express");
 const city = require("../models/city");
+const placesToVisitSchema = require("../models/placesToVisit");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -16,6 +17,8 @@ router.post("/", async (req, res) => {
         statistics: req.body.statistics,
         facts: req.body.facts,
         tags: req.body.tags,
+        placesToVisit: null,
+        reviews: null,
     });
     const result = await city.save();
     res.send(result);
@@ -45,6 +48,8 @@ router.put("/city/:postcode", async function(req, res, next){
         city.statistics = req.body.statistics;
         city.facts = req.body.facts;
         city.tags = req.body.tags;
+        city.placesToVisit = null;
+        city.reviews = nulls;
         await city.save();
         res.send(city);
     } catch (err) {
