@@ -32,12 +32,15 @@ app.use(cors());
 // Import routes
 const citiesRoutes = require('./routes/citiesRoutes');
 const usersRoutes = require('./routes/usersRoutes')
+const reviewsRoutes = require('./routes/reviewsRoutes');
+
 app.get('/api', function(req, res) {
     res.json({'message': 'Welcome to your DIT342 backend ExpressJS project!'});
 });
 
 app.use('/api/cities', citiesRoutes);
 app.use('/api/users', usersRoutes);
+app.use('/api/routes', reviewsRoutes);
 
 // Catch all non-error handler for api (i.e., 404 Not Found)
 app.use('/api/*', function (req, res) {

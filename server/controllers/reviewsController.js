@@ -1,7 +1,7 @@
-const ReviewsModel = require("server/models/reviewsModel.js");
+const ReviewsModel = require("../models/reviewsModel");
 const express = require("express");
 const router = express.Router();
-const reviewsModel = require("../models/reviewsModel");
+//const reviewsModel = require("../models/reviewsModel");
 
 
 async function createReview(req, res, next) {
