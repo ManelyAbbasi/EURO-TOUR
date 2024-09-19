@@ -12,7 +12,7 @@ async function getAllUsers(req, res) {
     }
 }
 
-async function createUser(req, res, next) {
+async function createUser(req, res) {
     const users = new UsersModel(req.body);
     try {
     await users.save();
@@ -20,45 +20,50 @@ async function createUser(req, res, next) {
     return res.status(500).next(err);
     }
     res.status(201).send(users);
-    };
+};
 
 async function updateUser(req, res, next) {
     try {
-        const user = await UsersModel.findById(req.params.username);
+        const user = await UsersModel.findOne({ username: req.params.username }); // Use findOne to search by username
         if (user == null) {
-            return res.status(404).send({"message": "User not found"});
+            return res.status(404).send({ "message": "User not found" });
         }
-        user.password = req.body.password;
-        user.sexuality = req.body.sexuality;
-        user.gender = req.body.gender;
-        await user.save();
-        res.status(201).send(user);
-    } catch (err) { return res.status(500).next(err); }
-};
 
-async function patchUser(req, res, next){
-    try{
-        const user = await UsersModel.findById(req.params.username);
-        if (user == null){
-            return res.status(404).send({"message": "User not found"});
+        if (req.body.password) user.password = req.body.password;
+        if (req.body.sexuality) user.sexuality = req.body.sexuality;
+        if (req.body.gender) user.gender = req.body.gender;
+    
+        await user.save(); 
+        res.status(200).send(user); 
+    } catch (err) {
+        next(err);
+    }
+} 
+
+async function patchUser(req, res, next) {
+    try {
+        const user = await UsersModel.findOne({ username: req.params.username });
+        if (user == null) {
+            return res.status(404).send({ "message": "User not found" });
         }
         user.password = (req.body.password || user.password);
         await user.save();
-        res.status(201).res.send(user);
+        res.status(200).send(user); 
     } catch (err) {
-        return res.status(500).next(err);
+        next(err); 
     }
-};
+}
 
 async function deleteOneUser(req, res) {
     const username = req.params.username;
     try {
-        const result = await UsersModel.deleteOne({ username: username });
+        const user = await UsersModel.findOneAndDelete({ username: username });
         
-        if (result.deletedCount === 0) {
+        if (!user) {
             return res.status(404).send({ "message": "User not found" });
         }
-        res.status(200).send({ "message": "User deleted successfully" });
+
+        res.status(200).send({ "message": "User deleted successfully", user });
     } catch (err) {
         console.error(err);
         res.status(500).send({ "message": "Internal server error" });
