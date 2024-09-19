@@ -6,7 +6,7 @@ const router = express.Router();
 
     async function getAllCities(req, res) {
         try {
-            const cities = await CitiesModel.find(); // Fetch users from the database
+            const cities = await CitiesModel.find();
             res.status(201).send({ cities });
         } catch (error) {
             res.status(500).send({ error: 'An error occurred while fetching cities.' });
@@ -16,13 +16,13 @@ const router = express.Router();
 async function createCity(req, res, next) {
     const cities = new CitiesModel(req.body);
     try {
-    await cities.save();
+        await cities.save();
+        res.status(201).send(cities); 
     } catch (err) {
-    return res.status(500).next(err);
+        next(err); 
     }
-    res.status(201).send(cities);
-    };
-
+}
+    
 async function getOneCity(req, res) {
     const postcode = req.params.postcode;
     try {
@@ -41,7 +41,7 @@ async function getOneCity(req, res) {
 
 async function updateCity(req, res, next){
     try{
-        const city = await CitiesModel.findById(req.params.postcode);
+        const city = await CitiesModel.findOne({postcode: req.params.postcode});
         if (city == null){
             return res.status(404).send({"message": "City not found"});
         }
@@ -51,9 +51,9 @@ async function updateCity(req, res, next){
         city.facts = req.body.facts;
         city.tags = req.body.tags;
         city.placesToVisit = null;
-        city.reviews = nulls;
+        city.reviews = null;
         await city.save();
-        res.status(201).send(city);
+        res.status(200).send(city);
     } catch (err) {
         return res.status(500).next(err);
     }
@@ -61,28 +61,28 @@ async function updateCity(req, res, next){
 
 async function patchCity(req, res, next){
     try{
-        const city = await CitiesModel.findById(req.params.postcode);
+        const city = await CitiesModel.findOne({postcode: req.params.postcode});
         if (city == null){
             return res.status(404).send({"message": "City not found"});
         }
-        city.statistics = (req.body.statistics || city.statistics);
-        city.facts = (req.body.facts || city.facts);
-        city.tags = (req.body.tags || city.tags);
+        city.statistics = req.body.statistics || city.statistics;
+        city.facts = req.body.facts || city.facts;
+        city.tags = req.body.tags || city.tags;
         await city.save();
         res.status(201).send(city);
     } catch (err) {
-        return res.status(500).next(err);
+        res.status(500).next(err);
     }
 };
 
 async function deleteOneCity(req, res) {
     const postcode = req.params.postcode;
     try {
-        const result = await CitiesModel.deleteOne({ postcode: postcode });
-        if (result.deletedCount === 0) {
+        const city = await CitiesModel.findOneAndDelete({ postcode: postcode });
+        if (!city) {
             return res.status(404).send({ "message": "City not found" });
         }
-        res.status(200).send({ "message": "City deleted successfully" });
+        res.status(200).send({ "message": "City deleted successfully", city });
     } catch (err) {
         console.error(err);
         res.status(500).send({ "message": "Internal server error" });

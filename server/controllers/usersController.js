@@ -5,7 +5,7 @@ const router = express.Router();
 
 async function getAllUsers(req, res) {
     try {
-        const users = await UsersModel.find(); // Fetch users from the database
+        const users = await UsersModel.find();
         res.status(201).send({ users });
     } catch (error) {
         res.status(500).send({ error: 'An error occurred while fetching users.' });
@@ -24,21 +24,21 @@ async function createUser(req, res) {
 
 async function updateUser(req, res, next) {
     try {
-        const user = await UsersModel.findOne({ username: req.params.username }); // Use findOne to search by username
+        const user = await UsersModel.findOne({ username: req.params.username });
         if (user == null) {
             return res.status(404).send({ "message": "User not found" });
         }
 
-        if (req.body.password) user.password = req.body.password;
-        if (req.body.sexuality) user.sexuality = req.body.sexuality;
-        if (req.body.gender) user.gender = req.body.gender;
+        user.password = req.body.password || user.password;
+        user.sexuality = req.body.sexuality || user.sexuality;
+        user.gender = req.body.gender || user.gender;
     
-        await user.save(); 
-        res.status(200).send(user); 
+        await user.save();
+        res.status(200).send(user);
     } catch (err) {
-        next(err);
+        res.status(500).next(err);
     }
-} 
+}
 
 async function patchUser(req, res, next) {
     try {
@@ -50,7 +50,7 @@ async function patchUser(req, res, next) {
         await user.save();
         res.status(200).send(user); 
     } catch (err) {
-        next(err); 
+        res.status(500).next(err); 
     }
 }
 
@@ -74,6 +74,6 @@ module.exports = {
     createUser,
     getAllUsers,
     updateUser,
-    patchUser, 
+    patchUser,
     deleteOneUser,
 }
