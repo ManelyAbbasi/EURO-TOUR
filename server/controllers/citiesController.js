@@ -1,7 +1,7 @@
-const CitiesModel = require("./models/citiesModel");
+const CitiesModel = require("../models/citiesModel");
 const express = require("express");
 //const citiesModel = require("../models/citiesModel");
-const placesToVisitSchema = require("./models/placesToVisitModel");
+const placesToVisitSchema = require("../models/placesToVisitModel");
 const router = express.Router();
 
 async function getAllCities(req, res, next) {
