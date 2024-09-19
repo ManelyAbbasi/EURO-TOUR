@@ -19,7 +19,7 @@ async function createReview(req, res, next) {
             const reviews = await ReviewsModel.find(); // Fetch users from the database
             res.status(201).send({ reviews });
         } catch (error) {
-            res.status(500).send({ error: 'An error occurred while fetching users.' });
+            res.status(500).send({ error: 'An error occurred while fetching reviews.' });
         }
     }
 

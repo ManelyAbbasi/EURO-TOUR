@@ -9,7 +9,7 @@ const router = express.Router();
             const placesToVisit = await placesToVisit.find(); // Fetch users from the database
             res.status(201).send({ placesToVisit });
         } catch (error) {
-            res.status(500).send({ error: 'An error occurred while fetching users.' });
+            res.status(500).send({ error: 'An error occurred while fetching places.' });
         }
     }
 
@@ -30,12 +30,12 @@ async function getOnePlace(req, res) {
         const placesToVisit = await PlacesToVisitModel.findOne({ address }); 
 
         if (!placesToVisit) {
-            return res.status(404).send({ message: "City not found" });
+            return res.status(404).send({ message: "Place not found" });
         }
 
         res.status(200).send(placesToVisit);
     } catch (err) {
-        res.status(500).send({ error: 'An error occurred while fetching the city.' })
+        res.status(500).send({ error: 'An error occurred while fetching the place.' })
     }
 }
 
