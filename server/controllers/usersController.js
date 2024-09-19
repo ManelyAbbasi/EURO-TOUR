@@ -1,7 +1,7 @@
-const UsersModel = require("server/models/usersModel.js");
+const UsersModel = require("../models/usersModel");
 const express = require("express");
 const router = express.Router();
-const usersModel = require("../models/usersModel");
+//const usersModel = require("../models/usersModel");
 
 
 async function createUser(req, res, next) {
