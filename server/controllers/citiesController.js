@@ -4,16 +4,16 @@ const citiesModel = require("../models/citiesModel");
 const placesToVisitSchema = require("../models/placesToVisitModel");
 const router = express.Router();
 
-router.get("/citiesController", async function getAllCities(req, res, next) {
+async function getAllCities(req, res, next) {
     try {
     const cities = await CitiesModel.find();
     } catch (err) {
     return res.status(500).next(err);
     }
     res.status(201).send({"cities": cities});
-    });
+    };
 
-router.post("/citiesController", async function createCity(req, res, next) {
+async function createCity(req, res, next) {
     const cities = new CitiesModel(req.body);
     try {
     await cities.save();
@@ -21,9 +21,9 @@ router.post("/citiesController", async function createCity(req, res, next) {
     return res.status(500).next(err);
     }
     res.status(201).send(cities);
-    });
+    };
 
-router.get("/citiesController/:postcode", async function getOneCity(req, res, next){
+async function getOneCity(req, res, next){
     const postcode = req.params.postcode;
     try{
         const city = await CitiesModel.findById(postcode);
@@ -34,9 +34,9 @@ router.get("/citiesController/:postcode", async function getOneCity(req, res, ne
     } catch (err) {
         return res.status(500).next(err);
     }
-});
+};
 
-router.put("/citiesController/:postcode", async function updateCity(req, res, next){
+async function updateCity(req, res, next){
     try{
         const city = await CitiesModel.findById(req.params.postcode);
         if (city == null){
@@ -54,9 +54,9 @@ router.put("/citiesController/:postcode", async function updateCity(req, res, ne
     } catch (err) {
         return res.status(500).next(err);
     }
-});
+};
 
-router.patch("/citiesController/:postcode", async function patchCity(req, res, next){
+async function patchCity(req, res, next){
     try{
         const city = await CitiesModel.findById(req.params.postcode);
         if (city == null){
@@ -70,9 +70,9 @@ router.patch("/citiesController/:postcode", async function patchCity(req, res, n
     } catch (err) {
         return res.status(500).next(err);
     }
-});
+};
 
-router.delete("/citiesController/:postcode", async function deleteOneCity(req, res, next) {
+async function deleteOneCity(req, res, next) {
     const postcode = req.params.postcode;
     try{
         const city = await CitiesModel.findByIdAndDelete(postcode);
@@ -83,4 +83,13 @@ router.delete("/citiesController/:postcode", async function deleteOneCity(req, r
     } catch (err) {
         return res.status(500).next(err);
     } 
-});
+};
+
+module.exports = {
+    getAllCities,
+    createCity,
+    getOneCity,
+    updateCity,
+    patchCity,
+    deleteOneCity,
+}
