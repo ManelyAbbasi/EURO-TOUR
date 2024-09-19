@@ -1,19 +1,19 @@
-const CitiesModel = require("server\models\citiesModel.js");
+const CitiesModel = require("../models/citiesModel");
 const express = require("express");
-const citiesModel = require("../models/citiesModel");
+//const citiesModel = require("../models/citiesModel");
 const placesToVisitSchema = require("../models/placesToVisitModel");
 const router = express.Router();
 
-router.get("/citiesController", async function getAllCities(req, res, next) {
-    try {
-    const cities = await CitiesModel.find();
-    } catch (err) {
-    return res.status(500).next(err);
+    async function getAllCities(req, res) {
+        try {
+            const cities = await CitiesModel.find(); // Fetch users from the database
+            res.status(201).send({ cities });
+        } catch (error) {
+            res.status(500).send({ error: 'An error occurred while fetching users.' });
+        }
     }
-    res.status(201).send({"cities": cities});
-    });
 
-router.post("/citiesController", async function createCity(req, res, next) {
+async function createCity(req, res, next) {
     const cities = new CitiesModel(req.body);
     try {
     await cities.save();
@@ -21,22 +21,25 @@ router.post("/citiesController", async function createCity(req, res, next) {
     return res.status(500).next(err);
     }
     res.status(201).send(cities);
-    });
+    };
 
-router.get("/citiesController/:postcode", async function getOneCity(req, res, next){
+async function getOneCity(req, res) {
     const postcode = req.params.postcode;
-    try{
-        const city = await CitiesModel.findById(postcode);
-        if (city == null){
-            return res.status(404).send({"message": "City not found"});
-        }
-        res.status(201).send(city);
-    } catch (err) {
-        return res.status(500).next(err);
-    }
-});
+    try {
 
-router.put("/citiesController/:postcode", async function updateCity(req, res, next){
+        const city = await CitiesModel.findOne({ postcode }); 
+
+        if (!city) {
+            return res.status(404).send({ message: "City not found" });
+        }
+
+        res.status(200).send(city); 
+    } catch (err) {
+        res.status(500).send({ error: 'An error occurred while fetching the city.' }); 
+    }
+}
+
+async function updateCity(req, res, next){
     try{
         const city = await CitiesModel.findById(req.params.postcode);
         if (city == null){
@@ -54,9 +57,9 @@ router.put("/citiesController/:postcode", async function updateCity(req, res, ne
     } catch (err) {
         return res.status(500).next(err);
     }
-});
+};
 
-router.patch("/citiesController/:postcode", async function patchCity(req, res, next){
+async function patchCity(req, res, next){
     try{
         const city = await CitiesModel.findById(req.params.postcode);
         if (city == null){
@@ -70,9 +73,9 @@ router.patch("/citiesController/:postcode", async function patchCity(req, res, n
     } catch (err) {
         return res.status(500).next(err);
     }
-});
+};
 
-router.delete("/citiesController/:postcode", async function deleteOneCity(req, res, next) {
+async function deleteOneCity(req, res, next) {
     const postcode = req.params.postcode;
     try{
         const city = await CitiesModel.findByIdAndDelete(postcode);
@@ -83,4 +86,13 @@ router.delete("/citiesController/:postcode", async function deleteOneCity(req, r
     } catch (err) {
         return res.status(500).next(err);
     } 
-});
+};
+
+module.exports = {
+    getAllCities,
+    createCity,
+    getOneCity,
+    updateCity,
+    patchCity,
+    deleteOneCity,
+}

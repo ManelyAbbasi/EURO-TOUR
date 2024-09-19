@@ -1,19 +1,19 @@
-const PlacesToVisitModel = require("server\models\placesToVisitModel.js");
+const PlacesToVisitModel = require("../models/placesToVisitModel");
 const express = require("express");
-const placesToVisitModell = require("../models/placesToVisitModel");
+//const placesToVisitModell = require("../models/placesToVisitModel");
 const router = express.Router();
 
-
-router.get("/placesToVisitController", async function getAllPlaces(req, res, next) {
-    try {
-    const placesToVisit = await PlacesToVisitModel.find();
-    } catch (err) {
-    return res.status(500).next(err);
+    
+    async function getAllPlaces(req, res) {
+        try {
+            const placesToVisit = await placesToVisit.find(); // Fetch users from the database
+            res.status(201).send({ placesToVisit });
+        } catch (error) {
+            res.status(500).send({ error: 'An error occurred while fetching users.' });
+        }
     }
-    res.status(201).send({"placesToVisit": placesToVisit});
-    });
 
-router.post("/placesToVisitController", async function createPlace(req, res, next) {
+async function createPlace(req, res, next) {
     const placesToVisit = new PlacesToVisitModel(req.body);
     try {
     await placesToVisit.save();
@@ -21,25 +21,26 @@ router.post("/placesToVisitController", async function createPlace(req, res, nex
     return res.status(500).next(err);
     }
     res.status(201).send(placesToVisit);
-    });
+    };
 
-router.get("/placesToVisitController/:address", async function getOnePlace(req, res, next) {  
-    const address = req.params.address; 
+async function getOnePlace(req, res) {
+    const address = req.params.address;
     try {
-        const placesToVisit = await PlacesToVisitModel.findById(address);
 
-        if (placesToVisit == null) {
-            return res.status(404).send({ "message": "Place not found" });
+        const placesToVisit = await PlacesToVisitModel.findOne({ address }); 
+
+        if (!placesToVisit) {
+            return res.status(404).send({ message: "City not found" });
         }
 
-        res.status(201).send(placesToVisit);
+        res.status(200).send(placesToVisit);
     } catch (err) {
-        res.status(500).send({ "message": "Something went wrong" });
+        res.status(500).send({ error: 'An error occurred while fetching the city.' })
     }
-});
+}
 
 
-router.put("/placesToVisitController/:address", async function updatePlace(req, res, next) {
+async function updatePlace(req, res, next) {
     try {
         const placesToVisit = await PlacesToVisitModel.findById(req.params.address);
         if (placesToVisit == null) {
@@ -55,9 +56,9 @@ router.put("/placesToVisitController/:address", async function updatePlace(req, 
     } catch (err) {
         return res.status(500).next(err);
     }
-});
+};
 
-router.patch("/placesToVisitController/:address", async function patchPlace(req, res, next){
+async function patchPlace(req, res, next){
     try{
         const placesToVisit = await PlacesToVisitModel.findById(req.params.address);
 
@@ -71,9 +72,9 @@ router.patch("/placesToVisitController/:address", async function patchPlace(req,
     } catch (err) {
         return res.status(500).next(err);
     }
-});
+};
 
-router.delete("/placesToVisitController/:address", async function deleteOnePlace(req, res, next) {
+async function deleteOnePlace(req, res, next) {
     const address = req.params.address; 
     try{
         const placesToVisit = await PlacesToVisitModel.findByIdAndDelete(address);
@@ -85,6 +86,13 @@ router.delete("/placesToVisitController/:address", async function deleteOnePlace
     } catch (err) {
         return res.status(500).next(err);
     } 
-});
+};
 
-
+module.exports = {
+    getAllPlaces,
+    createPlace,
+    getOnePlace,
+    updatePlace,
+    patchPlace,
+    deleteOnePlace,
+}
