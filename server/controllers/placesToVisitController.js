@@ -3,15 +3,15 @@ const express = require("express");
 //const placesToVisitModell = require("../models/placesToVisitModel");
 const router = express.Router();
 
-
-async function getAllPlaces(req, res, next) {
-    try {
-    const placesToVisit = await PlacesToVisitModel.find();
-    } catch (err) {
-    return res.status(500).next(err);
+    
+    async function getAllPlaces(req, res) {
+        try {
+            const placesToVisit = await placesToVisit.find(); // Fetch users from the database
+            res.status(201).send({ placesToVisit });
+        } catch (error) {
+            res.status(500).send({ error: 'An error occurred while fetching users.' });
+        }
     }
-    res.status(201).send({"placesToVisit": placesToVisit});
-    };
 
 async function createPlace(req, res, next) {
     const placesToVisit = new PlacesToVisitModel(req.body);

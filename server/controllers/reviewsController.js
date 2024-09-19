@@ -14,14 +14,14 @@ async function createReview(req, res, next) {
     res.status(201).send(reviews);
     };
 
-async function getAllReviews(req, res, next) {
-    try {
-    const reviews = await ReviewsModel.find();
-    } catch (err) {
-    return res.status(500).next(err);
+    async function getAllReviews(req, res) {
+        try {
+            const reviews = await ReviewsModel.find(); // Fetch users from the database
+            res.status(201).send({ reviews });
+        } catch (error) {
+            res.status(500).send({ error: 'An error occurred while fetching users.' });
+        }
     }
-    res.status(201).send({"reviews": reviews});
-    };
 
 async function deleteOldReviews(req, res, next) {
     try {

@@ -3,6 +3,14 @@ const express = require("express");
 const router = express.Router();
 //const usersModel = require("../models/usersModel");
 
+async function getAllUsers(req, res) {
+    try {
+        const users = await UsersModel.find(); // Fetch users from the database
+        res.status(201).send({ users });
+    } catch (error) {
+        res.status(500).send({ error: 'An error occurred while fetching users.' });
+    }
+}
 
 async function createUser(req, res, next) {
     const users = new UsersModel(req.body);
@@ -12,15 +20,6 @@ async function createUser(req, res, next) {
     return res.status(500).next(err);
     }
     res.status(201).send(users);
-    };
-
-async function getAllUsers(req, res, next) {
-    try {
-    const users = await UsersModel.find();
-    } catch (err) {
-    return res.status(500).next(err);
-    }
-    res.status(201).send({"users": users});
     };
 
 async function updateUser(req, res, next) {

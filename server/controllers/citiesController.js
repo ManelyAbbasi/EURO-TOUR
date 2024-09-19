@@ -4,14 +4,14 @@ const express = require("express");
 const placesToVisitSchema = require("../models/placesToVisitModel");
 const router = express.Router();
 
-async function getAllCities(req, res, next) {
-    try {
-    const cities = await CitiesModel.find();
-    } catch (err) {
-    return res.status(500).next(err);
+    async function getAllCities(req, res) {
+        try {
+            const cities = await CitiesModel.find(); // Fetch users from the database
+            res.status(201).send({ cities });
+        } catch (error) {
+            res.status(500).send({ error: 'An error occurred while fetching users.' });
+        }
     }
-    res.status(201).send({"cities": cities});
-    };
 
 async function createCity(req, res, next) {
     const cities = new CitiesModel(req.body);
