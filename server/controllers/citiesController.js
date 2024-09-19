@@ -9,7 +9,7 @@ const router = express.Router();
             const cities = await CitiesModel.find(); // Fetch users from the database
             res.status(201).send({ cities });
         } catch (error) {
-            res.status(500).send({ error: 'An error occurred while fetching users.' });
+            res.status(500).send({ error: 'An error occurred while fetching cities.' });
         }
     }
 
