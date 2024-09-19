@@ -23,18 +23,21 @@ async function createCity(req, res, next) {
     res.status(201).send(cities);
     };
 
-async function getOneCity(req, res, next){
+async function getOneCity(req, res) {
     const postcode = req.params.postcode;
-    try{
-        const city = await CitiesModel.findById(postcode);
-        if (city == null){
-            return res.status(404).send({"message": "City not found"});
+    try {
+
+        const city = await CitiesModel.findOne({ postcode }); 
+
+        if (!city) {
+            return res.status(404).send({ message: "City not found" });
         }
-        res.status(201).send(city);
+
+        res.status(200).send(city); 
     } catch (err) {
-        return res.status(500).next(err);
+        res.status(500).send({ error: 'An error occurred while fetching the city.' }); 
     }
-};
+}
 
 async function updateCity(req, res, next){
     try{

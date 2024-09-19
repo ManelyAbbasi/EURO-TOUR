@@ -23,20 +23,21 @@ async function createPlace(req, res, next) {
     res.status(201).send(placesToVisit);
     };
 
-async function getOnePlace(req, res, next) {  
-    const address = req.params.address; 
+async function getOnePlace(req, res) {
+    const address = req.params.address;
     try {
-        const placesToVisit = await PlacesToVisitModel.findById(address);
 
-        if (placesToVisit == null) {
-            return res.status(404).send({ "message": "Place not found" });
+        const placesToVisit = await PlacesToVisitModel.findOne({ address }); 
+
+        if (!placesToVisit) {
+            return res.status(404).send({ message: "City not found" });
         }
 
-        res.status(201).send(placesToVisit);
+        res.status(200).send(placesToVisit);
     } catch (err) {
-        res.status(500).send({ "message": "Something went wrong" });
+        res.status(500).send({ error: 'An error occurred while fetching the city.' })
     }
-};
+}
 
 
 async function updatePlace(req, res, next) {
