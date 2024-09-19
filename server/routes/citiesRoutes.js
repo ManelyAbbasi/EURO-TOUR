@@ -4,14 +4,14 @@ var citiesControllers = require('../controllers/citiesController');
 
 router.get('/', citiesControllers.getAllCities);
 
-router.get('/', citiesControllers.createCity);
+router.post('/', citiesControllers.createCity);
 
 router.get('/:postcode', citiesControllers.getOneCity);
 
-router.get('/:postcode', citiesControllers.updateCity);
+router.put('/:postcode', citiesControllers.updateCity);
 
-router.get('/:postcode', citiesControllers.patchCity);
+router.patch('/:postcode', citiesControllers.patchCity);
 
-router.get('/:postcode', citiesControllers.deleteOneCity);
+router.delete('/:postcode', citiesControllers.deleteOneCity);
 
 module.exports = router;
