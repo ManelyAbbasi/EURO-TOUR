@@ -4,7 +4,7 @@ const router = express.Router();
 const usersModel = require("../models/usersModel");
 
 
-router.post("/usersController", async function createUser(req, res, next) {
+async function createUser(req, res, next) {
     const users = new UsersModel(req.body);
     try {
     await users.save();
@@ -12,18 +12,18 @@ router.post("/usersController", async function createUser(req, res, next) {
     return res.status(500).next(err);
     }
     res.status(201).send(users);
-    });
+    };
 
-router.get("/usersController", async function getAllUsers(req, res, next) {
+async function getAllUsers(req, res, next) {
     try {
     const users = await UsersModel.find();
     } catch (err) {
     return res.status(500).next(err);
     }
     res.status(201).send({"users": users});
-    });
+    };
 
-router.put("/usersController/:username", async function updateUser(req, res, next) {
+async function updateUser(req, res, next) {
     try {
         const user = await UsersModel.findById(req.params.username);
         if (user == null) {
@@ -35,9 +35,9 @@ router.put("/usersController/:username", async function updateUser(req, res, nex
         await user.save();
         res.status(201).send(user);
     } catch (err) { return res.status(500).next(err); }
-});
+};
 
-router.patch("/usersController/:username", async function patchUser(req, res, next){
+async function patchUser(req, res, next){
     try{
         const user = await UsersModel.findById(req.params.username);
         if (user == null){
@@ -49,9 +49,9 @@ router.patch("/usersController/:username", async function patchUser(req, res, ne
     } catch (err) {
         return res.status(500).next(err);
     }
-});
+};
 
-router.delete("/usersController/:username", async function deleteOneUser(req, res, next) {
+async function deleteOneUser(req, res, next) {
     try {
         const user = await UsersModel.findById(req.params.username);
    if (user == null) {
@@ -59,4 +59,12 @@ router.delete("/usersController/:username", async function deleteOneUser(req, re
    }
    res.status(201).send(user);
     } catch (err) { return res.status(500).next(err); }
-});
+};
+
+module.exports = {
+    createUser,
+    getAllUsers,
+    updateUser,
+    patchUser, 
+    deleteOneUser,
+}
