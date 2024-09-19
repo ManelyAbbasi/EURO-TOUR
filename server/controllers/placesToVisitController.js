@@ -4,16 +4,16 @@ const placesToVisitModell = require("../models/placesToVisitModel");
 const router = express.Router();
 
 
-router.get("/placesToVisitController", async function getAllPlaces(req, res, next) {
+async function getAllPlaces(req, res, next) {
     try {
     const placesToVisit = await PlacesToVisitModel.find();
     } catch (err) {
     return res.status(500).next(err);
     }
     res.status(201).send({"placesToVisit": placesToVisit});
-    });
+    };
 
-router.post("/placesToVisitController", async function createPlace(req, res, next) {
+async function createPlace(req, res, next) {
     const placesToVisit = new PlacesToVisitModel(req.body);
     try {
     await placesToVisit.save();
@@ -21,9 +21,9 @@ router.post("/placesToVisitController", async function createPlace(req, res, nex
     return res.status(500).next(err);
     }
     res.status(201).send(placesToVisit);
-    });
+    };
 
-router.get("/placesToVisitController/:address", async function getOnePlace(req, res, next) {  
+async function getOnePlace(req, res, next) {  
     const address = req.params.address; 
     try {
         const placesToVisit = await PlacesToVisitModel.findById(address);
@@ -36,10 +36,10 @@ router.get("/placesToVisitController/:address", async function getOnePlace(req, 
     } catch (err) {
         res.status(500).send({ "message": "Something went wrong" });
     }
-});
+};
 
 
-router.put("/placesToVisitController/:address", async function updatePlace(req, res, next) {
+async function updatePlace(req, res, next) {
     try {
         const placesToVisit = await PlacesToVisitModel.findById(req.params.address);
         if (placesToVisit == null) {
@@ -55,9 +55,9 @@ router.put("/placesToVisitController/:address", async function updatePlace(req, 
     } catch (err) {
         return res.status(500).next(err);
     }
-});
+};
 
-router.patch("/placesToVisitController/:address", async function patchPlace(req, res, next){
+async function patchPlace(req, res, next){
     try{
         const placesToVisit = await PlacesToVisitModel.findById(req.params.address);
 
@@ -71,9 +71,9 @@ router.patch("/placesToVisitController/:address", async function patchPlace(req,
     } catch (err) {
         return res.status(500).next(err);
     }
-});
+};
 
-router.delete("/placesToVisitController/:address", async function deleteOnePlace(req, res, next) {
+async function deleteOnePlace(req, res, next) {
     const address = req.params.address; 
     try{
         const placesToVisit = await PlacesToVisitModel.findByIdAndDelete(address);
@@ -85,6 +85,13 @@ router.delete("/placesToVisitController/:address", async function deleteOnePlace
     } catch (err) {
         return res.status(500).next(err);
     } 
-});
+};
 
-
+module.exports = {
+    getAllPlaces,
+    createPlace,
+    getOnePlace,
+    updatePlace,
+    patchPlace,
+    deleteOnePlace,
+}

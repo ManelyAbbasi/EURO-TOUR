@@ -14,7 +14,7 @@ async function createReview(req, res, next) {
     res.status(201).send(reviews);
     };
 
-async function getAllreviews(req, res, next) {
+async function getAllReviews(req, res, next) {
     try {
     const reviews = await ReviewsModel.find();
     } catch (err) {
