@@ -46,6 +46,7 @@ async function updatePlace(req, res, next) {
         if (placesToVisit == null) {
             return res.status(404).send({"message": "Place not found"});
         }
+        placesToVisit.placeName = req.body.placeName;
         placesToVisit.address = req.body.address;
         placesToVisit.rating = req.body.rating;
         placesToVisit.content = req.body.content;
