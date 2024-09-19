@@ -23,23 +23,24 @@ async function createReview(req, res, next) {
         }
     }
 
-async function deleteOldReviews(req, res, next) {
+async function deleteOldReviews(req, res) {
     try {
-        // calculate the date 5 years ago
+        // Calculate the date 5 years ago
         const fiveYearsAgo = new Date();
         fiveYearsAgo.setFullYear(fiveYearsAgo.getFullYear() - 5);
 
-        // delete reviews older than 5 years
-        const result = await ReviewsModel.deleteMany({ date: { $lt: fiveYearsAgo } }); 
+        // Delete reviews older than 5 years
+        const result = await ReviewsModel.deleteMany({ date: { $lt: fiveYearsAgo } });
 
         if (result.deletedCount === 0) {
             return res.status(404).send({ "message": "There are no reviews older than 5 years to delete" });
         }
-        res.status(201).send(result);
+        res.status(200).send({ "message": `${result.deletedCount} reviews deleted successfully` });
     } catch (err) {
+        console.error(err);
         res.status(500).send({ "message": "An error occurred while deleting reviews" });
     }
-};
+}
 
 module.exports = {
     createReview, 

@@ -74,19 +74,20 @@ async function patchPlace(req, res, next){
     }
 };
 
-async function deleteOnePlace(req, res, next) {
-    const address = req.params.address; 
-    try{
-        const placesToVisit = await PlacesToVisitModel.findByIdAndDelete(address);
+async function deleteOnePlace(req, res) {
+    const address = req.params.address;
+    try {
+        const result = await PlacesToVisitModel.deleteOne({ address: address });
         
-        if (placesToVisit == null){
-            return res.status(404).send({"message": "Place not found"});
+        if (result.deletedCount === 0) {
+            return res.status(404).send({ "message": "Place not found" });
         }
-        res.status(201).send(placesToVisit);
+        res.status(200).send({ "message": "Place deleted successfully" });
     } catch (err) {
-        return res.status(500).next(err);
-    } 
-};
+        console.error(err);
+        res.status(500).send({ "message": "Internal server error" });
+    }
+}
 
 module.exports = {
     getAllPlaces,

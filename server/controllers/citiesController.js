@@ -75,18 +75,19 @@ async function patchCity(req, res, next){
     }
 };
 
-async function deleteOneCity(req, res, next) {
+async function deleteOneCity(req, res) {
     const postcode = req.params.postcode;
-    try{
-        const city = await CitiesModel.findByIdAndDelete(postcode);
-        if (city==null){
-            return res.status(404).send({"message": "City not found"});
+    try {
+        const result = await CitiesModel.deleteOne({ postcode: postcode });
+        if (result.deletedCount === 0) {
+            return res.status(404).send({ "message": "City not found" });
         }
-        res.status(201).send(city);
+        res.status(200).send({ "message": "City deleted successfully" });
     } catch (err) {
-        return res.status(500).next(err);
-    } 
-};
+        console.error(err);
+        res.status(500).send({ "message": "Internal server error" });
+    }
+}
 
 module.exports = {
     getAllCities,

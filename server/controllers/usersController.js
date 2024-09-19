@@ -50,15 +50,20 @@ async function patchUser(req, res, next){
     }
 };
 
-async function deleteOneUser(req, res, next) {
+async function deleteOneUser(req, res) {
+    const username = req.params.username;
     try {
-        const user = await UsersModel.findById(req.params.username);
-   if (user == null) {
-    return res.status(404).send({"message": "User not found"});
-   }
-   res.status(201).send(user);
-    } catch (err) { return res.status(500).next(err); }
-};
+        const result = await UsersModel.deleteOne({ username: username });
+        
+        if (result.deletedCount === 0) {
+            return res.status(404).send({ "message": "User not found" });
+        }
+        res.status(200).send({ "message": "User deleted successfully" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({ "message": "Internal server error" });
+    }
+}
 
 module.exports = {
     createUser,
