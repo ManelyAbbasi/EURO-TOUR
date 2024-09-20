@@ -62,17 +62,26 @@ async function getAllCities(req, res) {
     }
 }
 
-async function createCity(req, res, next) {
+async function createCity(req, res) {
     const validationErrors = validateCityData(req.body);
     if (validationErrors.length>0){
         res.status(400).send({errors: validationErrors});
     }
 
-    const cities = new CitiesModel(req.body);
-
+    const { postcode } = req.body;
     try {
-        await cities.save();
-        res.status(201).send(cities); 
+
+        const existingCity = await CitiesModel.findOne({ postcode });
+
+        if (existingCity) { // to check if a city already exists with that postcode
+            return res.status(400).send({ message: 'City with this postcode already exists' });
+        }
+
+        const newCity = new CitiesModel(req.body);
+
+
+        await newCity.save();
+        res.status(201).send(newCity); 
     } catch (err) {
         res.status(500).json({ error: 'An internal server error occurred while creating the city.' }); 
     }
@@ -80,6 +89,11 @@ async function createCity(req, res, next) {
     
 async function getOneCity(req, res) {
     const postcode = req.params.postcode;
+
+    if (!postcode || typeof postcode !== 'string') {
+        return res.status(400).send({ message: 'Invalid postcode format.' });
+    }
+
     try {
 
         const city = await CitiesModel.findOne({ postcode }); 
@@ -90,6 +104,7 @@ async function getOneCity(req, res) {
 
         res.status(200).send(city); 
     } catch (err) {
+
         res.status(500).send({ error: 'An error occurred while fetching the city.' }); 
     }
 }
@@ -100,15 +115,31 @@ async function updateCity(req, res, next){
         if (city == null){
             return res.status(404).send({"message": "City not found"});
         }
-        city.cityName = req.body.cityName;
-        city.country = req.body.country;
-        city.statistics = req.body.statistics;
-        city.facts = req.body.facts;
-        city.tags = req.body.tags;
-        city.placesToVisit = null;
-        city.reviews = null;
+        if (req.body.cityName !== undefined) {  // checks if there are values to be updated then proceeds with update
+            city.cityName = req.body.cityName;
+        }
+        if (req.body.country !== undefined) {
+            city.country = req.body.country;
+        }
+        if (req.body.statistics !== undefined) {
+            city.statistics = req.body.statistics;
+        }
+        if (req.body.facts !== undefined) {
+            city.facts = req.body.facts;
+        }
+        if (Array.isArray(req.body.tags)) {
+            city.tags = req.body.tags;
+        }
+        if (Array.isArray(req.body.placesToVisit)) {    // to ensure attribute values aren't changed to null if empty
+            city.placesToVisit = req.body.placesToVisit;
+        }
+        if (Array.isArray(req.body.reviews)) {
+            city.reviews = req.body.reviews;
+        }
+
         await city.save();
         res.status(200).send(city);
+
     } catch (err) {
         return res.status(500).next(err);
     }
@@ -120,11 +151,14 @@ async function patchCity(req, res, next){
         if (city == null){
             return res.status(404).send({"message": "City not found"});
         }
-        city.statistics = req.body.statistics || city.statistics;
-        city.facts = req.body.facts || city.facts;
-        city.tags = req.body.tags || city.tags;
+        city.statistics = req.body.statistics !== undefined ? req.body.statistics : city.statistics;
+        city.facts = req.body.facts !== undefined ? req.body.facts : city.facts;
+        if (Array.isArray(req.body.tags)) {
+            city.tags = req.body.tags;
+        }
+
         await city.save();
-        res.status(201).send(city);
+        res.status(200).send(city);
     } catch (err) {
         res.status(500).next(err);
     }
