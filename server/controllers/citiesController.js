@@ -61,33 +61,27 @@ async function getAllCities(req, res) {
         res.status(500).send({ error: 'An error occurred while fetching cities.' });
     }
 }
-
-async function createCity(req, res) {
-    const validationErrors = validateCityData(req.body);
-    if (validationErrors.length>0){
-        res.status(400).send({errors: validationErrors});
-    }
-
-    const { postcode } = req.body;
+ 
+async function createCity(req, res, next) {
     try {
-
-        const existingCity = await CitiesModel.findOne({ postcode });
-
-        if (existingCity) { // to check if a city already exists with that postcode
+        // Check if a city with the same postcode already exists
+        const existingCity = await CitiesModel.findOne({ postcode: req.body.postcode });
+        
+        if (existingCity) {
             return res.status(400).send({ message: 'City with this postcode already exists' });
         }
 
-        const newCity = new CitiesModel(req.body);
-
-
-        await newCity.save();
-        res.status(201).send(newCity); 
+        // Create a new city if it doesn't exist
+        const cities = new CitiesModel(req.body);
+        await cities.save();
+        res.status(201).send(cities); 
     } catch (err) {
-        res.status(500).json({ error: 'An internal server error occurred while creating the city.' }); 
+        next(err); // Pass the error to the next middleware
     }
 }
+
     
-async function getOneCity(req, res) {
+async function getOneCity(req, res) { 
     const postcode = req.params.postcode;
 
     if (!postcode || typeof postcode !== 'string') {
