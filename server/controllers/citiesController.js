@@ -73,18 +73,12 @@ async function updateCity(req, res, next){
         }
         if (req.body.statistics !== undefined) {
             city.statistics = req.body.statistics;
-        }
+        } 
         if (req.body.facts !== undefined) {
             city.facts = req.body.facts;
         }
         if (Array.isArray(req.body.tags)) {
             city.tags = req.body.tags;
-        }
-        if (Array.isArray(req.body.placesToVisit)) {    // to ensure attribute values aren't changed to null if empty
-            city.placesToVisit = req.body.placesToVisit;
-        }
-        if (Array.isArray(req.body.reviews)) {
-            city.reviews = req.body.reviews;
         }
 
         await city.save();
