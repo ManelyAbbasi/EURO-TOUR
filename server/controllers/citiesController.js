@@ -66,18 +66,33 @@ async function updateCity(req, res, next){
             return res.status(404).send({"message": "City not found"});
         }
         if (req.body.cityName !== undefined) {  // checks if there are values to be updated then proceeds with update
+            if (typeof req.body.cityName !== 'string' || req.body.cityName.trim() === "") {
+                return res.status(400).send({ "message": "Invalid cityName: must be a non-empty string" });
+            }
             city.cityName = req.body.cityName;
         }
         if (req.body.country !== undefined) {
+            if (typeof req.body.country !== 'string' || req.body.country.trim() === "") {
+                return res.status(400).send({ "message": "Invalid country: must be a non-empty string" });
+            }
             city.country = req.body.country;
         }
         if (req.body.statistics !== undefined) {
+            if (typeof req.body.statistics !== 'string' || req.body.statistics.trim() === "") {
+                return res.status(400).send({ "message": "Invalid statistics: must be a non-empty string" });
+            }
             city.statistics = req.body.statistics;
         } 
         if (req.body.facts !== undefined) {
+            if (typeof req.body.facts !== 'string' || req.body.facts.trim() === "") {
+                return res.status(400).send({ "message": "Invalid facts: must be a non-empty string" });
+            }
             city.facts = req.body.facts;
         }
         if (Array.isArray(req.body.tags)) {
+            if (req.body.tags.length === 0) {
+                return res.status(400).send({ "message": "Tags cannot be an empty array" });
+            }
             city.tags = req.body.tags;
         }
 
