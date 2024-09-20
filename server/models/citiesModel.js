@@ -15,4 +15,4 @@ var citiesSchema = new Schema({
   });
   
   // Export the city model
-  module.exports = mongoose.model('cities', citiesSchema);
+  module.exports = mongoose.model('cities', citiesSchema); 

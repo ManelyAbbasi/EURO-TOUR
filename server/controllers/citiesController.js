@@ -101,18 +101,16 @@ async function patchCity(req, res, next){
         if (city == null){
             return res.status(404).send({"message": "City not found"});
         }
-        city.statistics = req.body.statistics !== undefined ? req.body.statistics : city.statistics;
-        city.facts = req.body.facts !== undefined ? req.body.facts : city.facts;
-        if (Array.isArray(req.body.tags)) {
-            city.tags = req.body.tags;
-        }
-
+        city.statistics = req.body.statistics || city.statistics;
+        city.facts = req.body.facts || city.facts;
+        city.tags = req.body.tags || city.tags;
         await city.save();
-        res.status(200).send(city);
+        res.status(201).send(city);
     } catch (err) {
         res.status(500).next(err);
     }
 };
+ 
 
 async function deleteOneCity(req, res) {
     const postcode = req.params.postcode;
