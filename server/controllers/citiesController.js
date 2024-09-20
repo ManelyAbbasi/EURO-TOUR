@@ -4,6 +4,52 @@ const express = require("express");
 const placesToVisitSchema = require("../models/placesToVisitModel");
 const router = express.Router();
 
+function validateCityData(data){
+    const errors = [];
+    
+    if (!postcode || typeof data.postcode !== 'string'){
+        errors.push("Postcode is required and must be a string.");
+    }
+
+    if (!data.cityName || typeof data.cityName !== 'string') {
+        errors.push('City name is required and must be a string.');
+    }
+
+    if (!data.country || typeof data.country !== 'string') {
+        errors.push('Country is required and must be a string.');
+    }
+
+    if (!data.statistics || typeof data.statistics !== 'string') {
+        errors.push('Statistics are required and must be a string.');
+    }
+
+    if (!data.facts || typeof data.facts !== 'string') {
+        errors.push('Facts are required and must be a string.');
+    }
+
+    if (!Array.isArray(data.tags)) {
+        errors.push('Tags are required and must be an array.');
+    } else {
+        // Optional: Validate that each tag is a string
+        data.tags.forEach((tag, index) => {
+            if (typeof tag !== 'string') {
+                errors.push(`Tag at index ${index} must be a string.`);
+            }
+        });
+    }
+
+    if (data.placesToVisit && !Array.isArray(data.placesToVisit)) {
+        errors.push('Places to visit must be an array.');
+    }
+
+    if (data.reviews && !Array.isArray(data.reviews)) {
+        errors.push('Reviews must be an array.');
+    }
+
+    return errors;
+}
+
+
 async function getAllCities(req, res) {
     try {
         const cities = await CitiesModel.find(); // Fetch users from the database
@@ -17,12 +63,18 @@ async function getAllCities(req, res) {
 }
 
 async function createCity(req, res, next) {
+    const validationErrors = validateCityData(req.body);
+    if (validationErrors.length>0){
+        res.status(400).send({errors: validationErrors});
+    }
+
     const cities = new CitiesModel(req.body);
+
     try {
         await cities.save();
         res.status(201).send(cities); 
     } catch (err) {
-        next(err); 
+        res.status(500).json({ error: 'An internal server error occurred while creating the city.' }); 
     }
 }
     
