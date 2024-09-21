@@ -23,7 +23,7 @@ async function createReview(req, res) {
         });
         console.log(review); // Add this line
         
-        // Save the review to the database
+        // Save the review to the database  
         await review.save();
         
         // Send the created review as the response
@@ -44,7 +44,7 @@ async function createReview(req, res) {
         }
     }
 
-async function deleteOldReviews(req, res) {
+async function deleteOldReviews(req, res) { 
     try {
         // Calculate the date 5 years ago
         const fiveYearsAgo = new Date();

@@ -9,6 +9,7 @@ var placesToVisitSchema = new Schema({
     rating: { type: Number, min: 0.0, max: 5.0 },
     content: { type: String, required: true },
     tags: { type: Array, required: true },
+    city: { type: Schema.Types.ObjectId, ref: 'cities', required: true }, 
     reviews: [{ type: Schema.Types.ObjectId, ref: 'reviews' }] // Use ObjectId to reference the reviews
 });
 
