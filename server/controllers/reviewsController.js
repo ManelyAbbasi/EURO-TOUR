@@ -1,18 +1,30 @@
 const ReviewsModel = require("../models/reviewsModel");
 const express = require("express");
 const router = express.Router();
+const UsersModel = require("../models/usersModel");
 //const reviewsModel = require("../models/reviewsModel");
 
 
-async function createReview(req, res, next) {
-    const reviews = new ReviewsModel(req.body);
-    try {
-    await reviews.save();
-    } catch (err) {
-    return res.status(500).next(err);
-    }
-    res.status(201).send(reviews);
-    };
+    async function createReview(req, res) {
+        try {
+            // Find the user by their username from the request body
+            const user = await UsersModel.findOne({ username: req.body.user });
+            if (!user) {
+                return res.status(404).send({ error: "User not found" });
+            }
+
+            // Create the review
+            const review = new ReviewsModel({
+                ...req.body,
+                user: user._id, // Set user field to the found user's _id
+            });
+
+            await review.save();
+            res.status(201).send(review);
+        } catch (err) {
+            res.status(500).send({ message: "An error occurred while creating the review" });
+        }
+    }      
 
     async function getAllReviews(req, res) {
         try {
