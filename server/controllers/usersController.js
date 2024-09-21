@@ -52,7 +52,7 @@ async function updateUser(req, res, next) {
                 return res.status(400).send({ message: 'Invalid gender value' });
             }
             user.gender = req.body.gender;
-        }
+        } 
         if (req.body.isLGBTQIA !== undefined) {
             if (typeof req.body.isLGBTQIA !== 'boolean') {
                 return res.status(400).send({ "message": "Invalid isLGBTQIA: must be a boolean value" });
