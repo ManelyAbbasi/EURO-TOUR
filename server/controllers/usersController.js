@@ -18,7 +18,7 @@ async function getAllUsers(req, res) {
 
 async function createUser(req, res, next) {
     try {
-        const existingUser = await UsersModel.findOne({ postcode: req.body.postcode });
+        const existingUser = await UsersModel.findOne({ username: req.body.username });
 
         if (existingUser) {
             return res.status(400).send({ message: 'User with this username already exists' });
