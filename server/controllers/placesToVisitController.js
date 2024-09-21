@@ -9,7 +9,10 @@ const CitiesSchema = require("../models/citiesModel");
 async function getAllPlaces(req, res) {
     try {
         const placesToVisit = await placesToVisitModel.find();
-        res.status(201).send({ placesToVisit });
+        if (!placesToVisit || placesToVisit.length === 0) {
+            return res.status(404).send({ error: 'No places found.' });
+        }
+        res.status(200).send({ placesToVisit });
     } catch (error) {
         res.status(500).send({ error: 'An error occurred while fetching places.' });
     }
@@ -23,6 +26,22 @@ async function createPlace(req, res) {
     
         if (!city) {
             return res.status(404).send({ error: "City not found" });
+        }
+
+        if (typeof req.body.placeName !== 'string' || req.body.placeName.trim() === '') {
+            return res.status(400).send({ "message": "Invalid placeName: must be a non-empty string" });
+        }
+        if (typeof req.body.address !== 'string' || req.body.address.trim() === '') {
+            return res.status(400).send({ "message": "Invalid address: must be a non-empty string" });
+        }
+        if (req.body.rating < 0.0 || req.body.rating > 5.0) {
+            return res.status(400).send({ message: "Invalid rating: must be between 0.0 and 5.0" });
+        }
+        if (typeof req.body.content !== 'string' || req.body.content.trim() === '') {
+            return res.status(400).send({ "message": "Invalid content: must be a non-empty string" });
+        }
+        if (req.body.tags.length === 0) {
+            return res.status(400).send({ "message": "Tags cannot be an empty array" });
         }
 
         // Create the city
@@ -69,16 +88,40 @@ async function updatePlace(req, res, next) {
             return res.status(404).send({ "message": "Place not found" });
         }
 
-        placesToVisit.placeName = req.body.placeName;
-        placesToVisit.address = req.body.address;
-        placesToVisit.rating = req.body.rating;
-        placesToVisit.content = req.body.content;
-        placesToVisit.tags = req.body.tags;
-        placesToVisit.reviews = null;
+        if (req.body.placeName !== undefined) {
+            if (typeof req.body.placeName !== 'string' || req.body.placeName.trim() === "") {
+                return res.status(400).send({ "message": "Invalid placeName: must be a non-empty string" });
+            }
+            placesToVisit.placeName = req.body.placeName;
+        }
+        if (req.body.address !== undefined) {
+            if (typeof req.body.address !== 'string' || req.body.address.trim() === "") {
+                return res.status(400).send({ "message": "Invalid address: must be a non-empty string" });
+            }
+            placesToVisit.address = req.body.address;
+        }
+        if (req.body.rating !== undefined) {
+            if (req.body.rating < 0.0 || req.body.rating > 5.0) {
+                return res.status(400).send({ message: "Invalid rating: must be between 0.0 and 5.0" });
+            }
+            placesToVisit.rating = req.body.rating;
+        }
+        if (req.body.content !== undefined) {
+            if (typeof req.body.content !== 'string' || req.body.content.trim() === '') {
+                return res.status(400).send({ "message": "Invalid content: must be a non-empty string" });
+            }
+            placesToVisit.content = req.body.content;
+        }
+        if (Array.isArray(req.body.tags)) {
+            if (req.body.tags.length === 0) {
+                return res.status(400).send({ "message": "Tags cannot be an empty array" });
+            }
+            placesToVisit.tags = req.body.tags;
+        }
 
         await placesToVisit.save();
 
-        return res.status(201).send(placesToVisit);
+        return res.status(200).send(placesToVisit);
     } catch (err) {
         return next(err); 
     }
@@ -93,7 +136,7 @@ async function patchPlace(req, res){
 
         placesToVisit.content = (req.body.content || placesToVisit.content);
         await placesToVisit.save();
-        res.status(201).send(placesToVisit);
+        res.status(200).send(placesToVisit);
     } catch (err) {
         return res.status(500).next(err);
     }
