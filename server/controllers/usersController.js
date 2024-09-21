@@ -40,15 +40,10 @@ async function updateUser(req, res, next) {
             return res.status(404).send({ "message": "User not found" });
         }
         if (req.body.password !== undefined) {  
-            user.password = req.body.password
-        }
-      
-        if (req.body.sexuality !== undefined) {
-            const validSexualities = ['heterosexual', 'homosexual', 'bisexual', 'asexual', 'other'];
-            if (!validSexualities.includes(req.body.sexuality)) {
-                return res.status(400).send({ message: 'Invalid sexuality value' });
+            if (typeof req.body.password !== 'string' || req.body.password.trim() === "") {
+                return res.status(400).send({ "message": "Invalid password: must be a non-empty string" });
             }
-            user.sexuality = req.body.sexuality;
+            user.password = req.body.password
         }
 
         if (req.body.gender !== undefined) {
@@ -57,6 +52,12 @@ async function updateUser(req, res, next) {
                 return res.status(400).send({ message: 'Invalid gender value' });
             }
             user.gender = req.body.gender;
+        }
+        if (req.body.isLGBTQIA !== undefined) {
+            if (typeof req.body.isLGBTQIA !== 'boolean') {
+                return res.status(400).send({ "message": "Invalid isLGBTQIA: must be a boolean value" });
+            }
+            user.isLGBTQIA = req.body.isLGBTQIA;
         }
 
         await user.save();
