@@ -2,35 +2,38 @@ const ReviewsModel = require("../models/reviewsModel");
 const express = require("express");
 const router = express.Router();
 const UsersModel = require("../models/usersModel");
-//const reviewsModel = require("../models/reviewsModel");
 
 
-    async function createReview(req, res) {
-        try {
-            // Find the user by their username from the request body
-            const user = await UsersModel.findOne({ username: req.body.user });
-            console.log(user); // Add this line
-
-            if (!user) {
-                return res.status(404).send({ error: "User not found" });
-            }
-
-            // Create the review
-            const review = new ReviewsModel({
-                rating: req.body.rating,
-                content: req.body.content,
-                date: date.now(),
-                user: user._id, // Set user field to the found user's _id
-            });
-            console.log(review); // Add this line
-
-
-            await review.save();
-            res.status(201).send(review);
-        } catch (err) {
-            res.status(500).send({ message: "An error occurred while creating the review" });
+async function createReview(req, res) {
+    try {
+        // Find the user by their username from the request body
+        const user = await UsersModel.findOne({ username: req.body.user });
+        console.log(user); // Add this line
+        
+        if (!user) {
+            return res.status(404).send({ error: "User not found" });
         }
-    }      
+        
+        // Create the review
+        const review = new ReviewsModel({
+            rating: req.body.rating,
+            content: req.body.content,
+            date: Date.now(),
+            user: user._id, // Set user field to the found user's _id
+        });
+        console.log(review); // Add this line
+        
+        // Save the review to the database
+        await review.save();
+        
+        // Send the created review as the response
+        res.status(201).send(review);
+    } catch (err) {
+        // Log the error for better debugging
+        console.error("Error creating review:", err);
+        res.status(500).send({ message: "An error occurred while creating the review", error: err.message });
+    }
+}        
 
     async function getAllReviews(req, res) {
         try {
