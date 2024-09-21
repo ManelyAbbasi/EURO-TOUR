@@ -41,7 +41,7 @@ app.get('/api', function(req, res) {
 
 app.use('/api/cities', citiesRoutes);
 app.use('/api/users', usersRoutes);
-app.use('/api/routes', reviewsRoutes);
+app.use('/api/reviews', reviewsRoutes);
 app.use('/api/places', placesRoutes);
 
 // Catch all non-error handler for api (i.e., 404 Not Found)

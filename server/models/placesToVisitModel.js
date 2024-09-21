@@ -1,16 +1,17 @@
 var mongoose = require('mongoose');
-const reviewsSchema = require('./reviewsModel');
 var Schema = mongoose.Schema;
+const ReviewsModel = require('./reviewsModel'); // Assuming you're importing the model, not just the schema
 
+// Define the schema for placesToVisit
 var placesToVisitSchema = new Schema({
-    address: { type: String, required: true, unique: true },
-    rating: { type: Number, min: 0.0, max: 5.0},
+    placeName: { type: String, required: true },
+    address: { type: String, required: true, unique: true, sparse: true },
+    rating: { type: Number, min: 0.0, max: 5.0 },
     content: { type: String, required: true },
     tags: { type: Array, required: true },
-    reviews: [reviewsSchema]
-  });
-  
-  // Export the placesToVisit model
-  module.exports =  placesToVisitSchema;
+    city: { type: Schema.Types.ObjectId, ref: 'cities', required: true }, 
+    reviews: [{ type: Schema.Types.ObjectId, ref: 'reviews' }] // Use ObjectId to reference the reviews
+});
 
-  
+// Export the model based on the schema
+module.exports = mongoose.model('placesToVisit', placesToVisitSchema);

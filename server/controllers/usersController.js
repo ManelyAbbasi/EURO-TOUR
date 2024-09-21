@@ -6,64 +6,103 @@ const router = express.Router();
 async function getAllUsers(req, res) {
     try {
         const users = await UsersModel.find(); // Fetch users from the database
-        res.status(201).send({ users });
+        if (!users || users.length === 0) {
+            return res.status(404).send({ error: 'No users found.' });
+        }
+        res.status(200).send({ users });
     } catch (error) {
         res.status(500).send({ error: 'An error occurred while fetching users.' });
     }
 }
 
+
 async function createUser(req, res, next) {
-    const users = new UsersModel(req.body);
     try {
-    await users.save();
+        const existingUser = await UsersModel.findOne({ username: req.body.username });
+
+        if (existingUser) {
+            return res.status(400).send({ message: 'User with this username already exists' });
+        }
+
+        const users = new UsersModel(req.body);
+        await users.save();
+        res.status(201).send(users);
     } catch (err) {
     return res.status(500).next(err);
     }
-    res.status(201).send(users);
-    };
+ };
+
 
 async function updateUser(req, res, next) {
     try {
-        const user = await UsersModel.findById(req.params.username);
+        const user = await UsersModel.findOne({ username: req.params.username });
         if (user == null) {
-            return res.status(404).send({"message": "User not found"});
+            return res.status(404).send({ "message": "User not found" });
         }
-        user.password = req.body.password;
-        user.sexuality = req.body.sexuality;
-        user.gender = req.body.gender;
-        await user.save();
-        res.status(201).send(user);
-    } catch (err) { return res.status(500).next(err); }
-};
+        if (req.body.password !== undefined) {  
+            if (typeof req.body.password !== 'string' || req.body.password.trim() === "") {
+                return res.status(400).send({ "message": "Invalid password: must be a non-empty string" });
+            }
+            user.password = req.body.password
+        }
 
-async function patchUser(req, res, next){
-    try{
-        const user = await UsersModel.findById(req.params.username);
-        if (user == null){
-            return res.status(404).send({"message": "User not found"});
+        if (req.body.gender !== undefined) {
+            const validGenders = ['male', 'female', 'non-binary', 'other'];
+            if (!validGenders.includes(req.body.gender)) {
+                return res.status(400).send({ message: 'Invalid gender value' });
+            }
+            user.gender = req.body.gender;
+        } 
+        if (req.body.isLGBTQIA !== undefined) {
+            if (typeof req.body.isLGBTQIA !== 'boolean') {
+                return res.status(400).send({ "message": "Invalid isLGBTQIA: must be a boolean value" });
+            }
+            user.isLGBTQIA = req.body.isLGBTQIA;
         }
-        user.password = (req.body.password || user.password);
+
         await user.save();
-        res.status(201).res.send(user);
+        res.status(200).send(user);
+
     } catch (err) {
-        return res.status(500).next(err);
+        res.status(500).next(err);
     }
-};
+}
 
-async function deleteOneUser(req, res, next) {
+async function patchUser(req, res, next) {
     try {
-        const user = await UsersModel.findById(req.params.username);
-   if (user == null) {
-    return res.status(404).send({"message": "User not found"});
-   }
-   res.status(201).send(user);
-    } catch (err) { return res.status(500).next(err); }
-};
+        const user = await UsersModel.findOne({ username: req.params.username });
+        if (user == null) {
+            return res.status(404).send({ "message": "User not found" });
+        }
+
+        user.password = req.body.password || user.password;
+        await user.save();
+        res.status(200).send(user); 
+    } catch (err) {
+        res.status(500).next(err); 
+    }
+}
+
+async function deleteOneUser(req, res) {
+    const username = req.params.username;
+    try {
+        const user = await UsersModel.findOneAndDelete({ username: username });
+        
+        if (!user) {
+            return res.status(404).send({ "message": "User not found" });
+        }
+
+        res.status(200).send({ "message": "User deleted successfully", user });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({ "message": "Internal server error" });
+    }
+}
 
 module.exports = {
     createUser,
     getAllUsers,
     updateUser,
-    patchUser, 
+    patchUser,
     deleteOneUser,
 }

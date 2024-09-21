@@ -4,27 +4,65 @@ const express = require("express");
 const placesToVisitSchema = require("../models/placesToVisitModel");
 const router = express.Router();
 
-    async function getAllCities(req, res) {
-        try {
-            const cities = await CitiesModel.find(); // Fetch users from the database
-            res.status(201).send({ cities });
-        } catch (error) {
-            res.status(500).send({ error: 'An error occurred while fetching users.' });
-        }
-    }
 
-async function createCity(req, res, next) {
-    const cities = new CitiesModel(req.body);
+async function getAllCities(req, res) {
     try {
-    await cities.save();
-    } catch (err) {
-    return res.status(500).next(err);
+        const cities = await CitiesModel.find(); // Fetch users from the database
+        if (!cities || cities.length === 0) {   // When there's no cities to be found
+            return res.status(404).send({ message: 'No cities found.' });
+        }
+        res.status(200).send({ cities });
+    } catch (error) {
+        res.status(500).send({ error: 'An error occurred while fetching cities.' });
     }
-    res.status(201).send(cities);
-    };
+}
+ 
+async function createCity(req, res, next) {
+    
+    try {
+        
+        // Check if a city with the same postcode already exists
+        const existingCity = await CitiesModel.findOne({ postcode: req.body.postcode });
+        
+        if (existingCity) {
+            return res.status(400).send({ message: 'City with this postcode already exists' });
+        }
+        if (typeof req.body.postcode !== 'string' || req.body.postcode.trim() === "") {
+            return res.status(400).send({ "message": "Invalid postcode: must be a non-empty string" });
+        }
+        if (typeof req.body.cityName !== 'string' || req.body.cityName.trim() === "") {
+            return res.status(400).send({ "message": "Invalid cityName: must be a non-empty string" });
+        }
+        if (typeof req.body.country !== 'string' || req.body.country.trim() === "") {
+            return res.status(400).send({ "message": "Invalid country: must be a non-empty string" });
+        }
+        if (typeof req.body.statistics !== 'string' || req.body.statistics.trim() === "") {
+            return res.status(400).send({ "message": "Invalid statistics: must be a non-empty string" });
+        }
+        if (typeof req.body.facts !== 'string' || req.body.facts.trim() === "") {
+            return res.status(400).send({ "message": "Invalid facts: must be a non-empty string" });
+        }
+        if (req.body.tags.length === 0) {
+            return res.status(400).send({ "message": "Tags cannot be an empty array" });
+        }
 
-async function getOneCity(req, res) {
+        // Create a new city if it doesn't exist
+        const cities = new CitiesModel(req.body);
+        await cities.save();
+        res.status(201).send(cities); 
+    } catch (err) {
+        next(err); // Pass the error to the next middleware
+    }
+}
+
+    
+async function getOneCity(req, res) { 
     const postcode = req.params.postcode;
+
+    if (!postcode || typeof postcode !== 'string') {
+        return res.status(400).send({ message: 'Invalid postcode format.' });
+    }
+
     try {
 
         const city = await CitiesModel.findOne({ postcode }); 
@@ -35,25 +73,51 @@ async function getOneCity(req, res) {
 
         res.status(200).send(city); 
     } catch (err) {
+
         res.status(500).send({ error: 'An error occurred while fetching the city.' }); 
     }
 }
 
 async function updateCity(req, res, next){
     try{
-        const city = await CitiesModel.findById(req.params.postcode);
+        const city = await CitiesModel.findOne({postcode: req.params.postcode});
         if (city == null){
             return res.status(404).send({"message": "City not found"});
         }
-        city.cityName = req.body.cityName;
-        city.country = req.body.country;
-        city.statistics = req.body.statistics;
-        city.facts = req.body.facts;
-        city.tags = req.body.tags;
-        city.placesToVisit = null;
-        city.reviews = nulls;
+        if (req.body.cityName !== undefined) {  // checks if there are values to be updated then proceeds with update
+            if (typeof req.body.cityName !== 'string' || req.body.cityName.trim() === "") {
+                return res.status(400).send({ "message": "Invalid cityName: must be a non-empty string" });
+            }
+            city.cityName = req.body.cityName;
+        }
+        if (req.body.country !== undefined) {
+            if (typeof req.body.country !== 'string' || req.body.country.trim() === "") {
+                return res.status(400).send({ "message": "Invalid country: must be a non-empty string" });
+            }
+            city.country = req.body.country;
+        }
+        if (req.body.statistics !== undefined) {
+            if (typeof req.body.statistics !== 'string' || req.body.statistics.trim() === "") {
+                return res.status(400).send({ "message": "Invalid statistics: must be a non-empty string" });
+            }
+            city.statistics = req.body.statistics;
+        } 
+        if (req.body.facts !== undefined) {
+            if (typeof req.body.facts !== 'string' || req.body.facts.trim() === "") {
+                return res.status(400).send({ "message": "Invalid facts: must be a non-empty string" });
+            }
+            city.facts = req.body.facts;
+        }
+        if (Array.isArray(req.body.tags)) {
+            if (req.body.tags.length === 0) {
+                return res.status(400).send({ "message": "Tags cannot be an empty array" });
+            }
+            city.tags = req.body.tags;
+        }
+
         await city.save();
-        res.status(201).send(city);
+        res.status(200).send(city);
+
     } catch (err) {
         return res.status(500).next(err);
     }
@@ -61,32 +125,34 @@ async function updateCity(req, res, next){
 
 async function patchCity(req, res, next){
     try{
-        const city = await CitiesModel.findById(req.params.postcode);
+        const city = await CitiesModel.findOne({postcode: req.params.postcode});
         if (city == null){
             return res.status(404).send({"message": "City not found"});
         }
-        city.statistics = (req.body.statistics || city.statistics);
-        city.facts = (req.body.facts || city.facts);
-        city.tags = (req.body.tags || city.tags);
+        city.statistics = req.body.statistics || city.statistics;
+        city.facts = req.body.facts || city.facts;
+        city.tags = req.body.tags || city.tags;
         await city.save();
         res.status(201).send(city);
     } catch (err) {
-        return res.status(500).next(err);
+        res.status(500).next(err);
     }
 };
+ 
 
-async function deleteOneCity(req, res, next) {
+async function deleteOneCity(req, res) {
     const postcode = req.params.postcode;
-    try{
-        const city = await CitiesModel.findByIdAndDelete(postcode);
-        if (city==null){
-            return res.status(404).send({"message": "City not found"});
+    try {
+        const city = await CitiesModel.findOneAndDelete({ postcode: postcode });
+        if (!city) {
+            return res.status(404).send({ "message": "City not found" });
         }
-        res.status(201).send(city);
+        res.status(200).send({ "message": "City deleted successfully", city });
     } catch (err) {
-        return res.status(500).next(err);
-    } 
-};
+        console.error(err);
+        res.status(500).send({ "message": "Internal server error" });
+    }
+}
 
 module.exports = {
     getAllCities,

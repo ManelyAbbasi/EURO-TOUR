@@ -1,45 +1,67 @@
 const ReviewsModel = require("../models/reviewsModel");
 const express = require("express");
 const router = express.Router();
-//const reviewsModel = require("../models/reviewsModel");
+const UsersModel = require("../models/usersModel");
 
 
-async function createReview(req, res, next) {
-    const reviews = new ReviewsModel(req.body);
+async function createReview(req, res) {
     try {
-    await reviews.save();
+        // Find the user by their username from the request body
+        const user = await UsersModel.findOne({ username: req.body.user });
+        console.log(user); // Add this line
+        
+        if (!user) {
+            return res.status(404).send({ error: "User not found" });
+        }
+        
+        // Create the review
+        const review = new ReviewsModel({
+            rating: req.body.rating,
+            content: req.body.content,
+            date: Date.now(),
+            user: user._id, // Set user field to the found user's _id
+        });
+        console.log(review); // Add this line
+        
+        // Save the review to the database  
+        await review.save();
+        
+        // Send the created review as the response
+        res.status(201).send(review);
     } catch (err) {
-    return res.status(500).next(err);
+        // Log the error for better debugging
+        console.error("Error creating review:", err);
+        res.status(500).send({ message: "An error occurred while creating the review", error: err.message });
     }
-    res.status(201).send(reviews);
-    };
+}        
 
     async function getAllReviews(req, res) {
         try {
             const reviews = await ReviewsModel.find(); // Fetch users from the database
             res.status(201).send({ reviews });
         } catch (error) {
-            res.status(500).send({ error: 'An error occurred while fetching users.' });
+            res.status(500).send({ error: 'An error occurred while fetching reviews.' });
         }
     }
 
-async function deleteOldReviews(req, res, next) {
+async function deleteOldReviews(req, res) { 
     try {
-        // calculate the date 5 years ago
+        // Calculate the date 5 years ago
         const fiveYearsAgo = new Date();
         fiveYearsAgo.setFullYear(fiveYearsAgo.getFullYear() - 5);
 
-        // delete reviews older than 5 years
-        const result = await ReviewsModel.deleteMany({ date: { $lt: fiveYearsAgo } }); 
+        // Delete reviews older than 5 years
+        const result = await ReviewsModel.deleteMany({ date: { $lt: fiveYearsAgo } });
 
         if (result.deletedCount === 0) {
             return res.status(404).send({ "message": "There are no reviews older than 5 years to delete" });
         }
-        res.status(201).send(result);
+        res.status(200).send({ "message": `${result.deletedCount} reviews deleted successfully` });
     } catch (err) {
+        console.error(err);
         res.status(500).send({ "message": "An error occurred while deleting reviews" });
     }
-};
+}
 
 module.exports = {
     createReview, 
