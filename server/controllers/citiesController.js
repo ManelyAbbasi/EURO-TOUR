@@ -27,6 +27,25 @@ async function createCity(req, res, next) {
         if (existingCity) {
             return res.status(400).send({ message: 'City with this postcode already exists' });
         }
+        if (req.body.postcode.trim() === "") {
+            return res.status(400).send({ "message": "Invalid postcode: postcode can not be empty" });
+        }
+        if (typeof req.body.cityName !== 'string' || req.body.cityName.trim() === "") {
+            return res.status(400).send({ "message": "Invalid cityName: must be a non-empty string" });
+        }
+        if (typeof req.body.country !== 'string' || req.body.country.trim() === "") {
+            return res.status(400).send({ "message": "Invalid country: must be a non-empty string" });
+        }
+        if (typeof req.body.statistics !== 'string' || req.body.statistics.trim() === "") {
+            return res.status(400).send({ "message": "Invalid statistics: must be a non-empty string" });
+        }
+        if (typeof req.body.facts !== 'string' || req.body.facts.trim() === "") {
+            return res.status(400).send({ "message": "Invalid facts: must be a non-empty string" });
+        }
+        if (req.body.tags.length === 0) {
+            return res.status(400).send({ "message": "Tags cannot be an empty array" });
+        }
+
         // Create a new city if it doesn't exist
         const cities = new CitiesModel(req.body);
         await cities.save();
