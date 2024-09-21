@@ -9,15 +9,21 @@ const UsersModel = require("../models/usersModel");
         try {
             // Find the user by their username from the request body
             const user = await UsersModel.findOne({ username: req.body.user });
+            console.log(user); // Add this line
+
             if (!user) {
                 return res.status(404).send({ error: "User not found" });
             }
 
             // Create the review
             const review = new ReviewsModel({
-                ...req.body,
+                rating: req.body.rating,
+                content: req.body.content,
+                date: date.now(),
                 user: user._id, // Set user field to the found user's _id
             });
+            console.log(review); // Add this line
+
 
             await review.save();
             res.status(201).send(review);

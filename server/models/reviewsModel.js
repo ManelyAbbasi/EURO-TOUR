@@ -7,7 +7,6 @@ var Schema = mongoose.Schema;
 
 // new schema is being defined 
 var reviewsSchema = new Schema({
-   id: { type: String, required: true, unique: true },
    rating: { type: Number, required: true, min: 0.0, max: 5.0},
    content: { type: String, required: true, maxLength: [200, 'Max character length exceeded'] },  
    date: { type: Date, default: Date.now },
