@@ -27,8 +27,8 @@ async function createCity(req, res, next) {
         if (existingCity) {
             return res.status(400).send({ message: 'City with this postcode already exists' });
         }
-        if (req.body.postcode.trim() === "") {
-            return res.status(400).send({ "message": "Invalid postcode: postcode can not be empty" });
+        if (typeof req.body.postcode !== 'string' || req.body.postcode.trim() === "") {
+            return res.status(400).send({ "message": "Invalid postcode: must be a non-empty string" });
         }
         if (typeof req.body.cityName !== 'string' || req.body.cityName.trim() === "") {
             return res.status(400).send({ "message": "Invalid cityName: must be a non-empty string" });
