@@ -18,7 +18,7 @@ async function getAllPlaces(req, res) {
 async function createPlace(req, res) {
     try {
         // Find the city by their postcode from the request body
-        const city = await CitiesSchema.findOne({ postcode: req.body.city });
+        const city = await CitiesSchema.findById(req.params.cityId);
         console.log(city); // Add this line   
     
         if (!city) {

@@ -6,7 +6,6 @@ const PlacesToVisitModel = require('./placesToVisitModel'); // Ensure this expor
 const ReviewsModel = require('./reviewsModel'); // Ensure this exports the model
 
 var citiesSchema = new Schema({
-    postcode: { type: String, required: true, unique: true },
     cityName: { type: String, required: true },
     country: { type: String, required: true },
     statistics: { type: String, required: true },
