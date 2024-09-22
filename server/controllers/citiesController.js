@@ -4,6 +4,7 @@ const express = require("express");
 const placesToVisitSchema = require("../models/placesToVisitModel");
 const router = express.Router();
 const ReviewsModel = require("../models/reviewsModel");
+const UsersModel = require("../models/usersModel");
 
 
 async function getAllCities(req, res) {
@@ -227,8 +228,13 @@ async function addReviewToCity(req, res) {
             return res.status(404).send({ message: "City not found" });
         }
 
+        // Check if reviews field exists and is an array, otherwise initialize it
+        if (!city.reviews) {
+            city.reviews = [];
+        }
+
         // Find the user by their ID from the request body
-        const user = await UsersModel.findById(req.body.userId); // Use userId instead of username
+        const user = await UsersModel.findOne({ username: req.body.user });
         if (!user) {
             return res.status(404).send({ message: "User not found" });
         }
