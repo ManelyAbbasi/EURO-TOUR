@@ -12,5 +12,6 @@ router.patch('/:username', usersControllers.patchUser);
 
 router.delete('/:username', usersControllers.deleteOneUser);
 
+router.delete('/user/:username', usersControllers.adminDeleteUser);
 
 module.exports = router;
