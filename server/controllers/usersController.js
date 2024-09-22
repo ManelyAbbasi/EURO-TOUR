@@ -2,6 +2,7 @@ const UsersModel = require("../models/usersModel");
 const express = require("express");
 const router = express.Router();
 //const usersModel = require("../models/usersModel");
+const ReviewsModel = require('../models/reviewsModel');
 
 async function getAllUsers(req, res) {
     try {
@@ -15,6 +16,28 @@ async function getAllUsers(req, res) {
     }
 }
 
+async function getUserReviews(req, res) {
+    const username = req.params.username;
+
+    try {
+        const user = await UsersModel.findOne({ username });
+        
+        if (!user) {
+            return res.status(404).send({ message: 'User not found' });
+        }
+
+        const reviews = await ReviewsModel.find({ user: user._id });
+
+        if (reviews.length === 0) {
+            return res.status(404).send({ message: 'No reviews found for this user' });
+        }
+
+        res.status(200).send({ reviews });
+    } catch (error) {
+        console.error('Error fetching user reviews:', error);
+        res.status(500).send({ message: 'Internal server error', error: error.message });
+    }
+}
 
 async function createUser(req, res, next) {
     try {
@@ -161,4 +184,5 @@ module.exports = {
     patchUser,
     deleteOneUser,
     adminDeletesOneUser,
+    getUserReviews,
 }

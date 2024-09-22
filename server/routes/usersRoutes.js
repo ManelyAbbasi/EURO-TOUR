@@ -14,4 +14,6 @@ router.delete('/:username', usersControllers.deleteOneUser);
 
 router.delete('/user/:username', usersControllers.adminDeletesOneUser);
 
+router.get('/:username/reviews', usersControllers.getUserReviews);
+
 module.exports = router;
