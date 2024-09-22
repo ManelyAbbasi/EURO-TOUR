@@ -1,7 +1,6 @@
 const placesToVisitModel = require("../models/placesToVisitModel");
 const PlacesToVisitModel = require("../models/placesToVisitModel");
 const express = require("express");
-//const placesToVisitModell = require("../models/placesToVisitModel");
 const router = express.Router();
 const CitiesSchema = require("../models/citiesModel");
 const ReviewsModel = require("../models/reviewsModel");
