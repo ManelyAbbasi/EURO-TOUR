@@ -19,52 +19,6 @@ async function getAllPlaces(req, res) {
     }
 }
 
-async function createPlace(req, res) {
-    try {
-        // Find the city by their postcode from the request body
-        const city = await CitiesSchema.findById(req.params.cityId);
-        console.log(city); // Add this line   
-    
-        if (!city) {
-            return res.status(404).send({ error: "City not found" });
-        }
-
-        if (typeof req.body.placeName !== 'string' || req.body.placeName.trim() === '') {
-            return res.status(400).send({ "message": "Invalid placeName: must be a non-empty string" });
-        }
-        if (typeof req.body.address !== 'string' || req.body.address.trim() === '') {
-            return res.status(400).send({ "message": "Invalid address: must be a non-empty string" });
-        }
-        if (req.body.rating < 0.0 || req.body.rating > 5.0) {
-            return res.status(400).send({ message: "Invalid rating: must be between 0.0 and 5.0" });
-        }
-        if (typeof req.body.content !== 'string' || req.body.content.trim() === '') {
-            return res.status(400).send({ "message": "Invalid content: must be a non-empty string" });
-        }
-        if (req.body.tags.length === 0) {
-            return res.status(400).send({ "message": "Tags cannot be an empty array" });
-        }
-
-        // Create the city
-        const placesToVisit = new placesToVisitModel({
-            placeName: req.body.placeName,
-            address: req.body.address,
-            rating: req.body.rating,
-            content: req.body.content,
-            tags: req.body.tags,
-            reviews: req.body.reviews,
-            city: city._id, // Set user field to the found user's _id
-        });
-        console.log(placesToVisit); // Add this line
-
-        await placesToVisit.save();
-        res.status(201).send(placesToVisit);
-    } catch (err) {
-        console.error("Error creating the place to visit:", err);
-        res.status(500).send({ message: "An error occurred while creating the place", error: err.message });
-    }
-};
-
 async function getOnePlace(req, res) {
     const address = req.params.address;
     try {
@@ -220,7 +174,6 @@ async function addReviewToPlace(req, res) {
 
 module.exports = {
     getAllPlaces,
-    createPlace,
     getOnePlace,
     updatePlace,
     patchPlace,

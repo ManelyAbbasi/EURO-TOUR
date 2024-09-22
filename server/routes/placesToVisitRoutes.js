@@ -4,7 +4,7 @@ var placesToVisitControllers = require('../controllers/placesToVisitController')
 
 router.get('/', placesToVisitControllers.getAllPlaces);
 
-router.post('/', placesToVisitControllers.createPlace);
+//router.post('/', placesToVisitControllers.createPlace);
 
 router.get('/:address', placesToVisitControllers.getOnePlace);
 
