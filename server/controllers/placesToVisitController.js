@@ -4,6 +4,8 @@ const express = require("express");
 //const placesToVisitModell = require("../models/placesToVisitModel");
 const router = express.Router();
 const CitiesSchema = require("../models/citiesModel");
+const ReviewsModel = require("../models/reviewsModel");
+const UsersModel = require("../models/usersModel");
 
     
 async function getAllPlaces(req, res) {
@@ -131,6 +133,36 @@ async function deleteOnePlace(req, res) {
     }
 }
 
+async function addReviewToPlace(req, res) {
+    const address = req.params.address;
+
+    try {
+        const place = await PlacesToVisitModel.findOne({ address });
+        const user = await UsersModel.findOne({ username: req.body.user });
+        console.log(user); // Add this line
+        if (!place) {
+            return res.status(404).send({ message: "Place not found" });
+        }
+
+        const review = new ReviewsModel({
+            rating: req.body.rating,
+            content: req.body.content,
+            date: Date.now(),
+            user: user._id, // Set user field to the found user's _id
+        });
+        console.log(review); // Add this line
+
+        await review.save();
+
+        res.status(201).send({ message: "Review added successfully", review });
+    } catch (err) {
+        console.error("Error adding review to place:", err);
+        res.status(500).send({ message: "An error occurred while adding the review.", error: err.message });
+    }
+}
+
+
+
 module.exports = {
     getAllPlaces,
     createPlace,
@@ -139,4 +171,5 @@ module.exports = {
     patchPlace,
     deleteOnePlace,
     getReviewsForPlace,
+    addReviewToPlace,
 }
