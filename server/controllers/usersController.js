@@ -99,25 +99,21 @@ async function deleteOneUser(req, res) {
     }
 }
 
-// Route to delete a user by an admin
-async function adminDeleteUser(req, res) {
-    const usernameToDelete = req.params.username; // The username of the user to delete
-    const requesterUsername = req.body.username;   // The username of the user making the request
+async function adminDeletesOneUser(req, res) {
+    const usernameToDelete = req.params.username; 
+    const adminUsername = req.body.username; 
 
     try {
         // Check if the requester user exists
-        const requesterUser = await UsersModel.findOne({ username: requesterUsername });
+        const adminUser = await UsersModel.findOne({ username: adminUsername });
 
-        if (!requesterUser) {
+        if (!adminUser) {
             return res.status(404).send({ "message": "Requester user not found" });
         }
-
-        // Check if the requester user is an admin
-        if (!requesterUser.isAdmin) {
+        if (!adminUser.isAdmin) {
             return res.status(403).send({ "message": "Access denied. Admins only." });
         }
 
-        // If the admin check passes, proceed to delete the user
         const userToDelete = await UsersModel.findOneAndDelete({ username: usernameToDelete });
 
         if (!userToDelete) {
@@ -138,5 +134,5 @@ module.exports = {
     updateUser,
     patchUser,
     deleteOneUser,
-    adminDeleteUser,
+    adminDeletesOneUser,
 }
