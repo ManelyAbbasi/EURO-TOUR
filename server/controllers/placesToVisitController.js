@@ -186,6 +186,17 @@ async function addReviewToPlace(req, res) {
             return res.status(404).send({ message: "Place not found" });
         }
 
+        if (typeof req.body.rating !== 'number') {
+            return res.status(400).send({ "message": "Invalid rating: must be a non-empty number" });
+        }
+        if (req.body.rating < 0.0 || req.body.rating > 5.0) {
+            return res.status(400).send({ message: "Invalid rating: must be between 0.0 and 5.0" });
+        }
+        if (typeof req.body.content !== 'string' || req.body.content.trim() === '') {
+            return res.status(400).send({ "message": "Invalid content: must be a non-empty string" });
+        }
+
+
         const review = new ReviewsModel({
             rating: req.body.rating,
             content: req.body.content,
