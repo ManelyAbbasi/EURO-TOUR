@@ -1,9 +1,10 @@
 const placesToVisitModel = require("../models/placesToVisitModel");
 const PlacesToVisitModel = require("../models/placesToVisitModel");
 const express = require("express");
-//const placesToVisitModell = require("../models/placesToVisitModel");
 const router = express.Router();
 const CitiesSchema = require("../models/citiesModel");
+const ReviewsModel = require("../models/reviewsModel");
+const UsersModel = require("../models/usersModel");
 
     
 async function getAllPlaces(req, res) {
@@ -80,6 +81,23 @@ async function getOnePlace(req, res) {
     }
 }
 
+//Method may not work, but have mo create reviews based on place to test
+async function getReviewsForPlace(req, res) {
+    const address = req.params.address;
+    
+    try {
+        const place = await PlacesToVisitModel.findOne({ address }).populate('reviews');
+
+        if (!place) {
+            return res.status(404).send({ message: "Place not found" });
+        }
+
+        res.status(200).send(place.reviews);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({ error: 'An error occurred while fetching the reviews.' });
+    }
+}
 
 async function updatePlace(req, res, next) {
     try {
@@ -157,6 +175,47 @@ async function deleteOnePlace(req, res) {
     }
 }
 
+async function addReviewToPlace(req, res) {
+    const address = req.params.address;
+
+    try {
+        const place = await PlacesToVisitModel.findOne({ address });
+        const user = await UsersModel.findOne({ username: req.body.user });
+        console.log(user); // Add this line
+        if (!place) {
+            return res.status(404).send({ message: "Place not found" });
+        }
+
+        if (typeof req.body.rating !== 'number') {
+            return res.status(400).send({ "message": "Invalid rating: must be a non-empty number" });
+        }
+        if (req.body.rating < 0.0 || req.body.rating > 5.0) {
+            return res.status(400).send({ message: "Invalid rating: must be between 0.0 and 5.0" });
+        }
+        if (typeof req.body.content !== 'string' || req.body.content.trim() === '') {
+            return res.status(400).send({ "message": "Invalid content: must be a non-empty string" });
+        }
+
+
+        const review = new ReviewsModel({
+            rating: req.body.rating,
+            content: req.body.content,
+            date: Date.now(),
+            user: user._id, // Set user field to the found user's _id
+        });
+        console.log(review); // Add this line
+
+        await review.save();
+
+        res.status(201).send({ message: "Review added successfully", review });
+    } catch (err) {
+        console.error("Error adding review to place:", err);
+        res.status(500).send({ message: "An error occurred while adding the review.", error: err.message });
+    }
+}
+
+
+
 module.exports = {
     getAllPlaces,
     createPlace,
@@ -164,4 +223,6 @@ module.exports = {
     updatePlace,
     patchPlace,
     deleteOnePlace,
+    getReviewsForPlace,
+    addReviewToPlace,
 }
