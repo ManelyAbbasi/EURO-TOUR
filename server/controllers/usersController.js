@@ -20,15 +20,41 @@ async function createUser(req, res, next) {
     try {
         const existingUser = await UsersModel.findOne({ username: req.body.username });
 
-        if (existingUser) {
+        if (existingUser) { // check if existing user exists
             return res.status(400).send({ message: 'User with this username already exists' });
+        }
+
+        if (typeof req.body.username !== 'string' || req.body.username.trim() === '') {
+            return res.status(400).send({ "message": "Invalid username: must be a non-empty string" });
+        }
+        if (typeof req.body.password !== 'string' || req.body.password.trim() === '') {
+            return res.status(400).send({ "message": "Invalid password: must be a non-empty string" });
+        }
+        if (!req.body.birthDate || isNaN(Date.parse(req.body.birthDate))) {
+            return res.status(400).send({ "message": "Invalid birth date: must be a valid date format" });
+        }
+        const birthDate = new Date(req.body.birthDate);
+        const minDate = new Date('1920-01-01');
+        const maxDate = new Date('2012-01-01');
+        if (birthDate < minDate || birthDate > maxDate) {
+            return res.status(400).send({ message: "Invalid birthDate: must be between 1920-01-01 and 2012-01-01" });
+        }
+        if (typeof req.body.isLGBTQIA !== 'boolean') {
+            return res.status(400).send({ "message": "Invalid isLGBTQIA: must be a boolean value" });
+        }
+        const validGenders = ['male', 'female', 'non-binary', 'other'];
+        if (!validGenders.includes(req.body.gender)) {
+            return res.status(400).send({ message: 'Invalid gender value' });
+        }
+        if (typeof req.body.isAdmin !== 'boolean') {
+            return res.status(400).send({ "message": "Invalid isAdmin: must be a boolean value" });
         }
 
         const users = new UsersModel(req.body);
         await users.save();
         res.status(201).send(users);
     } catch (err) {
-    return res.status(500).next(err);
+        next(err); // Pass the error to the next middleware
     }
  };
 

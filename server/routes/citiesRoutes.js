@@ -6,12 +6,12 @@ router.get('/', citiesControllers.getAllCities);
 
 router.post('/', citiesControllers.createCity);
 
-router.get('/:postcode', citiesControllers.getOneCity);
+router.get('/:id', citiesControllers.getOneCity);
 
-router.put('/:postcode', citiesControllers.updateCity);
+router.put('/:id', citiesControllers.updateCity);
 
-router.patch('/:postcode', citiesControllers.patchCity);
+router.patch('/:id', citiesControllers.patchCity);
 
-router.delete('/:postcode', citiesControllers.deleteOneCity);
+router.delete('/:id', citiesControllers.deleteOneCity);
 
 module.exports = router;

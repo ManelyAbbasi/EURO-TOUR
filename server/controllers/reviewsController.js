@@ -13,7 +13,17 @@ async function createReview(req, res) {
         if (!user) {
             return res.status(404).send({ error: "User not found" });
         }
-        
+
+        if (typeof req.body.rating !== 'number') {
+            return res.status(400).send({ "message": "Invalid rating: must be a non-empty number" });
+        }
+        if (req.body.rating < 0.0 || req.body.rating > 5.0) {
+            return res.status(400).send({ message: "Invalid rating: must be between 0.0 and 5.0" });
+        }
+        if (typeof req.body.content !== 'string' || req.body.content.trim() === '') {
+            return res.status(400).send({ "message": "Invalid content: must be a non-empty string" });
+        }
+
         // Create the review
         const review = new ReviewsModel({
             rating: req.body.rating,
@@ -35,14 +45,17 @@ async function createReview(req, res) {
     }
 }        
 
-    async function getAllReviews(req, res) {
-        try {
-            const reviews = await ReviewsModel.find(); // Fetch users from the database
-            res.status(201).send({ reviews });
-        } catch (error) {
-            res.status(500).send({ error: 'An error occurred while fetching reviews.' });
+async function getAllReviews(req, res) {
+    try {
+        const reviews = await ReviewsModel.find(); // Fetch users from the database
+        if (!reviews || reviews.length === 0) {
+            return res.status(404).send({ error: 'No reviews found.' });
         }
+        res.status(201).send({ reviews });
+    } catch (error) {
+        res.status(500).send({ error: 'An error occurred while fetching reviews.' });
     }
+}
 
 async function deleteOldReviews(req, res) { 
     try {
