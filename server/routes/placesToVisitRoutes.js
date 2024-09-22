@@ -14,4 +14,6 @@ router.patch('/:address', placesToVisitControllers.patchPlace);
 
 router.delete('/:address', placesToVisitControllers.deleteOnePlace);
 
+router.get('/:address/reviews', placesToVisitControllers.getReviewsForPlace);
+
 module.exports = router;

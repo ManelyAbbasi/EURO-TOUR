@@ -61,6 +61,23 @@ async function getOnePlace(req, res) {
     }
 }
 
+//Method may not work, but have mo create reviews based on place to test
+async function getReviewsForPlace(req, res) {
+    const address = req.params.address;
+    
+    try {
+        const place = await PlacesToVisitModel.findOne({ address }).populate('reviews');
+
+        if (!place) {
+            return res.status(404).send({ message: "Place not found" });
+        }
+
+        res.status(200).send(place.reviews);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({ error: 'An error occurred while fetching the reviews.' });
+    }
+}
 
 async function updatePlace(req, res, next) {
     try {
@@ -121,4 +138,5 @@ module.exports = {
     updatePlace,
     patchPlace,
     deleteOnePlace,
+    getReviewsForPlace,
 }
