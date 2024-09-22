@@ -196,18 +196,20 @@ async function addReviewToPlace(req, res) {
             return res.status(400).send({ "message": "Invalid content: must be a non-empty string" });
         }
 
-
         const review = new ReviewsModel({
             rating: req.body.rating,
             content: req.body.content,
             date: Date.now(),
             user: user._id, // Set user field to the found user's _id
         });
-        console.log(review); // Add this line
-
+        
         await review.save();
-
+        
+        place.reviews.push(review._id);
+        await place.save(); 
+        
         res.status(201).send({ message: "Review added successfully", review });
+
     } catch (err) {
         console.error("Error adding review to place:", err);
         res.status(500).send({ message: "An error occurred while adding the review.", error: err.message });
