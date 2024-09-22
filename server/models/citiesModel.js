@@ -6,14 +6,13 @@ const PlacesToVisitModel = require('./placesToVisitModel'); // Ensure this expor
 const ReviewsModel = require('./reviewsModel'); // Ensure this exports the model
 
 var citiesSchema = new Schema({
-    postcode: { type: String, required: true, unique: true },
     cityName: { type: String, required: true },
     country: { type: String, required: true },
     statistics: { type: String, required: true },
     facts: { type: String, required: true },
     tags: { type: Array, required: true },
-    placesToVisit: [{ type: Schema.Types.ObjectId, ref: 'placesToVisit' }], // Reference to the placesToVisit model
-    reviews: [{ type: Schema.Types.ObjectId, ref: 'reviews' }] // Reference to the reviews model
+    placesToVisit: [{ type: Schema.Types.ObjectId, ref: 'placesToVisit', default: [] }], // Reference to the placesToVisit model
+    reviews: [{ type: Schema.Types.ObjectId, ref: 'reviews',default: [] }] // Reference to the reviews model
 });
 
 // Export the cities model
