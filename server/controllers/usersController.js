@@ -3,6 +3,38 @@ const express = require("express");
 const router = express.Router();
 //const usersModel = require("../models/usersModel");
 const ReviewsModel = require('../models/reviewsModel');
+const PlacesToVisitSchema = require('../models/placesToVisitModel');
+
+async function deletePlaceViaAdmin(req, res) {
+    const address = req.params.address;
+    const adminUsername = req.body.username;
+
+    try {
+        // Check if the admin user exists
+        const adminUser = await UsersModel.findOne({ username: adminUsername });
+
+        if (!adminUser) {
+            return res.status(404).send({ message: "Requester user not found" });
+        }
+
+        // Check if the user is an admin
+        if (!adminUser.isAdmin) {
+            return res.status(403).send({ message: "Access denied. Admins only." });
+        }
+
+        // Attempt to delete the place
+        const deletedPlace = await PlacesToVisitSchema.findOneAndDelete({ address: address });
+
+        if (!deletedPlace) {
+            return res.status(404).send({ message: "Place not found" });
+        }
+
+        res.status(200).send({ message: "Place deleted successfully", place: deletedPlace });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: "Internal server error" });
+    }
+}
 
 async function getAllUsers(req, res) {
     try {
@@ -185,4 +217,5 @@ module.exports = {
     deleteOneUser,
     adminDeletesOneUser,
     getUserReviews,
+    deletePlaceViaAdmin,
 }
