@@ -19,7 +19,8 @@ async function getAllCities(req, res) {
  
 async function createCity(req, res, next) {
     try {
-        const existingCity = await CitiesModel.findOne({ cityId: req.body.cityId });
+
+        const existingCity = await CitiesModel.findOne({ cityName: req.body.cityName });
 
         if (existingCity) { 
             return res.status(400).send({ message: 'This city already exists' });
@@ -40,7 +41,7 @@ async function createCity(req, res, next) {
         if (req.body.tags.length === 0) {
             return res.status(400).send({ "message": "Tags cannot be an empty array" });
         }
-
+    
         // Create a new city if it doesn't exist
         const cities = new CitiesModel(req.body);
         await cities.save();
@@ -50,7 +51,8 @@ async function createCity(req, res, next) {
     }
 }
 
-    
+
+ 
 async function getOneCity(req, res) { 
     const cityId = req.params.id;
 

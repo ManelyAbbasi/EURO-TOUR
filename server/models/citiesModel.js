@@ -11,8 +11,8 @@ var citiesSchema = new Schema({
     statistics: { type: String, required: true },
     facts: { type: String, required: true },
     tags: { type: Array, required: true },
-    placesToVisit: [{ type: Schema.Types.ObjectId, ref: 'placesToVisit' }], // Reference to the placesToVisit model
-    reviews: [{ type: Schema.Types.ObjectId, ref: 'reviews' }] // Reference to the reviews model
+    placesToVisit: [{ type: Schema.Types.ObjectId, ref: 'placesToVisit', default: [] }], // Reference to the placesToVisit model
+    reviews: [{ type: Schema.Types.ObjectId, ref: 'reviews',default: [] }] // Reference to the reviews model
 });
 
 // Export the cities model
