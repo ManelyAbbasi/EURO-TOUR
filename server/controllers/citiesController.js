@@ -176,24 +176,45 @@ async function createPlaceInCity(req, res) {
         }
 
         // Create the city
-        const placesToVisit = new placesToVisitSchema({
+        const placeToVisit = new placesToVisitSchema({
             placeName: req.body.placeName,
             address: req.body.address,
             rating: req.body.rating,
             content: req.body.content,
             tags: req.body.tags,
             reviews: req.body.reviews,
-            city: city._id, // Set user field to the found user's _id
+            city: city._id, // Set city field to the found city's _id
         });
-        console.log(placesToVisit); // Add this line
+        console.log(placeToVisit); // Add this line
 
-        await placesToVisit.save();
-        res.status(201).send(placesToVisit);
+        await placeToVisit.save();
+        
+        city.placesToVisit.push(placeToVisit._id);
+        await city.save();
+        res.status(201).send(placeToVisit);
     } catch (err) {
         console.error("Error creating the place to visit:", err);
         res.status(500).send({ message: "An error occurred while creating the place", error: err.message });
     }
 };
+
+async function getPlacesFromCity(req, res){
+    const cityId = req.params.cityId;
+    try{
+        const city = await CitiesModel.findOne(cityId).populate('placesToVisit');
+        if (!city){
+            return res.status(404).send({ message: "City not found" });
+        }
+        if (!city.placesToVisit || city.placesToVisit.length === 0){
+            return res.status(404).send({ message: "No places are found" });
+        }        
+        res.status(200).send(city.placesToVisit);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({ error: 'An error occurred while fetching the places.' });
+    }
+
+} 
 
 module.exports = {
     getAllCities,
@@ -202,5 +223,6 @@ module.exports = {
     updateCity,
     patchCity,
     deleteOneCity,
-    createPlaceInCity
+    createPlaceInCity,
+    getPlacesFromCity
 }

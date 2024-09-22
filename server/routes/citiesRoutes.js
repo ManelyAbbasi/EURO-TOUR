@@ -16,4 +16,6 @@ router.delete('/:id', citiesControllers.deleteOneCity);
 
 router.post('/:id/placesToVisit', citiesControllers.createPlaceInCity);
 
+router.get('/:id/placesToVisit', citiesControllers.getPlacesFromCity);
+
 module.exports = router;
