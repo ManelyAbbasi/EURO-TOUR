@@ -19,12 +19,6 @@ async function getAllCities(req, res) {
  
 async function createCity(req, res, next) {
     try {
-
-        const existingCity = await CitiesModel.findOne({ cityName: req.body.cityName });
-
-        if (existingCity) { 
-            return res.status(400).send({ message: 'This city already exists' });
-        } 
         
         if (typeof req.body.cityName !== 'string' || req.body.cityName.trim() === "") {
             return res.status(400).send({ "message": "Invalid cityName: must be a non-empty string" });
