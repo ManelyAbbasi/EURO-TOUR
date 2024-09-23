@@ -20,7 +20,7 @@ router.get('/:id/placesToVisit', citiesControllers.getPlacesFromCity);
 
 router.get('/:id/placesToVisit/:address', citiesControllers.getOnePlaceFromCity);
 
-router.post('/:id/reviews', citiesControllers.addReviewToCity);
+router.post('/:id/reviews', citiesControllers.createReviewToCity);
 
 router.get('/:id/reviews', citiesControllers.getReviewsForCity);
  
