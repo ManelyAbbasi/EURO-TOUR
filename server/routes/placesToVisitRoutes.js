@@ -16,7 +16,7 @@ router.delete('/:address', placesToVisitControllers.deleteOnePlace);
 
 router.get('/:address/reviews', placesToVisitControllers.getReviewsForPlace);
 
-router.post('/:address/reviews', placesToVisitControllers.addReviewToPlace);
+router.post('/:address/reviews', placesToVisitControllers.createReviewToPlace);
 
 router.delete('/:address/reviews', placesToVisitControllers.deleteReviewsByAddress);
 
