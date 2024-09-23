@@ -12,7 +12,7 @@ router.patch('/:username', usersControllers.patchUser);
 
 router.delete('/:username', usersControllers.deleteOneUser);
 
-router.delete('/user/:username', usersControllers.adminDeletesOneUser);
+router.delete('/user/:username', usersControllers.deleteUserByAdmin); 
 
 router.get('/:username/reviews', usersControllers.getUserReviews);
 
