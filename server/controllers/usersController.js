@@ -55,7 +55,7 @@ async function deleteCityViaAdmin(req, res) {
         }
 
         // Attempt to delete the place
-        const deletedCity = await CitiesModel.findByIdAndDelete(cityId);
+        const deletedCity = await CitiesModel.findOneAndDelete({cityId: cityId});
 
         if (!deletedCity) {
             return res.status(404).send({ message: "City not found" });
