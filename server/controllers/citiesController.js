@@ -149,18 +149,36 @@ async function deleteOneCity(req, res) {
     }
 }
 
+async function getPlacesFromCity(req, res){
+    const cityId = req.params.cityId;
+    try{
+        const city = await CitiesModel.findOne(cityId).populate('placesToVisit');
+        if (!city){
+            return res.status(404).send({ message: "City not found" });
+        }
+        if (!city.placesToVisit || city.placesToVisit.length === 0){
+            return res.status(404).send({ message: "No places are found" });
+        }
+        res.status(200).send(city.placesToVisit);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({ error: 'An error occurred while fetching the places.' });
+    }
+}
+
 
 async function createPlaceInCity(req, res) {
     const cityId = req.params.id;
     try {
-        // Find the city by their postcode from the request body
+        // Find the city by its id from the request body
         const city = await CitiesModel.findById(cityId);
         console.log(city); // Add this line   
-    
+
         if (!city) {
             return res.status(404).send({ error: "City not found" });
         }
 
+        // Input validations
         if (typeof req.body.placeName !== 'string' || req.body.placeName.trim() === '') {
             return res.status(400).send({ "message": "Invalid placeName: must be a non-empty string" });
         }
@@ -173,11 +191,16 @@ async function createPlaceInCity(req, res) {
         if (typeof req.body.content !== 'string' || req.body.content.trim() === '') {
             return res.status(400).send({ "message": "Invalid content: must be a non-empty string" });
         }
-        if (req.body.tags.length === 0) {
+        if (!Array.isArray(req.body.tags) || req.body.tags.length === 0) {
             return res.status(400).send({ "message": "Tags cannot be an empty array" });
         }
 
-        // Create the city
+        // Ensure that placesToVisit is initialized as an array
+        if (!city.placesToVisit) {
+            city.placesToVisit = [];
+        }
+
+        // Create the place to visit
         const placeToVisit = new placesToVisitSchema({
             placeName: req.body.placeName,
             address: req.body.address,
@@ -189,34 +212,20 @@ async function createPlaceInCity(req, res) {
         });
         console.log(placeToVisit); // Add this line
 
+        // Save the new place
         await placeToVisit.save();
-        
+
+        // Add the place to the city's placesToVisit array and save the city
         city.placesToVisit.push(placeToVisit._id);
         await city.save();
+
+        // Send the response
         res.status(201).send(placeToVisit);
     } catch (err) {
         console.error("Error creating the place to visit:", err);
         res.status(500).send({ message: "An error occurred while creating the place", error: err.message });
     }
-};
-
-async function getPlacesFromCity(req, res){
-    const cityId = req.params.cityId;
-    try{
-        const city = await CitiesModel.findOne(cityId).populate('placesToVisit');
-        if (!city){
-            return res.status(404).send({ message: "City not found" });
-        }
-        if (!city.placesToVisit || city.placesToVisit.length === 0){
-            return res.status(404).send({ message: "No places are found" });
-        }        
-        res.status(200).send(city.placesToVisit);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send({ error: 'An error occurred while fetching the places.' });
-    }
-
-} 
+}; 
 
 async function addReviewToCity(req, res) {
     const cityId = req.params.id; // Get the city ID from the request parameters
@@ -290,7 +299,7 @@ async function getReviewsForCity(req, res) {
         if (!reviews || reviews.length === 0) {
             return res.status(404).send({ message: "No reviews found for this city" });
         }
-
+ 
         res.status(200).send({ reviews });
 
     } catch (err) {

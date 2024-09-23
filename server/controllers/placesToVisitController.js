@@ -171,6 +171,43 @@ async function addReviewToPlace(req, res) {
 }
 
 
+const deleteReviewsByAddress = async (req, res) => {
+    const address = req.params.address;
+
+    try {
+        // Find the place by its address
+        const place = await PlacesToVisitModel.findOne({ address }).populate('reviews');
+        if (!place) {
+            return res.status(404).send({ error: 'Place not found' });
+        }
+
+        // Check if there are any reviews to delete
+        if (place.reviews.length === 0) {
+            return res.status(404).send({ message: 'No reviews found for this place' });
+        }
+
+        // Delete all reviews associated with the place
+        const result = await ReviewsModel.deleteMany({ _id: { $in: place.reviews } });
+
+        // Clear the reviews array in the place document
+        place.reviews = [];
+        await place.save();
+
+        // Success response
+        res.status(200).send({
+            message: `Successfully deleted ${result.deletedCount} reviews for the place at address: ${address}`
+        });
+
+    } catch (error) {
+        // Catch any errors that occur during the database operations
+        res.status(500).send({ error: 'An error occurred while deleting reviews', details: error.message });
+    }
+};
+
+
+
+
+
 
 module.exports = {
     getAllPlaces,
@@ -180,4 +217,5 @@ module.exports = {
     deleteOnePlace,
     getReviewsForPlace,
     addReviewToPlace,
+    deleteReviewsByAddress,
 }

@@ -18,4 +18,6 @@ router.get('/:address/reviews', placesToVisitControllers.getReviewsForPlace);
 
 router.post('/:address/reviews', placesToVisitControllers.addReviewToPlace);
 
+router.delete('/:address/reviews', placesToVisitControllers.deleteReviewsByAddress);
+
 module.exports = router;
