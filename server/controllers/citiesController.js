@@ -5,6 +5,7 @@ const placesToVisitSchema = require("../models/placesToVisitModel");
 const router = express.Router();
 const ReviewsModel = require("../models/reviewsModel");
 const UsersModel = require("../models/usersModel");
+const citiesModel = require("../models/citiesModel");
 
 
 async function getAllCities(req, res) {
@@ -227,6 +228,28 @@ async function createPlaceInCity(req, res) {
     }
 }; 
 
+async function getOnePlaceFromCity(req, res){
+    const cityId = req.params.cityId;
+    const address = req.params.address;
+    try{
+        const city = await CitiesModel.findOne(cityId).populate('placesToVisit');
+        if (!city.placesToVisit || city.placesToVisit.length === 0) {
+            return res.status(404).send({ message: "No places are found in this city" });
+        }
+
+        const place = city.placesToVisit.find(place => place.address === address);
+
+        if (!place) {
+            return res.status(404).send({ message: "Place not found" });
+        }
+
+        res.status(200).send(place);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({ error: 'An error occurred while fetching the places.' });
+    }
+}
+
 async function addReviewToCity(req, res) {
     const cityId = req.params.id; // Get the city ID from the request parameters
 
@@ -308,6 +331,34 @@ async function getReviewsForCity(req, res) {
     }
 }
 
+async function deleteReviewsById(req, res) {
+    const cityId = req.params.id;
+
+    try {
+        const city = await citiesModel.findOne({ _id: cityId }).populate('reviews');
+        if (!city) {
+            return res.status(404).send({ error: 'City not found' });
+        }
+
+        if (city.reviews.length === 0) {
+            return res.status(404).send({ message: 'No reviews found for this city' });
+        }
+
+        const result = await ReviewsModel.deleteMany({ _id: { $in: city.reviews } });
+
+        city.reviews = [];
+        await city.save();
+
+        res.status(200).send({
+            message: `Successfully deleted ${result.deletedCount} reviews for the city.`
+        });
+
+    } catch (error) {
+        res.status(500).send({ error: 'An error occurred while deleting reviews', details: error.message });
+    }
+}
+
+
 module.exports = {
     getAllCities,
     createCity,
@@ -319,5 +370,6 @@ module.exports = {
     getPlacesFromCity,
     getOnePlaceFromCity,
     addReviewToCity,
-    getReviewsForCity
+    getReviewsForCity,
+    deleteReviewsById
 }

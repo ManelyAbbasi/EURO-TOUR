@@ -23,5 +23,8 @@ router.get('/:id/placesToVisit/:address', citiesControllers.getOnePlaceFromCity)
 router.post('/:id/reviews', citiesControllers.addReviewToCity);
 
 router.get('/:id/reviews', citiesControllers.getReviewsForCity);
+ 
+router.delete('/:id/reviews', citiesControllers.deleteReviewsById);
+
 
 module.exports = router;

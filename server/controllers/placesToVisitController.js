@@ -211,7 +211,6 @@ const deleteReviewsByAddress = async (req, res) => {
 
 
 
-
 module.exports = {
     getAllPlaces,
     getOnePlace,
