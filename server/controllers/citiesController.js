@@ -3,6 +3,9 @@ const express = require("express");
 //const citiesModel = require("../models/citiesModel");
 const placesToVisitSchema = require("../models/placesToVisitModel");
 const router = express.Router();
+const ReviewsModel = require("../models/reviewsModel");
+const UsersModel = require("../models/usersModel");
+const citiesModel = require("../models/citiesModel");
 
 
 async function getAllCities(req, res) {
@@ -147,6 +150,215 @@ async function deleteOneCity(req, res) {
     }
 }
 
+async function getPlacesFromCity(req, res){
+    const cityId = req.params.cityId;
+    try{
+        const city = await CitiesModel.findOne(cityId).populate('placesToVisit');
+        if (!city){
+            return res.status(404).send({ message: "City not found" });
+        }
+        if (!city.placesToVisit || city.placesToVisit.length === 0){
+            return res.status(404).send({ message: "No places are found" });
+        }
+        res.status(200).send(city.placesToVisit);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({ error: 'An error occurred while fetching the places.' });
+    }
+}
+
+
+async function createPlaceInCity(req, res) {
+    const cityId = req.params.id;
+    try {
+        // Find the city by its id from the request body
+        const city = await CitiesModel.findById(cityId);
+        console.log(city); // Add this line   
+
+        if (!city) {
+            return res.status(404).send({ error: "City not found" });
+        }
+
+        // Input validations
+        if (typeof req.body.placeName !== 'string' || req.body.placeName.trim() === '') {
+            return res.status(400).send({ "message": "Invalid placeName: must be a non-empty string" });
+        }
+        if (typeof req.body.address !== 'string' || req.body.address.trim() === '') {
+            return res.status(400).send({ "message": "Invalid address: must be a non-empty string" });
+        }
+        if (req.body.rating < 0.0 || req.body.rating > 5.0) {
+            return res.status(400).send({ message: "Invalid rating: must be between 0.0 and 5.0" });
+        }
+        if (typeof req.body.content !== 'string' || req.body.content.trim() === '') {
+            return res.status(400).send({ "message": "Invalid content: must be a non-empty string" });
+        }
+        if (!Array.isArray(req.body.tags) || req.body.tags.length === 0) {
+            return res.status(400).send({ "message": "Tags cannot be an empty array" });
+        }
+
+        // Ensure that placesToVisit is initialized as an array
+        if (!city.placesToVisit) {
+            city.placesToVisit = [];
+        }
+
+        // Create the place to visit
+        const placeToVisit = new placesToVisitSchema({
+            placeName: req.body.placeName,
+            address: req.body.address,
+            rating: req.body.rating,
+            content: req.body.content,
+            tags: req.body.tags,
+            reviews: req.body.reviews,
+            city: city._id, // Set city field to the found city's _id
+        });
+        console.log(placeToVisit); // Add this line
+
+        // Save the new place
+        await placeToVisit.save();
+
+        // Add the place to the city's placesToVisit array and save the city
+        city.placesToVisit.push(placeToVisit._id);
+        await city.save();
+
+        // Send the response
+        res.status(201).send(placeToVisit);
+    } catch (err) {
+        console.error("Error creating the place to visit:", err);
+        res.status(500).send({ message: "An error occurred while creating the place", error: err.message });
+    }
+}; 
+
+async function getOnePlaceFromCity(req, res){
+    const cityId = req.params.cityId;
+    const address = req.params.address;
+    try{
+        const city = await CitiesModel.findOne(cityId).populate('placesToVisit');
+        if (!city.placesToVisit || city.placesToVisit.length === 0) {
+            return res.status(404).send({ message: "No places are found in this city" });
+        }
+
+        const place = city.placesToVisit.find(place => place.address === address);
+
+        if (!place) {
+            return res.status(404).send({ message: "Place not found" });
+        }
+
+        res.status(200).send(place);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({ error: 'An error occurred while fetching the places.' });
+    }
+}
+
+async function addReviewToCity(req, res) {
+    const cityId = req.params.id; // Get the city ID from the request parameters
+
+    try {
+        // Check if the city exists
+        const city = await CitiesModel.findById(cityId);
+
+        if (!city) {
+            return res.status(404).send({ message: "City not found" });
+        }
+        // Check if reviews field exists and is an array, otherwise initialize it
+        if (!city.reviews) {
+            city.reviews = [];
+        }
+
+        // Find the user by their ID from the request body
+        const user = await UsersModel.findOne({ username: req.body.user });
+        if (!user) {
+            return res.status(404).send({ message: "User not found" });
+        }
+
+        // Validate the rating
+        if (typeof req.body.rating !== 'number') {
+            return res.status(400).send({ message: "Invalid rating: must be a non-empty number" });
+        }
+        if (req.body.rating < 0.0 || req.body.rating > 5.0) {
+            return res.status(400).send({ message: "Invalid rating: must be between 0.0 and 5.0" });
+        }
+
+        // Validate the content
+        if (typeof req.body.content !== 'string' || req.body.content.trim() === '') {
+            return res.status(400).send({ message: "Invalid content: must be a non-empty string" });
+        }
+
+        // Create the review
+        const review = new ReviewsModel({
+            rating: req.body.rating,
+            content: req.body.content,
+            date: Date.now(),
+            user: user._id, // Set user field to the found user's _id
+        });
+
+        // Save the review
+        await review.save();
+
+        // Optionally, associate the review with the city
+        city.reviews.push(review._id);
+        await city.save();
+
+        // Send the response with the created review
+        res.status(201).send({ message: "Review added successfully", review });
+
+    } catch (err) {
+        console.error("Error adding review to city:", err);
+        res.status(500).send({ message: "An error occurred while adding the review.", error: err.message });
+    }
+}
+
+async function getReviewsForCity(req, res) {
+    const cityId = req.params.id; 
+
+    try {
+        const city = await CitiesModel.findById(cityId).populate('reviews');
+        if (!city) {
+            return res.status(404).send({ message: "City not found" });
+        }
+
+        const reviews = await ReviewsModel.find({ _id: { $in: city.reviews } }).populate('user', 'username');
+        
+        if (!reviews || reviews.length === 0) {
+            return res.status(404).send({ message: "No reviews found for this city" });
+        }
+ 
+        res.status(200).send({ reviews });
+
+    } catch (err) {
+        console.error("Error retrieving reviews for city:", err);
+        res.status(500).send({ message: "An error occurred while retrieving reviews.", error: err.message });
+    }
+}
+
+async function deleteReviewsById(req, res) {
+    const cityId = req.params.id;
+
+    try {
+        const city = await citiesModel.findOne({ _id: cityId }).populate('reviews');
+        if (!city) {
+            return res.status(404).send({ error: 'City not found' });
+        }
+
+        if (city.reviews.length === 0) {
+            return res.status(404).send({ message: 'No reviews found for this city' });
+        }
+
+        const result = await ReviewsModel.deleteMany({ _id: { $in: city.reviews } });
+
+        city.reviews = [];
+        await city.save();
+
+        res.status(200).send({
+            message: `Successfully deleted ${result.deletedCount} reviews for the city.`
+        });
+
+    } catch (error) {
+        res.status(500).send({ error: 'An error occurred while deleting reviews', details: error.message });
+    }
+}
+
+
 module.exports = {
     getAllCities,
     createCity,
@@ -154,4 +366,10 @@ module.exports = {
     updateCity,
     patchCity,
     deleteOneCity,
+    createPlaceInCity,
+    getPlacesFromCity,
+    getOnePlaceFromCity,
+    addReviewToCity,
+    getReviewsForCity,
+    deleteReviewsById
 }

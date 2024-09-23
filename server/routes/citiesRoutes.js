@@ -14,4 +14,17 @@ router.patch('/:id', citiesControllers.patchCity);
 
 router.delete('/:id', citiesControllers.deleteOneCity);
 
+router.post('/:id/placesToVisit', citiesControllers.createPlaceInCity);
+
+router.get('/:id/placesToVisit', citiesControllers.getPlacesFromCity);
+
+router.get('/:id/placesToVisit/:address', citiesControllers.getOnePlaceFromCity);
+
+router.post('/:id/reviews', citiesControllers.addReviewToCity);
+
+router.get('/:id/reviews', citiesControllers.getReviewsForCity);
+ 
+router.delete('/:id/reviews', citiesControllers.deleteReviewsById);
+
+
 module.exports = router;

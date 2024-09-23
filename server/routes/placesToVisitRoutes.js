@@ -4,7 +4,7 @@ var placesToVisitControllers = require('../controllers/placesToVisitController')
 
 router.get('/', placesToVisitControllers.getAllPlaces);
 
-router.post('/', placesToVisitControllers.createPlace);
+//router.post('/', placesToVisitControllers.createPlace);
 
 router.get('/:address', placesToVisitControllers.getOnePlace);
 
@@ -17,5 +17,7 @@ router.delete('/:address', placesToVisitControllers.deleteOnePlace);
 router.get('/:address/reviews', placesToVisitControllers.getReviewsForPlace);
 
 router.post('/:address/reviews', placesToVisitControllers.addReviewToPlace);
+
+router.delete('/:address/reviews', placesToVisitControllers.deleteReviewsByAddress);
 
 module.exports = router;

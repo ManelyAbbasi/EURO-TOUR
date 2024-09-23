@@ -11,7 +11,10 @@ var citiesSchema = new Schema({
     statistics: { type: String, required: true },
     facts: { type: String, required: true },
     tags: { type: Array, required: true },
-    placesToVisit: [{ type: Schema.Types.ObjectId, ref: 'placesToVisit', default: [] }], // Reference to the placesToVisit model
+    placesToVisit: { 
+        type: [{ type: Schema.Types.ObjectId, ref: 'placesToVisit' }], // Ensure 'PlacesToVisit' matches the model name
+        default: [] 
+    },
     reviews: [{ type: Schema.Types.ObjectId, ref: 'reviews',default: [] }] // Reference to the reviews model
 });
 

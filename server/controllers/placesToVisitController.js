@@ -19,52 +19,6 @@ async function getAllPlaces(req, res) {
     }
 }
 
-async function createPlace(req, res) {
-    try {
-        // Find the city by their postcode from the request body
-        const city = await CitiesSchema.findById(req.params.cityId);
-        console.log(city); // Add this line   
-    
-        if (!city) {
-            return res.status(404).send({ error: "City not found" });
-        }
-
-        if (typeof req.body.placeName !== 'string' || req.body.placeName.trim() === '') {
-            return res.status(400).send({ "message": "Invalid placeName: must be a non-empty string" });
-        }
-        if (typeof req.body.address !== 'string' || req.body.address.trim() === '') {
-            return res.status(400).send({ "message": "Invalid address: must be a non-empty string" });
-        }
-        if (req.body.rating < 0.0 || req.body.rating > 5.0) {
-            return res.status(400).send({ message: "Invalid rating: must be between 0.0 and 5.0" });
-        }
-        if (typeof req.body.content !== 'string' || req.body.content.trim() === '') {
-            return res.status(400).send({ "message": "Invalid content: must be a non-empty string" });
-        }
-        if (req.body.tags.length === 0) {
-            return res.status(400).send({ "message": "Tags cannot be an empty array" });
-        }
-
-        // Create the city
-        const placesToVisit = new placesToVisitModel({
-            placeName: req.body.placeName,
-            address: req.body.address,
-            rating: req.body.rating,
-            content: req.body.content,
-            tags: req.body.tags,
-            reviews: req.body.reviews,
-            city: city._id, // Set user field to the found user's _id
-        });
-        console.log(placesToVisit); // Add this line
-
-        await placesToVisit.save();
-        res.status(201).send(placesToVisit);
-    } catch (err) {
-        console.error("Error creating the place to visit:", err);
-        res.status(500).send({ message: "An error occurred while creating the place", error: err.message });
-    }
-};
-
 async function getOnePlace(req, res) {
     const address = req.params.address;
     try {
@@ -185,6 +139,9 @@ async function addReviewToPlace(req, res) {
         if (!place) {
             return res.status(404).send({ message: "Place not found" });
         }
+        if (!user) {
+            return res.status(404).send({ message: "User not found" });
+        }
 
         if (typeof req.body.rating !== 'number') {
             return res.status(400).send({ "message": "Invalid rating: must be a non-empty number" });
@@ -196,18 +153,20 @@ async function addReviewToPlace(req, res) {
             return res.status(400).send({ "message": "Invalid content: must be a non-empty string" });
         }
 
-
         const review = new ReviewsModel({
             rating: req.body.rating,
             content: req.body.content,
             date: Date.now(),
             user: user._id, // Set user field to the found user's _id
         });
-        console.log(review); // Add this line
-
+        
         await review.save();
-
+        
+        place.reviews.push(review._id);
+        await place.save(); 
+        
         res.status(201).send({ message: "Review added successfully", review });
+
     } catch (err) {
         console.error("Error adding review to place:", err);
         res.status(500).send({ message: "An error occurred while adding the review.", error: err.message });
@@ -215,14 +174,50 @@ async function addReviewToPlace(req, res) {
 }
 
 
+const deleteReviewsByAddress = async (req, res) => {
+    const address = req.params.address;
+
+    try {
+        // Find the place by its address
+        const place = await PlacesToVisitModel.findOne({ address }).populate('reviews');
+        if (!place) {
+            return res.status(404).send({ error: 'Place not found' });
+        }
+
+        // Check if there are any reviews to delete
+        if (place.reviews.length === 0) {
+            return res.status(404).send({ message: 'No reviews found for this place' });
+        }
+
+        // Delete all reviews associated with the place
+        const result = await ReviewsModel.deleteMany({ _id: { $in: place.reviews } });
+
+        // Clear the reviews array in the place document
+        place.reviews = [];
+        await place.save();
+
+        // Success response
+        res.status(200).send({
+            message: `Successfully deleted ${result.deletedCount} reviews for the place at address: ${address}`
+        });
+
+    } catch (error) {
+        // Catch any errors that occur during the database operations
+        res.status(500).send({ error: 'An error occurred while deleting reviews', details: error.message });
+    }
+};
+
+
+
+
 
 module.exports = {
     getAllPlaces,
-    createPlace,
     getOnePlace,
     updatePlace,
     patchPlace,
     deleteOnePlace,
     getReviewsForPlace,
     addReviewToPlace,
+    deleteReviewsByAddress,
 }

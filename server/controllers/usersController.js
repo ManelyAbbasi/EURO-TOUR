@@ -2,6 +2,71 @@ const UsersModel = require("../models/usersModel");
 const express = require("express");
 const router = express.Router();
 //const usersModel = require("../models/usersModel");
+const ReviewsModel = require('../models/reviewsModel');
+const PlacesToVisitSchema = require('../models/placesToVisitModel');
+const CitiesModel = require('../models/citiesModel');
+
+async function deletePlaceViaAdmin(req, res) {
+    const address = req.params.address;
+    const adminUsername = req.body.username;
+
+    try {
+        // Check if the admin user exists
+        const adminUser = await UsersModel.findOne({ username: adminUsername });
+
+        if (!adminUser) {
+            return res.status(404).send({ message: "Requester user not found" });
+        }
+
+        // Check if the user is an admin
+        if (!adminUser.isAdmin) {
+            return res.status(403).send({ message: "Access denied. Admins only." });
+        }
+
+        // Attempt to delete the place
+        const deletedPlace = await PlacesToVisitSchema.findOneAndDelete({ address: address });
+
+        if (!deletedPlace) {
+            return res.status(404).send({ message: "Place not found" });
+        }
+
+        res.status(200).send({ message: "Place deleted successfully", place: deletedPlace });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: "Internal server error" });
+    }
+}
+
+async function deleteCityViaAdmin(req, res) {
+    const cityId = req.params.cityId;
+    const adminUsername = req.body.username;
+
+    try {
+        // Check if the admin user exists
+        const adminUser = await UsersModel.findOne({ username: adminUsername });
+
+        if (!adminUser) {
+            return res.status(404).send({ message: "Requester user not found" });
+        }
+
+        // Check if the user is an admin
+        if (!adminUser.isAdmin) {
+            return res.status(403).send({ message: "Access denied. Admins only." });
+        }
+
+        // Attempt to delete the place
+        const deletedCity = await CitiesModel.findOneAndDelete({cityId: cityId});
+
+        if (!deletedCity) {
+            return res.status(404).send({ message: "City not found" });
+        }
+
+        res.status(200).send({ message: "City deleted successfully", city: deletedCity });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: "Internal server error" });
+    }
+}
 
 async function getAllUsers(req, res) {
     try {
@@ -15,6 +80,28 @@ async function getAllUsers(req, res) {
     }
 }
 
+async function getUserReviews(req, res) {
+    const username = req.params.username;
+
+    try {
+        const user = await UsersModel.findOne({ username });
+        
+        if (!user) {
+            return res.status(404).send({ message: 'User not found' });
+        }
+
+        const reviews = await ReviewsModel.find({ user: user._id });
+
+        if (reviews.length === 0) {
+            return res.status(404).send({ message: 'No reviews found for this user' });
+        }
+
+        res.status(200).send({ reviews });
+    } catch (error) {
+        console.error('Error fetching user reviews:', error);
+        res.status(500).send({ message: 'Internal server error', error: error.message });
+    }
+}
 
 async function createUser(req, res, next) {
     try {
@@ -161,4 +248,7 @@ module.exports = {
     patchUser,
     deleteOneUser,
     adminDeletesOneUser,
+    getUserReviews,
+    deletePlaceViaAdmin,
+    deleteCityViaAdmin
 }
