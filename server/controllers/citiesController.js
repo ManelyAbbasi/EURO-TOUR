@@ -213,8 +213,35 @@ async function getPlacesFromCity(req, res){
         console.error(err);
         res.status(500).send({ error: 'An error occurred while fetching the places.' });
     }
-
 } 
+
+async function getOnePlaceFromCity(req, res){
+    const cityId = req.params.cityId;
+    const address = req.params.address;
+    try{
+        const city = await CitiesModel.findOne(cityId).populate('placesToVisit');
+                
+        if (!city) {
+            return res.status(404).send({ message: "City not found" });
+        }
+
+        if (!city.placesToVisit || city.placesToVisit.length === 0) {
+            return res.status(404).send({ message: "No places are found in this city" });
+        }
+
+        const place = city.placesToVisit.find(place => place.address === address);
+
+        if (!place) {
+            return res.status(404).send({ message: "Place not found" });
+        }
+
+        res.status(200).send(place);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({ error: 'An error occurred while fetching the places.' });
+    }
+} 
+
 
 module.exports = {
     getAllCities,
@@ -224,5 +251,6 @@ module.exports = {
     patchCity,
     deleteOneCity,
     createPlaceInCity,
-    getPlacesFromCity
+    getPlacesFromCity,
+    getOnePlaceFromCity
 }

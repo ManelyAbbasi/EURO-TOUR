@@ -18,4 +18,6 @@ router.post('/:id/placesToVisit', citiesControllers.createPlaceInCity);
 
 router.get('/:id/placesToVisit', citiesControllers.getPlacesFromCity);
 
+router.get('/:id/placesToVisit/:address', citiesControllers.getOnePlaceFromCity);
+
 module.exports = router;
