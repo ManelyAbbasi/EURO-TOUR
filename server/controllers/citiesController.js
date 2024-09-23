@@ -3,6 +3,8 @@ const express = require("express");
 //const citiesModel = require("../models/citiesModel");
 const placesToVisitSchema = require("../models/placesToVisitModel");
 const router = express.Router();
+const ReviewsModel = require("../models/reviewsModel");
+const UsersModel = require("../models/usersModel");
 
 
 async function getAllCities(req, res) {
@@ -220,11 +222,6 @@ async function getOnePlaceFromCity(req, res){
     const address = req.params.address;
     try{
         const city = await CitiesModel.findOne(cityId).populate('placesToVisit');
-                
-        if (!city) {
-            return res.status(404).send({ message: "City not found" });
-        }
-
         if (!city.placesToVisit || city.placesToVisit.length === 0) {
             return res.status(404).send({ message: "No places are found in this city" });
         }
@@ -241,7 +238,87 @@ async function getOnePlaceFromCity(req, res){
         res.status(500).send({ error: 'An error occurred while fetching the places.' });
     }
 } 
+                
+async function addReviewToCity(req, res) {
+    const cityId = req.params.id; // Get the city ID from the request parameters
 
+    try {
+        // Check if the city exists
+        const city = await CitiesModel.findById(cityId);
+
+        if (!city) {
+            return res.status(404).send({ message: "City not found" });
+        }
+        // Check if reviews field exists and is an array, otherwise initialize it
+        if (!city.reviews) {
+            city.reviews = [];
+        }
+
+        // Find the user by their ID from the request body
+        const user = await UsersModel.findOne({ username: req.body.user });
+        if (!user) {
+            return res.status(404).send({ message: "User not found" });
+        }
+
+        // Validate the rating
+        if (typeof req.body.rating !== 'number') {
+            return res.status(400).send({ message: "Invalid rating: must be a non-empty number" });
+        }
+        if (req.body.rating < 0.0 || req.body.rating > 5.0) {
+            return res.status(400).send({ message: "Invalid rating: must be between 0.0 and 5.0" });
+        }
+
+        // Validate the content
+        if (typeof req.body.content !== 'string' || req.body.content.trim() === '') {
+            return res.status(400).send({ message: "Invalid content: must be a non-empty string" });
+        }
+
+        // Create the review
+        const review = new ReviewsModel({
+            rating: req.body.rating,
+            content: req.body.content,
+            date: Date.now(),
+            user: user._id, // Set user field to the found user's _id
+        });
+
+        // Save the review
+        await review.save();
+
+        // Optionally, associate the review with the city
+        city.reviews.push(review._id);
+        await city.save();
+
+        // Send the response with the created review
+        res.status(201).send({ message: "Review added successfully", review });
+
+    } catch (err) {
+        console.error("Error adding review to city:", err);
+        res.status(500).send({ message: "An error occurred while adding the review.", error: err.message });
+    }
+}
+
+async function getReviewsForCity(req, res) {
+    const cityId = req.params.id; 
+
+    try {
+        const city = await CitiesModel.findById(cityId).populate('reviews');
+        if (!city) {
+            return res.status(404).send({ message: "City not found" });
+        }
+
+        const reviews = await ReviewsModel.find({ _id: { $in: city.reviews } }).populate('user', 'username');
+        
+        if (!reviews || reviews.length === 0) {
+            return res.status(404).send({ message: "No reviews found for this city" });
+        }
+
+        res.status(200).send({ reviews });
+
+    } catch (err) {
+        console.error("Error retrieving reviews for city:", err);
+        res.status(500).send({ message: "An error occurred while retrieving reviews.", error: err.message });
+    }
+}
 
 module.exports = {
     getAllCities,
@@ -252,5 +329,7 @@ module.exports = {
     deleteOneCity,
     createPlaceInCity,
     getPlacesFromCity,
-    getOnePlaceFromCity
+    getOnePlaceFromCity,
+    addReviewToCity,
+    getReviewsForCity
 }
