@@ -1,42 +1,7 @@
 const ReviewsModel = require("../models/reviewsModel");
 const express = require("express");
 const router = express.Router();
-const UsersModel = require("../models/usersModel");
-
-
-async function createReview(req, res) {
-
-    try {
-        const user = await UsersModel.findOne({ username: req.body.user });
-        console.log(user); 
-        
-        if (!user) {
-            return res.status(404).send({ error: "User not found" });
-        }
-        if (typeof req.body.rating !== 'number') {
-            return res.status(400).send({ "message": "Invalid rating: must be a non-empty number" });
-        }
-        if (req.body.rating < 0.0 || req.body.rating > 5.0) {
-            return res.status(400).send({ message: "Invalid rating: must be between 0.0 and 5.0" });
-        }
-        if (typeof req.body.content !== 'string' || req.body.content.trim() === '') {
-            return res.status(400).send({ "message": "Invalid content: must be a non-empty string" });
-        }
-
-        const review = new ReviewsModel({
-            rating: req.body.rating,
-            content: req.body.content,
-            date: Date.now(),
-            user: user._id, 
-        });
-        
-        await review.save();
-        res.status(201).send(review);
-    } catch (err) {
-        console.error("Error creating review:", err);
-        res.status(500).send({ message: "An error occurred while creating the review", error: err.message });
-    }
-}        
+const UsersModel = require("../models/usersModel");     
 
 
 async function getAllReviews(req, res) {
@@ -71,7 +36,6 @@ async function deleteOldReviews(req, res) {
 }
 
 module.exports = {
-    createReview, 
     getAllReviews,
     deleteOldReviews, 
 } 
