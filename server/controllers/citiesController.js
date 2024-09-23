@@ -276,6 +276,29 @@ async function addReviewToCity(req, res) {
     }
 }
 
+async function getReviewsForCity(req, res) {
+    const cityId = req.params.id; 
+
+    try {
+        const city = await CitiesModel.findById(cityId).populate('reviews');
+        if (!city) {
+            return res.status(404).send({ message: "City not found" });
+        }
+
+        const reviews = await ReviewsModel.find({ _id: { $in: city.reviews } }).populate('user', 'username');
+        
+        if (!reviews || reviews.length === 0) {
+            return res.status(404).send({ message: "No reviews found for this city" });
+        }
+
+        res.status(200).send({ reviews });
+
+    } catch (err) {
+        console.error("Error retrieving reviews for city:", err);
+        res.status(500).send({ message: "An error occurred while retrieving reviews.", error: err.message });
+    }
+}
+
 module.exports = {
     getAllCities,
     createCity,
@@ -286,4 +309,5 @@ module.exports = {
     createPlaceInCity,
     getPlacesFromCity,
     addReviewToCity,
+    getReviewsForCity,
 }
