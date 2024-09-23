@@ -265,8 +265,10 @@ async function updateCity(req, res, next) {
 
 
 async function patchCity(req, res, next){
+    const cityId = req.params.id;
+
     try{
-        const city = await CitiesModel.findById(req.params.cityId);
+        const city = await CitiesModel.findById(cityId);
         if (city == null){
             return res.status(404).send({"message": "City not found"});
         }
