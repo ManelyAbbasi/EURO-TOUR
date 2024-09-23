@@ -4,6 +4,7 @@ const router = express.Router();
 //const usersModel = require("../models/usersModel");
 const ReviewsModel = require('../models/reviewsModel');
 const PlacesToVisitSchema = require('../models/placesToVisitModel');
+const CitiesModel = require('../models/citiesModel');
 
 async function deletePlaceViaAdmin(req, res) {
     const address = req.params.address;
@@ -30,6 +31,37 @@ async function deletePlaceViaAdmin(req, res) {
         }
 
         res.status(200).send({ message: "Place deleted successfully", place: deletedPlace });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: "Internal server error" });
+    }
+}
+
+async function deleteCityViaAdmin(req, res) {
+    const cityId = req.params.cityId;
+    const adminUsername = req.body.username;
+
+    try {
+        // Check if the admin user exists
+        const adminUser = await UsersModel.findOne({ username: adminUsername });
+
+        if (!adminUser) {
+            return res.status(404).send({ message: "Requester user not found" });
+        }
+
+        // Check if the user is an admin
+        if (!adminUser.isAdmin) {
+            return res.status(403).send({ message: "Access denied. Admins only." });
+        }
+
+        // Attempt to delete the place
+        const deletedCity = await CitiesModel.findOneAndDelete({cityId: cityId});
+
+        if (!deletedCity) {
+            return res.status(404).send({ message: "City not found" });
+        }
+
+        res.status(200).send({ message: "City deleted successfully", city: deletedCity });
     } catch (error) {
         console.error(error);
         res.status(500).send({ message: "Internal server error" });
@@ -218,4 +250,5 @@ module.exports = {
     adminDeletesOneUser,
     getUserReviews,
     deletePlaceViaAdmin,
+    deleteCityViaAdmin
 }

@@ -233,10 +233,10 @@ async function addReviewToCity(req, res) {
     try {
         // Check if the city exists
         const city = await CitiesModel.findById(cityId);
+
         if (!city) {
             return res.status(404).send({ message: "City not found" });
         }
-
         // Check if reviews field exists and is an array, otherwise initialize it
         if (!city.reviews) {
             city.reviews = [];
@@ -317,6 +317,7 @@ module.exports = {
     deleteOneCity,
     createPlaceInCity,
     getPlacesFromCity,
+    getOnePlaceFromCity,
     addReviewToCity,
-    getReviewsForCity,
+    getReviewsForCity
 }

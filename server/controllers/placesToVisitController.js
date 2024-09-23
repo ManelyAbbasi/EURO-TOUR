@@ -139,6 +139,9 @@ async function addReviewToPlace(req, res) {
         if (!place) {
             return res.status(404).send({ message: "Place not found" });
         }
+        if (!user) {
+            return res.status(404).send({ message: "User not found" });
+        }
 
         if (typeof req.body.rating !== 'number') {
             return res.status(400).send({ "message": "Invalid rating: must be a non-empty number" });
