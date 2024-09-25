@@ -276,7 +276,7 @@ async function patchCity(req, res, next){
         city.facts = req.body.facts || city.facts;
         city.tags = req.body.tags || city.tags;
         await city.save();
-        res.status(201).send(city);
+        res.status(200).send(city);
     } catch (err) {
         next(err);
     }

@@ -10,7 +10,7 @@ async function getAllReviews(req, res) {
         if (!reviews || reviews.length === 0) {
             return res.status(404).send({ error: 'No reviews found.' });
         }
-        res.status(201).send({ reviews });
+        res.status(200).send({ reviews });
     } catch (error) {
         res.status(500).send({ error: 'An error occurred while fetching reviews.' });
     }
