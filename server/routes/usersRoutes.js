@@ -20,4 +20,6 @@ router.delete('/placesToVisit/:address', usersControllers.deletePlaceViaAdmin);
 
 router.delete('/cities/:id', usersControllers.deleteCityViaAdmin);
 
+router.delete('/:username/reviews/:review_id', usersControllers.deleteReviewViaAdmin);
+
 module.exports = router;

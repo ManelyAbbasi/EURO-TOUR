@@ -241,6 +241,32 @@ async function deleteCityViaAdmin(req, res) {
     }
 }
 
+async function deleteReviewViaAdmin(req, res) {
+    const { username, review_id } = req.params; // Extract 'username' and 'review_id' from route parameters
+    const adminUsername = req.body.username;
+    try {
+        const adminUser = await UsersModel.findOne({ username: adminUsername });
+        if (!adminUser) {
+            return res.status(404).json({ message: "Admin not found" });
+        }
+        if (!adminUser.isAdmin) {
+            return res.status(403).json({ message: "Access denied. Admins only." });
+        }
+        const user = await UsersModel.findOne({ username });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        const review = await ReviewsModel.findOne({ _id: review_id, user: user._id });
+        if (!review) {
+            return res.status(404).json({ message: "Review not found or doesn't belong to the specified user" });
+        }
+        await ReviewsModel.findByIdAndDelete(review_id);
+        res.status(200).json({ message: "Review deleted successfully", review });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
 
 module.exports = {
     createUser,
@@ -251,5 +277,6 @@ module.exports = {
     deleteOneUser,
     deleteUserByAdmin,
     deletePlaceViaAdmin,
-    deleteCityViaAdmin
+    deleteCityViaAdmin,
+    deleteReviewViaAdmin
 }
