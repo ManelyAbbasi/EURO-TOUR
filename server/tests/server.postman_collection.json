@@ -1,75 +1,87 @@
 {
 	"info": {
-		"_postman_id": "f7ee95b5-9cb9-442f-a6a9-42de46138872",
-		"name": "server",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"_postman_id": "9e07ffe8-182f-4379-98f5-09360450a71d",
+		"name": "test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37686512",
+		"_collection_link": "https://group08.postman.co/workspace/group08-Workspace~58ff352a-546b-49cd-a5e8-b697b0fb499d/collection/37686512-9e07ffe8-182f-4379-98f5-09360450a71d?action=share&source=collection_link&creator=37686512"
 	},
 	"item": [
 		{
-			"name": "GET /api",
+			"name": "router.get('/', usersControllers.getAllUsers);",
 			"event": [
 				{
-					"listen": "prerequest",
+					"listen": "test",
 					"script": {
-						"id": "b58d92ec-5214-450c-adb0-28e068aa71b9",
 						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has the required fields\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"\r",
+							"  pm.expect(responseData).to.be.an('object');\r",
+							"  pm.expect(responseData.users).to.be.an('array');\r",
+							"\r",
+							"  responseData.users.forEach(function(user) {\r",
+							"    pm.expect(user).to.have.property('_id');\r",
+							"    pm.expect(user).to.have.property('username');\r",
+							"    pm.expect(user).to.have.property('password');\r",
+							"    pm.expect(user).to.have.property('birthDate');\r",
+							"    pm.expect(user).to.have.property('isLGBTQIA');\r",
+							"    pm.expect(user).to.have.property('gender');\r",
+							"    pm.expect(user).to.have.property('isAdmin');\r",
+							"    pm.expect(user).to.have.property('__v');\r",
+							"  });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Users response properties validation\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData.users).to.be.an('array');\r",
+							"    responseData.users.forEach(function(user) {\r",
+							"        pm.expect(user._id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"_id should be a non-empty string\");\r",
+							"        pm.expect(user.username).to.be.a('string').and.to.have.lengthOf.at.least(1, \"username should be a non-empty string\");\r",
+							"        pm.expect(user.password).to.be.a('string').and.to.have.lengthOf.at.least(1, \"password should be a non-empty string\");\r",
+							"        pm.expect(user.birthDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/).and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"birthDate should be in valid date format\");\r",
+							"        pm.expect(user.isLGBTQIA).to.be.a('boolean');\r",
+							"        pm.expect(user.gender).to.be.a('string').and.to.have.lengthOf.at.least(1, \"gender should be a non-empty string\");\r",
+							"        pm.expect(user.isAdmin).to.be.a('boolean');\r",
+							"        pm.expect(user.__v).to.be.a('number').and.to.be.at.least(0, \"__v should be a non-negative integer\");\r",
+							"    });\r",
+							"});\r",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
 			"request": {
 				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
+				"header": [],
 				"url": {
-					"raw": "{{host}}/api",
+					"raw": "http://localhost:3000/api/users",
+					"protocol": "http",
 					"host": [
-						"{{host}}"
+						"localhost"
 					],
+					"port": "3000",
 					"path": [
-						"api"
+						"api",
+						"users"
 					]
 				}
 			},
 			"response": []
 		}
-	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"id": "05864cff-5cba-4070-bac3-a59328954ebf",
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"id": "e9c319be-3306-4fc5-ba34-fcf64391213a",
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		}
-	],
-	"variable": [
-		{
-			"id": "cd185905-a834-4211-8030-583d17702534",
-			"key": "host",
-			"value": "http://localhost:3000",
-			"type": "string"
-		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }
