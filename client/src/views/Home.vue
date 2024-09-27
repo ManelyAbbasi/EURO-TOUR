@@ -5,18 +5,23 @@
         <router-link to="/"  class="logo"><img src="@/assets/horizontal-logo.png" alt="Euro Tour logo"></router-link>
       </logo>
       <nav class="navbar">
-        <a href="#cities"><img src="@/assets/cities.png"/>cities</a>
-        <a href="#placesToVisit"><img src="@/assets/places.png"/>places to visit</a>
-        <b-dropdown size="lg"  variant="link" toggle-class="text-decoration-none" no-caret>
+        <a href="#cities" class="navbar-item"><img src="@/assets/cities.png"/> cities</a>
+        <a href="#placesToVisit" class="navbar-item"><img src="@/assets/places.png"/> places to visit</a>
+        <b-dropdown
+          size="lg"
+          variant="link"
+          toggle-class="text-decoration-none"
+          no-caret
+          class="navbar-item dropdown"
+        >
           <template #button-content>
-            <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon"/>
+            <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
           </template>
-          <b-dropdown-item to="/login" class="login-link">Log in</b-dropdown-item>
-          <b-dropdown-item to="/signup" class="signup-link">Sign up</b-dropdown-item>
+          <!-- Dropdown items -->
+          <b-dropdown-item class="dropdown-item" to="/login">Log in</b-dropdown-item>
+          <b-dropdown-item class="dropdown-item" to="/signup">Sign up</b-dropdown-item>
         </b-dropdown>
       </nav>
-      <div class="user">
-      </div>
     </header>
     <main>
       <div class="layout-wrapper">
@@ -94,7 +99,6 @@ export default {
 .body-container{
   display: flex;
   flex-wrap: wrap;
-  border: 2px solid green;
   background-color: #42515e;
 }
 
@@ -103,20 +107,50 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  padding: 1rem 9%; /* Adjust padding for more space */
+  padding: 1rem 5%; /* Adjust padding for more space */
   background-color: rgba(155, 169, 182, 1);
   display: flex;
   justify-content: space-between;
   align-items: center;
   z-index: 900;
-  border: 2px solid red;
+}
+
+.b-dropdown .dropdown-menu {
+  width: auto; /* Ensure the width adjusts to content */
+  white-space: nowrap; /* Prevent wrapping of text inside dropdown */
+  padding: 0; /* Ensure padding doesn't push content */
+  margin: 0;
+  background-color: purple !important;
+  border: 1px solid rgba(0, 0, 0, 0.15); /* Consistent border */
+  border-radius: 0.25rem;
+}
+
+.b-dropdown .dropdown-item{
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem; /* Add appropriate padding */
+  color: blueviolet !important;
+  text-align: inherit;
+  border: none; /* Remove border */
+}
+
+.dropdown-item:hover {
+  background-color: blueviolet /* Hover effect */
+}
+
+.dropdown-icon {
+  max-height: 3rem;
+}
+
+.navbar-item {
+  border: none; /* Remove borders to prevent overflow */
+  margin: 0 1rem;
+  text-decoration: none;
 }
 
 .navbar a {
   font-size: 1.5rem;
   color: #edf7fb;
-  margin-left: 4rem;
-  border: 3px solid cyan;
   transition: 0.3s;
   text-decoration: none;
 }
@@ -130,7 +164,7 @@ export default {
   display: grid;
   grid-template-columns: 1fr 1fr;  /* Create two equal columns */
   grid-gap: 20px;  /* Optional: Add some space between columns */
-  padding: 10rem 9% 2rem;
+  padding: 7rem 9% 2rem;
   width: 100%;
   border: 2px solid blue;
 }
@@ -169,11 +203,6 @@ a img {
 
 .btn_message {
   margin-bottom: 1em;
-}
-
-.dropdown-icon {
-  width: 30px; /* Adjust the size as needed */
-  height: 30px; /* Adjust the size as needed */
 }
 
 .euromap{
