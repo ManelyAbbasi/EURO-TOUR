@@ -43,6 +43,11 @@
       <div class="button-container">
         <button class="btn" type="button" @click="saveButton()" :disabled="isEmpty">sign up</button>
       </div>
+
+      <div class="logo">
+      <router-link to="/"><img src="@/assets/vertical-logo.png" alt="Euro Tour logo" draggable="false" class="logo"></router-link>
+    </div>
+
     </div>
   </template>
 
