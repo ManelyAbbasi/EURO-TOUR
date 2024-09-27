@@ -27,9 +27,9 @@
           <div class="right-side-panel">
             <h1 class="hello">Hello!</h1>
             <p class="welcome-text">Make the most of your
-              upcoming travels! With your preferences
-              and our recommendations you will have
-              the experience of a lifetime</p>
+              upcoming travels! With your <b>preferences</b>
+              and our <b>recommendations</b> you will have
+              the experience of a <b>lifetime</b></p>
           </div>
           <div class="left-side-panel">
           <!-- map -->
@@ -122,6 +122,7 @@ export default {
   margin-left: 4rem;
   border: 3px solid cyan;
   transition: 0.3s;
+  text-decoration: none;
 }
 
 .navbar a:hover,
