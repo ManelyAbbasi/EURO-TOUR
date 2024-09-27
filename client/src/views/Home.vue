@@ -348,4 +348,64 @@ a img {
     color: #045768;
 }
 
+@media screen and (max-width:1200px) {
+    html{
+        font-size: 55%;
+    }
+}
+
+@media screen and (max-width: 991px){
+    section{
+        padding: 10rem 3% 2rem;
+    }
+    .euro-tour-header{
+        padding: 2rem 3%;
+    }
+    .footer{
+        padding: 2rem 3%;
+    }
+    .get-to-know-wrapper{
+        padding: 7rem;
+    }
+}
+
+@media screen and (max-width: 768px){
+    .navbar{
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    .euro-tour-header{
+        flex-direction: column;
+        gap: 2rem;
+    }
+    .layout-wrapper,
+    .get-to-know-wrapper{
+        flex-direction: column;
+        display: flex;
+    }
+    .layout-wrapper p{
+        font-size: 2.5rem;
+    }
+    .layout-wrapper h1{
+        font-size: 5rem;
+    }
+}
+
+@media screen and (max-width:576px) {
+    html{
+        font-size: 50%;
+    }
+}
+
+@media screen and (max-width:350px) {
+    .layout-wrapper img{
+        width: 90vw;
+    }
+    .footer{
+        flex-direction: column-reverse;
+    }
+}
 </style>
