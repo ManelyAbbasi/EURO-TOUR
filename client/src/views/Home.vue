@@ -33,6 +33,7 @@
           </div>
           <div class="left-side-panel">
           <!-- map -->
+          <EuroMap class="euromap"/>
           </div>
       </div>
     </main>
@@ -42,8 +43,12 @@
 <script>
 // @ is an alias to /src
 import { Api } from '@/Api'
+import EuroMap from '@/views/Map.vue' // Adjust the path as necessary
 
 export default {
+  components: {
+    EuroMap
+  },
   name: 'home',
   data() {
     return {
@@ -172,5 +177,9 @@ a img {
 .dropdown-icon {
   width: 30px; /* Adjust the size as needed */
   height: 30px; /* Adjust the size as needed */
+}
+
+.euromap{
+  width: 150%
 }
 </style>
