@@ -5,8 +5,8 @@
         <router-link to="/"  class="logo"><img src="@/assets/horizontal-logo.png" alt="Euro Tour logo"></router-link>
       </logo>
       <nav class="navbar">
-        <a href="#cities" class="navbar-item"><img src="@/assets/cities.png"/> cities</a>
-        <a href="#placesToVisit" class="navbar-item"><img src="@/assets/places.png"/> places to visit</a>
+        <a href="#cities" class="navbar-item"><i class="fa-solid fa-city" style="color: #edf7fb;"></i> cities</a>
+        <a href="#placesToVisit" class="navbar-item"><i class="fa-solid fa-map-pin" style="color: #edf7fb;"></i> places to visit</a>
         <b-dropdown
           size="lg"
           variant="link"
@@ -28,7 +28,8 @@
           <div class="right-side-panel">
             <h1 class="hello">Hello!</h1>
             <p class="welcome-text">Make the most of your
-              upcoming travels! With your <b>preferences</b>
+              upcoming travels! </p>
+            <p class="welcome-text">With your <b>preferences</b>
               and our <b>recommendations</b> you will have
               the experience of a <b>lifetime</b></p>
           </div>
@@ -37,6 +38,44 @@
           <EuroMap class="euromap"/>
           </div>
       </div>
+      <section class="get-to-know-wrapper">
+        <h2 class="heading">Get to know us!</h2>
+        <div class="get-to-know-container">
+            <div class="get-to-know-box">
+                <h3>About us</h3>
+                <div class="get-to-wrapper-text">
+                  <p>Feeling lost in a new city?
+                  Want to know what's out there?</p>
+                <p>We got you!</p>
+                <p> With us you can discover the best
+                  places to visit in your chosen city,
+                  by finding somewhere that
+                  piques your interest.</p>
+                </div>
+            </div>
+            <div class="get-to-know-box">
+                <h3>Our goals</h3>
+                <div class="get-to-wrapper-text">
+                  <p>We want to promote safe travel for all,
+                with putting a focus on</p>
+                <p>• Solo women travelers</p>
+                <p>• POCs</p>
+                <p>• Members of LGBTQIA+</p>
+                <p>We intend for our travelers to be able to make
+                the most of their time in a new city.</p>
+                </div>
+            </div>
+            <div class="get-to-know-box">
+                <h3>Why join us?</h3>
+                <div class="get-to-wrapper-text">
+                  <p>With an account you can:</p>
+                <p>• Get personalised recommendations</p>
+                <p>• Favourite cities and places</p>
+                <p>• Leave reviews and ratings</p>
+                </div>
+            </div>
+        </div>
+      </section>
     </main>
   </div>
 </template>
@@ -156,8 +195,9 @@ export default {
 }
 
 .navbar a:hover,
-.logo-wrapper img {
-  color: #bc672a;
+.logo-wrapper img,
+.navbar a:hover .fa-solid {
+  color: #bc672a !important;
 }
 
 .layout-wrapper {
@@ -166,14 +206,12 @@ export default {
   grid-gap: 20px;  /* Optional: Add some space between columns */
   padding: 7rem 9% 2rem;
   width: 100%;
-  border: 2px solid blue;
 }
 
 .left-side-panel, .right-side-panel {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 2px solid orange;
 }
 
 .right-side-panel {
@@ -181,8 +219,66 @@ export default {
   flex-direction: column;
 }
 
+.right-side-panel p {
+  font-size: 1.7rem;
+  padding: 0.5rem 0;
+}
+
+section{
+    min-height: 100vh;
+    padding: 4rem 9% 2rem;
+}
+
+.get-to-know-wrapper h2{
+    margin-bottom: 3rem;
+    font-size: 3rem;
+}
+
+.get-to-know-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 3rem;
+}
+
+.get-to-know-container .get-to-know-box{
+    flex: 1 1 30rem;
+    background-color: #8FC6DF;
+    padding: 3rem 2rem 4rem;
+    border-radius: 2rem;
+    text-align: center;
+    transition: all 0.5s;
+    max-width: 30%;
+    height: 30rem;
+    border: 3px solid #045768;
+}
+
+.get-to-know-container .get-to-know-box:hover{
+    border-color: #bc672a;
+    transform: scale(1.03);
+}
+
+.get-to-know-box h3{
+    font-size: 2rem;
+    color: #045768;
+    margin-bottom: 2rem;
+}
+
+.get-to-know-box p{
+    font-size: 1rem;
+    margin: 0.5rem 0 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.get-to-wrapper-text{
+  display: flex;
+  flex-direction: column;
+}
+
 .logo img{
-  border: 3px solid pink;
   max-height: 4rem;
 }
 
