@@ -7,17 +7,13 @@
       <nav class="navbar">
         <a href="#cities"><img src="@/assets/cities.png"/>cities</a>
         <a href="#placesToVisit"><img src="@/assets/places.png"/>places to visit</a>
-        <b-nav-item-dropdown right>
-        <!-- Custom button with your image -->
-        <template #button>
-          <button class="btn dropdown-toggle" type="button">
-            <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
-          </button>
-        </template>
-        <!-- Dropdown items -->
-        <b-dropdown-item href="#">Log In</b-dropdown-item>
-        <b-dropdown-item href="#">Sign Up</b-dropdown-item>
-      </b-nav-item-dropdown>
+        <b-dropdown size="lg"  variant="link" toggle-class="text-decoration-none" no-caret>
+          <template #button-content>
+            <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon"/>
+          </template>
+          <b-dropdown-item to="/login" class="login-link">Log in</b-dropdown-item>
+          <b-dropdown-item to="/signup" class="signup-link">Sign up</b-dropdown-item>
+        </b-dropdown>
       </nav>
       <div class="user">
       </div>
