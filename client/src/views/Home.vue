@@ -2,39 +2,40 @@
   <div class="body-container">
     <header class="euro-tour-header">
       <logo class="logo-wrapper">
-        <router-link to="/"><img src="@/assets/horizontal-logo.png" alt="Euro Tour logo" draggable="false" class="logo"></router-link>
+        <router-link to="/"  class="logo"><img src="@/assets/horizontal-logo.png" alt="Euro Tour logo"></router-link>
       </logo>
       <nav class="navbar">
-        <a href="#cities"><font-awesome-icon icon="city" style="color: #edf7fb;" />cities</a>
-        <a href="#placesToVisit"><font-awesome-icon icon="map-pin" style="color: #edf7fb;" />places to visit</a>
-        <user-wrapper class="navbar">
-          <b-nav-item-dropdown img src="@/assets/sign-in-icon.png" text="user" class="navbar" right>
-          <b-dropdown-item href="#">log in</b-dropdown-item>
-          <b-dropdown-item href="#">sign up</b-dropdown-item>
-        </b-nav-item-dropdown>
-        </user-wrapper>
+        <a href="#cities"><img src="@/assets/cities.png"/>cities</a>
+        <a href="#placesToVisit"><img src="@/assets/places.png"/>places to visit</a>
+        <b-nav-item-dropdown right>
+        <!-- Custom button with your image -->
+        <template #button>
+          <button class="btn dropdown-toggle" type="button">
+            <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
+          </button>
+        </template>
+        <!-- Dropdown items -->
+        <b-dropdown-item href="#">Log In</b-dropdown-item>
+        <b-dropdown-item href="#">Sign Up</b-dropdown-item>
+      </b-nav-item-dropdown>
       </nav>
       <div class="user">
       </div>
     </header>
-    <div class="layout-wrapper">
-      <main>
-        <div class="right-side-panel">
-          <h1 class="hello">Hello!</h1>
-          <p class="p1">Make the most of your
-            upcoming travels! With your preferences
-            and our recommendations you will have
-            the experience of a lifetime</p>
-        </div>
-        <div class="left-side-panel">
-          <p class="p1">Make the most of your
-            upcoming travels! With your preferences
-            and our recommendations you will have
-            the experience of a lifetime</p>
-        <!-- map -->
-        </div>
-      </main>
-    </div>
+    <main>
+      <div class="layout-wrapper">
+          <div class="right-side-panel">
+            <h1 class="hello">Hello!</h1>
+            <p class="welcome-text">Make the most of your
+              upcoming travels! With your preferences
+              and our recommendations you will have
+              the experience of a lifetime</p>
+          </div>
+          <div class="left-side-panel">
+          <!-- map -->
+          </div>
+      </div>
+    </main>
   </div>
 </template>
 
@@ -87,41 +88,40 @@ export default {
     outline: none;
     font-family: "Lexend Deca", sans-serif;
     color: #bc672a;
-    background-color: #42515e;
 }
 
 .body-container{
   display: flex;
   flex-wrap: wrap;
   border: 2px solid green;
+  background-color: #42515e;
 }
 
-.euro-tour-header{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 2rem 9%;
-    background-color:  rgba(155, 169, 182, 1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 900;
-    border: 2px solid red;
-    max-height: 2rem;
+.euro-tour-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 1rem 9%; /* Adjust padding for more space */
+  background-color: rgba(155, 169, 182, 1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 900;
+  border: 2px solid red;
 }
 
-.navbar a, .logo-wrapper img {
-    font-size: 1.5rem;
-    color: #edf7fb;
-    margin-left: 4rem;
-    transition: 0.3s;
-    background-color: rgba(155, 169, 182, 1);
-    border: 2px solid red;
+.navbar a {
+  font-size: 1.5rem;
+  color: #edf7fb;
+  margin-left: 4rem;
+  border: 3px solid cyan;
+  transition: 0.3s;
 }
 
-.navbar a:hover, .logo-wrapper img{
-    color: #bc672a;
+.navbar a:hover,
+.logo-wrapper img {
+  color: #bc672a;
 }
 
 .layout-wrapper {
@@ -138,21 +138,39 @@ export default {
   justify-content: center;
   align-items: center;
   border: 2px solid orange;
-  padding: 20px;
 }
 
-.logo-wrapper img{
+.right-side-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo img{
   border: 3px solid pink;
-  max-width: 35%;
-  size: 20px;
+  max-height: 4rem;
 }
 
-.p1 {
-  font-size: 20px;
+.hello {
+  font-size: 3rem;
+}
+
+.welcome-text {
+  font-size: 2rem;
   border: 2px solid purple;
+  border: 2rem;;
+}
+
+a img {
+  max-height: 1rem;
+  color: #42515e;
 }
 
 .btn_message {
   margin-bottom: 1em;
+}
+
+.dropdown-icon {
+  width: 30px; /* Adjust the size as needed */
+  height: 30px; /* Adjust the size as needed */
 }
 </style>
