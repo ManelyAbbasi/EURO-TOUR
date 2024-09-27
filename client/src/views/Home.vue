@@ -77,6 +77,14 @@
         </div>
       </section>
     </main>
+    <footer class="footer">
+        <div class="footer-text">
+            <p> &copy; 2024 copyright: eurotrip.com</p>
+        </div>
+        <div class="top-icon">
+            <a href="#"><i class="fa-solid fa-caret-up"></i></a>
+        </div>
+    </footer>
   </div>
 </template>
 
@@ -288,7 +296,6 @@ section{
 
 .welcome-text {
   font-size: 2rem;
-  border: 2px solid purple;
   border: 2rem;;
 }
 
@@ -304,4 +311,41 @@ a img {
 .euromap{
   width: 150%
 }
+
+.footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 1rem;
+    background-color: #9BA9B6;
+    width: 100%;
+}
+
+.footer-text p{
+    color: #045768;
+    font-size: 1rem;
+    margin: 1rem;
+    padding: 0 0 1rem;
+}
+
+.top-icon a{
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background-color: #edf7fb;
+    border-radius: 50%;
+    transition: all 0.5s;
+}
+
+.top-icon a:hover{
+    box-shadow: 0 0 1 #045768;
+}
+
+.top-icon a i{
+    font-size: 2rem;
+    color: #045768;
+}
+
 </style>
