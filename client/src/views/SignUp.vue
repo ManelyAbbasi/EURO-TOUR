@@ -84,7 +84,7 @@ export default {
         'jul', 'aug', 'sep', 'oct', 'nov', 'dec'
       ],
       days: Array.from({ length: 31 }, (_, i) => i + 1), // Generates an array [1, 2, ..., 31]
-      years: Array.from({ length: 2012 - 1920 + 1 }, (_, i) => 2012 - i), // Generates array [2012, 2011, ..., 1920]
+      years: Array.from({ length: 2012 - 1920 + 1 }, (_, i) => 2012 - i) // Generates array [2012, 2011, ..., 1920]
     }
   },
   methods: {
