@@ -346,7 +346,7 @@ export default {
 }
 
 @media screen and (max-width: 991px){
-    section{
+    .get-to-know-wrapper{
         padding: 10rem 3% 2rem;
     }
     .euro-tour-header{
@@ -372,15 +372,15 @@ export default {
         flex-direction: column;
         gap: 2rem;
     }
-    .layout-wrapper,
+    .home-layout-wrapper,
     .get-to-know-wrapper{
         flex-direction: column;
         display: flex;
     }
-    .layout-wrapper p{
+    .home-layout-wrapper p{
         font-size: 2.5rem;
     }
-    .layout-wrapper h1{
+    .home-layout-wrapper h1{
         font-size: 5rem;
     }
 }
@@ -392,7 +392,7 @@ export default {
 }
 
 @media screen and (max-width:350px) {
-    .layout-wrapper img{
+    .home-layout-wrapper img{
         width: 90vw;
     }
     .footer{
