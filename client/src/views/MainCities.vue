@@ -30,7 +30,7 @@
 
       <main>
         <div class="maincities-layout-wrapper">
-          <div class="maincities-right-side-panel">
+          <div class="maincities-left-side-panel">
 
             <!-- carousel of cities -->
             <div class="carousel-container">
@@ -46,10 +46,20 @@
                 <b-carousel-slide img-src="https://picsum.photos/1024/480/?image=58"></b-carousel-slide>
 
               </b-carousel>
+
+            <p class="under-pic">
+                Slide #: {{ slide }}<br>
+            </p>
+            </div>
+            <div class="detail-about-city">
+                <p>good to know:</p>
+                <p>facts:</p>
+                <p>stats:</p>
+                <p>tags:</p>
             </div>
           </div>
 
-          <div class="maincities-left-side-panel">
+          <div class="maincities-right-side-panel">
             <!-- search and trending -->
           </div>
         </div>
@@ -72,14 +82,6 @@ export default {
     return {
       slide: 0,
       sliding: null
-    }
-  },
-  methods: {
-    onSlideStart(slide) {
-      this.sliding = true
-    },
-    onSlideEnd(slide) {
-      this.sliding = false
     }
   }
 }
@@ -174,21 +176,21 @@ export default {
   width: 100%;
 }
 
-.maincities-left-side-panel, .maincities-right-side-panel {
+.maincities-right-side-panel .maincities-left-side-panel {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.maincities-right-side-panel {
+.maincities-left-side-panel {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   background-color: #edf7fb;
 
 }
 
-.maincities-left-side-panel {
-    background-color: #759cab;
+.maincities-right-side-panel {
+  background-color: #759cab;
 }
 
 .logo img{
@@ -234,6 +236,14 @@ a img {
 .top-icon a i{
     font-size: 2rem;
     color: #045768;
+}
+
+.detail-about-city{
+    width: 80%;
+}
+
+.carousel-container{
+    width: 100%;
 }
 
 @media screen and (max-width:1200px) {
