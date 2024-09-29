@@ -155,16 +155,16 @@ export default {
   font-family: 'Lexend Deca', sans-serif;
   border: rgba(0, 0, 0, 0.301);
   background-color: rgba(0, 0, 0, 0.301);
-  width: 50%;
+  width: 100%;
   outline: none;
 }
 
 .dob-container {
   display: flex;
   justify-content: space-between;  /* Evenly space the selects */
-  width: 37%;
+  width: 79%;
   margin-top: -30px;
-  margin-left: 110px;
+  margin-left: 190px;
   font-family: 'Lexend Deca', sans-serif;
 }
 
@@ -185,7 +185,7 @@ export default {
 /* Style for the Date of Birth label */
 .signup-row-form label {
   position: relative;
-  left: -180px;
+  left: -185px;
   top: 30px;
   font-family: 'Lexend Deca', sans-serif;
   font-size: 16px;
