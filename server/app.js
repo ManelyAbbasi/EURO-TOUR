@@ -34,6 +34,7 @@ const citiesRoutes = require('./routes/citiesRoutes');
 const usersRoutes = require('./routes/usersRoutes')
 const reviewsRoutes = require('./routes/reviewsRoutes');
 const placesRoutes = require('./routes/placesToVisitRoutes');
+const authenticateRoutes = require('./routes/authenticateRoutes')
 
 app.get('/api', function(req, res) {
     res.json({'message': 'Welcome to your DIT342 backend ExpressJS project!'});
@@ -43,6 +44,7 @@ app.use('/api/cities', citiesRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/reviews', reviewsRoutes);
 app.use('/api/places', placesRoutes);
+app.use('/api/authenticate', authenticateRoutes);
 
 // Catch all non-error handler for api (i.e., 404 Not Found)
 app.use('/api/*', function (req, res) {

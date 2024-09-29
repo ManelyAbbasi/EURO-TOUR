@@ -3,7 +3,7 @@ var router = express.Router();
 const UsersModel = require("../models/usersModel");
 var passport = require('passport');
 
-router.post('/login', function (req, res, next) {
+async function login(req, res, next) {
     passport.authenticate('local', function (err, user, info) {
         if (err) {
             return next(err);
@@ -21,9 +21,10 @@ router.post('/login', function (req, res, next) {
             res.send({ 'message': 'User authenticated' });
         });
     })(req, res, next);
-});
+};
 
-router.get('/isAuthenticated', function (req, res) {
+
+async function isAuthenticated(req, res) {
     try {
         if (req.isAuthenticated()) {
             return res.json({ "authenticated": true, "username": req.user.username, "_id": req.user._id, "isAdmin": req.user.isAdmin });
@@ -33,13 +34,17 @@ router.get('/isAuthenticated', function (req, res) {
     } catch (err) {
         return next(err);
     }
-});
+};
 
-router.delete('/logout', function (req, res, next) {
+async function logout(req, res, next) {
     req.logout(function (err) {
         if (err) { return next(err); }
         res.json({ "message": "User logged out" });
     });
-});
+};
 
-module.exports = router;
+module.exports = {
+    logout,
+    isAuthenticated,
+    login
+};
