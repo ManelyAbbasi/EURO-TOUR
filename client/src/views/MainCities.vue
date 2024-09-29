@@ -58,8 +58,9 @@
                     <h4 class="maincities-or">or</h4>
                     <button class="maincities-ratings-btn" type="button">ratings</button>
                 </div>
-          </div>
-        </div>
+            </div>
+            </div>
+            </div>
       </main>
 
       <footer class="footer">
