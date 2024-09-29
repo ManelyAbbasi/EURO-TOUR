@@ -32,25 +32,25 @@
             </div>
 
             <!-- 4th row: date of birth -->
-            <div class="signup-row-form">
-              <label for="dob">date of birth</label><br />
-              <div class="dob-container">
-                <select v-model="birthDay" class="signup-input dob-select">
-                  <option disabled value="">day</option>
-                  <option v-for="day in days" :key="day" :value="day">{{ day }}</option>
-                </select>
+            <div class="signup-row-form dob-row">
+             <label for="dob">date of birth</label><br />
+             <div class="dob-container">
+              <select v-model="birthDay" class="signup-input dob-select">
+              <option disabled value="">day</option>
+              <option v-for="day in days" :key="day" :value="day">{{ day }}</option>
+            </select>
 
-                <select v-model="birthMonth" class="signup-input dob-select">
-                  <option disabled value="">month</option>
-                  <option v-for="(month, index) in months" :key="index" :value="index + 1">{{ month }}</option>
-                </select>
+            <select v-model="birthMonth" class="signup-input dob-select">
+              <option disabled value="">month</option>
+              <option v-for="(month, index) in months" :key="index" :value="index + 1">{{ month }}</option>
+            </select>
 
-                <select v-model="birthYear" class="signup-input dob-select">
-                  <option disabled value="">year</option>
-                  <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
-                </select>
-              </div>
-            </div>
+            <select v-model="birthYear" class="signup-input dob-select">
+              <option disabled value="">year</option>
+              <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+            </select>
+        </div>
+        </div>
 
             <!-- Sign up button -->
             <div class="signup-button-container">
@@ -155,16 +155,16 @@ export default {
   font-family: 'Lexend Deca', sans-serif;
   border: rgba(0, 0, 0, 0.301);
   background-color: rgba(0, 0, 0, 0.301);
-  width: 100%;
+  width: 120%;
   outline: none;
 }
 
 .dob-container {
   display: flex;
   justify-content: space-between;  /* Evenly space the selects */
-  width: 79%;
+  width: 85%;
   margin-top: -30px;
-  margin-left: 190px;
+  margin-left: 150px;
   font-family: 'Lexend Deca', sans-serif;
 }
 
@@ -185,7 +185,7 @@ export default {
 /* Style for the Date of Birth label */
 .signup-row-form label {
   position: relative;
-  left: -185px;
+  left: -210px;
   top: 30px;
   font-family: 'Lexend Deca', sans-serif;
   font-size: 16px;
@@ -218,7 +218,7 @@ button:active[disabled] {
   cursor: pointer;
   border-radius: 0px;
   margin-top: 50px;
-  width: 15%;
+  width: 30%;
 }
 
 .signup-btn:hover {
