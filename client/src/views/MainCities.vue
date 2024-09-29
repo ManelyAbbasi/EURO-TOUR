@@ -24,8 +24,8 @@
         </nav>
         </header>
         <main>
-        <div class="layout-wrapper">
-            <div class="right-side-panel">
+        <div class="maincities-layout-wrapper">
+            <div class="maincities-right-side-panel">
                 <!--carousel of cities-->
                 <p>hello</p>
                 <div>
@@ -86,7 +86,7 @@
         </p>
     </div>
             </div>
-            <div class="left-side-panel">
+            <div class="maincities-left-side-panel">
                 <!--search and trending-->
             </div>
         </div>
@@ -202,7 +202,7 @@ export default {
     color: #bc672a!important;
 }
 
-.layout-wrapper {
+.maincities-layout-wrapper {
   display: grid;
   grid-template-columns: 2fr 1fr;  /* Create two equal columns */
   grid-gap: 20px;  /* Optional: Add some space between columns */
@@ -210,19 +210,19 @@ export default {
   width: 100%;
 }
 
-.left-side-panel, .right-side-panel {
+.maincities-left-side-panel, .maincities-right-side-panel {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.right-side-panel {
+.maincities-right-side-panel {
   display: flex;
   flex-direction: column;
   background-color: #edf7fb;
 }
 
-.left-side-panel {
+.maincities-left-side-panel {
     background-color: #759cab;
 }
 
