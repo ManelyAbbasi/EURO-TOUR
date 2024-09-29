@@ -2,63 +2,63 @@
     <!-- Parent container for the split layout -->
     <div class="split-container">
       <!-- Left side: light blue background -->
-      <div class="left-side">
+      <div class="signup-left-side">
         <!-- Logo section -->
-        <div class="logo">
+        <div class="signup-logo">
           <router-link to="/">
-            <img src="@/assets/vertical-logo.png" alt="Euro Tour logo" draggable="false" class="logo-img">
+            <img src="@/assets/vertical-logo.png" alt="Euro Tour logo" draggable="false" class="signup-logo-img">
           </router-link>
         </div>
       </div>
 
       <!-- Right side: Form with dark blue background -->
-      <div class="right-side">
-        <div class="container">
+      <div class="signup-right-side">
+        <div class="signup-container">
           <!-- Container for the form -->
-          <div class="form-entries">
+          <div class="signup-form-entries">
             <!-- 1st row: username -->
-            <div class="row-form">
-              <input class="input" name="username" id="usernameID" type="text" v-model="username" placeholder="username">
+            <div class="signup-row-form">
+              <input class="signup-input" name="username" id="usernameID" type="text" v-model="username" placeholder="username">
             </div>
 
             <!-- 2nd row: password -->
-            <div class="row-form">
-              <input class="input" name="password" id="passwordID" type="password" v-model="password" placeholder="password">
+            <div class="signup-row-form">
+              <input class="signup-input" name="password" id="passwordID" type="password" v-model="password" placeholder="password">
             </div>
 
             <!-- 3rd row: confirm password -->
-            <div class="row-form">
-              <input class="input" name="confirm password" id="confirmpasswordID" type="password" v-model="confirmpassword" placeholder="confirm password">
+            <div class="signup-row-form">
+              <input class="signup-input" name="confirm password" id="confirmpasswordID" type="password" v-model="confirmpassword" placeholder="confirm password">
             </div>
 
             <!-- 4th row: date of birth -->
-            <div class="row-form">
-              <label for="dob">date of birth</label><br />
-              <div class="dob-container">
-                <select v-model="birthDay" class="input dob-select">
-                  <option disabled value="">day</option>
-                  <option v-for="day in days" :key="day" :value="day">{{ day }}</option>
-                </select>
+            <div class="signup-row-form dob-row">
+             <label for="dob">date of birth</label><br />
+             <div class="dob-container">
+              <select v-model="birthDay" class="signup-input dob-select">
+              <option disabled value="">day</option>
+              <option v-for="day in days" :key="day" :value="day">{{ day }}</option>
+            </select>
 
-                <select v-model="birthMonth" class="input dob-select">
-                  <option disabled value="">month</option>
-                  <option v-for="(month, index) in months" :key="index" :value="index + 1">{{ month }}</option>
-                </select>
+            <select v-model="birthMonth" class="signup-input dob-select">
+              <option disabled value="">month</option>
+              <option v-for="(month, index) in months" :key="index" :value="index + 1">{{ month }}</option>
+            </select>
 
-                <select v-model="birthYear" class="input dob-select">
-                  <option disabled value="">year</option>
-                  <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
-                </select>
-              </div>
-            </div>
+            <select v-model="birthYear" class="signup-input dob-select">
+              <option disabled value="">year</option>
+              <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+            </select>
+        </div>
+        </div>
 
             <!-- Sign up button -->
-            <div class="button-container">
-              <button class="btn" type="button" @click="saveButton()" :disabled="isEmpty">sign up</button>
+            <div class="signup-button-container">
+              <button class="signup-btn" type="button" @click="saveButton()" :disabled="isEmpty">sign up</button>
             </div>
 
              <!-- Already have an account section -->
-          <div class="login-container">
+          <div class="signup-login-container">
             <span>already have an account? </span>
             <router-link to="/login" class="login-link">log in</router-link>
           </div>
@@ -90,7 +90,6 @@ export default {
   methods: {
     saveButton() {
       if (!this.isEmpty) {
-        // Add your logic to save or submit the form here
         console.log('Form submitted')
       }
     }
@@ -115,12 +114,12 @@ export default {
   height: 100vh;
 }
 
-.left-side {
+.signup-left-side {
   flex: 1;
   background-color: #9BA9B6;
 }
 
-.right-side {
+.signup-right-side {
   flex: 1.5;
   background-color: #42515e;
   display: flex;
@@ -129,18 +128,18 @@ export default {
   justify-content: center;
 }
 
-.logo {
+.signup-logo {
   margin-bottom: 20px;            /* Space between logo and form */
 }
 
-.logo-img {
+.signup-logo-img {
   width: 80%;
   max-width: 500px;
   margin-top: 30%;
 }
 
 /* Styling for the row of the name, username and password */
-.row-form {
+.signup-row-form {
   display: flex;
   margin-top: 2%;
   align-items: center;
@@ -148,23 +147,23 @@ export default {
 }
 
 /* Styling specific to the input fields */
-.input {
+.signup-input {
   color: #759CAB;
   font-size: 16px;
   padding: 12px 20px;
   font-family: 'Lexend Deca', sans-serif;
   border: rgba(0, 0, 0, 0.301);
   background-color: rgba(0, 0, 0, 0.301);
-  width: 50%;
+  width: 120%;
   outline: none;
 }
 
 .dob-container {
   display: flex;
   justify-content: space-between;  /* Evenly space the selects */
-  width: 37%;
+  width: 85%;
   margin-top: -30px;
-  margin-left: 110px;
+  margin-left: 150px;
   font-family: 'Lexend Deca', sans-serif;
 }
 
@@ -183,16 +182,16 @@ export default {
 }
 
 /* Style for the Date of Birth label */
-.row-form label {
+.signup-row-form label {
   position: relative;
-  left: -180px;
+  left: -210px;
   top: 30px;
   font-family: 'Lexend Deca', sans-serif;
   font-size: 16px;
   color: #757575;
 }
 
-.button-container {
+.signup-button-container {
   display: flex;
   display: row;
   gap: 30px;
@@ -210,7 +209,7 @@ button:active[disabled] {
   transform: none;
 }
 
-.btn {
+.signup-btn {
   color: #EDF7FB;
   font-size: 2.5vh;
   border: #759CAB;
@@ -218,16 +217,16 @@ button:active[disabled] {
   cursor: pointer;
   border-radius: 0px;
   margin-top: 50px;
-  width: 15%;
+  width: 30%;
 }
 
-.btn:hover {
+.signup-btn:hover {
   background-color: #759CAB;
   color: #EDF7FB;
 }
 
 /* Styling for the button when disabled */
-.btn:disabled {
+.signup-btn:disabled {
   color: #EDF7FB;
   font-size: 2.5vh;
   border: 2px solid #757575;
@@ -236,7 +235,7 @@ button:active[disabled] {
   cursor: not-allowed;
 }
 
-.login-container {
+.signup-login-container {
   text-align: center;
   margin-top: 5px;
   font-family: 'Lexend Deca', sans-serif;
