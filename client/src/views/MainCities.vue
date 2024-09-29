@@ -60,9 +60,17 @@
           </div>
 
           <div class="maincities-right-side-panel">
-            <!-- search and trending -->
-          </div>
-        </div>
+            <div class="maincities-right-side-panel">
+                <!--search and trending-->
+                <h2 class="maincities-search-title">Search cities by: <i class="fa-solid fa-filter" style="color: #045768;"></i></h2>
+                <div class="maincities-button-wrapper">
+                    <button class="maincities-tags-btn" type="button">tags</button>
+                    <h4 class="maincities-or">or</h4>
+                    <button class="maincities-ratings-btn" type="button">ratings</button>
+                </div>
+            </div>
+            </div>
+            </div>
       </main>
 
       <footer class="footer">
@@ -190,7 +198,40 @@ export default {
 }
 
 .maincities-right-side-panel {
-  background-color: #759cab;
+    background-color: #759cab;
+    flex-direction: column;
+    display: flex;
+}
+
+.maincities-left-side-panel h2 {
+    color: #045768;
+    font-size: 2rem;
+}
+
+.maincities-left-side-panel h4 {
+    color: #045768;
+    font-size: 1.5rem;
+}
+
+.maincities-button-wrapper {
+    flex-direction: row;
+    display: flex;
+    gap: 2rem;
+}
+
+.maincities-button-wrapper button{
+    padding: 0 2rem;
+    color: #edf7fb;
+    background-color: #9BA9B6;
+    border: none;
+    transition: 0.8s all;
+    max-width: 7rem;
+}
+
+.maincities-button-wrapper button:hover{
+    color: #9BA9B6;
+    background-color: #edf7fb;
+    transform: scale(1.05);
 }
 
 .logo img{
