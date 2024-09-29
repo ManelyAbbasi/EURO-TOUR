@@ -1,8 +1,8 @@
 <template>
-  <div class="body-container">
+  <div class="home-body-container">
     <header class="euro-tour-header">
-      <logo class="logo-wrapper">
-        <router-link to="/"  class="logo"><img src="@/assets/horizontal-logo.png" alt="Euro Tour logo"></router-link>
+      <logo class="header-logo-wrapper">
+        <router-link to="/"  class="home-logo"><img src="@/assets/horizontal-logo.png" alt="Euro Tour logo"></router-link>
       </logo>
       <nav class="navbar">
         <router-link to="/maincities" class="navbar-item"><i class="fa-solid fa-city" style="color: #edf7fb;"></i> cities</router-link>
@@ -24,8 +24,8 @@
       </nav>
     </header>
     <main>
-      <div class="layout-wrapper">
-          <div class="right-side-panel">
+      <div class="home-layout-wrapper">
+          <div class="home-right-side-panel">
             <h1 class="hello">Hello!</h1>
             <p class="welcome-text">Make the most of your
               upcoming travels! </p>
@@ -33,13 +33,13 @@
               and our <b>recommendations</b> you will have
               the experience of a <b>lifetime</b></p>
           </div>
-          <div class="left-side-panel">
+          <div class="home-left-side-panel">
           <!-- map -->
           <EuroMap class="euromap"/>
           </div>
       </div>
       <section class="get-to-know-wrapper">
-        <h2 class="heading">Get to know us!</h2>
+        <h2 class="home-heading">Get to know us!</h2>
         <div class="get-to-know-container">
             <div class="get-to-know-box">
                 <h3>About us</h3>
@@ -131,7 +131,7 @@ export default {
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
 
-*{
+.home-body-container{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -143,7 +143,7 @@ export default {
     color: #bc672a;
 }
 
-.body-container{
+.home-body-container{
   display: flex;
   flex-wrap: wrap;
   background-color: #42515e;
@@ -208,7 +208,7 @@ export default {
   color: #bc672a !important;
 }
 
-.layout-wrapper {
+.home-layout-wrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;  /* Create two equal columns */
   grid-gap: 20px;  /* Optional: Add some space between columns */
@@ -216,23 +216,23 @@ export default {
   width: 100%;
 }
 
-.left-side-panel, .right-side-panel {
+.home-left-side-panel, .home-right-side-panel {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.right-side-panel {
+.home-right-side-panel {
   display: flex;
   flex-direction: column;
 }
 
-.right-side-panel p {
+.home-right-side-panel p {
   font-size: 1.7rem;
   padding: 0.5rem 0;
 }
 
-section{
+.get-to-know-wrapper{
     min-height: 100vh;
     padding: 4rem 9% 2rem;
 }
@@ -286,7 +286,7 @@ section{
   flex-direction: column;
 }
 
-.logo img{
+.home-logo img{
   max-height: 4rem;
 }
 
@@ -297,15 +297,6 @@ section{
 .welcome-text {
   font-size: 2rem;
   border: 2rem;;
-}
-
-a img {
-  max-height: 1rem;
-  color: #42515e;
-}
-
-.btn_message {
-  margin-bottom: 1em;
 }
 
 .euromap{
@@ -355,7 +346,7 @@ a img {
 }
 
 @media screen and (max-width: 991px){
-    section{
+    .get-to-know-wrapper{
         padding: 10rem 3% 2rem;
     }
     .euro-tour-header{
@@ -381,15 +372,15 @@ a img {
         flex-direction: column;
         gap: 2rem;
     }
-    .layout-wrapper,
+    .home-layout-wrapper,
     .get-to-know-wrapper{
         flex-direction: column;
         display: flex;
     }
-    .layout-wrapper p{
+    .home-layout-wrapper p{
         font-size: 2.5rem;
     }
-    .layout-wrapper h1{
+    .home-layout-wrapper h1{
         font-size: 5rem;
     }
 }
@@ -401,7 +392,7 @@ a img {
 }
 
 @media screen and (max-width:350px) {
-    .layout-wrapper img{
+    .home-layout-wrapper img{
         width: 90vw;
     }
     .footer{
