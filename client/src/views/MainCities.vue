@@ -68,6 +68,7 @@
                     <h4 class="maincities-or">or</h4>
                     <button class="maincities-ratings-btn" type="button">ratings</button>
                 </div>
+                <h2 class="maincities-search-title">Trending Cities:</h2>
             </div>
             </div>
             </div>
@@ -201,14 +202,17 @@ export default {
     background-color: #759cab;
     flex-direction: column;
     display: flex;
+    align-items: center;
 }
 
-.maincities-left-side-panel h2 {
+.maincities-right-side-panel h2 {
     color: #045768;
     font-size: 2rem;
+    padding: 0.5rem;
+    margin: 1rem 0;
 }
 
-.maincities-left-side-panel h4 {
+.maincities-right-side-panel h4 {
     color: #045768;
     font-size: 1.5rem;
 }
