@@ -1,91 +1,55 @@
 <template>
     <div class="maincities-body-container">
-        <header class="euro-tour-header">
+      <header class="euro-tour-header">
         <logo class="logo-wrapper">
-            <router-link to="/"  class="logo"><img src="@/assets/horizontal-logo.png" alt="Euro Tour logo"></router-link>
+          <router-link to="/" class="logo">
+            <img src="@/assets/horizontal-logo.png" alt="Euro Tour logo" />
+          </router-link>
         </logo>
         <nav class="navbar">
-            <router-link to="/maincities" class="navbar-item maincities-navbar-item"><i class="fa-solid fa-city" style="color: #edf7fb;"></i> cities</router-link>
-            <a href="#placesToVisit" class="navbar-item"><i class="fa-solid fa-map-pin" style="color: #edf7fb;"></i> places to visit</a>
-            <b-dropdown
+          <router-link to="/maincities" class="navbar-item maincities-navbar-item"
+            ><i class="fa-solid fa-city"></i> cities</router-link>
+          <a href="#placesToVisit" class="navbar-item"
+            ><i class="fa-solid fa-map-pin"></i> places to visit</a>
+          <b-dropdown
             size="lg"
             variant="link"
             toggle-class="text-decoration-none"
             no-caret
             class="navbar-item dropdown"
-            >
+          >
             <template #button-content>
-                <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
+              <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
             </template>
             <!-- Dropdown items -->
             <b-dropdown-item class="dropdown-item" to="/login">Log in</b-dropdown-item>
             <b-dropdown-item class="dropdown-item" to="/signup">Sign up</b-dropdown-item>
-            </b-dropdown>
+          </b-dropdown>
         </nav>
-        </header>
-        <main>
+      </header>
+
+      <main>
         <div class="maincities-layout-wrapper">
-            <div class="maincities-right-side-panel">
-                <!--carousel of cities-->
-                <p>hello</p>
-                <div>
-    <b-carousel
-      id="carousel-1"
-      v-model="slide"
-      :interval="4000"
-      controls
-      indicators
-      background="#ababab"
-      img-width="1024"
-      img-height="480"
-      style="text-shadow: 1px 1px 2px #333;"
-      @sliding-start="onSlideStart"
-      @sliding-end="onSlideEnd"
-    >
-      <!-- Text slides with image -->
-      <b-carousel-slide
-        caption="First slide"
-        text="Nulla vitae elit libero, a pharetra augue mollis interdum."
-        img-src="https://picsum.photos/1024/480/?image=52"
-      ></b-carousel-slide>
+          <div class="maincities-right-side-panel">
 
-      <!-- Slides with custom text -->
-      <b-carousel-slide img-src="https://picsum.photos/1024/480/?image=54">
-        <h1>Hello world!</h1>
-      </b-carousel-slide>
+            <!-- carousel of cities -->
+            <div class="carousel-container">
+              <b-carousel
+                id="carousel-1"
+                v-model="slide"
+                :interval="4000"
+                controls
+              >
+                <!--image -->
+                <b-carousel-slide img-src="https://picsum.photos/1024/480/?image=52"></b-carousel-slide>
+                <b-carousel-slide img-src="https://picsum.photos/1024/480/?image=54"></b-carousel-slide>
+                <b-carousel-slide img-src="https://picsum.photos/1024/480/?image=58"></b-carousel-slide>
 
-      <!-- Slides with image only -->
-      <b-carousel-slide img-src="https://picsum.photos/1024/480/?image=58"></b-carousel-slide>
-
-      <!-- Slides with img slot -->
-      <!-- Note the classes .d-block and .img-fluid to prevent browser default image alignment -->
-      <b-carousel-slide>
-        <template #img>
-          <img
-            class="d-block img-fluid w-100"
-            width="1024"
-            height="480"
-            src="https://picsum.photos/1024/480/?image=55"
-            alt="image slot"
-          >
-        </template>
-      </b-carousel-slide>
-
-      <!-- Slide with blank fluid image to maintain slide aspect ratio -->
-      <b-carousel-slide caption="Blank Image" img-blank img-alt="Blank image">
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eros felis, tincidunt
-          a tincidunt eget, convallis vel est. Ut pellentesque ut lacus vel interdum.
-        </p>
-          </b-carousel-slide>
-        </b-carousel>
-
-        <p class="mt-4">
-        Slide #: {{ slide }}<br>
-        Sliding: {{ sliding }}
-        </p>
-    </div>
+              </b-carousel>
             </div>
+          </div>
+
+          <div class="maincities-left-side-panel">
             <div class="maincities-left-side-panel">
                 <!--search and trending-->
                 <h2 class="maincities-search-title">Search cities by: <i class="fa-solid fa-filter" style="color: #045768;"></i></h2>
@@ -94,19 +58,20 @@
                     <h4 class="maincities-or">or</h4>
                     <button class="maincities-ratings-btn" type="button">ratings</button>
                 </div>
-            </div>
+          </div>
         </div>
-        </main>
-        <footer class="footer">
-            <div class="footer-text">
-                <p> &copy; 2024 copyright: eurotrip.com</p>
-            </div>
-            <div class="top-icon">
-                <a href="#"><i class="fa-solid fa-caret-up"></i></a>
-            </div>
-        </footer>
-  </div>
-</template>
+      </main>
+
+      <footer class="footer">
+        <div class="footer-text">
+          <p> &copy; 2024 copyright: eurotrip.com</p>
+        </div>
+        <div class="top-icon">
+          <a href="#"><i class="fa-solid fa-caret-up"></i></a>
+        </div>
+      </footer>
+    </div>
+  </template>
 
 <script>
 export default {
@@ -226,6 +191,7 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: #edf7fb;
+
 }
 
 .maincities-left-side-panel {
