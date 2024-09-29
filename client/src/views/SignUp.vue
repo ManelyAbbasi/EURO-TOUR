@@ -4,7 +4,7 @@
       <!-- Left side: light blue background -->
       <div class="left-side">
         <!-- Logo section -->
-        <div class="logo">
+        <div class="signup-logo">
           <router-link to="/">
             <img src="@/assets/vertical-logo.png" alt="Euro Tour logo" draggable="false" class="logo-img">
           </router-link>
@@ -129,7 +129,7 @@ export default {
   justify-content: center;
 }
 
-.logo {
+.signup-logo {
   margin-bottom: 20px;            /* Space between logo and form */
 }
 

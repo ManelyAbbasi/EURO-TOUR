@@ -1,8 +1,8 @@
 <template>
-  <div class="body-container">
+  <div class="home-body-container">
     <header class="euro-tour-header">
       <logo class="logo-wrapper">
-        <router-link to="/"  class="logo"><img src="@/assets/horizontal-logo.png" alt="Euro Tour logo"></router-link>
+        <router-link to="/"  class="logo-home"><img src="@/assets/horizontal-logo.png" alt="Euro Tour logo"></router-link>
       </logo>
       <nav class="navbar">
         <a href="#cities" class="navbar-item"><i class="fa-solid fa-city" style="color: #edf7fb;"></i> cities</a>
@@ -131,7 +131,7 @@ export default {
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
 
-*{
+.home-body-container{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -143,7 +143,7 @@ export default {
     color: #bc672a;
 }
 
-.body-container{
+.home-body-container{
   display: flex;
   flex-wrap: wrap;
   background-color: #42515e;
@@ -286,7 +286,7 @@ section{
   flex-direction: column;
 }
 
-.logo img{
+.logo-home img{
   max-height: 4rem;
 }
 
