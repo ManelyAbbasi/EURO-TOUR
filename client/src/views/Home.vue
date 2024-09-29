@@ -1,8 +1,8 @@
 <template>
   <div class="home-body-container">
     <header class="euro-tour-header">
-      <logo class="logo-wrapper">
-        <router-link to="/"  class="logo-home"><img src="@/assets/horizontal-logo.png" alt="Euro Tour logo"></router-link>
+      <logo class="header-logo-wrapper">
+        <router-link to="/"  class="home-logo"><img src="@/assets/horizontal-logo.png" alt="Euro Tour logo"></router-link>
       </logo>
       <nav class="navbar">
         <a href="#cities" class="navbar-item"><i class="fa-solid fa-city" style="color: #edf7fb;"></i> cities</a>
@@ -24,8 +24,8 @@
       </nav>
     </header>
     <main>
-      <div class="layout-wrapper">
-          <div class="right-side-panel">
+      <div class="home-layout-wrapper">
+          <div class="home-right-side-panel">
             <h1 class="hello">Hello!</h1>
             <p class="welcome-text">Make the most of your
               upcoming travels! </p>
@@ -33,13 +33,13 @@
               and our <b>recommendations</b> you will have
               the experience of a <b>lifetime</b></p>
           </div>
-          <div class="left-side-panel">
+          <div class="home-left-side-panel">
           <!-- map -->
           <EuroMap class="euromap"/>
           </div>
       </div>
       <section class="get-to-know-wrapper">
-        <h2 class="heading">Get to know us!</h2>
+        <h2 class="home-heading">Get to know us!</h2>
         <div class="get-to-know-container">
             <div class="get-to-know-box">
                 <h3>About us</h3>
@@ -208,7 +208,7 @@ export default {
   color: #bc672a !important;
 }
 
-.layout-wrapper {
+.home-layout-wrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;  /* Create two equal columns */
   grid-gap: 20px;  /* Optional: Add some space between columns */
@@ -216,23 +216,23 @@ export default {
   width: 100%;
 }
 
-.left-side-panel, .right-side-panel {
+.home-left-side-panel, .home-right-side-panel {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.right-side-panel {
+.home-right-side-panel {
   display: flex;
   flex-direction: column;
 }
 
-.right-side-panel p {
+.home-right-side-panel p {
   font-size: 1.7rem;
   padding: 0.5rem 0;
 }
 
-section{
+.get-to-know-wrapper{
     min-height: 100vh;
     padding: 4rem 9% 2rem;
 }
@@ -286,7 +286,7 @@ section{
   flex-direction: column;
 }
 
-.logo-home img{
+.home-logo img{
   max-height: 4rem;
 }
 
@@ -297,15 +297,6 @@ section{
 .welcome-text {
   font-size: 2rem;
   border: 2rem;;
-}
-
-a img {
-  max-height: 1rem;
-  color: #42515e;
-}
-
-.btn_message {
-  margin-bottom: 1em;
 }
 
 .euromap{
