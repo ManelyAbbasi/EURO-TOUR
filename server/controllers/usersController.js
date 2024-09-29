@@ -4,50 +4,87 @@ const router = express.Router();
 const ReviewsModel = require('../models/reviewsModel');
 const PlacesToVisitSchema = require('../models/placesToVisitModel');
 const CitiesModel = require('../models/citiesModel');
+var passport = require('passport');
 
 
 async function createUser(req, res, next) {
-
     try {
+        // Check if the user already exists
         const existingUser = await UsersModel.findOne({ username: req.body.username });
 
-        if (existingUser) { 
+        if (existingUser) {
             return res.status(400).json({ message: 'User with this username already exists' });
         }
 
+        // Validate username
         if (typeof req.body.username !== 'string' || req.body.username.trim() === '') {
             return res.status(400).json({ "message": "Invalid username: must be a non-empty string" });
         }
+
+        // Validate password
         if (typeof req.body.password !== 'string' || req.body.password.trim() === '') {
             return res.status(400).json({ "message": "Invalid password: must be a non-empty string" });
         }
+
+        // Validate birthDate
         if (!req.body.birthDate || isNaN(Date.parse(req.body.birthDate))) {
             return res.status(400).json({ "message": "Invalid birth date: must be a valid date format" });
         }
+
         const birthDate = new Date(req.body.birthDate);
         const minDate = new Date('1920-01-01');
         const maxDate = new Date('2012-01-01');
         if (birthDate < minDate || birthDate > maxDate) {
             return res.status(400).json({ message: "Invalid birthDate: must be between 1920-01-01 and 2012-01-01" });
         }
+
+        // Validate isLGBTQIA
         if (typeof req.body.isLGBTQIA !== 'boolean') {
             return res.status(400).json({ "message": "Invalid isLGBTQIA: must be a boolean value" });
         }
+
+        // Validate gender
         const validGenders = ['male', 'female', 'non-binary', 'other'];
         if (!validGenders.includes(req.body.gender)) {
             return res.status(400).json({ message: 'Invalid gender value' });
         }
+
+        // Validate isAdmin
         if (typeof req.body.isAdmin !== 'boolean') {
             return res.status(400).json({ "message": "Invalid isAdmin: must be a boolean value" });
         }
 
-        const users = new UsersModel(req.body);
-        await users.save();
-        res.status(201).json(users);
+        // Create the new user using Passport's register method
+        UsersModel.register(new UsersModel({
+            username: req.body.username,
+            birthDate: req.body.birthDate,
+            isLGBTQIA: req.body.isLGBTQIA,
+            gender: req.body.gender,
+            isAdmin: req.body.isAdmin
+        }), req.body.password, function (err, user) {
+            if (err) {
+                // Handle error, such as duplicate user or validation error
+                return res.status(400).json({ "message": err.message });
+            }
+
+            // Authenticate the user once registered
+            passport.authenticate('local')(req, res, function () {
+                // Log the user in
+                req.logIn(user, function (err) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    // Send success response with user data
+                    res.status(201).json({ user, "message": "User created & authenticated" });
+                });
+            });
+        });
     } catch (err) {
-        next(err); 
+        next(err);
     }
- };
+};
+
 
 
 async function getAllUsers(req, res) {
@@ -129,6 +166,10 @@ async function patchUser(req, res, next) {
         const user = await UsersModel.findOne({ username: req.params.username });
         if (user == null) {
             return res.status(404).json({ "message": "User not found" });
+        }
+
+        if (!req.isAuthenticated() || req.user._id.toString() !== user._id.toString()) {
+            return res.status(401).json({ "message": "You are not authorized to edit this user" });
         }
 
         user.password = req.body.password || user.password;
