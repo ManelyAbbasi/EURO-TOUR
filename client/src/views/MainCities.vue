@@ -34,30 +34,28 @@
 
             <!-- carousel of cities -->
             <div class="carousel-container">
-              <b-carousel
-                id="carousel-1"
-                v-model="slide"
-                :interval="4000"
-                controls
-              >
-                <!--image -->
+                <b-carousel id="carousel-1" v-model="slide" :interval="4000" controls>
+                <!--images -->
                 <b-carousel-slide img-src="https://picsum.photos/1024/480/?image=52"></b-carousel-slide>
                 <b-carousel-slide img-src="https://picsum.photos/1024/480/?image=54"></b-carousel-slide>
                 <b-carousel-slide img-src="https://picsum.photos/1024/480/?image=58"></b-carousel-slide>
 
               </b-carousel>
 
+            <!-- display new text for each slide -->
             <p class="under-pic">
-                Slide #: {{ slide }}<br>
+            {{ captions[slide] }} <!-- this will dynamically change based on the active slide -->
             </p>
+
             </div>
+
             <div class="detail-about-city">
-                <p>good to know:</p>
-                <p>facts:</p>
-                <p>stats:</p>
-                <p>tags:</p>
-            </div>
-          </div>
+            <p><strong>Good to know:</strong> {{ goodToKnow[slide] }}</p>
+            <p><strong>Facts:</strong> {{ facts[slide] }}</p>
+            <p><strong>Stats:</strong> {{ stats[slide] }}</p>
+            <p><strong>Tags:</strong> {{ tags[slide] }}</p>
+        </div>
+        </div>
 
           <div class="maincities-right-side-panel">
             <div class="maincities-right-side-panel">
@@ -103,11 +101,32 @@
 export default {
   data() {
     return {
-      slide: 0,
-      sliding: null
+      slide: 0, // Tracks the active slide
+      captions: [
+        'London, United Kingdom',
+        'Paris, France',
+        'Dublin, Ireland'
+      ],
+      goodToKnow: [
+        'London is the capital of the United Kingdom.',
+        'Paris is famous for its café culture and iconic landmarks.',
+        'Dublin is known for its literary history and vibrant nightlife.'
+      ],
+      facts: [
+        'Population: 8.9 million',
+        'Population: 2.1 million',
+        'Population: 1.2 million'
+      ],
+      stats: [
+        'Area: 1,572 km²',
+        'Area: 105.4 km²',
+        'Area: 318 km²'
+      ],
+      tags: []
     }
   }
 }
+
 </script>
 
 <style scoped>
