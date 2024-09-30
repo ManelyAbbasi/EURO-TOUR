@@ -228,6 +228,7 @@ async function getReviewsForCity(req, res) {
     const cityId = req.params.id; 
     const minRating = parseFloat(req.query.minRating); // Get min rating from query
     const maxRating = parseFloat(req.query.maxRating); // Get max rating from query
+    const sortOrder = req.query.sortOrder || 'asc'; // Get sort order from query (default to ascending)
 
     try {
         const city = await CitiesModel.findById(cityId).populate('reviews');
@@ -251,6 +252,13 @@ async function getReviewsForCity(req, res) {
             return res.status(404).json({ message: "No reviews found for this city in the specified rating range." });
         }
 
+        filteredReviews.sort((a, b) => {
+            if (sortOrder === 'desc') {
+                return b.rating - a.rating; // Descending order
+            } else {
+                return a.rating - b.rating; // Ascending order
+            }
+        });
         res.status(200).json({ reviews: filteredReviews });
 
     } catch (err) {
