@@ -4,44 +4,49 @@ const express = require("express");
 const router = express.Router();
 const ReviewsModel = require("../models/reviewsModel");
 const UsersModel = require("../models/usersModel");
+var passport = require('passport');
 
 
 async function createReviewToPlace(req, res) {
     const address = req.params.address;
 
     try {
+        if (!req.isAuthenticated()) {
+            return res.status(401).json({ message: "You need to be logged in to create a review." });
+        }
+
         const place = await PlacesToVisitModel.findOne({ address });
-        const user = await UsersModel.findOne({ username: req.body.user });
-        console.log(user); // Add this line
         if (!place) {
             return res.status(404).json({ message: "Place not found" });
         }
+
+        const user = await UsersModel.findOne({ username: req.user.username }); // Use req.user.username from authentication
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
         if (typeof req.body.rating !== 'number') {
-            return res.status(400).json({ "message": "Invalid rating: must be a non-empty number" });
+            return res.status(400).json({ message: "Invalid rating: must be a number" });
         }
         if (req.body.rating < 0.0 || req.body.rating > 5.0) {
             return res.status(400).json({ message: "Invalid rating: must be between 0.0 and 5.0" });
         }
         if (typeof req.body.content !== 'string' || req.body.content.trim() === '') {
-            return res.status(400).json({ "message": "Invalid content: must be a non-empty string" });
+            return res.status(400).json({ message: "Invalid content: must be a non-empty string" });
         }
 
         const review = new ReviewsModel({
             rating: req.body.rating,
             content: req.body.content,
             date: Date.now(),
-            user: user._id, // Set user field to the found user's _id
+            user: user._id,
         });
-        
+
         await review.save();
-        
+
         place.reviews.push(review._id);
-        await place.save(); 
-        
+        await place.save();
+
         res.status(201).json({ message: "Review added successfully", review });
 
     } catch (err) {
@@ -97,22 +102,29 @@ async function getReviewsForPlace(req, res) {
 
 
 async function updatePlace(req, res, next) {
-     
     try {
+        if (!req.isAuthenticated()) {
+            return res.status(401).json({ message: "You need to be logged in to update a place." });
+        }
+
+        if (!req.user.isAdmin) {
+            return res.status(403).json({ message: "Access denied. Only admins can update places." });
+        }
+
         const placesToVisit = await PlacesToVisitModel.findOne({ address: req.params.address });
         if (placesToVisit == null) {
-            return res.status(404).json({ "message": "Place not found" });
+            return res.status(404).json({ message: "Place not found" });
         }
 
         if (req.body.placeName !== undefined) {
             if (typeof req.body.placeName !== 'string' || req.body.placeName.trim() === "") {
-                return res.status(400).json({ "message": "Invalid placeName: must be a non-empty string" });
+                return res.status(400).json({ message: "Invalid placeName: must be a non-empty string" });
             }
             placesToVisit.placeName = req.body.placeName;
         }
         if (req.body.address !== undefined) {
             if (typeof req.body.address !== 'string' || req.body.address.trim() === "") {
-                return res.status(400).json({ "message": "Invalid address: must be a non-empty string" });
+                return res.status(400).json({ message: "Invalid address: must be a non-empty string" });
             }
             placesToVisit.address = req.body.address;
         }
@@ -124,13 +136,13 @@ async function updatePlace(req, res, next) {
         }
         if (req.body.content !== undefined) {
             if (typeof req.body.content !== 'string' || req.body.content.trim() === '') {
-                return res.status(400).json({ "message": "Invalid content: must be a non-empty string" });
+                return res.status(400).json({ message: "Invalid content: must be a non-empty string" });
             }
             placesToVisit.content = req.body.content;
         }
         if (Array.isArray(req.body.tags)) {
             if (req.body.tags.length === 0) {
-                return res.status(400).json({ "message": "Tags cannot be an empty array" });
+                return res.status(400).json({ message: "Tags cannot be an empty array" });
             }
             placesToVisit.tags = req.body.tags;
         }
@@ -138,41 +150,54 @@ async function updatePlace(req, res, next) {
         await placesToVisit.save();
         return res.status(200).json(placesToVisit);
     } catch (err) {
-        return next(err); 
+        return next(err);
     }
 }
 
 
-async function patchPlace(req, res){
-
-    try{
-        const placesToVisit = await PlacesToVisitModel.findOne({ address: req.params.address });
-        if (placesToVisit == null){
-            return res.status(404).json({"message": "Place not found"});
+async function patchPlace(req, res) {
+    try {
+        if (!req.isAuthenticated()) {
+            return res.status(401).json({ message: "You need to be logged in to patch a place." });
+        }
+        if (!req.user.isAdmin) {
+            return res.status(403).json({ message: "Access denied. Only admins can patch places." });
         }
 
-        placesToVisit.content = (req.body.content || placesToVisit.content);
+        const placesToVisit = await PlacesToVisitModel.findOne({ address: req.params.address });
+        if (placesToVisit == null) {
+            return res.status(404).json({ message: "Place not found" });
+        }
+
+        placesToVisit.content = req.body.content || placesToVisit.content;
         await placesToVisit.save();
         res.status(200).json(placesToVisit);
     } catch (err) {
         return res.status(500).next(err);
     }
-};
- 
+}
 
 async function deleteOnePlace(req, res) {
     const address = req.params.address;
 
     try {
+        if (!req.isAuthenticated()) {
+            return res.status(401).json({ message: "You need to be logged in to delete a place." });
+        }
+        if (!req.user.isAdmin) {
+            return res.status(403).json({ message: "Access denied. Only admins can delete places." });
+        }
+
         const result = await PlacesToVisitModel.deleteOne({ address: address });
         
         if (result.deletedCount === 0) {
-            return res.status(404).json({ "message": "Place not found" });
+            return res.status(404).json({ message: "Place not found" });
         }
-        res.status(200).json({ "message": "Place deleted successfully" });
+        
+        res.status(200).json({ message: "Place deleted successfully" });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ "message": "Internal server error" });
+        res.status(500).json({ message: "Internal server error" });
     }
 }
 
