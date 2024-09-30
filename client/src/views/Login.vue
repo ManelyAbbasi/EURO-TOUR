@@ -34,7 +34,7 @@
              <!-- Don't have an account section -->
           <div class="create-account-container">
             <span>new to euro trip? </span>
-            <router-link to="/" class="create-account-link"> create an account</router-link>
+            <router-link to="/signup" class="create-account-link"> create an account</router-link>
           </div>
           </div>
         </div>
