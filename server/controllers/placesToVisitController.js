@@ -98,6 +98,7 @@ async function getReviewsForPlace(req, res) {
     const address = req.params.address;
     const minRating = parseFloat(req.query.minRating); // Get min rating from query
     const maxRating = parseFloat(req.query.maxRating); // Get max rating from query
+    const sortOrder = req.query.sortOrder || 'asc';
 
     try {
         const place = await PlacesToVisitModel.findOne({ address }).populate('reviews');
@@ -105,14 +106,27 @@ async function getReviewsForPlace(req, res) {
             return res.status(404).json({ message: "Place not found" });
         }
 
-        // Filter reviews based on the rating range
-        const filteredReviews = place.reviews.filter(review => {
-            const reviewRating = review.rating;
-            return (isNaN(minRating) || reviewRating >= minRating) && 
-                   (isNaN(maxRating) || reviewRating <= maxRating);
-        });
+        let reviews = place.reviews;
 
-        res.status(200).json(filteredReviews);
+        if (!isNaN(minRating) || !isNaN(maxRating)) {
+            reviews = reviews.filter(review => {
+                const reviewRating = review.rating;
+                return (isNaN(minRating) || reviewRating >= minRating) && 
+                       (isNaN(maxRating) || reviewRating <= maxRating);
+            });
+        }
+
+        if (reviews.length > 0) {
+            reviews.sort((a, b) => {
+                if (sortOrder === 'desc') {
+                    return b.rating - a.rating; // Descending order
+                } else {
+                    return a.rating - b.rating; // Ascending order
+                }
+            });
+        }
+
+        res.status(200).json(reviews);
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'An error occurred while fetching the reviews.' });
