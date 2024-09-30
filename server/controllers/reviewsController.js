@@ -18,7 +18,13 @@ async function getAllReviews(req, res) {
 
 
 async function deleteOldReviews(req, res) { 
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "You need to be logged in to delete reviews." });
+    }
 
+    if (!req.user.isAdmin) {
+        return res.status(403).json({ message: "Access denied. Admins only." });
+    }
     try {
         const fiveYearsAgo = new Date();
         fiveYearsAgo.setFullYear(fiveYearsAgo.getFullYear() - 5);
