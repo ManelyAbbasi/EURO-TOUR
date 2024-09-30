@@ -96,13 +96,23 @@ async function getOnePlace(req, res) {
 
 async function getReviewsForPlace(req, res) {
     const address = req.params.address;
+    const minRating = parseFloat(req.query.minRating); // Get min rating from query
+    const maxRating = parseFloat(req.query.maxRating); // Get max rating from query
 
     try {
         const place = await PlacesToVisitModel.findOne({ address }).populate('reviews');
         if (!place) {
             return res.status(404).json({ message: "Place not found" });
         }
-        res.status(200).json(place.reviews);
+
+        // Filter reviews based on the rating range
+        const filteredReviews = place.reviews.filter(review => {
+            const reviewRating = review.rating;
+            return (isNaN(minRating) || reviewRating >= minRating) && 
+                   (isNaN(maxRating) || reviewRating <= maxRating);
+        });
+
+        res.status(200).json(filteredReviews);
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'An error occurred while fetching the reviews.' });
