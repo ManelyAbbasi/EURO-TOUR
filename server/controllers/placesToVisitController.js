@@ -20,7 +20,7 @@ async function createReviewToPlace(req, res) {
             return res.status(404).json({ message: "Place not found" });
         }
 
-        const user = await UsersModel.findOne({ username: req.user.username }); // Use req.user.username from authentication
+        const user = await UsersModel.findOne({ username: req.user.username });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }

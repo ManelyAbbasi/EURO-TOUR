@@ -111,7 +111,7 @@ async function createReviewToCity(req, res) {
         if (!city.reviews) {
             city.reviews = [];
         }
-        const user = await UsersModel.findOne({ username: req.body.user });
+        const user = await UsersModel.findOne({ username: req.user.username });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -163,12 +163,12 @@ async function getOneCity(req, res) {
 }
 
 async function getAllCities(req, res) {
+    
     try {
         const { tags } = req.query;
 
         let filter = {};
 
-        // If 'tags' are provided in the query, filter cities by those tags
         if (tags) {
             const tagsArray = tags.split(','); // Convert tags string to array (comma-separated)
             filter = { tags: { $all: tagsArray } };
@@ -226,6 +226,8 @@ async function getPlacesFromCity(req, res){
 
 async function getReviewsForCity(req, res) {
     const cityId = req.params.id; 
+    const minRating = parseFloat(req.query.minRating); // Get min rating from query
+    const maxRating = parseFloat(req.query.maxRating); // Get max rating from query
 
     try {
         const city = await CitiesModel.findById(cityId).populate('reviews');
@@ -238,8 +240,18 @@ async function getReviewsForCity(req, res) {
         if (!reviews || reviews.length === 0) {
             return res.status(404).json({ message: "No reviews found for this city" });
         }
- 
-        res.status(200).json({ reviews });
+
+        const filteredReviews = reviews.filter(review => {
+            const reviewRating = review.rating;
+            return (isNaN(minRating) || reviewRating >= minRating) && 
+                   (isNaN(maxRating) || reviewRating <= maxRating);
+        });
+
+        if (filteredReviews.length === 0) {
+            return res.status(404).json({ message: "No reviews found for this city in the specified rating range." });
+        }
+
+        res.status(200).json({ reviews: filteredReviews });
 
     } catch (err) {
         console.error("Error retrieving reviews for city:", err);
