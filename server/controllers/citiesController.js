@@ -36,6 +36,9 @@ async function createCity(req, res, next) {
         await city.save();
         res.status(201).json(city);
     } catch (err) {
+        if (err.name === 'ValidationError' && err.errors && err.errors.tags) {
+            return res.status(400).json({ message: "Invalid tag(s) provided. Please provide valid tags." });
+        }
         next(err);
     }
 }
@@ -85,6 +88,9 @@ async function createPlaceInCity(req, res) {
         await city.save();
         res.status(201).json(placeToVisit);
     } catch (err) {
+        if (err.name === 'ValidationError' && err.errors && err.errors.tags) {
+            return res.status(400).json({ message: "Invalid tag(s) provided. Please provide valid tags." });
+        }
         console.error("Error creating the place to visit:", err);
         res.status(500).json({ message: "An error occurred while creating the place", error: err.message });
     }
@@ -280,6 +286,9 @@ async function updateCity(req, res, next) {
         await city.save();
         res.status(200).json(city);
     } catch (err) {
+        if (err.name === 'ValidationError' && err.errors && err.errors.tags) {
+            return res.status(400).json({ message: "Invalid tag(s) provided. Please provide valid tags." });
+        }
         next(err);
     }
 }
@@ -305,6 +314,9 @@ async function patchCity(req, res, next){
         await city.save();
         res.status(200).json(city);
     } catch (err) {
+        if (err.name === 'ValidationError' && err.errors && err.errors.tags) {
+            return res.status(400).json({ message: "Invalid tag(s) provided. Please provide valid tags." });
+        }
         next(err);
     }
 };

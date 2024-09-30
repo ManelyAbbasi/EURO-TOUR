@@ -150,6 +150,9 @@ async function updatePlace(req, res, next) {
         await placesToVisit.save();
         return res.status(200).json(placesToVisit);
     } catch (err) {
+        if (err.name === 'ValidationError' && err.errors && err.errors.tags) {
+            return res.status(400).json({ message: "Invalid tag(s) provided. Please provide valid tags." });
+        }
         return next(err);
     }
 }
@@ -173,6 +176,9 @@ async function patchPlace(req, res) {
         await placesToVisit.save();
         res.status(200).json(placesToVisit);
     } catch (err) {
+        if (err.name === 'ValidationError' && err.errors && err.errors.tags) {
+            return res.status(400).json({ message: "Invalid tag(s) provided. Please provide valid tags." });
+        }
         return res.status(500).next(err);
     }
 }
