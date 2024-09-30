@@ -253,12 +253,10 @@ export default {
 
 }
 
-.detail-about-city{
-    width: 80%;
-}
-
 .carousel-container{
     width: 100%;
+    margin: 30px;
+    margin-left: 30px;
 }
 
 .under-pic, .detail-about-city p {
@@ -289,9 +287,10 @@ export default {
 }
 
 .detail-about-city {
-    width: 80%;
+    width: 70%;
     color: #759CAB;
     font-size: 1em;
+    margin-right: 30px;
 }
 
 .detail-item {
