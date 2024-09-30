@@ -36,6 +36,9 @@ async function createCity(req, res, next) {
         await city.save();
         res.status(201).json(city);
     } catch (err) {
+        if (err.name === 'ValidationError' && err.errors && err.errors.tags) {
+            return res.status(400).json({ message: "Invalid tag(s) provided. Please provide valid tags." });
+        }
         next(err);
     }
 }
@@ -85,6 +88,9 @@ async function createPlaceInCity(req, res) {
         await city.save();
         res.status(201).json(placeToVisit);
     } catch (err) {
+        if (err.name === 'ValidationError' && err.errors && err.errors.tags) {
+            return res.status(400).json({ message: "Invalid tag(s) provided. Please provide valid tags." });
+        }
         console.error("Error creating the place to visit:", err);
         res.status(500).json({ message: "An error occurred while creating the place", error: err.message });
     }
@@ -105,7 +111,7 @@ async function createReviewToCity(req, res) {
         if (!city.reviews) {
             city.reviews = [];
         }
-        const user = await UsersModel.findOne({ username: req.body.user });
+        const user = await UsersModel.findOne({ username: req.user.username });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -159,8 +165,17 @@ async function getOneCity(req, res) {
 async function getAllCities(req, res) {
     
     try {
-        const cities = await CitiesModel.find();
-        if (!cities || cities.length === 0) { 
+        const { tags } = req.query;
+
+        let filter = {};
+
+        if (tags) {
+            const tagsArray = tags.split(','); // Convert tags string to array (comma-separated)
+            filter = { tags: { $all: tagsArray } };
+        }
+
+        const cities = await CitiesModel.find(filter);
+        if (!cities || cities.length === 0) {
             return res.status(404).json({ message: 'No cities found.' });
         }
         res.status(200).json({ cities });
@@ -211,6 +226,8 @@ async function getPlacesFromCity(req, res){
 
 async function getReviewsForCity(req, res) {
     const cityId = req.params.id; 
+    const minRating = parseFloat(req.query.minRating); // Get min rating from query
+    const maxRating = parseFloat(req.query.maxRating); // Get max rating from query
 
     try {
         const city = await CitiesModel.findById(cityId).populate('reviews');
@@ -223,8 +240,18 @@ async function getReviewsForCity(req, res) {
         if (!reviews || reviews.length === 0) {
             return res.status(404).json({ message: "No reviews found for this city" });
         }
- 
-        res.status(200).json({ reviews });
+
+        const filteredReviews = reviews.filter(review => {
+            const reviewRating = review.rating;
+            return (isNaN(minRating) || reviewRating >= minRating) && 
+                   (isNaN(maxRating) || reviewRating <= maxRating);
+        });
+
+        if (filteredReviews.length === 0) {
+            return res.status(404).json({ message: "No reviews found for this city in the specified rating range." });
+        }
+
+        res.status(200).json({ reviews: filteredReviews });
 
     } catch (err) {
         console.error("Error retrieving reviews for city:", err);
@@ -280,6 +307,9 @@ async function updateCity(req, res, next) {
         await city.save();
         res.status(200).json(city);
     } catch (err) {
+        if (err.name === 'ValidationError' && err.errors && err.errors.tags) {
+            return res.status(400).json({ message: "Invalid tag(s) provided. Please provide valid tags." });
+        }
         next(err);
     }
 }
@@ -305,6 +335,9 @@ async function patchCity(req, res, next){
         await city.save();
         res.status(200).json(city);
     } catch (err) {
+        if (err.name === 'ValidationError' && err.errors && err.errors.tags) {
+            return res.status(400).json({ message: "Invalid tag(s) provided. Please provide valid tags." });
+        }
         next(err);
     }
 };

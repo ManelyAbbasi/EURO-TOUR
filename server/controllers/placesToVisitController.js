@@ -20,7 +20,7 @@ async function createReviewToPlace(req, res) {
             return res.status(404).json({ message: "Place not found" });
         }
 
-        const user = await UsersModel.findOne({ username: req.user.username }); // Use req.user.username from authentication
+        const user = await UsersModel.findOne({ username: req.user.username });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -56,10 +56,19 @@ async function createReviewToPlace(req, res) {
 }
 
 
-async function getAllPlaces(req, res) { 
-
+async function getAllPlaces(req, res) {
     try {
-        const placesToVisit = await placesToVisitModel.find();
+        const { tags } = req.query;
+
+        let filter = {};
+
+        // If 'tags' are provided in the query, filter places by those tags
+        if (tags) {
+            const tagsArray = tags.split(','); // Convert tags string to array (comma-separated)
+            filter = { tags: { $all: tagsArray } };
+        }
+
+        const placesToVisit = await placesToVisitModel.find(filter);
         if (!placesToVisit || placesToVisit.length === 0) {
             return res.status(404).json({ error: 'No places found.' });
         }
@@ -87,13 +96,23 @@ async function getOnePlace(req, res) {
 
 async function getReviewsForPlace(req, res) {
     const address = req.params.address;
+    const minRating = parseFloat(req.query.minRating); // Get min rating from query
+    const maxRating = parseFloat(req.query.maxRating); // Get max rating from query
 
     try {
         const place = await PlacesToVisitModel.findOne({ address }).populate('reviews');
         if (!place) {
             return res.status(404).json({ message: "Place not found" });
         }
-        res.status(200).json(place.reviews);
+
+        // Filter reviews based on the rating range
+        const filteredReviews = place.reviews.filter(review => {
+            const reviewRating = review.rating;
+            return (isNaN(minRating) || reviewRating >= minRating) && 
+                   (isNaN(maxRating) || reviewRating <= maxRating);
+        });
+
+        res.status(200).json(filteredReviews);
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'An error occurred while fetching the reviews.' });
@@ -150,6 +169,9 @@ async function updatePlace(req, res, next) {
         await placesToVisit.save();
         return res.status(200).json(placesToVisit);
     } catch (err) {
+        if (err.name === 'ValidationError' && err.errors && err.errors.tags) {
+            return res.status(400).json({ message: "Invalid tag(s) provided. Please provide valid tags." });
+        }
         return next(err);
     }
 }
@@ -173,6 +195,9 @@ async function patchPlace(req, res) {
         await placesToVisit.save();
         res.status(200).json(placesToVisit);
     } catch (err) {
+        if (err.name === 'ValidationError' && err.errors && err.errors.tags) {
+            return res.status(400).json({ message: "Invalid tag(s) provided. Please provide valid tags." });
+        }
         return res.status(500).next(err);
     }
 }
