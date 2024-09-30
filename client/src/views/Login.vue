@@ -41,3 +41,28 @@
       </div>
     </div>
 </template>
+
+<script>
+export default {
+  name: 'login',
+  data() {
+    return {
+      username: '',
+      password: ''
+    }
+  },
+  methods: {
+    saveButton() {
+      if (!this.isEmpty) {
+        console.log('Form submitted')
+      }
+    }
+  },
+  computed: {
+    isEmpty() {
+      return this.username === '' ||
+             this.password === ''
+    }
+  }
+}
+</script>
