@@ -163,10 +163,19 @@ async function getOneCity(req, res) {
 }
 
 async function getAllCities(req, res) {
-    
     try {
-        const cities = await CitiesModel.find();
-        if (!cities || cities.length === 0) { 
+        const { tags } = req.query;
+
+        let filter = {};
+
+        // If 'tags' are provided in the query, filter cities by those tags
+        if (tags) {
+            const tagsArray = tags.split(','); // Convert tags string to array (comma-separated)
+            filter = { tags: { $all: tagsArray } };
+        }
+
+        const cities = await CitiesModel.find(filter);
+        if (!cities || cities.length === 0) {
             return res.status(404).json({ message: 'No cities found.' });
         }
         res.status(200).json({ cities });
