@@ -34,11 +34,11 @@
 
             <!-- carousel of cities -->
             <div class="carousel-container">
-                <b-carousel id="carousel-1" v-model="slide" :interval="4000" controls>
+                <b-carousel id="carousel" v-model="slide" :interval="4000" controls>
                 <!--images -->
-                <b-carousel-slide img-src="https://picsum.photos/1024/480/?image=52"></b-carousel-slide>
-                <b-carousel-slide img-src="https://picsum.photos/1024/480/?image=54"></b-carousel-slide>
-                <b-carousel-slide img-src="https://picsum.photos/1024/480/?image=58"></b-carousel-slide>
+                <b-carousel-slide img-src="https://picsum.photos/600/600/?image=52"></b-carousel-slide>
+                <b-carousel-slide img-src="https://picsum.photos/600/600/?image=54"></b-carousel-slide>
+                <b-carousel-slide img-src="https://picsum.photos/600/600/?image=58"></b-carousel-slide>
 
               </b-carousel>
 
@@ -50,10 +50,22 @@
             </div>
 
             <div class="detail-about-city">
-            <p><strong>Good to know:</strong> {{ goodToKnow[slide] }}</p>
-            <p><strong>Facts:</strong> {{ facts[slide] }}</p>
-            <p><strong>Stats:</strong> {{ stats[slide] }}</p>
-            <p><strong>Tags:</strong> {{ tags[slide] }}</p>
+            <div class="detail-item">
+                <p><strong class="heading">Good to know:</strong></p>
+                <p>{{ goodToKnow[slide] }}</p>
+            </div>
+            <div class="detail-item">
+                <p><strong class="heading">Facts:</strong></p>
+                <p>{{ facts[slide] }}</p>
+            </div>
+            <div class="detail-item">
+                <p><strong class="heading">Stats:</strong></p>
+                <p>{{ stats[slide] }}</p>
+            </div>
+            <div class="detail-item">
+                <p><strong class="heading">Tags:</strong></p>
+                <p>{{ tags[slide] }}</p>
+            </div>
         </div>
         </div>
 
@@ -101,7 +113,7 @@
 export default {
   data() {
     return {
-      slide: 0, // Tracks the active slide
+      slide: 0,
       captions: [
         'London, United Kingdom',
         'Paris, France',
@@ -126,7 +138,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>
@@ -229,6 +240,40 @@ export default {
   flex-direction: row;
   background-color: #edf7fb;
 
+}
+
+.detail-about-city{
+    width: 80%;
+}
+
+.carousel-container{
+    width: 100%;
+}
+
+.under-pic, .detail-about-city p {
+  text-align: left;
+  margin: 10px;
+  color: #759CAB
+}
+
+.under-pic{
+    font-weight: bold;
+    font-size: 2em;
+}
+
+.detail-about-city {
+    width: 80%;
+    color: #759CAB;
+    font-size: 1em;
+}
+
+.detail-item {
+    margin-top: 40px; /* Space between items */
+}
+
+.heading {
+    font-size: 1.5em;
+    font-weight: bold;
 }
 
 .maincities-right-side-panel {
@@ -344,14 +389,6 @@ a img {
 .top-icon a i{
     font-size: 2rem;
     color: #045768;
-}
-
-.detail-about-city{
-    width: 80%;
-}
-
-.carousel-container{
-    width: 100%;
 }
 
 @media screen and (max-width:1200px) {
