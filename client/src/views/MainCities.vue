@@ -78,6 +78,11 @@
                 <p>{{ tags[slide] }}</p>
             </div>
         </div>
+
+            <!-- Heart Icon -->
+            <div class="heart-icon-container">
+              <i class="fa-regular fa-heart" style="color: #bc672a;"></i>
+            </div>
         </div>
 
           <div class="maincities-right-side-panel">
@@ -259,20 +264,16 @@ export default {
     margin-left: 30px;
 }
 
-.under-pic, .detail-about-city p {
-  text-align: left;
-  margin: 10px;
-  color: #759CAB
-}
-
 .under-pic{
+    margin-block: 2px;
     font-weight: bold;
     font-size: 2em;
+    text-align: left;
+    color: #759CAB
 }
 
 .star-rating{
   text-align: left;
-  margin: 10px;
   font-size: 2.5em;
 }
 
@@ -287,10 +288,16 @@ export default {
 }
 
 .detail-about-city {
-    width: 70%;
+    width: 60%;
     color: #759CAB;
     font-size: 1em;
-    margin-right: 30px;
+    margin-right: 20px;
+}
+
+.detail-about-city p {
+  text-align: left;
+  margin: 0.1px;
+  color: #759CAB;
 }
 
 .detail-item {
@@ -300,6 +307,16 @@ export default {
 .heading {
     font-size: 1.5em;
     font-weight: bold;
+}
+
+.heart-icon-container {
+  margin-right: 25px;
+  margin-block: 20px;
+
+}
+
+.heart-icon-container i {
+  font-size: 3em;
 }
 
 .maincities-right-side-panel {
