@@ -175,6 +175,9 @@ async function getOnePlaceFromCity(req, res){
     
     try{
         const city = await CitiesModel.findOne(cityId).populate('placesToVisit');
+        if (!city){
+            return res.status(404).json({ message: "City not found" });
+        }
         if (!city.placesToVisit || city.placesToVisit.length === 0) {
             return res.status(404).json({ message: "No places are found in this city" });
         }
