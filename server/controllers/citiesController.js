@@ -8,28 +8,33 @@ const citiesModel = require("../models/citiesModel");
 
 
 async function createCity(req, res, next) {
-    
-    try {    
+    try {
+        if (!req.isAuthenticated()) {
+            return res.status(401).json({ message: "You need to be logged in to create a city." });
+        }
+        if (!req.user.isAdmin) {
+            return res.status(403).json({ message: "Access denied. Only admins can create cities." });
+        }
+
         if (typeof req.body.cityName !== 'string' || req.body.cityName.trim() === "") {
-            return res.status(400).json({ "message": "Invalid cityName: must be a non-empty string" });
+            return res.status(400).json({ message: "Invalid cityName: must be a non-empty string" });
         }
         if (typeof req.body.country !== 'string' || req.body.country.trim() === "") {
-            return res.status(400).json({ "message": "Invalid country: must be a non-empty string" });
+            return res.status(400).json({ message: "Invalid country: must be a non-empty string" });
         }
         if (typeof req.body.statistics !== 'string' || req.body.statistics.trim() === "") {
-            return res.status(400).json({ "message": "Invalid statistics: must be a non-empty string" });
+            return res.status(400).json({ message: "Invalid statistics: must be a non-empty string" });
         }
         if (typeof req.body.facts !== 'string' || req.body.facts.trim() === "") {
-            return res.status(400).json({ "message": "Invalid facts: must be a non-empty string" });
+            return res.status(400).json({ message: "Invalid facts: must be a non-empty string" });
         }
-        if (req.body.tags.length === 0) {
-            return res.status(400).json({ "message": "Tags cannot be an empty array" });
+        if (!Array.isArray(req.body.tags) || req.body.tags.length === 0) {
+            return res.status(400).json({ message: "Tags must be a non-empty array" });
         }
-    
-        // Create a new city if it doesn't exist
-        const cities = new CitiesModel(req.body);
-        await cities.save();
-        res.status(201).json(cities); 
+
+        const city = new CitiesModel(req.body);
+        await city.save();
+        res.status(201).json(city);
     } catch (err) {
         next(err);
     }
@@ -38,30 +43,31 @@ async function createCity(req, res, next) {
 async function createPlaceInCity(req, res) {
     const cityId = req.params.id;
     try {
-        const city = await CitiesModel.findById(cityId);
-        console.log(city);
+        if (!req.isAuthenticated()) {
+            return res.status(401).json({ message: "You need to be logged in to create a place in a city." });
+        }
+        if (!req.user.isAdmin) {
+            return res.status(403).json({ message: "Access denied. Only admins can create places in cities." });
+        }
 
-        if (!city) { 
+        const city = await CitiesModel.findById(cityId);
+        if (!city) {
             return res.status(404).json({ error: "City not found" });
         }
         if (typeof req.body.placeName !== 'string' || req.body.placeName.trim() === '') {
-            return res.status(400).json({ "message": "Invalid placeName: must be a non-empty string" });
+            return res.status(400).json({ message: "Invalid placeName: must be a non-empty string" });
         }
         if (typeof req.body.address !== 'string' || req.body.address.trim() === '') {
-            return res.status(400).json({ "message": "Invalid address: must be a non-empty string" });
+            return res.status(400).json({ message: "Invalid address: must be a non-empty string" });
         }
-        if (req.body.rating < 0.0 || req.body.rating > 5.0) {
-            return res.status(400).json({ message: "Invalid rating: must be between 0.0 and 5.0" });
+        if (typeof req.body.rating !== 'number' || req.body.rating < 0.0 || req.body.rating > 5.0) {
+            return res.status(400).json({ message: "Invalid rating: must be a number between 0.0 and 5.0" });
         }
         if (typeof req.body.content !== 'string' || req.body.content.trim() === '') {
-            return res.status(400).json({ "message": "Invalid content: must be a non-empty string" });
+            return res.status(400).json({ message: "Invalid content: must be a non-empty string" });
         }
         if (!Array.isArray(req.body.tags) || req.body.tags.length === 0) {
-            return res.status(400).json({ "message": "Tags cannot be an empty array" });
-        }
-
-        if (!city.placesToVisit) {
-            city.placesToVisit = [];
+            return res.status(400).json({ message: "Tags cannot be an empty array" });
         }
 
         const placeToVisit = new placesToVisitSchema({
@@ -82,12 +88,16 @@ async function createPlaceInCity(req, res) {
         console.error("Error creating the place to visit:", err);
         res.status(500).json({ message: "An error occurred while creating the place", error: err.message });
     }
-} 
+}
 
 async function createReviewToCity(req, res) {
     const cityId = req.params.id;
 
     try {
+        if (!req.isAuthenticated()) {
+            return res.status(401).json({ message: "You need to be logged in to create a review." });
+        }
+
         const city = await CitiesModel.findById(cityId);
         if (!city) {
             return res.status(404).json({ message: "City not found" });
@@ -165,6 +175,9 @@ async function getOnePlaceFromCity(req, res){
     
     try{
         const city = await CitiesModel.findOne(cityId).populate('placesToVisit');
+        if (!city){
+            return res.status(404).json({ message: "City not found" });
+        }
         if (!city.placesToVisit || city.placesToVisit.length === 0) {
             return res.status(404).json({ message: "No places are found in this city" });
         }
@@ -221,38 +234,46 @@ async function getReviewsForCity(req, res) {
 
 async function updateCity(req, res, next) {
     const cityId = req.params.id;
+
     try {
+        if (!req.isAuthenticated()) {
+            return res.status(401).json({ message: "You need to be logged in to update the city." });
+        }
+        if (!req.user.isAdmin) {
+            return res.status(403).json({ message: "Access denied. Only admins can update cities." });
+        }
+
         const city = await CitiesModel.findById(cityId);
         if (!city) {
-            return res.status(404).json({ "message": "City not found" });
+            return res.status(404).json({ message: "City not found" });
         }
         if (req.body.cityName !== undefined) {
             if (typeof req.body.cityName !== 'string' || req.body.cityName.trim() === "") {
-                return res.status(400).json({ "message": "Invalid cityName: must be a non-empty string" });
+                return res.status(400).json({ message: "Invalid cityName: must be a non-empty string" });
             }
             city.cityName = req.body.cityName;
         }
         if (req.body.country !== undefined) {
             if (typeof req.body.country !== 'string' || req.body.country.trim() === "") {
-                return res.status(400).json({ "message": "Invalid country: must be a non-empty string" });
+                return res.status(400).json({ message: "Invalid country: must be a non-empty string" });
             }
             city.country = req.body.country;
         }
         if (req.body.statistics !== undefined) {
             if (typeof req.body.statistics !== 'string' || req.body.statistics.trim() === "") {
-                return res.status(400).json({ "message": "Invalid statistics: must be a non-empty string" });
+                return res.status(400).json({ message: "Invalid statistics: must be a non-empty string" });
             }
             city.statistics = req.body.statistics;
         }
         if (req.body.facts !== undefined) {
             if (typeof req.body.facts !== 'string' || req.body.facts.trim() === "") {
-                return res.status(400).json({ "message": "Invalid facts: must be a non-empty string" });
+                return res.status(400).json({ message: "Invalid facts: must be a non-empty string" });
             }
             city.facts = req.body.facts;
         }
         if (Array.isArray(req.body.tags)) {
             if (req.body.tags.length === 0) {
-                return res.status(400).json({ "message": "Tags cannot be an empty array" });
+                return res.status(400).json({ message: "Tags cannot be an empty array" });
             }
             city.tags = req.body.tags;
         }
@@ -268,6 +289,12 @@ async function patchCity(req, res, next){
     const cityId = req.params.id;
 
     try{
+        if (!req.isAuthenticated()) {
+            return res.status(401).json({ message: "You need to be logged in to patch a place." });
+        }
+        if (!req.user.isAdmin) {
+            return res.status(403).json({ message: "Access denied. Only admins can patch places." });
+        }
         const city = await CitiesModel.findById(cityId);
         if (city == null){
             return res.status(404).json({"message": "City not found"});
@@ -286,6 +313,12 @@ async function deleteReviewsById(req, res) {
     const cityId = req.params.id;
 
     try {
+        if (!req.isAuthenticated()) {
+            return res.status(401).json({ message: "You need to be logged in to delete a place." });
+        }
+        if (!req.user.isAdmin) {
+            return res.status(403).json({ message: "Access denied. Only admins can delete places." });
+        }
         const city = await citiesModel.findOne({ _id: cityId }).populate('reviews');
         if (!city) {
             return res.status(404).json({ error: 'City not found' });
