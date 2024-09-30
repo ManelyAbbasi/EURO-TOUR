@@ -55,6 +55,7 @@
               :class="index <= 3 ? 'fa-solid fa-star' : 'fa-regular fa-star'"
               style="color: #bc672a;"
             ></i>
+            <span class="rating-text">3.1/5.0</span>
           </div>
 
             </div>
@@ -274,11 +275,17 @@ export default {
 .star-rating{
   text-align: left;
   margin: 10px;
-  font-size: 2em;
+  font-size: 2.5em;
 }
 
 .star-rating i {
   margin-right: 5px; /* increase space between stars */
+}
+
+.rating-text {
+  margin-left: 0.5rem;
+  font-size: 0.6em;
+  color: #42515E;
 }
 
 .detail-about-city {
