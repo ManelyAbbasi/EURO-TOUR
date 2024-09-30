@@ -36,6 +36,9 @@ async function createCity(req, res, next) {
         await city.save();
         res.status(201).json(city);
     } catch (err) {
+        if (err.name === 'ValidationError' && err.errors && err.errors.tags) {
+            return res.status(400).json({ message: "Invalid tag(s) provided. Please provide valid tags." });
+        }
         next(err);
     }
 }
@@ -85,6 +88,9 @@ async function createPlaceInCity(req, res) {
         await city.save();
         res.status(201).json(placeToVisit);
     } catch (err) {
+        if (err.name === 'ValidationError' && err.errors && err.errors.tags) {
+            return res.status(400).json({ message: "Invalid tag(s) provided. Please provide valid tags." });
+        }
         console.error("Error creating the place to visit:", err);
         res.status(500).json({ message: "An error occurred while creating the place", error: err.message });
     }
@@ -157,10 +163,19 @@ async function getOneCity(req, res) {
 }
 
 async function getAllCities(req, res) {
-    
     try {
-        const cities = await CitiesModel.find();
-        if (!cities || cities.length === 0) { 
+        const { tags } = req.query;
+
+        let filter = {};
+
+        // If 'tags' are provided in the query, filter cities by those tags
+        if (tags) {
+            const tagsArray = tags.split(','); // Convert tags string to array (comma-separated)
+            filter = { tags: { $all: tagsArray } };
+        }
+
+        const cities = await CitiesModel.find(filter);
+        if (!cities || cities.length === 0) {
             return res.status(404).json({ message: 'No cities found.' });
         }
         res.status(200).json({ cities });
@@ -280,6 +295,9 @@ async function updateCity(req, res, next) {
         await city.save();
         res.status(200).json(city);
     } catch (err) {
+        if (err.name === 'ValidationError' && err.errors && err.errors.tags) {
+            return res.status(400).json({ message: "Invalid tag(s) provided. Please provide valid tags." });
+        }
         next(err);
     }
 }
@@ -305,6 +323,9 @@ async function patchCity(req, res, next){
         await city.save();
         res.status(200).json(city);
     } catch (err) {
+        if (err.name === 'ValidationError' && err.errors && err.errors.tags) {
+            return res.status(400).json({ message: "Invalid tag(s) provided. Please provide valid tags." });
+        }
         next(err);
     }
 };

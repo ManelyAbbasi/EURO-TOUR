@@ -10,7 +10,37 @@ var citiesSchema = new Schema({
     country: { type: String, required: true },
     statistics: { type: String, required: true },
     facts: { type: String, required: true },
-    tags: { type: Array, required: true },
+    tags: {
+        type: [String], 
+        required: true,
+        validate: {
+            validator: function(tags) {
+                const allowedTags = [
+                    'historical', 
+                    'adventurous', 
+                    'quiet', 
+                    'party', 
+                    'architecture', 
+                    'sight-seeing', 
+                    'museum', 
+                    'new', 
+                    'foodie', 
+                    'nature', 
+                    'foresty', 
+                    'beachy', 
+                    'hot weather', 
+                    'cold weather', 
+                    'varied weather', 
+                    'popular', 
+                    'cheap', 
+                    'pricey', 
+                    'unique'
+                ];
+                return tags.every(tag => allowedTags.includes(tag));
+            },
+            message: 'Invalid tag/tags provided.'
+        }
+    },
     placesToVisit: { 
         type: [{ type: Schema.Types.ObjectId, ref: 'placesToVisit' }], // Ensure 'PlacesToVisit' matches the model name
         default: [] 
