@@ -56,10 +56,19 @@ async function createReviewToPlace(req, res) {
 }
 
 
-async function getAllPlaces(req, res) { 
-
+async function getAllPlaces(req, res) {
     try {
-        const placesToVisit = await placesToVisitModel.find();
+        const { tags } = req.query;
+
+        let filter = {};
+
+        // If 'tags' are provided in the query, filter places by those tags
+        if (tags) {
+            const tagsArray = tags.split(','); // Convert tags string to array (comma-separated)
+            filter = { tags: { $all: tagsArray } };
+        }
+
+        const placesToVisit = await placesToVisitModel.find(filter);
         if (!placesToVisit || placesToVisit.length === 0) {
             return res.status(404).json({ error: 'No places found.' });
         }
