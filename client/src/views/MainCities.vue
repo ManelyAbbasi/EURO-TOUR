@@ -47,6 +47,16 @@
             {{ captions[slide] }} <!-- this will dynamically change based on the active slide -->
             </p>
 
+           <!-- Star Icons -->
+          <div class="star-rating">
+            <i
+              v-for="index in 5"
+              :key="index"
+              :class="index <= 3 ? 'fa-solid fa-star' : 'fa-regular fa-star'"
+              style="color: #bc672a;"
+            ></i>
+          </div>
+
             </div>
 
             <div class="detail-about-city">
@@ -259,6 +269,16 @@ export default {
 .under-pic{
     font-weight: bold;
     font-size: 2em;
+}
+
+.star-rating{
+  text-align: left;
+  margin: 10px;
+  font-size: 2em;
+}
+
+.star-rating i {
+  margin-right: 5px; /* increase space between stars */
 }
 
 .detail-about-city {
