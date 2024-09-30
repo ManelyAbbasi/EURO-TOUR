@@ -69,6 +69,20 @@
                     <button class="maincities-ratings-btn" type="button">ratings</button>
                 </div>
                 <h2 class="maincities-search-title">Trending Cities:</h2>
+                <div class="trending-cities-wrapper">
+                  <div class="maincities-amst-wrapper trending-city-wrapper">
+                    <img src="@/assets/Amsterdam.jpg" alt="Amsterdam city" class="trending-cities-img"/>
+                    <p class="maincities-trending-amst">1. Amsterdam, The Netherlands</p>
+                  </div>
+                  <div class="maincities-dublin-wrapper trending-city-wrapper">
+                    <img src="@/assets/Dublin.jpg" alt="Dublin city" class="trending-cities-img"/>
+                    <p class="maincities-trending-dublin">2. Dublin, Republic of Ireland</p>
+                  </div>
+                  <div class="maincities-paris-wrapper trending-city-wrapper">
+                    <img src="@/assets/Paris.jpg" alt="Paris city" class="trending-cities-img"/>
+                    <p class="maincities-trending-paris">3. Paris, France</p>
+                  </div>
+                </div>
             </div>
             </div>
             </div>
@@ -236,6 +250,36 @@ export default {
     color: #9BA9B6;
     background-color: #edf7fb;
     transform: scale(1.05);
+}
+
+.trending-cities-wrapper {
+  gap: 2rem;
+}
+
+.trending-city-wrapper {
+  max-width: 20rem;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content:last baseline;
+}
+
+.trending-city-wrapper p{
+  font-size: 1rem;
+  align-content: center;
+  padding: 0.5rem;
+  justify-items: center;
+  margin: 0.5rem;
+}
+
+.trending-cities-img {
+  max-width: 35%;
+  margin: 1rem;
+}
+
+.trending-city-wrapper img{
+  border: 1px solid #edf7fb;
 }
 
 .logo img{
