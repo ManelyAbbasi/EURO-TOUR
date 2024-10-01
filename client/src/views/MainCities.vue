@@ -304,7 +304,7 @@ export default {
   text-decoration: underline;
   cursor: pointer;
   margin-left: 9rem; /* Increase margin-left for more right alignment */
-  margin-top: 7rem;  /* Add margin-top to move it further down */
+  margin-top: 7.5rem;  /* Add margin-top to move it further down */
   display: inline-block; /* Ensure margin-top works properly */
 }
 
