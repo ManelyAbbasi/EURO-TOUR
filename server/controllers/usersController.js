@@ -212,6 +212,17 @@ async function deleteOneUser(req, res) {
     }
 }
 
+// Helper function for generic deletion logic
+async function deleteUserHelper(username, res) {
+    const userToDelete = await UsersModel.findOneAndDelete({ username });
+
+    if (!userToDelete) {
+        return res.status(404).json({ "message": "User not found" });
+    }
+
+    res.status(200).json({ "message": "User deleted successfully", user: userToDelete });
+}
+
 
 async function deleteUserByAdmin(req, res) {
     const usernameToDelete = req.params.username; 
@@ -220,22 +231,19 @@ async function deleteUserByAdmin(req, res) {
         if (!req.isAuthenticated()) {
             return res.status(401).json({ message: "You need to be logged in to perform this action." });
         }
+
         if (!req.user.isAdmin) {
             return res.status(403).json({ message: "Access denied. Admins only." });
         }
 
-        const userToDelete = await UsersModel.findOneAndDelete({ username: usernameToDelete });
-
-        if (!userToDelete) {
-            return res.status(404).json({ "message": "User not found" });
-        }
-
-        res.status(200).json({ "message": "User deleted successfully", user: userToDelete });
+        // Extend with admin-specific behavior
+        await deleteUserHelper(usernameToDelete, res);
+        
     } catch (err) {
         console.error(err);
         res.status(500).json({ "message": "Internal server error" });
     }
-};
+}
 
 
 async function deletePlaceViaAdmin(req, res) {
