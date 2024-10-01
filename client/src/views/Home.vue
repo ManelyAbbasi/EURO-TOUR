@@ -5,7 +5,7 @@
         <router-link to="/"  class="home-logo"><img src="@/assets/horizontal-logo.png" alt="Euro Tour logo"></router-link>
       </logo>
       <nav class="navbar">
-        <a href="#cities" class="navbar-item"><i class="fa-solid fa-city" style="color: #edf7fb;"></i> cities</a>
+        <router-link to="/maincities" class="navbar-item"><i class="fa-solid fa-city" style="color: #edf7fb;"></i> cities</router-link>
         <a href="#placesToVisit" class="navbar-item"><i class="fa-solid fa-map-pin" style="color: #edf7fb;"></i> places to visit</a>
         <b-dropdown
           size="lg"
