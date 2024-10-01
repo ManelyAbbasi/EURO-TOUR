@@ -21,7 +21,7 @@ router.get('/:id/placesToVisit', citiesControllers.getPlacesFromCity);
 
 router.get('/:id/placesToVisit/:address', citiesControllers.getOnePlaceFromCity);
 
-router.post('/:id/reviews', authenticatoin, citiesControllers.createReviewToCity);
+router.post('/:id/reviews', authentication, citiesControllers.createReviewToCity);
 
 router.get('/:id/reviews', citiesControllers.getReviewsForCity);
  

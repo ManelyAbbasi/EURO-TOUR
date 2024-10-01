@@ -1,10 +1,11 @@
 <template>
   <div class="home-body-container">
     <header class="euro-tour-header">
-      <logo class="header-logo-wrapper">
+      <div class="header-logo-wrapper">
         <router-link to="/"  class="home-logo"><img src="@/assets/horizontal-logo.png" alt="Euro Tour logo"></router-link>
-      </logo>
+      </div>
       <nav class="navbar">
+        <a href="#favourites" class="navbar-item" v-if="isLoggedIn"><i class="fa-regular fa-heart" style="color: #edf7fb;"></i> favourites</a>
         <router-link to="/maincities" class="navbar-item"><i class="fa-solid fa-city" style="color: #edf7fb;"></i> cities</router-link>
         <a href="#placesToVisit" class="navbar-item"><i class="fa-solid fa-map-pin" style="color: #edf7fb;"></i> places to visit</a>
         <b-dropdown
@@ -101,6 +102,12 @@ export default {
   data() {
     return {
       message: 'none'
+    }
+  },
+  computed: {
+    isLoggedIn() {
+      const token = localStorage.getItem('x-auth-token')
+      return !!token // Returns true if token exists, otherwise false
     }
   },
   methods: {

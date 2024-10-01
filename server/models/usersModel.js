@@ -18,7 +18,7 @@ var usersSchema = new Schema({
     isAdmin: { type: Boolean, default: false },
     session: {
         key: {
-            type: mongoose.SchemaTypes.ObjectId(),
+            type: mongoose.SchemaTypes.ObjectId,
             required: true
         }, 
         expiry: {type: Date,

@@ -109,7 +109,10 @@ export default {
 
         console.log('User object:', user)
         const response = await Api.post('/users', user)
+        console.log('response', response)
+        console.log('header', response.headers)
         localStorage.setItem('x-auth-token', response.headers['x-auth-token'])
+        this.$router.push({ name: 'home' })
       } catch (error) {
         console.error(error)
       }

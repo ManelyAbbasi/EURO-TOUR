@@ -276,6 +276,46 @@ async function deleteReviewViaAdmin(req, res) {
     }
 }
 
+async function login(req, res, next) {
+    try {
+        const { username, password } = req.body;
+
+        if (!username || !password) {
+            return res.status(400).json({ message: "Username and password are required" });
+        }
+
+        const user = await UsersModel.findOne({ username });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        if (password !== user.password) {
+            return res.status(401).json({ message: "Invalid password" });
+        }
+        const sessionKey = new mongoose.Types.ObjectId();
+        const sessionExpiry = Date.now() + 60 * 60 * 1000; // 1 hour session expiry
+        user.session = {
+            key: sessionKey,
+            expiry: sessionExpiry,
+        };
+
+        await user.save();
+
+        res.set('x-auth-token', sessionKey);
+        res.status(200).json({
+            message: "Login successful",
+            user: {
+                username: user.username,
+                isAdmin: user.isAdmin,
+            }
+        });
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
 module.exports = {
     createUser,
     getAllUsers,
