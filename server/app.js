@@ -1,7 +1,5 @@
 var express = require('express');
 const session = require('express-session');
-const passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
 
 var mongoose = require('mongoose');
 var morgan = require('morgan');
@@ -34,34 +32,16 @@ app.use(morgan('dev'));
 
 // Enable cross-origin resource sharing for frontend must be registered before api
 app.options('*', cors());
-app.use(cors());
-
-// Use the session middleware before Passport
-app.use(session({
-    secret: 'your_secret_key', // Use a secure, random secret for production
-    resave: false, // Don't save session if unmodified
-    saveUninitialized: false, // Don't create session until something stored
-    cookie: { secure: false } // Set to true if using HTTPS
+app.use(cors({
+    exposedHeaders: ['x-auth-token'],
 }));
-
-// Initialize Passport and the session
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Import your User model
-let User = require('./models/usersModel');
-
-// Set up Passport Local strategy
-passport.use(User.createStrategy());
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
 
 // Import routes
 const citiesRoutes = require('./routes/citiesRoutes');
 const usersRoutes = require('./routes/usersRoutes');
 const reviewsRoutes = require('./routes/reviewsRoutes');
 const placesRoutes = require('./routes/placesToVisitRoutes');
-const authenticateRoutes = require('./routes/authenticateRoutes');
+const authentication = require('./middleware/authentication');
 
 // Basic API endpoint
 app.get('/api', function(req, res) {
@@ -70,10 +50,9 @@ app.get('/api', function(req, res) {
 
 // Define API routes
 app.use('/api/cities', citiesRoutes);
-app.use('/api/users', usersRoutes);
+app.use('/api/users', authentication, usersRoutes);
 app.use('/api/reviews', reviewsRoutes);
 app.use('/api/places', placesRoutes);
-app.use('/api/authenticate', authenticateRoutes);
 
 // Catch all non-error handler for API (i.e., 404 Not Found)
 app.use('/api/*', function (req, res) {

@@ -1,30 +1,31 @@
 var express = require('express');
 var router = express.Router();
 var citiesControllers = require('../controllers/citiesController');
+const authentication = require('../middleware/authentication');
 
 router.get('/', citiesControllers.getAllCities);
 
-router.post('/', citiesControllers.createCity);
+router.post('/', authentication, citiesControllers.createCity);
 
 router.get('/:id', citiesControllers.getOneCity);
 
-router.put('/:id', citiesControllers.updateCity);
+router.put('/:id', authentication, citiesControllers.updateCity);
 
-router.patch('/:id', citiesControllers.patchCity);
+router.patch('/:id', authentication, citiesControllers.patchCity);
 
-router.delete('/:id', citiesControllers.deleteOneCity);
+router.delete('/:id', authentication, citiesControllers.deleteOneCity);
 
-router.post('/:id/placesToVisit', citiesControllers.createPlaceInCity);
+router.post('/:id/placesToVisit', authentication, citiesControllers.createPlaceInCity);
 
 router.get('/:id/placesToVisit', citiesControllers.getPlacesFromCity);
 
 router.get('/:id/placesToVisit/:address', citiesControllers.getOnePlaceFromCity);
 
-router.post('/:id/reviews', citiesControllers.createReviewToCity);
+router.post('/:id/reviews', authentication, citiesControllers.createReviewToCity);
 
 router.get('/:id/reviews', citiesControllers.getReviewsForCity);
  
-router.delete('/:id/reviews', citiesControllers.deleteReviewsById);
+router.delete('/:id/reviews', authentication, citiesControllers.deleteReviewsById);
 
 
 module.exports = router;
