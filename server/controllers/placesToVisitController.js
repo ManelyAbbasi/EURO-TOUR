@@ -1,19 +1,13 @@
 const placesToVisitModel = require("../models/placesToVisitModel");
 const PlacesToVisitModel = require("../models/placesToVisitModel");
-const express = require("express");
-const router = express.Router();
 const ReviewsModel = require("../models/reviewsModel");
 const UsersModel = require("../models/usersModel");
-var passport = require('passport');
 
 
 async function createReviewToPlace(req, res) {
     const address = req.params.address;
 
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "You need to be logged in to create a review." });
-        }
 
         const place = await PlacesToVisitModel.findOne({ address });
         if (!place) {
@@ -136,9 +130,6 @@ async function getReviewsForPlace(req, res) {
 
 async function updatePlace(req, res, next) {
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "You need to be logged in to update a place." });
-        }
 
         if (!req.user.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can update places." });
@@ -193,9 +184,6 @@ async function updatePlace(req, res, next) {
 
 async function patchPlace(req, res) {
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "You need to be logged in to patch a place." });
-        }
         if (!req.user.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can patch places." });
         }
@@ -220,9 +208,6 @@ async function deleteOnePlace(req, res) {
     const address = req.params.address;
 
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "You need to be logged in to delete a place." });
-        }
         if (!req.user.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can delete places." });
         }

@@ -1,7 +1,5 @@
 const CitiesModel = require("../models/citiesModel");
-const express = require("express");
 const placesToVisitSchema = require("../models/placesToVisitModel");
-const router = express.Router();
 const ReviewsModel = require("../models/reviewsModel");
 const UsersModel = require("../models/usersModel");
 const citiesModel = require("../models/citiesModel");
@@ -9,9 +7,6 @@ const citiesModel = require("../models/citiesModel");
 
 async function createCity(req, res, next) {
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "You need to be logged in to create a city." });
-        }
         if (!req.user.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can create cities." });
         }
@@ -46,9 +41,6 @@ async function createCity(req, res, next) {
 async function createPlaceInCity(req, res) {
     const cityId = req.params.id;
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "You need to be logged in to create a place in a city." });
-        }
         if (!req.user.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can create places in cities." });
         }
@@ -271,9 +263,6 @@ async function updateCity(req, res, next) {
     const cityId = req.params.id;
 
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "You need to be logged in to update the city." });
-        }
         if (!req.user.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can update cities." });
         }
@@ -327,9 +316,6 @@ async function patchCity(req, res, next){
     const cityId = req.params.id;
 
     try{
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "You need to be logged in to patch a place." });
-        }
         if (!req.user.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can patch places." });
         }
@@ -354,9 +340,6 @@ async function deleteReviewsById(req, res) {
     const cityId = req.params.id;
 
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "You need to be logged in to delete a place." });
-        }
         if (!req.user.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can delete places." });
         }

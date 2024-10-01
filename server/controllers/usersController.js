@@ -1,10 +1,8 @@
 const UsersModel = require("../models/usersModel");
-const express = require("express");
-const router = express.Router();
 const ReviewsModel = require('../models/reviewsModel');
 const PlacesToVisitSchema = require('../models/placesToVisitModel');
 const CitiesModel = require('../models/citiesModel');
-var passport = require('passport');
+const usersModel = require("../models/usersModel");
 
 
 async function createUser(req, res, next) {
@@ -42,27 +40,9 @@ async function createUser(req, res, next) {
             return res.status(400).json({ "message": "Invalid isAdmin: must be a boolean value" });
         }
 
-        UsersModel.register(new UsersModel({
-            username: req.body.username,
-            birthDate: req.body.birthDate,
-            isLGBTQIA: req.body.isLGBTQIA,
-            gender: req.body.gender,
-            isAdmin: req.body.isAdmin
-        }), req.body.password, function (err, user) {
-            if (err) {
-                return res.status(400).json({ "message": err.message });
-            }
-
-            passport.authenticate('local')(req, res, function () {
-                req.logIn(user, function (err) {
-                    if (err) {
-                        return next(err);
-                    }
-
-                    res.status(201).json({ user, "message": "User created & authenticated" });
-                });
-            });
-        });
+        const user = new usersModel(req.body);
+        await user.save();
+        res.status(201).json(user);
     } catch (err) {
         next(err);
     }
@@ -71,10 +51,6 @@ async function createUser(req, res, next) {
 async function getAllUsers(req, res) {
 
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: 'You need to be logged in to view this resource.' });
-        }
-
         if (!req.user.isAdmin) {
             return res.status(403).json({ message: 'Access denied. Admins only.' });
         }
@@ -93,9 +69,6 @@ async function getUserReviews(req, res) {
     const username = req.params.username;
 
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: 'You need to be logged in to view reviews' });
-        }
 
         const user = await UsersModel.findOne({ username });
         
@@ -124,9 +97,6 @@ async function getUserReviews(req, res) {
 async function updateUser(req, res, next) {
 
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ "message": "You need to be logged in to update a user." });
-        }
 
         const user = await UsersModel.findOne({ username: req.params.username });
         
@@ -167,9 +137,6 @@ async function updateUser(req, res, next) {
 async function patchUser(req, res, next) {
 
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ "message": "You need to be logged in to update a user." });
-        }
 
         const user = await UsersModel.findOne({ username: req.params.username });
         if (user == null) {
@@ -177,9 +144,6 @@ async function patchUser(req, res, next) {
         }
         if (req.user.username !== req.params.username && !req.user.isAdmin) {
             return res.status(403).json({ "message": "You are not authorized to update this user." });
-        }
-        if (!req.isAuthenticated() || req.user._id.toString() !== user._id.toString()) {
-            return res.status(401).json({ "message": "You are not authorized to edit this user" });
         }
 
         user.password = req.body.password || user.password;
@@ -195,7 +159,7 @@ async function deleteOneUser(req, res) {
     const username = req.params.username;
 
     try {
-        if (!req.isAuthenticated() || (req.user.username !== username && !req.user.isAdmin)) {
+        if (req.user.username !== username && !req.user.isAdmin) {
             return res.status(403).json({ message: "You are not authorized to delete this user" });
         }
         
@@ -228,9 +192,6 @@ async function deleteUserByAdmin(req, res) {
     const usernameToDelete = req.params.username; 
 
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "You need to be logged in to perform this action." });
-        }
 
         if (!req.user.isAdmin) {
             return res.status(403).json({ message: "Access denied. Admins only." });
@@ -250,9 +211,6 @@ async function deletePlaceViaAdmin(req, res) {
     const address = req.params.address;
 
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "You need to be logged in to perform this action." });
-        }
         if (!req.user.isAdmin) {
             return res.status(403).json({ message: "Access denied. Admins only." });
         }
@@ -275,9 +233,6 @@ async function deleteCityViaAdmin(req, res) {
     const cityId = req.params.cityId;
 
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "You need to be logged in to perform this action." });
-        }
         if (!req.user.isAdmin) {
             return res.status(403).json({ message: "Access denied. Admins only." });
         }
@@ -299,9 +254,6 @@ async function deleteReviewViaAdmin(req, res) {
     const { username, review_id } = req.params;
 
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "You need to be logged in to perform this action." });
-        }
 
         if (!req.user.isAdmin) {
             return res.status(403).json({ message: "Access denied. Admins only." });
