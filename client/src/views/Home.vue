@@ -26,10 +26,10 @@
     <main>
       <div class="home-layout-wrapper">
           <div class="home-right-side-panel">
-            <h1 class="hello">Hello!</h1>
-            <p class="welcome-text">Make the most of your
+            <h1 class="text hello"> </h1>
+            <p class="text welcome-text">Make the most of your
               upcoming travels! </p>
-            <p class="welcome-text">With your <b>preferences</b>
+            <p class="text welcome-text">With your <b>preferences</b>
               and our <b>recommendations</b> you will have
               the experience of a <b>lifetime</b></p>
           </div>
@@ -93,6 +93,34 @@
 import { Api } from '@/Api'
 import EuroMap from '@/views/Map.vue' // Adjust the path as necessary
 
+const text = document.querySelector('.hello')
+const textLoad = () => {
+  setTimeout(() => {
+    text.textContent = 'Hello!'
+  }, 0)
+  setTimeout(() => {
+    text.textContent = 'Hola!'
+  }, 4000)
+  setTimeout(() => {
+    text.textContent = 'Bonjour!'
+  }, 8000)
+  setTimeout(() => {
+    text.textContent = 'Ciao!'
+  }, 12000)
+  setTimeout(() => {
+    text.textContent = 'Salut!'
+  }, 16000)
+  setTimeout(() => {
+    text.textContent = 'Hallo!'
+  }, 20000)
+  setTimeout(() => {
+    text.textContent = 'Cześć!'
+  }, 24000)
+}
+
+textLoad()
+setInterval(28000)
+
 export default {
   components: {
     EuroMap
@@ -128,7 +156,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
 
 .home-body-container{
@@ -292,6 +320,34 @@ export default {
 
 .hello {
   font-size: 3rem;
+}
+
+.hello {
+  position: relative;
+  font-size: 3rem;
+  white-space: nowrap; /* Ensure the text doesn't break */
+  overflow: hidden; /* Hide the overflow */
+}
+
+h1.text.hello:before {
+  content:"";
+  animation: typewriterAnimate 4s steps(12) infinite;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #42515e;
+  border-left: 2px solid #bc672a;
+}
+
+@keyframes typewriterAnimate {
+  40%, 60%{
+    left: 100%;
+  }
+  100%{
+    left: 0%
+  }
 }
 
 .welcome-text {
