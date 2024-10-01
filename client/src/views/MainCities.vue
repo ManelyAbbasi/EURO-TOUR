@@ -81,8 +81,13 @@
 
             <!-- Heart Icon -->
             <div class="heart-icon-container">
-              <i class="fa-regular fa-heart" style="color: #bc672a;"></i>
-            </div>
+            <i :class="isFavorite ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"
+              class="favorite-icon"
+              style="color: #bc672a;"
+              @click="toggleFavorite">
+            </i>
+          </div>
+
         </div>
 
           <div class="maincities-right-side-panel">
@@ -129,6 +134,7 @@
 export default {
   data() {
     return {
+      isFavorite: false,
       slide: 0,
       captions: [
         'London, United Kingdom',
@@ -151,6 +157,11 @@ export default {
         'Area: 318 km²'
       ],
       tags: []
+    }
+  },
+  methods: {
+    toggleFavorite() {
+      this.isFavorite = !this.isFavorite // Toggle between true and false
     }
   }
 }
@@ -199,7 +210,7 @@ export default {
 .b-dropdown .dropdown-item{
   display: block;
   width: 100%;
-  padding: 0.5rem 1rem; /* Add appropriate padding */
+  padding: 0.5rem 1rem;
   color: blueviolet !important;
   text-align: inherit;
   border: none; /* Remove border */
@@ -240,7 +251,7 @@ export default {
 .maincities-layout-wrapper {
   display: grid;
   grid-template-columns: 2fr 1fr;  /* Create two equal columns */
-  grid-gap: 20px;  /* Optional: Add some space between columns */
+  grid-gap: 20px;
   padding: 7rem 9% 2rem;
   width: 100%;
 }
@@ -278,7 +289,7 @@ export default {
 }
 
 .star-rating i {
-  margin-right: 5px; /* increase space between stars */
+  margin-right: 5px; /* Increase space between stars */
 }
 
 .rating-text {
@@ -317,6 +328,12 @@ export default {
 
 .heart-icon-container i {
   font-size: 3em;
+  cursor: pointer;
+  transition: transform 0.3s ease; /* Add smooth transition on click or hover */
+}
+
+.heart-icon-container i:hover {
+  transform: scale(1.1); /* Slightly enlarge the heart on hover */
 }
 
 .maincities-right-side-panel {
