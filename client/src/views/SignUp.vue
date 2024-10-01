@@ -69,6 +69,8 @@
 </template>
 
 <script>
+import { Api } from '../Api'
+
 export default {
   name: 'SignUp',
   data() {
@@ -88,7 +90,29 @@ export default {
     }
   },
   methods: {
-    saveButton() {
+    async saveButton() {
+      if (!this.isEmpty) {
+        console.log('Form submitted')
+      }
+      try {
+        const birthDate = `${this.birthYear}-${this.birthMonth.toString().padStart(2, '0')}-${this.birthDay.toString().padStart(2, '0')}`
+        console.log('Birth Date:', birthDate)
+
+        const user = {
+          username: this.username,
+          password: this.password,
+          birthDate: birthDate,
+          isLGBTQIA: false,
+          gender: 'other',
+          isAdmin: false
+        }
+
+        console.log('User object:', user)
+        const response = await Api.post('/users', user)
+        localStorage.setItem('x-auth-token', response.headers['x-auth-token'])
+      } catch (error) {
+        console.error(error)
+      }
       if (!this.isEmpty) {
         console.log('Form submitted')
       }

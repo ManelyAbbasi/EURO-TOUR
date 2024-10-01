@@ -15,7 +15,15 @@ var usersSchema = new Schema({
         enum: ['male', 'female', 'non-binary', 'other'], 
         default: 'other'  
     },
-    isAdmin: { type: Boolean, default: false }
+    isAdmin: { type: Boolean, default: false },
+    session: {
+        key: {
+            type: mongoose.SchemaTypes.ObjectId(),
+            required: true
+        }, 
+        expiry: {type: Date,
+            required: true}
+    }
 }, {
     toJSON: {
         transform: function(doc, ret) {
