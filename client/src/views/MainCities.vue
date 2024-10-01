@@ -57,7 +57,6 @@
             ></i>
             <span class="rating-text">3.1/5.0</span>
           </div>
-
             </div>
 
             <div class="detail-about-city">
@@ -77,6 +76,7 @@
                 <p><strong class="heading">Tags:</strong></p>
                 <p>{{ tags[slide] }}</p>
             </div>
+            <router-link to="/citiesmore" class="read-more">read more</router-link>
         </div>
 
             <!-- Heart Icon -->
@@ -296,6 +296,16 @@ export default {
   margin-left: 0.5rem;
   font-size: 0.6em;
   color: #42515E;
+}
+
+.read-more {
+  font-size: 1.2rem;
+  color: #bc672a;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 9rem; /* Increase margin-left for more right alignment */
+  margin-top: 7rem;  /* Add margin-top to move it further down */
+  display: inline-block; /* Ensure margin-top works properly */
 }
 
 .detail-about-city {
