@@ -39,7 +39,6 @@ app.use(cors({
 // Import routes
 const citiesRoutes = require('./routes/citiesRoutes');
 const usersRoutes = require('./routes/usersRoutes');
-const reviewsRoutes = require('./routes/reviewsRoutes');
 const placesRoutes = require('./routes/placesToVisitRoutes');
 const authentication = require('./middleware/authentication');
 
@@ -51,7 +50,6 @@ app.get('/api', function(req, res) {
 // Define API routes
 app.use('/api/cities', citiesRoutes);
 app.use('/api/users', authentication, usersRoutes);
-app.use('/api/reviews', reviewsRoutes);
 app.use('/api/places', placesRoutes);
 
 // Catch all non-error handler for API (i.e., 404 Not Found)

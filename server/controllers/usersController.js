@@ -1,5 +1,4 @@
 const UsersModel = require("../models/usersModel");
-const ReviewsModel = require('../models/reviewsModel');
 const PlacesToVisitSchema = require('../models/placesToVisitModel');
 const CitiesModel = require('../models/citiesModel');
 const usersModel = require("../models/usersModel");
@@ -61,35 +60,6 @@ async function getAllUsers(req, res) {
         res.status(200).json({ users });
     } catch (error) {
         res.status(500).json({ error: 'An error occurred while fetching users.' });
-    }
-}
-
-/*In future add admin too?*/
-async function getUserReviews(req, res) {
-    const username = req.params.username;
-
-    try {
-
-        const user = await UsersModel.findOne({ username });
-        
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        if (req.user.username !== username && !req.user.isAdmin) {
-            return res.status(403).json({ message: 'You are not authorized to view these reviews' });
-        }
-
-        const reviews = await ReviewsModel.find({ user: user._id });
-
-        if (reviews.length === 0) {
-            return res.status(404).json({ message: 'No reviews found for this user' });
-        }
-
-        res.status(200).json({ reviews });
-    } catch (error) {
-        console.error('Error fetching user reviews:', error);
-        res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 }
 
@@ -176,7 +146,6 @@ async function deleteOneUser(req, res) {
     }
 }
 
-// Helper function for generic deletion logic
 async function deleteUserHelper(username, res) {
     const userToDelete = await UsersModel.findOneAndDelete({ username });
 
@@ -197,7 +166,6 @@ async function deleteUserByAdmin(req, res) {
             return res.status(403).json({ message: "Access denied. Admins only." });
         }
 
-        // Extend with admin-specific behavior
         await deleteUserHelper(usernameToDelete, res);
         
     } catch (err) {
@@ -250,32 +218,6 @@ async function deleteCityViaAdmin(req, res) {
     }
 }
 
-async function deleteReviewViaAdmin(req, res) {
-    const { username, review_id } = req.params;
-
-    try {
-
-        if (!req.user.isAdmin) {
-            return res.status(403).json({ message: "Access denied. Admins only." });
-        }
-
-        const user = await UsersModel.findOne({ username });
-
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-        const review = await ReviewsModel.findOne({ _id: review_id, user: user._id });
-        if (!review) {
-            return res.status(404).json({ message: "Review not found or doesn't belong to the specified user" });
-        }
-        await ReviewsModel.findByIdAndDelete(review_id);
-        res.status(200).json({ message: "Review deleted successfully", review });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal server error" });
-    }
-}
-
 async function login(req, res, next) {
     try {
         const { username, password } = req.body;
@@ -319,12 +261,10 @@ async function login(req, res, next) {
 module.exports = {
     createUser,
     getAllUsers,
-    getUserReviews,
     updateUser,
     patchUser,
     deleteOneUser,
     deleteUserByAdmin,
     deletePlaceViaAdmin,
     deleteCityViaAdmin,
-    deleteReviewViaAdmin
 }
