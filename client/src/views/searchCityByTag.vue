@@ -34,10 +34,17 @@
         <h2 class="search-cities-text">Search cities by:</h2>
 
         <div class="filter-options">
-          <button class="tags-button">tags</button>
-          <button class="ratings-button">ratings</button>
-          <i class="fa-solid fa-filter"></i>
+        <router-link to="/searchCityByTag">
+            <button class="tags-button">tags</button>
+        </router-link>
+
+        <router-link to="/searchCityByRating">
+            <button class="ratings-button">ratings</button>
+        </router-link>
+
+        <i class="fa-solid fa-filter"></i>
         </div>
+
         </div>
     </div>
     </main>
@@ -118,6 +125,10 @@ export default {
   cursor: pointer;
   font-size: 1.2rem;
   margin-block: 40px;
+}
+
+.tags-button:hover, .ratings-button:hover{
+    transform: scale(1.05);
 }
 
 .tags-button{
