@@ -146,7 +146,7 @@ export default {
 
 .search-cities-text {
   font-family: "Lexend Deca", sans-serif;
-  color: #42515e;
+  color: #045768;
   font-size: 3rem;
   margin-top: 2.5rem;
   margin-left: 6rem;
@@ -207,6 +207,23 @@ export default {
 .tag-button.active {
     background-color: #8FC6DF; /* New background color when selected */
     color: #42515e; /* Change text color when selected */
+}
+
+.result-text {
+    color: #045768;
+    margin-top: 4rem;
+    margin-right: 6rem;
+
+}
+
+.clear-button {
+    background-color: #8FC6DF;
+    color: #42515e;
+    border: none;
+    padding: 5px 50px;
+    font-size: 1.2rem;
+    margin-top: 4rem;
+    margin-left: 8rem;
 }
 
 .euro-tour-header {
