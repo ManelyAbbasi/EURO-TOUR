@@ -51,35 +51,43 @@
     </b-row>
 
     <b-row>
-    <b-col>
+      <b-col>
         <div class="available-tags">
-        <button class="tag-button">historical</button>
-        <button class="tag-button">quiet</button>
-        <button class="tag-button">party</button>
-        <button class="tag-button">architecture</button>
-        <button class="tag-button">recently added</button>
-        <button class="tag-button">nature</button>
-        <button class="tag-button">beachy</button>
-        <button class="tag-button">warm weather</button>
-        <button class="tag-button">cold weather</button>
-        <button class="tag-button">popular</button>
-        <button class="tag-button">cheap</button>
-        <button class="tag-button">high-end</button>
+          <button class="tag-button" @click="toggleTag('historical')">historical</button>
+          <button class="tag-button" @click="toggleTag('quiet')">quiet</button>
+          <button class="tag-button" @click="toggleTag('party')">party</button>
+          <button class="tag-button" @click="toggleTag('architecture')">architecture</button>
+          <button class="tag-button" @click="toggleTag('recently added')">recently added</button>
+          <button class="tag-button" @click="toggleTag('nature')">nature</button>
+          <button class="tag-button" @click="toggleTag('beachy')">beachy</button>
+          <button class="tag-button" @click="toggleTag('warm weather')">warm weather</button>
+          <button class="tag-button" @click="toggleTag('cold weather')">cold weather</button>
+          <button class="tag-button" @click="toggleTag('popular')">popular</button>
+          <button class="tag-button" @click="toggleTag('cheap')">cheap</button>
+          <button class="tag-button" @click="toggleTag('high-end')">high-end</button>
         </div>
-    </b-col>
+      </b-col>
     </b-row>
 
     <b-row>
-    <b-col col="3">
+    <b-col>
     <h2 class="result-text">selected tags:</h2>
     </b-col>
 
-    <b-col col="6">
-    <div class="selected-tags"></div>
+    <b-col cols="7">
+    <div class="selected-tags">
+      <button
+        v-for="tag in selectedTags"
+        :key="tag"
+        class="tag-button-selected"
+      >
+        {{ tag }}
+      </button>
+    </div>
     </b-col>
 
-    <b-col col="3">
-    <button class="clear-button">clear all tags</button>
+    <b-col>
+        <button class="clear-button" @click="clearTags">clear all tags</button>
     </b-col>
     </b-row>
 
@@ -105,7 +113,18 @@
 
 <script>
 export default {
+  data() {
+    return {
+      selectedTags: [],
+      allTags: [
+        'historical', 'quiet', 'party', 'architecture',
+        'recently added', 'nature', 'beachy', 'warm weather',
+        'cold weather', 'popular', 'cheap', 'high-end'
+      ]
+    }
+  },
   mounted() {
+    // Create a link element
     const link = document.createElement('link')
     link.rel = 'stylesheet'
     link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css'
@@ -114,6 +133,19 @@ export default {
     link.referrerPolicy = 'no-referrer'
     // Append the link element to the head
     document.head.appendChild(link)
+  },
+  methods: {
+    toggleTag(tag) {
+      const tagIndex = this.selectedTags.indexOf(tag)
+      if (tagIndex === -1) {
+        this.selectedTags.push(tag)
+      } else {
+        this.selectedTags.splice(tagIndex, 1)
+      }
+    },
+    clearTags() {
+      this.selectedTags = []
+    }
   }
 }
 </script>
@@ -204,15 +236,28 @@ export default {
     transform: scale(1.05);
 }
 
-.tag-button.active {
-    background-color: #8FC6DF; /* New background color when selected */
-    color: #42515e; /* Change text color when selected */
+.selected-tags {
+  display: flex;
+  flex-direction: row; /* Arrange in a row */
+  flex-wrap: wrap; /* Allow tags to wrap to the next line */
+  gap: 10px; /* Space between tags */
+  margin-top: 4.4rem;
+}
+
+.tag-button-selected {
+  min-width: 150px; /* Set a consistent width for each tag */
+  padding: 10px 20px;
+  background-color: #8FC6DF;
+  color: #42515e;
+  border: 1px solid #edf7fb;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .result-text {
     color: #045768;
     margin-top: 4rem;
-    margin-right: 6rem;
+    margin-left: 2rem;
 
 }
 
@@ -221,9 +266,8 @@ export default {
     color: #42515e;
     border: none;
     padding: 5px 50px;
-    font-size: 1.2rem;
-    margin-top: 4rem;
-    margin-left: 8rem;
+    font-size: 1.1rem;
+    margin-top: 4.4rem;
 }
 
 .euro-tour-header {
