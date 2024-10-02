@@ -1,53 +1,6 @@
 const placesToVisitModel = require("../models/placesToVisitModel");
 const PlacesToVisitModel = require("../models/placesToVisitModel");
-const ReviewsModel = require("../models/reviewsModel");
 const UsersModel = require("../models/usersModel");
-
-
-async function createReviewToPlace(req, res) {
-    const address = req.params.address;
-
-    try {
-
-        const place = await PlacesToVisitModel.findOne({ address });
-        if (!place) {
-            return res.status(404).json({ message: "Place not found" });
-        }
-
-        const user = await UsersModel.findOne({ username: req.user.username });
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        if (typeof req.body.rating !== 'number') {
-            return res.status(400).json({ message: "Invalid rating: must be a number" });
-        }
-        if (req.body.rating < 0.0 || req.body.rating > 5.0) {
-            return res.status(400).json({ message: "Invalid rating: must be between 0.0 and 5.0" });
-        }
-        if (typeof req.body.content !== 'string' || req.body.content.trim() === '') {
-            return res.status(400).json({ message: "Invalid content: must be a non-empty string" });
-        }
-
-        const review = new ReviewsModel({
-            rating: req.body.rating,
-            content: req.body.content,
-            date: Date.now(),
-            user: user._id,
-        });
-
-        await review.save();
-
-        place.reviews.push(review._id);
-        await place.save();
-
-        res.status(201).json({ message: "Review added successfully", review });
-
-    } catch (err) {
-        console.error("Error adding review to place:", err);
-        res.status(500).json({ message: "An error occurred while adding the review.", error: err.message });
-    }
-}
 
 
 async function getAllPlaces(req, res) {
@@ -84,46 +37,6 @@ async function getOnePlace(req, res) {
         res.status(200).json(placesToVisit);
     } catch (err) {
         res.status(500).json({ error: 'An error occurred while fetching the place.' })
-    }
-}
-
-
-async function getReviewsForPlace(req, res) {
-    const address = req.params.address;
-    const minRating = parseFloat(req.query.minRating); // Get min rating from query
-    const maxRating = parseFloat(req.query.maxRating); // Get max rating from query
-    const sortOrder = req.query.sortOrder || 'asc';
-
-    try {
-        const place = await PlacesToVisitModel.findOne({ address }).populate('reviews');
-        if (!place) {
-            return res.status(404).json({ message: "Place not found" });
-        }
-
-        let reviews = place.reviews;
-
-        if (!isNaN(minRating) || !isNaN(maxRating)) {
-            reviews = reviews.filter(review => {
-                const reviewRating = review.rating;
-                return (isNaN(minRating) || reviewRating >= minRating) && 
-                       (isNaN(maxRating) || reviewRating <= maxRating);
-            });
-        }
-
-        if (reviews.length > 0) {
-            reviews.sort((a, b) => {
-                if (sortOrder === 'desc') {
-                    return b.rating - a.rating; // Descending order
-                } else {
-                    return a.rating - b.rating; // Ascending order
-                }
-            });
-        }
-
-        res.status(200).json(reviews);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'An error occurred while fetching the reviews.' });
     }
 }
 
@@ -225,47 +138,10 @@ async function deleteOnePlace(req, res) {
     }
 }
 
-
-async function deleteReviewsByAddress(req, res) {
-    const address = req.params.address;
-
-    try {
-        const place = await PlacesToVisitModel.findOne({ address }).populate('reviews');
-        if (!place) {
-            return res.status(404).json({ error: 'Place not found' });
-        }
-        if (place.reviews.length === 0) {
-            return res.status(404).json({ message: 'No reviews found for this place' });
-        }
-
-        // Retrieve the review objects before deletion
-        const reviewsToDelete = await ReviewsModel.find({ _id: { $in: place.reviews } });
-        if (!reviewsToDelete || reviewsToDelete.length === 0) {
-            return res.status(404).json({ message: 'No reviews found to delete' });
-        }
-
-        const result = await ReviewsModel.deleteMany({ _id: { $in: place.reviews } });
-        place.reviews = [];
-        await place.save();
-
-        res.status(200).json({
-            message: `Successfully deleted ${result.deletedCount} reviews for the place at address: ${address}`,
-            deletedReviews: reviewsToDelete
-        });
-
-    } catch (error) {
-        res.status(500).json({ error: 'An error occurred while deleting reviews', details: error.message });
-    }
-}
- 
-
 module.exports = {
-    createReviewToPlace,
-    getReviewsForPlace,
     getAllPlaces,
     getOnePlace,
     updatePlace,
     patchPlace,
     deleteOnePlace,
-    deleteReviewsByAddress,
 }
