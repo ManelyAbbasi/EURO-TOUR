@@ -28,7 +28,7 @@
         </nav>
       </header>
 
-        <b-container  class="search-by-tag-panel">
+        <b-container class="search-by-tag-panel">
 
             <b-row>
             <b-col col="4">
@@ -65,6 +65,27 @@
         <button class="tag-button">pricey</button>
         </div>
     </b-col>
+    </b-row>
+
+    <b-row>
+    <b-col col="3">
+    <h2 class="result-text">selected tags:</h2>
+    </b-col>
+
+    <b-col col="6">
+    <div class="selected-tags"></div>
+    </b-col>
+
+    <b-col col="3">
+    <button class="clear-button">clear all tags</button>
+    </b-col>
+    </b-row>
+
+    <b-row>
+    <b-col col="12">
+
+    </b-col >
+
     </b-row>
 
         </b-container>
@@ -126,11 +147,15 @@ export default {
   font-family: "Lexend Deca", sans-serif;
   color: #42515e;
   font-size: 3rem;
+  margin-top: 2.5rem;
+  margin-left: 6rem;
+
 }
 
 .filter-options {
   display: flex;
-  gap: 80px; /* Adds space between the buttons */
+  gap: 4rem; /* Adds space between the buttons */
+  margin-right: 10rem;
 }
 
 .tags-button, .ratings-button {
@@ -165,8 +190,9 @@ export default {
 }
 
 .available-tags {
-    margin-top: 100px;
+    
 }
+
 .euro-tour-header {
   position: fixed;
   top: 0;
