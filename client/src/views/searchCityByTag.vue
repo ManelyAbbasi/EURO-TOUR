@@ -28,11 +28,14 @@
         </nav>
       </header>
 
-      <main>
-    <div class="maincities-layout-wrapper">
-        <div class="search-by-tag-panel">
-        <h2 class="search-cities-text">Search cities by:</h2>
+        <b-container  class="search-by-tag-panel">
 
+            <b-row>
+            <b-col col="4">
+                <h2 class="search-cities-text">Search cities by:</h2>
+            </b-col>
+
+            <b-col col="8">
         <div class="filter-options">
         <router-link to="/searchCityByTag">
             <button class="tags-button">tags</button>
@@ -44,10 +47,27 @@
 
         <i class="fa-solid fa-filter"></i>
         </div>
+    </b-col>
+    </b-row>
 
+    <b-row>
+    <b-col>
+        <div class="available-tags">
+        <button class="tag-button">historical</button>
+        <button class="tag-button">adventurous</button>
+        <button class="tag-button">quiet</button>
+        <button class="tag-button">party</button>
+        <button class="tag-button">architecture</button>
+        <button class="tag-button">nature</button>
+        <button class="tag-button">beachy</button>
+        <button class="tag-button">popular</button>
+        <button class="tag-button">cheap</button>
+        <button class="tag-button">pricey</button>
         </div>
-    </div>
-    </main>
+    </b-col>
+    </b-row>
+
+        </b-container>
 
     <footer class="footer">
         <div class="footer-text">
@@ -95,21 +115,17 @@ export default {
 }
 
 .search-by-tag-panel {
-    display: flex;
-    justify-content: center;
     background-color: #759cab;
-    width: 1400px;
-    height: 700px;
-    padding: 10px;
-    margin-left: -80px;
-    align-items: flex-start;
+    width: 100rem;
+    height: 50rem;
+    margin-bottom: 35px;
+    margin-top: 120px;
 }
 
 .search-cities-text {
   font-family: "Lexend Deca", sans-serif;
   color: #42515e;
   font-size: 3rem;
-  margin: 40px 0 0 -80px; /* Move it down by 20px and to the left by 50px */
 }
 
 .filter-options {
@@ -148,6 +164,9 @@ export default {
   margin-block: 40px;
 }
 
+.available-tags {
+    margin-top: 100px;
+}
 .euro-tour-header {
   position: fixed;
   top: 0;
@@ -210,14 +229,6 @@ export default {
 .maincities-navbar-item,
 .maincities-navbar-item i{
     color: #bc672a!important;
-}
-
-.maincities-layout-wrapper {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-gap: 20px;
-  padding: 7rem 9% 2rem;
-  width: 100%;
 }
 
 .logo img{
