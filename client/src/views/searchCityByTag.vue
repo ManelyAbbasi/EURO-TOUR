@@ -54,15 +54,17 @@
     <b-col>
         <div class="available-tags">
         <button class="tag-button">historical</button>
-        <button class="tag-button">adventurous</button>
         <button class="tag-button">quiet</button>
         <button class="tag-button">party</button>
         <button class="tag-button">architecture</button>
+        <button class="tag-button">recently added</button>
         <button class="tag-button">nature</button>
         <button class="tag-button">beachy</button>
+        <button class="tag-button">warm weather</button>
+        <button class="tag-button">cold weather</button>
         <button class="tag-button">popular</button>
         <button class="tag-button">cheap</button>
-        <button class="tag-button">pricey</button>
+        <button class="tag-button">high-end</button>
         </div>
     </b-col>
     </b-row>
@@ -104,7 +106,6 @@
 <script>
 export default {
   mounted() {
-    // Create a link element
     const link = document.createElement('link')
     link.rel = 'stylesheet'
     link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css'
@@ -189,8 +190,23 @@ export default {
   margin-block: 40px;
 }
 
-.available-tags {
-    
+.tag-button {
+    background-color: #00000025;
+    color: #8FC6DF;
+    border-radius: 5px;
+    border: 1px solid #edf7fb;
+    padding: 10px 40px;
+    cursor: pointer;
+    margin: 12px;
+}
+
+.tag-button:hover{
+    transform: scale(1.05);
+}
+
+.tag-button.active {
+    background-color: #8FC6DF; /* New background color when selected */
+    color: #42515e; /* Change text color when selected */
 }
 
 .euro-tour-header {
