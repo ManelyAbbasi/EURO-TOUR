@@ -19,7 +19,9 @@ var usersSchema = new Schema({
     session: {
         key: {
             type: mongoose.SchemaTypes.ObjectId,
-            required: true
+            required: true, 
+            unique: true,
+            sparse: true
         }, 
         expiry: {type: Date,
             required: true}

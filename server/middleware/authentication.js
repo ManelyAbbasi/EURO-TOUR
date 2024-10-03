@@ -10,16 +10,14 @@ module.exports = async function(req, res, next){
         res.set('x-auth-token', req.body.session.key);
         next();
     } else {
-        const user = await User.findOne({username: req.body.username});
+        const user = await User.findOne({"session.key": req.headers['x-auth-token']});
         if(!user){
             return res.status(404).json({"message": "User not found"})
-        } 
-        if(req.headers.x-auth-token !== user.session.key){
-            return res.status(401).json({"message": "Invalid session"});
-        } 
+        }
         if(Date.now() > user.session.expiry){
             return res.status(401).json({"message": "Session expired"});
         }
+        req.body.isAdmin = user.isAdmin;
         next();
     }
 }

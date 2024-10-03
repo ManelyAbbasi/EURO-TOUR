@@ -6,7 +6,7 @@ const citiesModel = require("../models/citiesModel");
 
 async function createCity(req, res, next) {
     try {
-        if (!req.user.isAdmin) {
+        if (!req.body.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can create cities." });
         }
 

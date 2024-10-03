@@ -19,4 +19,6 @@ router.delete('/placesToVisit/:address', usersControllers.deletePlaceViaAdmin);
 
 router.delete('/cities/:id', usersControllers.deleteCityViaAdmin);
 
+router.post('/login', usersControllers.login);
+
 module.exports = router;

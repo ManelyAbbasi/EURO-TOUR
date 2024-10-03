@@ -2,6 +2,7 @@ const UsersModel = require("../models/usersModel");
 const PlacesToVisitSchema = require('../models/placesToVisitModel');
 const CitiesModel = require('../models/citiesModel');
 const usersModel = require("../models/usersModel");
+const mongoose = require("mongoose");
 
 
 async function createUser(req, res, next) {
@@ -258,6 +259,7 @@ async function login(req, res, next) {
     }
 }
 
+
 module.exports = {
     createUser,
     getAllUsers,
@@ -267,4 +269,5 @@ module.exports = {
     deleteUserByAdmin,
     deletePlaceViaAdmin,
     deleteCityViaAdmin,
+    login
 }
