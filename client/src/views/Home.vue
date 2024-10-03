@@ -35,7 +35,7 @@
             <img src="@/assets/signed-in-icon.png" alt="Sign In" class="dropdown-icon" />
           </template>
           <!-- Dropdown items -->
-          <b-dropdown-item class="dropdown-item" @click="logout">Log out</b-dropdown-item>
+          <b-dropdown-item class="dropdown-item logout" @click="logout">Log out</b-dropdown-item>
           <b-dropdown-item class="dropdown-item" to="/profile">Profile</b-dropdown-item>
         </b-dropdown>
       </nav>
@@ -43,10 +43,12 @@
     <main>
       <div class="home-layout-wrapper">
           <div class="home-right-side-panel">
-            <h1 class="hello">Hello!</h1>
-            <p class="welcome-text">Make the most of your
+            <h1 class="hello" v-if="!isLoggedIn">Hello!</h1>
+            <h1 class="hello" v-if="isLoggedIn">Welcome back traveler!</h1>
+            <p class="welcome-text" v-if="!isLoggedIn">Make the most of your
               upcoming travels! </p>
-            <p class="welcome-text">With your <b>preferences</b>
+              <p class="welcome-text" v-if="isLoggedIn">Let's plan for your next travels </p>
+            <p class="welcome-text" v-if="!isLoggedIn">With your <b>preferences</b>
               and our <b>recommendations</b> you will have
               the experience of a <b>lifetime</b></p>
           </div>
@@ -228,7 +230,8 @@ export default {
   text-decoration: none;
 }
 
-.navbar a {
+.navbar a,
+li.dropdown-item.logout {
   font-size: 1.5rem;
   color: #edf7fb;
   transition: 0.3s;
@@ -236,6 +239,7 @@ export default {
 }
 
 .navbar a:hover,
+.li.dropdown-item.logout:hover,
 .logo-wrapper img,
 .navbar a:hover .fa-solid,
 .navbar a:hover .fa-regular {
