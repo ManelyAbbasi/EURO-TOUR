@@ -29,11 +29,58 @@
       </header>
 
       <form class="user-form">
+        <b-row>
       <label for="username">username</label>
       <input type="text" id="username" class="input-field"/>
 
       <label for="password">password</label>
       <input type="password" id="password" class="input-field"/>
+    </b-row>
+
+    <b-row>
+        <div class="gender-selection">
+  <label for="gender">What is your gender?</label>
+  <div class="gender-buttons">
+    <div class="gender-item">
+      <div
+        class="gender-button"
+        data-value="male"
+        :class="{ active: activeGender === 'male' }"
+        @click="selectGender('male')"
+      ></div>
+      <label for="male" class="gender-label">male</label>
+    </div>
+    <div class="gender-item">
+      <div
+        class="gender-button"
+        data-value="female"
+        :class="{ active: activeGender === 'female' }"
+        @click="selectGender('female')"
+      ></div>
+      <label for="female" class="gender-label">female</label>
+    </div>
+    <div class="gender-item">
+      <div
+        class="gender-button"
+        data-value="non-binary"
+        :class="{ active: activeGender === 'non-binary' }"
+        @click="selectGender('non-binary')"
+      ></div>
+      <label for="non-binary" class="gender-label">non-binary</label>
+    </div>
+    <div class="gender-item">
+      <div
+        class="gender-button"
+        data-value="other"
+        :class="{ active: activeGender === 'other' }"
+        @click="selectGender('other')"
+      ></div>
+      <label for="other" class="gender-label">other</label>
+    </div>
+  </div>
+</div>
+</b-row>
+
       </form>
 
     <footer class="footer">
@@ -49,8 +96,19 @@
 
 <script>
 export default {
+  data() {
+    return {
+      activeGender: null // Tracks the currently selected gender
+    }
+  },
+  methods: {
+    selectGender(gender) {
+      console.log(`Selected gender: ${gender}`) // Log the selected gender
+      this.activeGender = gender // Update active gender when a button is clicked
+    }
+  },
   mounted() {
-    // Create a link element
+    // Create a link element for Font Awesome
     const link = document.createElement('link')
     link.rel = 'stylesheet'
     link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css'
@@ -76,8 +134,8 @@ export default {
     outline: none;
     font-family: "Lexend Deca", sans-serif;
     background-color: #42515e;
-    display: flex;
     flex-wrap: wrap;
+    display: flex;
 }
 
 .euro-tour-header {
@@ -154,20 +212,17 @@ a img {
 }
 
 .user-form {
-  display: flex;
-  align-items: center;
   flex-direction: column;
   margin-top: 10rem;
-  margin-left: 28rem;
-  width: 40rem;
-
+  margin-left: 23rem;
+  width: 100%;
 }
 
 label {
   color: #8FC6DF;
   font-size: 1.1rem;
   font-family: 'Lexend Deca', sans-serif;
-  margin-right: 42rem;
+  text-align: left;
 }
 
 .input-field {
@@ -177,9 +232,49 @@ label {
   font-family: 'Lexend Deca', sans-serif;
   border: rgba(0, 0, 0, 0.301);
   background-color: rgba(0, 0, 0, 0.301);
-  width: 120%;
+  width: 50rem;
   outline: none;
   margin-bottom: 2rem;
+
+}
+
+.gender-selection {
+    display: flex;
+}
+
+.gender-selection label {
+    color: #8FC6DF; /* Label color */
+    font-size: 1.1rem;
+    font-family: 'Lexend Deca', sans-serif;
+}
+
+.gender-buttons {
+    display: flex;
+    gap: 4rem; /* Space between buttons */
+    margin-left: 2rem;
+}
+
+.gender-item {
+    display: flex; /* Flex container for button and label */
+    align-items: center; /* Center items vertically */
+    gap: 0.5rem;
+}
+
+.gender-button {
+    width: 1.2rem;
+    height: 1.2rem;
+    background-color: rgba(0, 0, 0, 0.301); /* Default button color */
+    cursor: pointer;
+    border: 2px solid transparent; /* For a smooth transition */
+    transition: background-color 0.3s, border-color 0.3s; /* Transition effect */
+}
+
+.gender-button:hover {
+    border-color: #FF7F30; /* Change border color on hover */
+}
+
+.gender-button.active {
+    background-color: #FF7F30; /* Color when button is active */
 }
 
 .footer{
