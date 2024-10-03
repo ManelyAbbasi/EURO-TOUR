@@ -95,9 +95,9 @@
                 <!--search and trending-->
                 <h2 class="maincities-search-title">Search cities by: <i class="fa-solid fa-filter" style="color: #045768;"></i></h2>
                 <div class="maincities-button-wrapper">
-                  <router-link to="/searchCityByTags" class="maincities-tags-btn">tags</router-link>
+                  <router-link to="/searchCityByTag" class="maincities-tags-btn">tags</router-link>
                     <h4 class="maincities-or">or</h4>
-                    <router-link to="/searchCityByRatings" class="maincities-ratings-btn">ratings</router-link>
+                    <router-link to="/searchCityByRating" class="maincities-ratings-btn">ratings</router-link>
                 </div>
                 <h2 class="maincities-search-title">Trending Cities:</h2>
                 <div class="trending-cities-wrapper">
