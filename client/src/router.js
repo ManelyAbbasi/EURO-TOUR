@@ -7,7 +7,6 @@ import Login from './views/Login.vue'
 import MainCities from './views/MainCities.vue'
 import searchCityByTag from './views/searchCityByTag.vue'
 
-
 const routes = [
   { path: '/', name: 'home', component: Home },
   { path: '/signup', name: 'signup', component: SignUp },

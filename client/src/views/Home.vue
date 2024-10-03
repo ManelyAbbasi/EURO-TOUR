@@ -35,7 +35,7 @@
             <img src="@/assets/signed-in-icon.png" alt="Sign In" class="dropdown-icon" />
           </template>
           <!-- Dropdown items -->
-          <b-dropdown-item class="dropdown-item" to="/">Log out</b-dropdown-item>
+          <b-dropdown-item class="dropdown-item" @click="logout">Log out</b-dropdown-item>
           <b-dropdown-item class="dropdown-item" to="/profile">Profile</b-dropdown-item>
         </b-dropdown>
       </nav>
@@ -117,13 +117,13 @@ export default {
   name: 'home',
   data() {
     return {
-      message: 'none'
+      message: 'none',
+      loggedInStatus: !!localStorage.getItem('x-auth-token') // Reactive property for login status
     }
   },
   computed: {
     isLoggedIn() {
-      const token = localStorage.getItem('x-auth-token')
-      return !!token // Returns true if token exists, otherwise false
+      return this.loggedInStatus // Use reactive `loggedInStatus` property
     }
   },
   methods: {
@@ -135,10 +135,19 @@ export default {
         .catch(error => {
           this.message = error
         })
+    },
+    logout() {
+      // Remove the authentication token from localStorage
+      localStorage.removeItem('x-auth-token')
+      console.log('Logged out successfully')
+      // Update the reactive `loggedInStatus` property to force reactivity
+      this.loggedInStatus = false
+      // Redirect the user to the homepage (or login page)
+      this.$router.push('/')
     }
   },
   mounted() {
-    // Create a link element
+    // Create a link element for FontAwesome
     const link = document.createElement('link')
     link.rel = 'stylesheet'
     link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css'
@@ -148,6 +157,7 @@ export default {
     // Append the link element to the head
     document.head.appendChild(link)
   }
+
 }
 </script>
 
