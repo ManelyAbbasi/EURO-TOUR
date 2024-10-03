@@ -1,34 +1,50 @@
 <template>
     <div class="maincities-body-container">
       <header class="euro-tour-header">
-        <logo class="logo-wrapper">
+        <div class="logo-wrapper">
           <router-link to="/" class="logo">
             <img src="@/assets/horizontal-logo.png" alt="Euro Tour logo" />
           </router-link>
-        </logo>
+        </div>
         <nav class="navbar">
-          <router-link to="/maincities" class="navbar-item maincities-navbar-item"
+          <router-link to="/maincities" class="navbar-item maincities-navbar-item" v-if="isLoggedIn"
             ><i class="fa-solid fa-city"></i> cities</router-link>
-          <a href="#placesToVisit" class="navbar-item"
+          <a href="#placesToVisit" class="navbar-item" v-if="isLoggedIn"
             ><i class="fa-solid fa-map-pin"></i> places to visit</a>
-          <b-dropdown
-            size="lg"
-            variant="link"
-            toggle-class="text-decoration-none"
-            no-caret
-            class="navbar-item dropdown"
-          >
-            <template #button-content>
-              <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
-            </template>
-            <!-- Dropdown items -->
-            <b-dropdown-item class="dropdown-item" to="/login">Log in</b-dropdown-item>
-            <b-dropdown-item class="dropdown-item" to="/signup">Sign up</b-dropdown-item>
-          </b-dropdown>
+            <b-dropdown
+          size="lg"
+          variant="link"
+          toggle-class="text-decoration-none"
+          no-caret
+          class="navbar-item dropdown"
+          v-if="!isLoggedIn"
+        >
+          <template #button-content>
+            <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
+          </template>
+          <!-- Dropdown items -->
+          <b-dropdown-item class="dropdown-item" to="/login">Log in</b-dropdown-item>
+          <b-dropdown-item class="dropdown-item" to="/signup">Sign up</b-dropdown-item>
+        </b-dropdown>
+        <b-dropdown
+          size="lg"
+          variant="link"
+          toggle-class="text-decoration-none"
+          no-caret
+          class="navbar-item dropdown"
+          v-if="isLoggedIn"
+        >
+          <template #button-content>
+            <img src="@/assets/signed-in-icon.png" alt="Sign In" class="dropdown-icon" />
+          </template>
+          <!-- Dropdown items -->
+          <b-dropdown-item class="dropdown-item" to="/">Log out</b-dropdown-item>
+          <b-dropdown-item class="dropdown-item" to="/profile">Profile</b-dropdown-item>
+        </b-dropdown>
         </nav>
       </header>
 
-        <b-container class="search-by-tag-panel">
+        <b-container class="search-by-panel">
 
             <b-row>
             <b-col col="4">
@@ -49,46 +65,17 @@
         </div>
     </b-col>
     </b-row>
-
     <b-row>
-      <b-col>
-        <div class="available-tags">
-          <button class="tag-button" @click="toggleTag('historical')">historical</button>
-          <button class="tag-button" @click="toggleTag('quiet')">quiet</button>
-          <button class="tag-button" @click="toggleTag('party')">party</button>
-          <button class="tag-button" @click="toggleTag('architecture')">architecture</button>
-          <button class="tag-button" @click="toggleTag('recently added')">recently added</button>
-          <button class="tag-button" @click="toggleTag('nature')">nature</button>
-          <button class="tag-button" @click="toggleTag('beachy')">beachy</button>
-          <button class="tag-button" @click="toggleTag('warm weather')">warm weather</button>
-          <button class="tag-button" @click="toggleTag('cold weather')">cold weather</button>
-          <button class="tag-button" @click="toggleTag('popular')">popular</button>
-          <button class="tag-button" @click="toggleTag('cheap')">cheap</button>
-          <button class="tag-button" @click="toggleTag('high-end')">high-end</button>
-        </div>
-      </b-col>
+      <b-col><h4>sort by:</h4></b-col>
+      <b-col><button class="sort-by-button" @click="clearTags">highest to lowest</button></b-col>
+      <b-col><button class="sort-by-button" @click="clearTags">lowest to highest</button></b-col>
+      <b-col></b-col>
     </b-row>
-
     <b-row>
+      <b-col><h4>range of ratings:</h4></b-col>
     <b-col>
-    <h2 class="result-text">selected tags:</h2>
     </b-col>
 
-    <b-col cols="7">
-    <div class="selected-tags">
-      <button
-        v-for="tag in selectedTags"
-        :key="tag"
-        class="tag-button-selected"
-      >
-        {{ tag }}
-      </button>
-    </div>
-    </b-col>
-
-    <b-col>
-        <button class="clear-button" @click="clearTags">clear all tags</button>
-    </b-col>
     </b-row>
 
     <b-row>
@@ -115,14 +102,10 @@
 export default {
   data() {
     return {
-      selectedTags: [],
-      allTags: [
-        'historical', 'quiet', 'party', 'architecture',
-        'recently added', 'nature', 'beachy', 'warm weather',
-        'cold weather', 'popular', 'cheap', 'high-end'
-      ]
+      value: '2'
     }
   },
+
   mounted() {
     // Create a link element
     const link = document.createElement('link')
@@ -168,7 +151,7 @@ export default {
     align-items: center;
 }
 
-.search-by-tag-panel {
+.search-by-panel {
     background-color: #759cab;
     width: 100rem;
     height: 50rem;
@@ -206,12 +189,12 @@ export default {
 }
 
 .tags-button{
-    background-color: #bc672a;
+    background-color: #9BA9B6 ;
     margin-left: 80px;
 }
 
 .ratings-button{
-    background-color: #9BA9B6;
+    background-color: #bc672a;
     border: none;
 }
 
@@ -236,32 +219,14 @@ export default {
     transform: scale(1.05);
 }
 
-.selected-tags {
-  display: flex;
-  flex-direction: row; /* Arrange in a row */
-  flex-wrap: wrap; /* Allow tags to wrap to the next line */
-  gap: 10px; /* Space between tags */
-  margin-top: 4.4rem;
-}
-
-.tag-button-selected {
-  min-width: 150px; /* Set a consistent width for each tag */
-  padding: 10px 20px;
-  background-color: #8FC6DF;
-  color: #42515e;
-  border: 1px solid #edf7fb;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.result-text {
+h4 {
     color: #045768;
     margin-top: 4rem;
     margin-left: 2rem;
 
 }
 
-.clear-button {
+.sort-by-button {
     background-color: #8FC6DF;
     color: #42515e;
     border: none;

@@ -6,7 +6,7 @@ import SignUp from './views/SignUp.vue'
 import Login from './views/Login.vue'
 import MainCities from './views/MainCities.vue'
 import searchCityByTag from './views/searchCityByTag.vue'
-
+import SearchCityByRating from './views/SearchCityByRating.vue'
 
 const routes = [
   { path: '/', name: 'home', component: Home },
@@ -14,7 +14,8 @@ const routes = [
   { path: '/map', name: 'map', component: Map },
   { path: '/maincities', name: 'maincities', component: MainCities },
   { path: '/login', name: 'login', component: Login },
-  { path: '/searchCityByTag', name: 'citytag', component: searchCityByTag }
+  { path: '/searchCityByTag', name: 'citytag', component: searchCityByTag },
+  { path: '/SearchCityByRating', name: 'cityrating', component: SearchCityByRating }
 ]
 
 const router = createRouter({
