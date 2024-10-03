@@ -15,25 +15,18 @@ var citiesSchema = new Schema({
         validate: {
             validator: function(tags) {
                 const allowedTags = [
-                    'historical', 
-                    'adventurous', 
+                    'historical',  
                     'quiet', 
                     'party', 
                     'architecture', 
-                    'sight-seeing', 
-                    'museum', 
-                    'new', 
-                    'foodie', 
+                    'recently added',  
                     'nature', 
-                    'foresty', 
                     'beachy', 
-                    'hot weather', 
-                    'cold weather', 
-                    'varied weather', 
+                    'warm weather', 
+                    'cold weather',  
                     'popular', 
                     'cheap', 
-                    'pricey', 
-                    'unique'
+                    'high-end', 
                 ];
                 return tags.every(tag => allowedTags.includes(tag));
             },

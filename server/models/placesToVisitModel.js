@@ -14,23 +14,16 @@ var placesToVisitSchema = new Schema({
                 const allowedTags = [
                     'historical', 
                     'adventurous', 
-                    'quiet', 
-                    'party', 
-                    'architecture', 
+                    'party',  
                     'sight-seeing', 
                     'museum', 
-                    'new', 
-                    'foodie', 
-                    'nature', 
-                    'foresty', 
+                    'recently opened', 
+                    'food', 
+                    'nature',
                     'beachy', 
-                    'hot weather', 
-                    'cold weather', 
-                    'varied weather', 
                     'popular', 
                     'cheap', 
-                    'pricey', 
-                    'unique'
+                    'high-end', 
                 ];
                 return tags.every(tag => allowedTags.includes(tag));
             },
