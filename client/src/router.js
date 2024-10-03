@@ -15,8 +15,7 @@ const routes = [
   { path: '/maincities', name: 'maincities', component: MainCities },
   { path: '/login', name: 'login', component: Login },
   { path: '/searchCityByTag', name: 'citytag', component: searchCityByTag },
-  { path: '/Profile', name: 'profile', component: Profile },
-  
+  { path: '/Profile', name: 'profile', component: Profile }
 ]
 
 const router = createRouter({
