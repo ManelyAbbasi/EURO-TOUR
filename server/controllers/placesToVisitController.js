@@ -44,7 +44,7 @@ async function getOnePlace(req, res) {
 async function updatePlace(req, res, next) {
     try {
 
-        if (!req.user.isAdmin) {
+        if (!req.body.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can update places." });
         }
 
@@ -97,7 +97,7 @@ async function updatePlace(req, res, next) {
 
 async function patchPlace(req, res) {
     try {
-        if (!req.user.isAdmin) {
+        if (!req.body.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can patch places." });
         }
 
@@ -121,7 +121,7 @@ async function deleteOnePlace(req, res) {
     const address = req.params.address;
 
     try {
-        if (!req.user.isAdmin) {
+        if (!req.body.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can delete places." });
         }
 

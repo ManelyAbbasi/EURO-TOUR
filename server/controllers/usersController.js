@@ -2,6 +2,7 @@ const UsersModel = require("../models/usersModel");
 const PlacesToVisitSchema = require('../models/placesToVisitModel');
 const CitiesModel = require('../models/citiesModel');
 const usersModel = require("../models/usersModel");
+const mongoose = require("mongoose");
 
 
 async function createUser(req, res, next) {
@@ -50,7 +51,7 @@ async function createUser(req, res, next) {
 async function getAllUsers(req, res) {
 
     try {
-        if (!req.user.isAdmin) {
+        if (!req.body.isAdmin) {
             return res.status(403).json({ message: 'Access denied. Admins only.' });
         }
         const users = await UsersModel.find(); 
@@ -73,7 +74,7 @@ async function updateUser(req, res, next) {
         if (user == null) {
             return res.status(404).json({ "message": "User not found" });
         }
-        if (req.user.username !== req.params.username && !req.user.isAdmin) {
+        if (req.body.username !== req.params.username && !req.body.isAdmin) {
             return res.status(403).json({ "message": "You are not authorized to update this user." });
         }
         if (req.body.password !== undefined) {  
@@ -101,35 +102,38 @@ async function updateUser(req, res, next) {
     } catch (err) {
         res.status(500).next(err);
     }
-}
+}  
 
 
 async function patchUser(req, res, next) {
 
     try {
-
         const user = await UsersModel.findOne({ username: req.params.username });
+
         if (user == null) {
             return res.status(404).json({ "message": "User not found" });
         }
-        if (req.user.username !== req.params.username && !req.user.isAdmin) {
+
+        if (req.body.username !== req.params.username && !req.body.isAdmin) {
             return res.status(403).json({ "message": "You are not authorized to update this user." });
         }
 
         user.password = req.body.password || user.password;
-        await user.save();
+        await user.save(); // Save the updated user
+
         res.status(200).json(user); 
     } catch (err) {
-        res.status(500).next(err); 
+        next(err); // Pass the error to the next middleware
     }
 }
+
 
 
 async function deleteOneUser(req, res) {
     const username = req.params.username;
 
     try {
-        if (req.user.username !== username && !req.user.isAdmin) {
+        if (req.body.username !== username && !req.body.isAdmin) {
             return res.status(403).json({ message: "You are not authorized to delete this user" });
         }
         
@@ -155,14 +159,14 @@ async function deleteUserHelper(username, res) {
 
     res.status(200).json({ "message": "User deleted successfully", user: userToDelete });
 }
-
+ 
 
 async function deleteUserByAdmin(req, res) {
     const usernameToDelete = req.params.username; 
 
     try {
 
-        if (!req.user.isAdmin) {
+        if (!req.body.isAdmin) {
             return res.status(403).json({ message: "Access denied. Admins only." });
         }
 
@@ -179,7 +183,7 @@ async function deletePlaceViaAdmin(req, res) {
     const address = req.params.address;
 
     try {
-        if (!req.user.isAdmin) {
+        if (!req.body.isAdmin) {
             return res.status(403).json({ message: "Access denied. Admins only." });
         }
 
@@ -201,7 +205,7 @@ async function deleteCityViaAdmin(req, res) {
     const cityId = req.params.cityId;
 
     try {
-        if (!req.user.isAdmin) {
+        if (!req.body.isAdmin) {
             return res.status(403).json({ message: "Access denied. Admins only." });
         }
 
@@ -258,6 +262,7 @@ async function login(req, res, next) {
     }
 }
 
+
 module.exports = {
     createUser,
     getAllUsers,
@@ -267,4 +272,5 @@ module.exports = {
     deleteUserByAdmin,
     deletePlaceViaAdmin,
     deleteCityViaAdmin,
+    login
 }
