@@ -37,48 +37,48 @@
       <input type="password" id="password" class="input-field"/>
     </b-row>
 
-    <b-row>
-        <div class="gender-selection">
-  <label for="gender">What is your gender?</label>
-  <div class="gender-buttons">
-    <div class="gender-item">
-      <div
-        class="gender-button"
-        data-value="male"
-        :class="{ active: activeGender === 'male' }"
-        @click="selectGender('male')"
-      ></div>
-      <label for="male" class="gender-label">male</label>
-    </div>
-    <div class="gender-item">
-      <div
-        class="gender-button"
-        data-value="female"
-        :class="{ active: activeGender === 'female' }"
-        @click="selectGender('female')"
-      ></div>
-      <label for="female" class="gender-label">female</label>
-    </div>
-    <div class="gender-item">
-      <div
-        class="gender-button"
-        data-value="non-binary"
-        :class="{ active: activeGender === 'non-binary' }"
-        @click="selectGender('non-binary')"
-      ></div>
-      <label for="non-binary" class="gender-label">non-binary</label>
-    </div>
-    <div class="gender-item">
-      <div
-        class="gender-button"
-        data-value="other"
-        :class="{ active: activeGender === 'other' }"
-        @click="selectGender('other')"
-      ></div>
-      <label for="other" class="gender-label">other</label>
+        <b-row>
+  <div class="gender-selection">
+    <label for="gender">What is your gender?</label>
+    <div class="gender-buttons">
+      <div class="gender-item">
+        <div
+          class="gender-button"
+          data-value="male"
+          :class="{ active: activeGender === 'male' }"
+          @click="selectGender('male')"
+        ></div>
+        <label for="male" class="gender-label">male</label>
+      </div>
+      <div class="gender-item">
+        <div
+          class="gender-button"
+          data-value="female"
+          :class="{ active: activeGender === 'female' }"
+          @click="selectGender('female')"
+        ></div>
+        <label for="female" class="gender-label">female</label>
+      </div>
+      <div class="gender-item">
+        <div
+          class="gender-button"
+          data-value="non-binary"
+          :class="{ active: activeGender === 'non-binary' }"
+          @click="selectGender('non-binary')"
+        ></div>
+        <label for="non-binary" class="gender-label">non-binary</label>
+      </div>
+      <div class="gender-item">
+        <div
+          class="gender-button"
+          data-value="other"
+          :class="{ active: activeGender === 'other' }"
+          @click="selectGender('other')"
+        ></div>
+        <label for="other" class="gender-label">other</label>
+      </div>
     </div>
   </div>
-</div>
 </b-row>
 
       </form>
@@ -98,21 +98,20 @@
 export default {
   data() {
     return {
-      activeGender: null // Tracks the currently selected gender
+      activeGender: null // Initialize active gender
     }
   },
   methods: {
     selectGender(gender) {
-      console.log(`Selected gender: ${gender}`) // Log the selected gender
-      this.activeGender = gender // Update active gender when a button is clicked
+      this.activeGender = gender // Set active gender to the clicked button
     }
   },
   mounted() {
-    // Create a link element for Font Awesome
+    // Create a link element
     const link = document.createElement('link')
     link.rel = 'stylesheet'
-    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css'
-    link.integrity = 'sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=='
+    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css';
+    link.integrity = 'sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==';
     link.crossOrigin = 'anonymous'
     link.referrerPolicy = 'no-referrer'
     // Append the link element to the head
