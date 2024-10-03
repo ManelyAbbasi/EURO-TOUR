@@ -40,8 +40,8 @@ async function createCity(req, res, next) {
 async function createPlaceInCity(req, res) {
     const cityId = req.params.id;
     try {
-        if (!req.user.isAdmin) {
-            return res.status(403).json({ message: "Access denied. Only admins can create places in cities." });
+        if (!req.body.isAdmin) {
+            return res.status(403).json({ message: "Access denied. Only admins can create cities." });
         }
 
         const city = await CitiesModel.findById(cityId);
@@ -172,7 +172,7 @@ async function updateCity(req, res, next) {
     const cityId = req.params.id;
 
     try {
-        if (!req.user.isAdmin) {
+        if (!req.body.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can update cities." });
         }
 
@@ -225,7 +225,7 @@ async function patchCity(req, res, next){
     const cityId = req.params.id;
 
     try{
-        if (!req.user.isAdmin) {
+        if (!req.body.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can patch places." });
         }
         const city = await CitiesModel.findById(cityId);
