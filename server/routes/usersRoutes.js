@@ -23,4 +23,9 @@ router.delete('/cities/:id', usersControllers.deleteCityViaAdmin);
 
 router.post('/login', usersControllers.login);
 
+router.delete('/:username/favorites', usersControllers.removeFromFavorites);
+
+router.get('/:username/favorites', usersControllers.getFavorites);
+
+
 module.exports = router;
