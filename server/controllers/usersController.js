@@ -48,6 +48,49 @@ async function createUser(req, res, next) {
     }
 };
 
+async function addToFavorites(req, res) {
+    const username = req.params.username;
+    const { cityId, address } = req.body;
+
+    try {
+        const user = await UsersModel.findOne({ username });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        if (cityId) {
+            const cityExists = await CitiesModel.findById(cityId);
+            if (!cityExists) {
+                return res.status(404).json({ message: "City not found" });
+            }
+            user.favourites.push({ city: cityId, places: [] });
+        }
+
+        if (address) {
+            const placeExists = await PlacesToVisitSchema.findOne({ address });
+            if (!placeExists) {
+                return res.status(404).json({ message: "Place not found" });
+            }
+
+            const favouriteCity = user.favourites.find(fav => fav.city.toString() === placeExists.city.toString());
+            if (favouriteCity) {
+                if (!favouriteCity.places.includes(placeExists._id)) {
+                    favouriteCity.places.push(placeExists._id); 
+                }
+            } else {
+                user.favourites.push({ city: placeExists.city, places: [placeExists._id] });
+            }
+        }
+
+        await user.save();
+        res.status(200).json({ message: "Added to favorites successfully", favourites: user.favourites });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
 async function getAllUsers(req, res) {
 
     try {
@@ -262,9 +305,102 @@ async function login(req, res, next) {
     }
 }
 
+async function removeFromFavorites(req, res) {
+    const username = req.params.username;
+    const { cityId, address } = req.body;
+
+    try {
+        const user = await UsersModel.findOne({ username });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        let removedCityMessage = null;
+        let removedPlaceMessage = null;
+
+        if (cityId && address) {
+            const favouriteCity = user.favourites.find(fav => fav.city.toString() === cityId);
+            if (favouriteCity) {
+                const originalLength = favouriteCity.places.length;
+                favouriteCity.places = favouriteCity.places.filter(place => place.address !== address);
+                
+                if (favouriteCity.places.length < originalLength) {
+                    removedPlaceMessage = "Place removed from favorites.";
+                } else {
+                    removedPlaceMessage = "Place not found in favorites."; 
+                }
+                
+                if (favouriteCity.places.length === 0) {
+                    user.favourites = user.favourites.filter(fav => fav.city.toString() !== cityId);
+                    removedCityMessage = "City removed from favorites.";
+                }
+            } else {
+                removedCityMessage = "City not found in favorites.";
+            }
+        } 
+        
+        else if (cityId) {
+            const favouriteCity = user.favourites.find(fav => fav.city.toString() === cityId);
+            if (favouriteCity) {
+                user.favourites = user.favourites.filter(fav => fav.city.toString() !== cityId);
+                removedCityMessage = "City removed from favorites.";
+            } else {
+                return res.status(404).json({ message: "City not found in favorites." });
+            }
+        } 
+        
+        else if (address) {
+            let placeRemoved = false;
+            for (const favourite of user.favourites) {
+                if (favourite.places.some(place => place.address === address)) {
+                    favourite.places = favourite.places.filter(place => place.address !== address);
+                    placeRemoved = true;
+                    removedPlaceMessage = "Place removed from favorites.";
+                    break;
+                }
+            }
+            if (!placeRemoved) {
+                return res.status(404).json({ message: "Place not found in favorites." });
+            }
+        }
+        await user.save();
+        
+        const responseMessages = [];
+        if (removedCityMessage) responseMessages.push(removedCityMessage);
+        if (removedPlaceMessage) responseMessages.push(removedPlaceMessage);
+
+        res.status(200).json({ 
+            message: responseMessages.length > 0 ? responseMessages.join(' ') : "No changes made.",
+            favourites: user.favourites 
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+
+async function getFavorites(req, res) {
+    const username = req.params.username;
+
+    try {
+        const user = await UsersModel.findOne({ username });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json({ favourites: user.favourites });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
 
 module.exports = {
     createUser,
+    addToFavorites,
     getAllUsers,
     updateUser,
     patchUser,
@@ -272,5 +408,7 @@ module.exports = {
     deleteUserByAdmin,
     deletePlaceViaAdmin,
     deleteCityViaAdmin,
-    login
+    login,
+    removeFromFavorites,
+    getFavorites
 }

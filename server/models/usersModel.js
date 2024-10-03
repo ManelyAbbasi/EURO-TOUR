@@ -25,7 +25,11 @@ var usersSchema = new Schema({
         }, 
         expiry: {type: Date,
             required: true}
-    }
+    },
+    favourites: [{ 
+        city: { type: Schema.Types.ObjectId, ref: 'cities', required: true },  // Reference to city
+        places: [{ type: Schema.Types.ObjectId, ref: 'placesToVisit' }] // Array of references to places
+    }]
 }, {
     toJSON: {
         transform: function(doc, ret) {
