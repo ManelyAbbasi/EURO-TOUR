@@ -107,18 +107,30 @@ async function getOneCity(req, res) {
 }
 
 async function getAllCities(req, res) {
-    
     try {
-        const { tags } = req.query;
+        const { tags, minRating, maxRating, sortByRating } = req.query;
 
         let filter = {};
 
         if (tags) {
             const tagsArray = tags.split(','); // Convert tags string to array (comma-separated)
-            filter = { tags: { $all: tagsArray } };
+            filter.tags = { $all: tagsArray };
         }
 
-        const cities = await CitiesModel.find(filter);
+        if (minRating || maxRating) {
+            filter.rating = {};
+            if (minRating) filter.rating.$gte = parseFloat(minRating);
+            if (maxRating) filter.rating.$lte = parseFloat(maxRating);
+        }
+
+        let sortOption = {};
+
+        if (sortByRating) {
+            sortOption.rating = sortByRating === 'asc' ? 1 : -1;
+        }
+
+        const cities = await CitiesModel.find(filter).sort(sortOption);
+
         if (!cities || cities.length === 0) {
             return res.status(404).json({ message: 'No cities found.' });
         }
