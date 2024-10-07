@@ -1,136 +1,104 @@
 <template>
-    <div class="maincities-body-container">
-      <header class="euro-tour-header">
-        <logo class="logo-wrapper">
-          <router-link to="/" class="logo">
-            <img src="@/assets/horizontal-logo.png" alt="Euro Tour logo" />
-          </router-link>
-        </logo>
-        <nav class="navbar">
-          <router-link to="/maincities" class="navbar-item maincities-navbar-item"
-            ><i class="fa-solid fa-city"></i> cities</router-link>
-          <a href="#placesToVisit" class="navbar-item"
-            ><i class="fa-solid fa-map-pin"></i> places to visit</a>
-          <b-dropdown
-            size="lg"
-            variant="link"
-            toggle-class="text-decoration-none"
-            no-caret
-            class="navbar-item dropdown"
-          >
-            <template #button-content>
-              <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
-            </template>
-            <!-- Dropdown items -->
-            <b-dropdown-item class="dropdown-item" to="/login">Log in</b-dropdown-item>
-            <b-dropdown-item class="dropdown-item" to="/signup">Sign up</b-dropdown-item>
-          </b-dropdown>
-        </nav>
-      </header>
+  <div class="maincities-body-container">
+    <header class="euro-tour-header">
+      <logo class="logo-wrapper">
+        <router-link to="/" class="logo">
+          <img src="@/assets/horizontal-logo.png" alt="Euro Tour logo" />
+        </router-link>
+      </logo>
+      <nav class="navbar">
+        <router-link to="/maincities" class="navbar-item maincities-navbar-item"
+          ><i class="fa-solid fa-city"></i> cities</router-link>
+        <a href="#placesToVisit" class="navbar-item"
+          ><i class="fa-solid fa-map-pin"></i> places to visit</a>
+        <b-dropdown
+          size="lg"
+          variant="link"
+          toggle-class="text-decoration-none"
+          no-caret
+          class="navbar-item dropdown"
+        >
+          <template #button-content>
+            <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
+          </template>
+          <!-- Dropdown items -->
+          <b-dropdown-item class="dropdown-item" to="/login">Log in</b-dropdown-item>
+          <b-dropdown-item class="dropdown-item" to="/signup">Sign up</b-dropdown-item>
+        </b-dropdown>
+      </nav>
+    </header>
 
-      <form class="user-form">
-        <b-row>
-      <label for="username">username</label>
-      <input type="text" id="username" class="input-field"/>
+    <form class="user-form" @submit.prevent="saveChanges"> <!-- Prevent default form submission -->
+      <b-row>
+        <label for="username">username</label>
+        <input type="text" id="username" class="input-field" v-model="username"/>
 
-      <label for="password">password</label>
-      <input type="password" id="password" class="input-field"/>
-    </b-row>
+        <label for="password">password</label>
+        <input type="password" id="password" class="input-field" v-model="password"/>
+      </b-row>
 
-        <b-row>
-  <div class="gender-selection">
-    <label for="gender">What is your gender?</label>
-    <div class="gender-buttons">
-      <div class="gender-item">
-        <div
-          class="gender-button"
-          data-value="male"
-          :class="{ active: activeGender === 'male' }"
-          @click="selectGender('male')"
-        ></div>
-        <label for="male" class="gender-label">male</label>
-      </div>
-      <div class="gender-item">
-        <div
-          class="gender-button"
-          data-value="female"
-          :class="{ active: activeGender === 'female' }"
-          @click="selectGender('female')"
-        ></div>
-        <label for="female" class="gender-label">female</label>
-      </div>
-      <div class="gender-item">
-        <div
-          class="gender-button"
-          data-value="non-binary"
-          :class="{ active: activeGender === 'non-binary' }"
-          @click="selectGender('non-binary')"
-        ></div>
-        <label for="non-binary" class="gender-label">non-binary</label>
-      </div>
-      <div class="gender-item">
-        <div
-          class="gender-button"
-          data-value="other"
-          :class="{ active: activeGender === 'other' }"
-          @click="selectGender('other')"
-        ></div>
-        <label for="other" class="gender-label">other</label>
-      </div>
-    </div>
-  </div>
-</b-row>
+      <b-row>
+        <div class="gender-selection">
+          <label for="gender">What is your gender?</label>
+          <div class="gender-buttons">
+            <div class="gender-item" v-for="gender in ['male', 'female', 'non-binary', 'other']" :key="gender">
+              <div
+                class="gender-button"
+                :data-value="gender"
+                :class="{ active: activeGender === gender }"
+                @click="selectGender(gender)"
+              ></div>
+              <label :for="gender" class="gender-label">{{ gender }}</label>
+            </div>
+          </div>
+        </div>
+      </b-row>
 
-<b-row>
-  <div class="sexuality-selection">
-    <label for="lgbtqia">Are you a member of LGBTQIA+?</label>
-    <div class="sexuality-buttons">
-      <div class="sexuality-item">
-        <div
-          class="sexuality-button"
-          data-value="yes"
-          :class="{ active: activeLGBTQIA === 'yes' }"
-          @click="selectLGBTQIA('yes')"
-        ></div>
-        <label for="yes" class="sexuality-label">yes</label>
-      </div>
-      <div class="sexuality-item">
-        <div
-          class="sexuality-button"
-          data-value="no"
-          :class="{ active: activeLGBTQIA === 'no' }"
-          @click="selectLGBTQIA('no')"
-        ></div>
-        <label for="no" class="sexuality-label">no</label>
-      </div>
-    </div>
-  </div>
-</b-row>
+      <b-row>
+        <div class="sexuality-selection">
+          <label for="lgbtqia">Are you a member of LGBTQIA+?</label>
+          <div class="sexuality-buttons">
+            <div class="sexuality-item" v-for="status in ['yes', 'no']" :key="status">
+              <div
+                class="sexuality-button"
+                :data-value="status"
+                :class="{ active: activeLGBTQIA === status }"
+                @click="selectLGBTQIA(status)"
+              ></div>
+              <label :for="status" class="sexuality-label">{{ status }}</label>
+            </div>
+          </div>
+        </div>
+      </b-row>
 
-<b-row>
-  <div class="save-changes-container">
-    <button class="save-button" @click="saveChanges">save changes</button>
-    <span class="saved-message" v-if="isSaved">saved!</span>
-  </div>
-</b-row>
+      <b-row>
+        <div class="save-changes-container">
+          <button type="submit" class="save-button">save changes</button>
+          <span class="saved-message" v-if="isSaved">saved!</span>
+        </div>
+      </b-row>
 
-      </form>
+    </form>
 
     <footer class="footer">
-        <div class="footer-text">
-          <p> &copy; 2024 copyright: eurotrip.com</p>
-        </div>
-        <div class="top-icon">
-          <a href="#"><i class="fa-solid fa-caret-up"></i></a>
-        </div>
-      </footer>
-    </div>
-  </template>
+      <div class="footer-text">
+        <p> &copy; 2024 copyright: eurotrip.com</p>
+      </div>
+      <div class="top-icon">
+        <a href="#"><i class="fa-solid fa-caret-up"></i></a>
+      </div>
+    </footer>
+  </div>
+</template>
 
 <script>
+import { Api } from '../Api' // Assuming your backend API call method is in Api.js
+
 export default {
   data() {
     return {
+      username: '', // Add username field to bind to the input
+      password: '', // Add password field to bind to the input
       activeGender: null, // Initialize active gender
       activeLGBTQIA: null, // Initialize active LGBTQIA status
       isSaved: false // Track if the "saved!" message should be shown
@@ -141,19 +109,40 @@ export default {
       this.activeGender = gender // Set active gender to the clicked button
     },
     selectLGBTQIA(status) {
-      this.activeLGBTQIA = status // Set active LGBTQIA status to the clicked button
+      this.activeLGBTQIA = status === 'yes' // Convert to boolean for isLGBTQIA
     },
-    saveChanges() {
-      // Show the "saved!" message when the button is clicked
-      this.isSaved = true
+    async saveChanges() {
+      const authToken = localStorage.getItem('x-auth-token') // Retrieve token from localStorage
+      const userCredentials = {
+        username: this.username,
+        password: this.password,
+        gender: this.activeGender,
+        isLGBTQIA: this.activeLGBTQIA
+      }
+
+      try {
+        const response = await Api.put(`/users/${this.username}`, userCredentials, {
+          headers: {
+            'x-auth-token': authToken // Include token in the request headers
+          }
+        })
+
+        if (response.status === 200) {
+          this.isSaved = true // Show the saved message
+          console.log('User information updated successfully:', response.data) // Log response data
+        }
+      } catch (error) {
+        console.error('Update error:', error)
+        alert('Failed to update user information. Please try again.')
+      }
     }
   },
   mounted() {
-    // Create a link element for Font Awesome (for icons, if needed)
+  // Create a link element for Font Awesome (for icons, if needed)
     const link = document.createElement('link')
     link.rel = 'stylesheet'
     link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css'
-    link.integrity = 'sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=='
+    link.integrity = 'sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==' // Replace this with the correct integrity hash
     link.crossOrigin = 'anonymous'
     link.referrerPolicy = 'no-referrer'
     // Append the link element to the head
