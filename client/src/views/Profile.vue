@@ -284,7 +284,7 @@ label {
 }
 
 .gender-selection label, .sexuality-selection label {
-    color: #8FC6DF; /* Label color */
+    color: #8FC6DF;
     font-size: 1.1rem;
     font-family: 'Lexend Deca', sans-serif;
 }
@@ -296,26 +296,42 @@ label {
 }
 
 .gender-item, .sexuality-item {
-    display: flex; /* Flex container for button and label */
-    align-items: center; /* Center items vertically */
+    display: flex;
+    align-items: center;
     gap: 0.5rem;
 }
 
 .gender-button, .sexuality-button {
     width: 1.2rem;
     height: 1.2rem;
-    background-color: rgba(0, 0, 0, 0.301); /* Default button color */
+    background-color: rgba(0, 0, 0, 0.301);
     cursor: pointer;
     border: 2px solid transparent; /* For a smooth transition */
     transition: background-color 0.3s, border-color 0.3s; /* Transition effect */
 }
 
 .gender-button:hover, .sexuality-button:hover {
-    border-color: #FF7F30; /* Change border color on hover */
+    border-color: #bc672a;
 }
 
 .gender-button.active, .sexuality-button.active {
-    background-color: #FF7F30; /* Color when button is active */
+    background-color: #bc672a;
+}
+
+.save-changes-container {
+  display: flex;
+  align-items: center; /* Aligns button and message vertically */
+  margin-left: 20rem;
+  margin-top: 2rem;
+}
+
+.save-button {
+  background-color: #bc672a;
+  color: #edf7fb;
+  border: none;
+  padding: 0.3rem 1.3rem;
+  font-size: 1rem;
+  cursor: pointer;
 }
 
 .footer{
