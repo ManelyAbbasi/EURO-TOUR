@@ -124,20 +124,24 @@
 export default {
   data() {
     return {
-      activeGender: null // Initialize active gender
+      activeGender: null, // Initialize active gender
+      activeLGBTQIA: null // Initialize active LGBTQIA status
     }
   },
   methods: {
     selectGender(gender) {
       this.activeGender = gender // Set active gender to the clicked button
+    },
+    selectLGBTQIA(status) {
+      this.activeLGBTQIA = status // Set active LGBTQIA status to the clicked button
     }
   },
   mounted() {
-    // Create a link element
+    // Create a link element for Font Awesome (for icons, if needed)
     const link = document.createElement('link')
     link.rel = 'stylesheet'
-    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css';
-    link.integrity = 'sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==';
+    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css'
+    link.integrity = 'sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=='
     link.crossOrigin = 'anonymous'
     link.referrerPolicy = 'no-referrer'
     // Append the link element to the head
