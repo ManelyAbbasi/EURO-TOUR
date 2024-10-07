@@ -260,32 +260,37 @@ label {
   width: 50rem;
   outline: none;
   margin-bottom: 2rem;
-
 }
 
 .gender-selection {
     display: flex;
+    margin-bottom: 1rem; /* Add space below the gender section */
 }
 
-.gender-selection label {
+.sexuality-selection {
+    display: flex;
+    margin-top: 1rem; /* Add space above the sexuality section */
+}
+
+.gender-selection label, .sexuality-selection label {
     color: #8FC6DF; /* Label color */
     font-size: 1.1rem;
     font-family: 'Lexend Deca', sans-serif;
 }
 
-.gender-buttons {
+.gender-buttons, .sexuality-buttons {
     display: flex;
     gap: 4rem; /* Space between buttons */
     margin-left: 2rem;
 }
 
-.gender-item {
+.gender-item, .sexuality-item {
     display: flex; /* Flex container for button and label */
     align-items: center; /* Center items vertically */
     gap: 0.5rem;
 }
 
-.gender-button {
+.gender-button, .sexuality-button {
     width: 1.2rem;
     height: 1.2rem;
     background-color: rgba(0, 0, 0, 0.301); /* Default button color */
@@ -294,11 +299,11 @@ label {
     transition: background-color 0.3s, border-color 0.3s; /* Transition effect */
 }
 
-.gender-button:hover {
+.gender-button:hover, .sexuality-button:hover {
     border-color: #FF7F30; /* Change border color on hover */
 }
 
-.gender-button.active {
+.gender-button.active, .sexuality-button.active {
     background-color: #FF7F30; /* Color when button is active */
 }
 
