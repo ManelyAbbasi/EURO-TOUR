@@ -81,6 +81,32 @@
   </div>
 </b-row>
 
+<b-row>
+  <div class="sexuality-selection">
+    <label for="lgbtqia">Are you a member of LGBTQIA+?</label>
+    <div class="sexuality-buttons">
+      <div class="sexuality-item">
+        <div
+          class="sexuality-button"
+          data-value="yes"
+          :class="{ active: activeLGBTQIA === 'yes' }"
+          @click="selectLGBTQIA('yes')"
+        ></div>
+        <label for="yes" class="sexuality-label">yes</label>
+      </div>
+      <div class="sexuality-item">
+        <div
+          class="sexuality-button"
+          data-value="no"
+          :class="{ active: activeLGBTQIA === 'no' }"
+          @click="selectLGBTQIA('no')"
+        ></div>
+        <label for="no" class="sexuality-label">no</label>
+      </div>
+    </div>
+  </div>
+</b-row>
+
       </form>
 
     <footer class="footer">
