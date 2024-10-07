@@ -107,6 +107,13 @@
   </div>
 </b-row>
 
+<b-row>
+  <div class="save-changes-container">
+    <button class="save-button" @click="saveChanges">save changes</button>
+    <span class="saved-message" v-if="showSavedMessage">saved!</span>
+  </div>
+</b-row>
+
       </form>
 
     <footer class="footer">
