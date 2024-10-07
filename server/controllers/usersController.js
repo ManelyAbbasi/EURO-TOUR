@@ -107,46 +107,50 @@ async function getAllUsers(req, res) {
     }
 }
 
-
 async function updateUser(req, res, next) {
-
     try {
-
-        const user = await UsersModel.findOne({ username: req.params.username });
-        
-        if (user == null) {
-            return res.status(404).json({ "message": "User not found" });
+        const sessionKey = req.headers['x-auth-token'];
+        if (!sessionKey) {
+            return res.status(401).json({ message: "No session token provided, authorization denied" });
         }
-        if (req.body.username !== req.params.username && !req.body.isAdmin) {
-            return res.status(403).json({ "message": "You are not authorized to update this user." });
+        const currentUser = await UsersModel.findOne({ 'session.key': sessionKey });
+        if (!currentUser) {
+            return res.status(401).json({ message: "Invalid session token" });
+        }
+        const userToUpdate = await UsersModel.findOne({ username: req.params.username });
+        if (!userToUpdate) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        if (currentUser.username !== req.params.username && !currentUser.isAdmin) {
+            return res.status(403).json({ message: "You are not authorized to update this user." });
         }
         if (req.body.password !== undefined) {  
             if (typeof req.body.password !== 'string' || req.body.password.trim() === "") {
-                return res.status(400).json({ "message": "Invalid password: must be a non-empty string" });
+                return res.status(400).json({ message: "Invalid password: must be a non-empty string" });
             }
-            user.password = req.body.password
+            userToUpdate.password = req.body.password; 
         }
         if (req.body.gender !== undefined) {
             const validGenders = ['male', 'female', 'non-binary', 'other'];
             if (!validGenders.includes(req.body.gender)) {
                 return res.status(400).json({ message: 'Invalid gender value' });
             }
-            user.gender = req.body.gender;
-        } 
+            userToUpdate.gender = req.body.gender;
+        }
         if (req.body.isLGBTQIA !== undefined) {
             if (typeof req.body.isLGBTQIA !== 'boolean') {
-                return res.status(400).json({ "message": "Invalid isLGBTQIA: must be a boolean value" });
+                return res.status(400).json({ message: "Invalid isLGBTQIA: must be a boolean value" });
             }
-            user.isLGBTQIA = req.body.isLGBTQIA;
+            userToUpdate.isLGBTQIA = req.body.isLGBTQIA;
         }
 
-        await user.save();
-        res.status(200).json(user);
+        await userToUpdate.save();
+        res.status(200).json(userToUpdate);
     } catch (err) {
-        res.status(500).next(err);
+        console.error("Error updating user:", err);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
-}  
-
+}
 
 async function patchUser(req, res, next) {
 
