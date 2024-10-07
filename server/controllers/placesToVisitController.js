@@ -5,20 +5,39 @@ const UsersModel = require("../models/usersModel");
 
 async function getAllPlaces(req, res) {
     try {
-        const { tags } = req.query;
+        const { tags, minRating, maxRating, sortByRating } = req.query;
 
+        // Initialize an empty filter object
         let filter = {};
 
-        // If 'tags' are provided in the query, filter places by those tags
+        // If tags are provided, filter places by tags
         if (tags) {
             const tagsArray = tags.split(','); // Convert tags string to array (comma-separated)
-            filter = { tags: { $all: tagsArray } };
+            filter.tags = { $all: tagsArray };
         }
 
-        const placesToVisit = await placesToVisitModel.find(filter);
+        // If minRating or maxRating is provided, filter places by rating range
+        if (minRating || maxRating) {
+            filter.rating = {}; // Initialize the rating filter
+            if (minRating) filter.rating.$gte = parseFloat(minRating); // $gte = greater than or equal
+            if (maxRating) filter.rating.$lte = parseFloat(maxRating); // $lte = less than or equal
+        }
+
+        // Initialize an empty sort option
+        let sortOption = {};
+
+        // If sortByRating is provided, set the sorting order
+        if (sortByRating) {
+            sortOption.rating = sortByRating === 'asc' ? 1 : -1; // Ascending = 1, Descending = -1
+        }
+
+        // Fetch places based on the filter and sort them if sortByRating is passed
+        const placesToVisit = await placesToVisitModel.find(filter).sort(sortOption);
+
         if (!placesToVisit || placesToVisit.length === 0) {
             return res.status(404).json({ error: 'No places found.' });
         }
+
         res.status(200).json({ placesToVisit });
     } catch (error) {
         res.status(500).json({ error: 'An error occurred while fetching places.' });
@@ -44,7 +63,7 @@ async function getOnePlace(req, res) {
 async function updatePlace(req, res, next) {
     try {
 
-        if (!req.user.isAdmin) {
+        if (!req.body.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can update places." });
         }
 
@@ -97,7 +116,7 @@ async function updatePlace(req, res, next) {
 
 async function patchPlace(req, res) {
     try {
-        if (!req.user.isAdmin) {
+        if (!req.body.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can patch places." });
         }
 
@@ -121,7 +140,7 @@ async function deleteOnePlace(req, res) {
     const address = req.params.address;
 
     try {
-        if (!req.user.isAdmin) {
+        if (!req.body.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can delete places." });
         }
 
