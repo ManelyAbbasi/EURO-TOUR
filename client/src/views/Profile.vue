@@ -28,59 +28,95 @@
       </nav>
     </header>
 
-    <form class="user-form" @submit.prevent="saveChanges"> <!-- Prevent default form submission -->
+    <form class="user-form">
       <b-row>
-        <label for="username">username</label>
-        <input type="text" id="username" class="input-field" v-model="username"/>
+    <label for="username">username</label>
+    <input type="text" id="username" class="input-field"/>
 
-        <label for="password">password</label>
-        <input type="password" id="password" class="input-field" v-model="password"/>
-      </b-row>
-
-      <b-row>
-        <div class="gender-selection">
-          <label for="gender">What is your gender?</label>
-          <div class="gender-buttons">
-            <div class="gender-item" v-for="gender in ['male', 'female', 'non-binary', 'other']" :key="gender">
-              <div
-                class="gender-button"
-                :data-value="gender"
-                :class="{ active: activeGender === gender }"
-                @click="selectGender(gender)"
-              ></div>
-              <label :for="gender" class="gender-label">{{ gender }}</label>
-            </div>
-          </div>
-        </div>
-      </b-row>
+    <label for="password">password</label>
+    <input type="password" id="password" class="input-field"/>
+  </b-row>
 
       <b-row>
-        <div class="sexuality-selection">
-          <label for="lgbtqia">Are you a member of LGBTQIA+?</label>
-          <div class="sexuality-buttons">
-            <div class="sexuality-item" v-for="status in ['yes', 'no']" :key="status">
-              <div
-                class="sexuality-button"
-                :data-value="status"
-                :class="{ active: activeLGBTQIA === status }"
-                @click="selectLGBTQIA(status)"
-              ></div>
-              <label :for="status" class="sexuality-label">{{ status }}</label>
-            </div>
-          </div>
-        </div>
-      </b-row>
+<div class="gender-selection">
+  <label for="gender">What is your gender?</label>
+  <div class="gender-buttons">
+    <div class="gender-item">
+      <div
+        class="gender-button"
+        data-value="male"
+        :class="{ active: activeGender === 'male' }"
+        @click="selectGender('male')"
+      ></div>
+      <label for="male" class="gender-label">male</label>
+    </div>
+    <div class="gender-item">
+      <div
+        class="gender-button"
+        data-value="female"
+        :class="{ active: activeGender === 'female' }"
+        @click="selectGender('female')"
+      ></div>
+      <label for="female" class="gender-label">female</label>
+    </div>
+    <div class="gender-item">
+      <div
+        class="gender-button"
+        data-value="non-binary"
+        :class="{ active: activeGender === 'non-binary' }"
+        @click="selectGender('non-binary')"
+      ></div>
+      <label for="non-binary" class="gender-label">non-binary</label>
+    </div>
+    <div class="gender-item">
+      <div
+        class="gender-button"
+        data-value="other"
+        :class="{ active: activeGender === 'other' }"
+        @click="selectGender('other')"
+      ></div>
+      <label for="other" class="gender-label">other</label>
+    </div>
+  </div>
+</div>
+</b-row>
 
-      <b-row>
-        <div class="save-changes-container">
-          <button type="submit" class="save-button">save changes</button>
-          <span class="saved-message" v-if="isSaved">saved!</span>
-        </div>
-      </b-row>
+<b-row>
+<div class="sexuality-selection">
+  <label for="lgbtqia">Are you a member of LGBTQIA+?</label>
+  <div class="sexuality-buttons">
+    <div class="sexuality-item">
+      <div
+        class="sexuality-button"
+        data-value="yes"
+        :class="{ active: activeLGBTQIA === 'yes' }"
+        @click="selectLGBTQIA('yes')"
+      ></div>
+      <label for="yes" class="sexuality-label">yes</label>
+    </div>
+    <div class="sexuality-item">
+      <div
+        class="sexuality-button"
+        data-value="no"
+        :class="{ active: activeLGBTQIA === 'no' }"
+        @click="selectLGBTQIA('no')"
+      ></div>
+      <label for="no" class="sexuality-label">no</label>
+    </div>
+  </div>
+</div>
+</b-row>
+
+<b-row>
+<div class="save-changes-container">
+  <button class="save-button" @click="saveChanges">save changes</button>
+  <span class="saved-message" v-if="isSaved">saved!</span>
+</div>
+</b-row>
 
     </form>
 
-    <footer class="footer">
+  <footer class="footer">
       <div class="footer-text">
         <p> &copy; 2024 copyright: eurotrip.com</p>
       </div>
@@ -109,7 +145,7 @@ export default {
       this.activeGender = gender // Set active gender to the clicked button
     },
     selectLGBTQIA(status) {
-      this.activeLGBTQIA = status === 'yes' // Convert to boolean for isLGBTQIA
+      this.activeLGBTQIA = status // Directly set to 'yes' or 'no'
     },
     async saveChanges() {
       const authToken = localStorage.getItem('x-auth-token') // Retrieve token from localStorage
