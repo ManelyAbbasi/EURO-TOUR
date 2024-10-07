@@ -110,7 +110,7 @@
 <b-row>
   <div class="save-changes-container">
     <button class="save-button" @click="saveChanges">save changes</button>
-    <span class="saved-message" v-if="showSavedMessage">saved!</span>
+    <span class="saved-message" v-if="isSaved">saved!</span>
   </div>
 </b-row>
 
@@ -132,7 +132,8 @@ export default {
   data() {
     return {
       activeGender: null, // Initialize active gender
-      activeLGBTQIA: null // Initialize active LGBTQIA status
+      activeLGBTQIA: null, // Initialize active LGBTQIA status
+      isSaved: false // Track if the "saved!" message should be shown
     }
   },
   methods: {
@@ -141,6 +142,10 @@ export default {
     },
     selectLGBTQIA(status) {
       this.activeLGBTQIA = status // Set active LGBTQIA status to the clicked button
+    },
+    saveChanges() {
+      // Show the "saved!" message when the button is clicked
+      this.isSaved = true
     }
   },
   mounted() {
@@ -332,6 +337,13 @@ label {
   padding: 0.3rem 1.3rem;
   font-size: 1rem;
   cursor: pointer;
+}
+
+.saved-message {
+  margin-left: 1rem; /* Adds space between the button and the saved message */
+  color: #8FC6DF; /* Light blue color for saved message */
+  font-size: 1rem;
+  font-family: 'Lexend Deca', sans-serif;
 }
 
 .footer{
