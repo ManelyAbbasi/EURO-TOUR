@@ -175,8 +175,8 @@ export default {
     outline: none;
     font-family: "Lexend Deca", sans-serif;
     background-color: #42515e;
-    flex-wrap: wrap;
     display: flex;
+    flex-wrap: wrap; /* Allow wrapping of items */
 }
 
 .euro-tour-header {
@@ -256,7 +256,7 @@ a img {
   flex-direction: column;
   margin-top: 10rem;
   margin-left: 23rem;
-  width: 100%;
+  width: 50%;
 }
 
 label {
@@ -280,12 +280,14 @@ label {
 
 .gender-selection {
     display: flex;
-    margin-bottom: 1rem; /* Add space below the gender section */
+    margin-top: 2rem;
+    margin-bottom: 2rem;
 }
 
 .sexuality-selection {
     display: flex;
-    margin-top: 1rem; /* Add space above the sexuality section */
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 
 .gender-selection label, .sexuality-selection label {
@@ -326,8 +328,9 @@ label {
 .save-changes-container {
   display: flex;
   align-items: center; /* Aligns button and message vertically */
-  margin-left: 20rem;
+  margin-left: 18rem;
   margin-top: 2rem;
+  margin-bottom: 5rem;
 }
 
 .save-button {
@@ -341,7 +344,7 @@ label {
 
 .saved-message {
   margin-left: 1rem; /* Adds space between the button and the saved message */
-  color: #8FC6DF; /* Light blue color for saved message */
+  color: #8FC6DF;
   font-size: 1rem;
   font-family: 'Lexend Deca', sans-serif;
 }
