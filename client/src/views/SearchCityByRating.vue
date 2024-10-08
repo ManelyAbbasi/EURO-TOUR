@@ -67,13 +67,126 @@
     </b-row>
     <b-row>
       <b-col><h4>sort by:</h4></b-col>
-      <b-col><button class="sort-by-button" @click="clearTags">highest to lowest</button></b-col>
-      <b-col><button class="sort-by-button" @click="clearTags">lowest to highest</button></b-col>
+      <b-col><button class="sort-by-button" @click="recordSortOption(desc)" :class="{ active: activeSort === 'desc' }" >highest to lowest</button></b-col>
+      <b-col><button class="sort-by-button" @click="recordSortOption(asc)" :class="{ active: activeSort === 'asc' }" >lowest to highest</button></b-col>
       <b-col></b-col>
     </b-row>
-    <b-row>
-      <b-col><h4>range of ratings:</h4></b-col>
-    <b-col>
+    <b-row class="range-of-ratings-row" >
+      <b-col class="range-rating-title">
+      <div class="range-rating-title-wrapper">
+        <h4>range of ratings:</h4>
+      </div>
+    </b-col>
+    <b-col class="min-rating-column">
+      <h5>minimum rating</h5>
+      <div class="min-rating-buttons">
+
+        <div class="min-item">
+          <div
+          class="min-button"
+          data-value="1"
+          :class="{active: activeMinRating === '1'}"
+          @click="selectMinRating('1')"
+        ></div>
+        <label for="min-rating-1" class="min-rating-label">1</label>
+        </div>
+
+        <div class="min-item">
+          <div
+          class="min-button"
+          data-value="2"
+          :class="{active: activeMinRating === '2'}"
+          @click="selectMinRating('2')"
+        ></div>
+        <label for="min-rating-2" class="min-rating-label">2</label>
+        </div>
+
+        <div class="min-item">
+          <div
+          class="min-button"
+          data-value="3"
+          :class="{active: activeMinRating === '3'}"
+          @click="selectMinRating('3')"
+          ></div>
+          <label for="min-rating-3" class="min-rating-label">3</label>
+        </div>
+
+        <div class="min-item">
+          <div
+          class="min-button"
+          data-value="4"
+          :class="{active: activeMinRating === '4'}"
+          @click="selectMinRating('4')"
+          ></div>
+          <label for="min-rating-4" class="min-rating-label">4</label>
+        </div>
+
+        <div class="min-item">
+        <div
+          class="min-button"
+          data-value="5"
+          :class="{active: activeMinRating === '5'}"
+          @click="selectMinRating('5')"
+        ></div>
+        <label for="min-rating-5" class="min-rating-label">5</label>
+        </div>
+
+      </div>
+    </b-col>
+    <b-col class="max-rating-column">
+      <h5>maximum rating</h5>
+      <div class="max-rating-buttons">
+
+        <div class="max-item">
+          <div
+          class="max-button"
+          data-value="1"
+          :class="{active: activeMaxRating === '1'}"
+          @click="selectMaxRating('1')"
+          ></div>
+          <label for="max-rating-1" class="max-rating-label">1</label>
+      </div>
+
+      <div class="max-item">
+        <div
+        class="max-button"
+        data-value="2"
+        :class="{active: activeMaxRating === '2'}"
+        @click="selectMaxRating('2')"
+        ></div>
+      <label for="max-rating-2" class="max-rating-label">2</label>
+      </div>
+
+      <div class="max-item">
+        <div
+        class="max-button"
+        data-value="3"
+        :class="{active: activeMaxRating === '3'}"
+        @click="selectMaxRating('3')"
+        ></div>
+        <label for="max-rating-3" class="max-rating-label">3</label>
+      </div>
+
+      <div class="max-item">
+        <div
+        class="max-button"
+        data-value="4"
+        :class="{active: activeMaxRating === '4'}"
+        @click="selectMaxRating('4')"
+        ></div>
+        <label for="max-rating-4" class="max-rating-label">4</label>
+      </div>
+
+      <div class="max-item">
+      <div
+        class="max-button"
+        data-value="5"
+        :class="{active: activeMaxRating === '5'}"
+        @click="selectMaxRating('5')"
+      ></div>
+      <label for="max-rating-5" class="max-rating-label">5</label>
+      </div>
+    </div>
     </b-col>
 
     </b-row>
@@ -102,7 +215,9 @@
 export default {
   data() {
     return {
-      value: '2'
+      value: '2',
+      activeMinRating: null,
+      activeMaxRating: null
     }
   },
 
@@ -118,16 +233,19 @@ export default {
     document.head.appendChild(link)
   },
   methods: {
-    toggleTag(tag) {
-      const tagIndex = this.selectedTags.indexOf(tag)
-      if (tagIndex === -1) {
-        this.selectedTags.push(tag)
-      } else {
-        this.selectedTags.splice(tagIndex, 1)
+    recordSortOption(option) {
+      this.activeSort = option // Set the active button when clicked
+      // Handle the sorting logic here if needed
+    },
+    selectMinRating(minRating) {
+      if (!this.activeMaxRating || Number(minRating) <= Number(this.activeMaxRating)) {
+        this.activeMinRating = minRating
       }
     },
-    clearTags() {
-      this.selectedTags = []
+    selectMaxRating(maxRating) {
+      if (!this.activeMinRating || Number(maxRating) >= Number(this.activeMinRating)) {
+        this.activeMaxRating = maxRating
+      }
     }
   }
 }
@@ -205,20 +323,6 @@ export default {
   margin-block: 40px;
 }
 
-.tag-button {
-    background-color: #00000025;
-    color: #8FC6DF;
-    border-radius: 5px;
-    border: 1px solid #edf7fb;
-    padding: 10px 40px;
-    cursor: pointer;
-    margin: 12px;
-}
-
-.tag-button:hover{
-    transform: scale(1.05);
-}
-
 h4 {
     color: #045768;
     margin-top: 4rem;
@@ -233,6 +337,99 @@ h4 {
     padding: 5px 50px;
     font-size: 1.1rem;
     margin-top: 4.4rem;
+    transition: all 0.5s;
+}
+
+.sort-by-button:hover{
+  background-color:  #42515e;
+  color: #8FC6DF;
+  transform: scale(1.03);
+}
+
+.sort-by-button.active {
+  background-color: #42515e;
+  color: #8FC6DF;
+  transform: scale(1.03);
+}
+
+.range-of-ratings-row{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-top: 2rem;
+}
+
+.range-rating-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.range-rating-title h4{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.range-rating-title-wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.min-rating-column,
+.max-rating-column{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 2rem;
+}
+.max-rating-column{
+  margin-right: 2rem;
+}
+
+.min-rating-buttons label,
+.max-rating-buttons label{
+    color: #045768;
+    font-size: 1.1rem;
+    font-family: 'Lexend Deca', sans-serif;
+}
+
+.min-rating-buttons,
+.max-rating-buttons {
+    display: flex;
+    gap: 1.8rem; /* Space between buttons */
+    margin-left: 2rem;
+}
+
+.min-item,
+.max-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.min-button,
+.max-button{
+    width: 1.2rem;
+    height: 1.2rem;
+    background-color: rgba(0, 0, 0, 0.301);
+    cursor: pointer;
+    border: 2px solid transparent; /* For a smooth transition */
+    transition: background-color 0.3s, border-color 0.3s; /* Transition effect */
+}
+
+.min-button:hover,
+.max-button:hover{
+    border-color: #bc672a;
+}
+
+.min-button.active,
+.max-button.active {
+    background-color: #bc672a;
+}
+
+h5{
+  color: #045768;
 }
 
 .euro-tour-header {
