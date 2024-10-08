@@ -154,34 +154,31 @@ export default {
     },
     textLoad() {
       const textElement = document.querySelector('.typewriter-hello')
-      if (!textElement) return // Prevent errors if the element is not found
+      if (!textElement) return
 
       const messages = ['Hello!', 'Hola!', 'Bonjour!', 'Ciao!', 'Salut!', 'Hallo!', 'Cześć!', 'Ahoj!', 'Bok!', 'Geia sas!', 'Olá!', 'Jó napot!']
       let index = 0
-      let timeoutId // Variable to store the timeout ID
+      let timeoutId
 
       const updateText = () => {
-        textElement.textContent = messages[index] // Update the text content
+        textElement.textContent = messages[index]
         index = (index + 1) % messages.length // Cycle through the messages
       }
 
       const handleAnimationEnd = () => {
         clearTimeout(timeoutId) // Clear any existing timeout to avoid conflicts
-        updateText() // Update the text when animation ends
+        updateText()
         textElement.classList.remove('active') // Remove class to reset animation
 
-        // Add a small delay (e.g., 500 milliseconds) before restarting the animation
         timeoutId = setTimeout(() => {
           textElement.classList.add('active') // Re-add class to trigger animation again
-        }) // Adjust the delay time here as needed
+        })
       }
 
-      // Listen for the animationend event
       textElement.addEventListener('animationend', handleAnimationEnd)
 
-      // Initialize the first text and start the animation
       updateText()
-      textElement.classList.add('active') // Start the typewriter animation
+      textElement.classList.add('active')
     }
   },
   mounted() {
@@ -370,13 +367,13 @@ li.dropdown-item.logout {
   position: relative;
   font-size: 3rem;
   white-space: nowrap; /* Ensure the text doesn't break */
-  overflow: hidden; /* Hide the overflow */
+  overflow: hidden;
   display: inline-block;
 }
 
 .hello:before {
   content: "";
-  animation: typewriterAnimate 4s steps(12) infinite; /* Keep default animation */
+  animation: typewriterAnimate 4s steps(12) infinite;
   position: absolute;
   top: 0;
   left: 0;
@@ -389,7 +386,7 @@ li.dropdown-item.logout {
 
 .hello.active:before {
   display: block; /* Only display when the animation starts */
-  animation: typewriterAnimate 4s steps(12); /* Trigger animation */
+  animation: typewriterAnimate 4s steps(12);
 }
 
 @keyframes typewriterAnimate {
