@@ -382,10 +382,10 @@ async function removeFromFavorites(req, res) {
 
 
 async function getFavorites(req, res) {
-    const username = req.params.username;
+    const sessionKey = req.headers['x-auth-token'];
 
     try {
-        const user = await UsersModel.findOne({ username });
+        const user = await UsersModel.findOne({ "session.key": sessionKey });
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });

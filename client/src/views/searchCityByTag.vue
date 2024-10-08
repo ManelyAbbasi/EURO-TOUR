@@ -41,7 +41,7 @@
             <button class="tags-button">tags</button>
         </router-link>
 
-        <router-link to="/searchCityByRating">
+        <router-link to="/SearchCityByRating">
             <button class="ratings-button">ratings</button>
         </router-link>
 
