@@ -508,21 +508,21 @@ a img {
 }
 
 .cities-list {
-    display: flex;               /* Use flexbox for layout */
-    flex-wrap: wrap;            /* Allow cards to wrap onto multiple lines */
-    justify-content: space-around; /* Space out the cards */
-    margin: 2rem;               /* Add some margin around the list */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 2rem;
 }
 
 .city-card {
-    background-color: #9BA9B6;     /* Background color for the city cards */
-    border: 1px solid #bc672a;     /* Optional: Add border to city cards */
-    border-radius: 8px;         /* Rounded corners */
-    padding: 1rem;              /* Inner padding */
-    margin: 0.5rem;             /* Space between cards */
+    background-color: #9BA9B6;
+    border: 1px solid #bc672a;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 0.5rem;
     flex: 0 1 calc(30% - 1rem); /* Flex item: grow, shrink, basis (30% width minus margin) */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better visibility */
-    text-align: center;         /* Center text within each card */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
 .city-card-img{
@@ -542,9 +542,9 @@ a img {
 }
 
 .city-country-text p {
-  margin: 0; /* Removes default margins */
-  padding: 0; /* Removes any default padding */
-  line-height: 1.7; /* Optional: Adjust the spacing between lines within the paragraph */
+  margin: 0;
+  padding: 0;
+  line-height: 1.7;
 }
 
 .cityname-text{
@@ -566,13 +566,13 @@ a img {
 }
 
 .tag-bubble-selected {
-    background-color: #8FC6DF; /* Blue color for selected tags */
-    color: #42515e; /* Darker text color */
+    background-color: #8FC6DF;
+    color: #42515e;
 }
 
 .tag-bubble-nonselected {
-    background-color: #CAC4D0; /* Grey color for non-selected tags */
-    color: #ffffff; /* White text color */
+    background-color: #CAC4D0;
+    color: #edf7fb;
 }
 
 /* Responsive adjustments */
