@@ -101,9 +101,18 @@
         <b-col col="12">
           <div v-if="Array.isArray(cities) && cities.length > 0" class="cities-list">
             <div v-for="city in cities" :key="city._id" class="city-card">
-                <p>{{ city.cityName }}</p>
-                <p>{{ city.country }}</p>
-                <p>{{ city.tags.join(' ') }}</p>
+              <div class="top-half-card">
+                <div class="city-img-wrapper">
+                  <img src="@/assets/London.jpg" class="city-card-img"/>
+                </div>
+                <div class="city-country-text">
+                  <p>{{ city.cityName }}, </p>
+                  <p>{{ city.country }}</p>
+                </div>
+              </div>
+              <div class="bottom-half-card">
+                <div v-for="tag in city.tags" :key="tag" class="tag-bubble">{{ tag }}</div>
+              </div>
             </div>
           </div>
 
@@ -485,24 +494,6 @@ a img {
     }
 }
 
-.cities-list {
-    display: flex;               /* Use flexbox for layout */
-    flex-wrap: wrap;            /* Allow cards to wrap onto multiple lines */
-    justify-content: space-around; /* Space out the cards */
-    margin: 2rem;               /* Add some margin around the list */
-}
-
-.city-card {
-    background-color: #fff;     /* Background color for the city cards */
-    border: 1px solid #ccc;     /* Optional: Add border to city cards */
-    border-radius: 8px;         /* Rounded corners */
-    padding: 1rem;              /* Inner padding */
-    margin: 0.5rem;             /* Space between cards */
-    flex: 0 1 calc(30% - 1rem); /* Flex item: grow, shrink, basis (30% width minus margin) */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better visibility */
-    text-align: center;         /* Center text within each card */
-}
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .city-card {
@@ -532,6 +523,40 @@ a img {
     flex: 0 1 calc(30% - 1rem); /* Flex item: grow, shrink, basis (30% width minus margin) */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better visibility */
     text-align: center;         /* Center text within each card */
+}
+
+.city-card-img{
+  max-width: 100%;
+  border-radius: 10%;
+  border: 1px solid black;
+}
+
+.top-half-card{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  border: 1px solid red;
+}
+
+.city-country-text{
+  border: 1px solid purple;
+  padding: 0.5rem 3rem;
+}
+
+.bottom-half-card{
+  border: 2px solid green;
+  gap: 0.5rem;
+}
+
+.tag-bubble {
+    display: inline-block;
+    background-color: #8FC6DF; /* Bubble background color */
+    color: #42515e; /* Bubble text color */
+    border-radius: 12px; /* Rounded corners */
+    padding: 5px 10px; /* Padding for spacing */
+    margin: 5px; /* Space between bubbles */
+    font-size: 0.9rem; /* Font size */
+    text-align: center; /* Center text */
 }
 
 /* Responsive adjustments */
