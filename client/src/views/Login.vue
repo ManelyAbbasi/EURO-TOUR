@@ -19,11 +19,13 @@
           <!-- 1st row: username -->
           <div class="row-form">
             <input class="input" name="username" id="usernameID" type="text" v-model="username" placeholder="username">
+            <p v-if="usernameError" class="error-message">{{ usernameError }}</p>
           </div>
 
           <!-- 2nd row: password -->
           <div class="row-form">
             <input class="input" name="password" id="passwordID" type="password" v-model="password" placeholder="password">
+            <p v-if="passwordError" class="error-message">{{ passwordError }}</p>
           </div>
 
           <!-- Login button -->
@@ -43,18 +45,24 @@
 </template>
 
 <script>
-import { Api } from '../Api' // Assuming your backend API call method is in Api.js
+import { Api } from '../Api'
 
 export default {
   name: 'login',
   data() {
     return {
       username: '',
-      password: ''
+      password: '',
+      usernameError: '',
+      passwordError: ''
     }
   },
   methods: {
     async loginButton() {
+      // Reset error messages
+      this.usernameError = ''
+      this.passwordError = ''
+
       if (!this.isEmpty) {
         try {
           const userCredentials = {
@@ -67,14 +75,20 @@ export default {
           const authToken = response.headers['x-auth-token']
           if (authToken) {
             localStorage.setItem('x-auth-token', authToken)
-
             this.$router.push({ name: 'home' })
           } else {
-            console.error('Login failed: No auth token received')
+            console.error('login failed: no auth token received')
           }
         } catch (error) {
-          console.error('Login error:', error)
-          alert('Login failed. Please check your username and password.')
+          // Handle specific error cases
+          if (error.response && error.response.status === 404) {
+            this.usernameError = 'there in no account with this username'
+          } else if (error.response && error.response.status === 401) {
+            this.passwordError = 'password does not match the username'
+          } else {
+            console.error('login error:', error)
+            alert('login failed. please try again.')
+          }
         }
       }
     }
@@ -88,9 +102,8 @@ export default {
 </script>
 
 <style scoped>
-/* Split container for vertical layout */
 .split-container {
-  display: flex;                /* Horizontal layout */
+  display: flex;
   height: 100vh;
 }
 
@@ -109,7 +122,7 @@ export default {
 }
 
 .logo {
-  margin-bottom: 20px;            /* Space between logo and form */
+  margin-bottom: 20px;
 }
 
 .logo-img {
@@ -118,15 +131,13 @@ export default {
   margin-top: 30%;
 }
 
-/* Styling for the row of the name, username and password */
 .row-form {
   display: flex;
-  margin-top: 2%;
+
   align-items: center;
   flex-direction: column;
 }
 
-/* Styling specific to the input fields */
 .input {
   color: #759CAB;
   font-size: 16px;
@@ -136,6 +147,7 @@ export default {
   background-color: rgba(0, 0, 0, 0.301);
   width: 50%;
   outline: none;
+  margin-top: 2%;
 }
 
 .button-container {
@@ -146,7 +158,6 @@ export default {
   padding-top: 2%;
 }
 
-/* Click animation for the button */
 button:active {
   transform: translate(0em, 0.2em);
 }
@@ -164,6 +175,7 @@ button:active[disabled] {
   cursor: pointer;
   border-radius: 0px;
   width: 15%;
+  font-family: 'Lexend Deca', sans-serif;
 }
 
 .btn:hover {
@@ -171,7 +183,6 @@ button:active[disabled] {
   color: #EDF7FB;
 }
 
-/* Styling for the button when disabled */
 .btn:disabled {
   color: #EDF7FB;
   font-size: 2.5vh;
@@ -189,13 +200,20 @@ button:active[disabled] {
 }
 
 .create-account-link {
-  text-decoration: underline; /* Make the link underlined */
+  text-decoration: underline;
   color: #757575;
   transition: color 0.3s; /* Smooth transition for color change */
 }
 
 .create-account-link:hover {
   color: #759CAB;
+}
+
+.error-message {
+  color: #bc672a;
+  font-family: 'Lexend Deca', sans-serif;
+  font-size: 12px;
+  margin-left: 13rem;
 }
 
 </style>
