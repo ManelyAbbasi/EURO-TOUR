@@ -1,74 +1,109 @@
 <template>
-    <div class="maincities-body-container">
-      <header class="euro-tour-header">
-        <logo class="logo-wrapper">
-          <router-link to="/" class="logo">
-            <img src="@/assets/horizontal-logo.png" alt="Euro Tour logo" />
-          </router-link>
-        </logo>
-        <nav class="navbar">
-          <router-link to="/maincities" class="navbar-item maincities-navbar-item"
-            ><i class="fa-solid fa-city"></i> cities</router-link>
-          <a href="#placesToVisit" class="navbar-item"
-            ><i class="fa-solid fa-map-pin"></i> places to visit</a>
-          <b-dropdown
-            size="lg"
-            variant="link"
-            toggle-class="text-decoration-none"
-            no-caret
-            class="navbar-item dropdown"
-          >
-            <template #button-content>
-              <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
-            </template>
-            <!-- Dropdown items -->
-            <b-dropdown-item class="dropdown-item" to="/login">Log in</b-dropdown-item>
-            <b-dropdown-item class="dropdown-item" to="/signup">Sign up</b-dropdown-item>
-          </b-dropdown>
-        </nav>
-      </header>
+  <div class="maincities-body-container">
+    <header class="euro-tour-header">
+      <logo class="logo-wrapper">
+        <router-link to="/" class="logo">
+          <img src="@/assets/horizontal-logo.png" alt="Euro Tour logo" />
+        </router-link>
+      </logo>
+      <nav class="navbar">
+        <router-link to="/maincities" class="navbar-item maincities-navbar-item">
+          <i class="fa-solid fa-city"></i> cities
+        </router-link>
+        <a href="#placesToVisit" class="navbar-item">
+          <i class="fa-solid fa-map-pin"></i> places to visit
+        </a>
+        <b-dropdown
+          size="lg"
+          variant="link"
+          toggle-class="text-decoration-none"
+          no-caret
+          class="navbar-item dropdown"
+        >
+          <template #button-content>
+            <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
+          </template>
+          <b-dropdown-item class="dropdown-item" to="/login">Log in</b-dropdown-item>
+          <b-dropdown-item class="dropdown-item" to="/signup">Sign up</b-dropdown-item>
+        </b-dropdown>
+      </nav>
+    </header>
 
-    <!-- No Favourites Page -->
     <div class="favourites-container">
       <div v-if="favourites.length === 0" class="no-favourites">
-        <!-- No Favourites Layout -->
         <div class="empty-heart-icon">
           <i class="fa-regular fa-heart" style="color: #bc672a;"></i>
         </div>
         <h2>You currently have no favourites</h2>
         <p>cities and places you save will be shown here</p>
       </div>
+
+      <div v-else>
+        <!-- Display Favourites -->
+        <h2>Your Favourites:</h2>
+        <ul>
+          <li v-for="favourite in favourites" :key="favourite._id" class="favourite-item">
+            <!-- Assuming you need to fetch the city name using the city ID -->
+            <div class="city-country-text">
+              <p class="cityname-text">{{ favourite.city }}</p> <!-- Display city ID -->
+              <p>{{ favourite.places.length > 0 ? favourite.places.join(', ') : 'No associated places' }}</p>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
 
     <footer class="footer">
-        <div class="footer-text">
-          <p> &copy; 2024 copyright: eurotrip.com</p>
-        </div>
-        <div class="top-icon">
-          <a href="#"><i class="fa-solid fa-caret-up"></i></a>
-        </div>
-      </footer>
-    </div>
-  </template>
+      <div class="footer-text">
+        <p>&copy; 2024 copyright: eurotrip.com</p>
+      </div>
+      <div class="top-icon">
+        <a href="#"><i class="fa-solid fa-caret-up"></i></a>
+      </div>
+    </footer>
+  </div>
+</template>
 
 <script>
+import { Api } from '@/Api' // Import your API handling
+
 export default {
   data() {
     return {
-      favourites: [] // Empty array to show "No Favourites" page
+      favourites: [] // Initially empty array for favourites
     }
   },
 
-  mounted() {
-    // Create a link element for Font Awesome (for icons, if needed)
-    const link = document.createElement('link')
-    link.rel = 'stylesheet'
-    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css';
-    link.integrity = 'sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=='
-    link.crossOrigin = 'anonymous'
-    link.referrerPolicy = 'no-referrer'
-    // Append the link element to the head
-    document.head.appendChild(link)
+  async mounted() {
+    this.getFavorites() // Fetch favorites when the component is mounted
+    this.loadFontAwesome()
+  },
+
+  methods: {
+    async getFavorites() {
+      const sessionKey = localStorage.getItem('x-auth-token') // Assuming token is stored in localStorage
+      try {
+        const response = await Api.get('/users/favorites', { headers: { 'x-auth-token': sessionKey } })
+        if (response.data && response.data.favourites) {
+          this.favourites = response.data.favourites // Update favourites with response
+        } else {
+          this.favourites = []
+        }
+      } catch (error) {
+        console.error('Error fetching favorites:', error)
+        this.favourites = [] // Reset to empty if error occurs
+      }
+    },
+
+    loadFontAwesome() {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css'
+      link.integrity = 'sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=='
+      link.crossOrigin = 'anonymous'
+      link.referrerPolicy = 'no-referrer'
+      document.head.appendChild(link)
+    }
   }
 }
 </script>
@@ -285,5 +320,25 @@ a img {
     .footer{
         flex-direction: column-reverse;
     }
+}
+
+.favourites-list {
+  margin-top: 2rem;
+}
+
+.favourite-item {
+  font-size: 1.2rem;
+  color: #8FC6DF;
+  margin: 0.5rem 0;
+}
+
+.city-country-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.cityname-text {
+  font-weight: bold; /* Make city name bold */
 }
 </style>
