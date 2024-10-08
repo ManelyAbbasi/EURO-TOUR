@@ -100,12 +100,12 @@
       <b-row>
         <b-col col="12">
           <div v-if="Array.isArray(cities) && cities.length > 0" class="cities-list">
-    <div v-for="city in cities" :key="city._id" class="city-card">
-        <p>{{ city.cityName }}</p>
-        <p>{{ city.country }}</p>
-        <p>{{ city.tags.join(' ') }}</p>
-    </div>
-</div>
+            <div v-for="city in cities" :key="city._id" class="city-card">
+                <p>{{ city.cityName }}</p>
+                <p>{{ city.country }}</p>
+                <p>{{ city.tags.join(' ') }}</p>
+            </div>
+          </div>
 
           <div v-else>
             <h3>No cities found.</h3>
@@ -144,20 +144,21 @@ export default {
   },
   mounted() {
     this.getCities()
-    // Create a link element
     const link = document.createElement('link')
     link.rel = 'stylesheet'
     link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css'
     link.integrity = 'sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=='
     link.crossOrigin = 'anonymous'
     link.referrerPolicy = 'no-referrer'
-    // Append the link element to the head
     document.head.appendChild(link)
   },
   methods: {
     async getCities() {
       try {
-        const response = await Api.get('/cities')
+        const params = {
+          tags: this.selectedTags.length ? this.selectedTags.join(',') : undefined
+        }
+        const response = await Api.get('/cities', { params })
         if (response.data && response.data.cities) {
           this.cities = response.data.cities
         } else {
@@ -181,9 +182,11 @@ export default {
       } else {
         this.selectedTags.splice(tagIndex, 1)
       }
+      this.getCities()
     },
     clearTags() {
       this.selectedTags = []
+      this.getCities()
     }
   }
 }
