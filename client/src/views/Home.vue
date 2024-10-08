@@ -133,7 +133,7 @@ export default {
   },
   computed: {
     isLoggedIn() {
-      return this.loggedInStatus // Use reactive `loggedInStatus` property
+      return this.loggedInStatus // Use reactive loggedInStatus property
     }
   },
   methods: {
@@ -152,19 +152,29 @@ export default {
       this.$router.push('/')
     },
     textLoad() {
-      const text = document.querySelector('.typewriter-hello')
-      if (!text) return // Prevent errors if the element is not found
+      const textElement = document.querySelector('.typewriter-hello')
+      if (!textElement) return // Prevent errors if the element is not found
 
       const messages = ['Hello!', 'Hola!', 'Bonjour!', 'Ciao!', 'Salut!', 'Hallo!', 'Cześć!']
       let index = 0
 
       const updateText = () => {
-        text.textContent = messages[index]
+        textElement.textContent = messages[index] // Update the text content
         index = (index + 1) % messages.length // Cycle through the messages
       }
 
-      updateText() // Show the first message immediately
-      setInterval(updateText, 4000) // Change message every 4 seconds
+      // Listen for the animationend event
+      textElement.addEventListener('animationend', () => {
+        updateText() // Update the text when animation ends
+        textElement.classList.remove('active') // Remove class to reset animation
+        setTimeout(() => {
+          textElement.classList.add('active') // Re-add class to trigger animation again
+        }) // Small delay to ensure the animation restarts smoothly
+      })
+
+      // Initialize the first text and start the animation
+      updateText()
+      textElement.classList.add('active') // Start the typewriter animation
     }
   },
   mounted() {
@@ -360,11 +370,12 @@ li.dropdown-item.logout {
   font-size: 3rem;
   white-space: nowrap; /* Ensure the text doesn't break */
   overflow: hidden; /* Hide the overflow */
+  display: inline-block;
 }
 
-h1.typewriter-hello:before {
-  content:"";
-  animation: typewriterAnimate 4s steps(12) infinite;
+.hello:before {
+  content: "";
+  animation: typewriterAnimate 4s steps(12) infinite; /* Keep default animation */
   position: absolute;
   top: 0;
   left: 0;
@@ -372,14 +383,20 @@ h1.typewriter-hello:before {
   height: 100%;
   background-color: #42515e;
   border-left: 2px solid #bc672a;
+  display: none; /* Initially hidden */
+}
+
+.hello.active:before {
+  display: block; /* Only display when the animation starts */
+  animation: typewriterAnimate 4s steps(12); /* Trigger animation */
 }
 
 @keyframes typewriterAnimate {
-  40%, 60%{
+  40%, 60% {
     left: 100%;
   }
-  100%{
-    left: 0%
+  100% {
+    left: 0%;
   }
 }
 
