@@ -97,7 +97,7 @@
                 <div class="maincities-button-wrapper">
                   <router-link to="/searchCityByTag" class="maincities-tags-btn">tags</router-link>
                     <h4 class="maincities-or">or</h4>
-                    <router-link to="/searchCityByRating" class="maincities-ratings-btn">ratings</router-link>
+                    <router-link to="/SearchCityByRating" class="maincities-ratings-btn">ratings</router-link>
                 </div>
                 <h2 class="maincities-search-title">Trending Cities:</h2>
                 <div class="trending-cities-wrapper">
