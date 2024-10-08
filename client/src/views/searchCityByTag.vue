@@ -1,115 +1,132 @@
 <template>
-    <div class="maincities-body-container">
-      <header class="euro-tour-header">
-        <logo class="logo-wrapper">
-          <router-link to="/" class="logo">
-            <img src="@/assets/horizontal-logo.png" alt="Euro Tour logo" />
-          </router-link>
-        </logo>
-        <nav class="navbar">
-          <router-link to="/maincities" class="navbar-item maincities-navbar-item"
-            ><i class="fa-solid fa-city"></i> cities</router-link>
-          <a href="#placesToVisit" class="navbar-item"
-            ><i class="fa-solid fa-map-pin"></i> places to visit</a>
-          <b-dropdown
-            size="lg"
-            variant="link"
-            toggle-class="text-decoration-none"
-            no-caret
-            class="navbar-item dropdown"
+  <div class="maincities-body-container">
+    <header class="euro-tour-header">
+      <logo class="logo-wrapper">
+        <router-link to="/" class="logo">
+          <img src="@/assets/horizontal-logo.png" alt="Euro Tour logo" />
+        </router-link>
+      </logo>
+      <nav class="navbar">
+        <router-link to="/maincities" class="navbar-item maincities-navbar-item"
+          ><i class="fa-solid fa-city"></i> cities</router-link
+        >
+        <a href="#placesToVisit" class="navbar-item"
+          ><i class="fa-solid fa-map-pin"></i> places to visit</a
+        >
+        <b-dropdown
+          size="lg"
+          variant="link"
+          toggle-class="text-decoration-none"
+          no-caret
+          class="navbar-item dropdown"
+        >
+          <template #button-content>
+            <img
+              src="@/assets/signed-in-icon.png"
+              alt="Signed In"
+              class="dropdown-icon"
+            />
+          </template>
+          <b-dropdown-item class="dropdown-item logout" @click="logout"
+            >Log out</b-dropdown-item
           >
-            <template #button-content>
-              <img src="@/assets/signed-in-icon.png" alt="Signed In" class="dropdown-icon" />
-            </template>
-            <!-- Dropdown items -->
-            <b-dropdown-item class="dropdown-item logout" @click="logout">Log out</b-dropdown-item>
-            <b-dropdown-item class="dropdown-item" to="/profile">Profile</b-dropdown-item>
-          </b-dropdown>
-        </nav>
-      </header>
+          <b-dropdown-item class="dropdown-item" to="/profile">Profile</b-dropdown-item>
+        </b-dropdown>
+      </nav>
+    </header>
 
-        <b-container class="search-by-tag-panel">
+    <b-container class="search-by-tag-panel">
+      <b-row>
+        <b-col col="4">
+          <h2 class="search-cities-text">Search cities by:</h2>
+        </b-col>
 
-            <b-row>
-            <b-col col="4">
-                <h2 class="search-cities-text">Search cities by:</h2>
-            </b-col>
+        <b-col col="8">
+          <div class="filter-options">
+            <router-link to="/searchCityByTag">
+              <button class="tags-button">tags</button>
+            </router-link>
 
-            <b-col col="8">
-        <div class="filter-options">
-        <router-link to="/searchCityByTag">
-            <button class="tags-button">tags</button>
-        </router-link>
+            <router-link to="/searchCityByRating">
+              <button class="ratings-button">ratings</button>
+            </router-link>
 
-        <router-link to="/searchCityByRating">
-            <button class="ratings-button">ratings</button>
-        </router-link>
+            <i class="fa-solid fa-filter"></i>
+          </div>
+        </b-col>
+      </b-row>
 
-        <i class="fa-solid fa-filter"></i>
+      <b-row>
+        <b-col>
+          <div class="available-tags">
+            <button
+              class="tag-button"
+              @click="toggleTag('historical')"
+              >historical</button
+            >
+            <button class="tag-button" @click="toggleTag('quiet')">quiet</button>
+            <button class="tag-button" @click="toggleTag('party')">party</button>
+            <button class="tag-button" @click="toggleTag('architecture')">architecture</button>
+            <button class="tag-button" @click="toggleTag('recently added')">recently added</button>
+            <button class="tag-button" @click="toggleTag('nature')">nature</button>
+            <button class="tag-button" @click="toggleTag('beachy')">beachy</button>
+            <button class="tag-button" @click="toggleTag('warm weather')">warm weather</button>
+            <button class="tag-button" @click="toggleTag('cold weather')">cold weather</button>
+            <button class="tag-button" @click="toggleTag('popular')">popular</button>
+            <button class="tag-button" @click="toggleTag('cheap')">cheap</button>
+            <button class="tag-button" @click="toggleTag('high-end')">high-end</button>
+          </div>
+        </b-col>
+      </b-row>
+
+      <b-row>
+        <b-col>
+          <h2 class="result-text">selected tags:</h2>
+        </b-col>
+
+        <b-col cols="7">
+          <div class="selected-tags">
+            <button
+              v-for="tag in selectedTags"
+              :key="tag"
+              class="tag-button-selected"
+            >
+              {{ tag }}
+            </button>
+          </div>
+        </b-col>
+
+        <b-col>
+          <button class="clear-button" @click="clearTags">clear all tags</button>
+        </b-col>
+      </b-row>
+
+      <b-row>
+      <b-col col="12">
+        <div v-if="Array.isArray(cities) && cities.length > 0" class="cities-list">
+          <div v-for="city in cities" :key="city._id" class="city-card">
+            <h3>{{ city.name }}</h3>
+            <p>Rating: {{ city.rating }}</p>
+            <p>Tags: {{ city.tags.join(', ') }}</p>
+          </div>
         </div>
-    </b-col>
-    </b-row>
-
-    <b-row>
-      <b-col>
-        <div class="available-tags">
-          <button class="tag-button" @click="toggleTag('historical')">historical</button>
-          <button class="tag-button" @click="toggleTag('quiet')">quiet</button>
-          <button class="tag-button" @click="toggleTag('party')">party</button>
-          <button class="tag-button" @click="toggleTag('architecture')">architecture</button>
-          <button class="tag-button" @click="toggleTag('recently added')">recently added</button>
-          <button class="tag-button" @click="toggleTag('nature')">nature</button>
-          <button class="tag-button" @click="toggleTag('beachy')">beachy</button>
-          <button class="tag-button" @click="toggleTag('warm weather')">warm weather</button>
-          <button class="tag-button" @click="toggleTag('cold weather')">cold weather</button>
-          <button class="tag-button" @click="toggleTag('popular')">popular</button>
-          <button class="tag-button" @click="toggleTag('cheap')">cheap</button>
-          <button class="tag-button" @click="toggleTag('high-end')">high-end</button>
+        <div v-else>
+          <h3>No cities found.</h3>
         </div>
       </b-col>
     </b-row>
-
-    <b-row>
-    <b-col>
-    <h2 class="result-text">selected tags:</h2>
-    </b-col>
-
-    <b-col cols="7">
-    <div class="selected-tags">
-      <button
-        v-for="tag in selectedTags"
-        :key="tag"
-        class="tag-button-selected"
-      >
-        {{ tag }}
-      </button>
-    </div>
-    </b-col>
-
-    <b-col>
-        <button class="clear-button" @click="clearTags">clear all tags</button>
-    </b-col>
-    </b-row>
-
-    <b-row>
-    <b-col col="12">
-
-    </b-col >
-
-    </b-row>
-
-        </b-container>
+    </b-container>
 
     <footer class="footer">
-        <div class="footer-text">
-          <p> &copy; 2024 copyright: eurotrip.com</p>
-        </div>
-        <div class="top-icon">
-          <a href="#"><i class="fa-solid fa-caret-up"></i></a>
-        </div>
-      </footer>
-    </div>
-  </template>
+      <div class="footer-text">
+        <p> &copy; 2024 copyright: eurotrip.com</p>
+      </div>
+      <div class="top-icon">
+        <a href="#"><i class="fa-solid fa-caret-up"></i></a>
+      </div>
+    </footer>
+  </div>
+</template>
 
 <script>
 import { Api } from '@/Api'
@@ -123,30 +140,31 @@ export default {
         'recently added', 'nature', 'beachy', 'warm weather',
         'cold weather', 'popular', 'cheap', 'high-end'
       ],
+      cities: [],
       message: 'none',
-      loggedInStatus: !!localStorage.getItem('x-auth-token') // Reactive property for login status
+      loggedInStatus: !!localStorage.getItem('x-auth-token')
     }
   },
-  computed: {
-    isLoggedIn() {
-      return this.loggedInStatus // Use reactive `loggedInStatus` property
-    }
+  mounted() {
+    this.getCities()
   },
   methods: {
-    getMessage() {
-      Api.get('/')
-        .then(response => {
-          this.message = response.data.message
-        })
-        .catch(error => {
-          this.message = error
-        })
+    async getCities() {
+      try {
+        const response = await Api.get('/cities')
+        if (response.data && response.data.cities) {
+          this.cities = response.data.cities
+        } else {
+          this.cities = []
+        }
+      } catch (error) {
+        console.error('Error fetching cities:', error)
+        this.cities = []
+      }
     },
     logout() {
-      // Remove the authentication token from localStorage
       localStorage.removeItem('x-auth-token')
       console.log('Logged out successfully')
-      // Update the reactive `loggedInStatus` property to force reactivity
       this.loggedInStatus = false
       // Redirect the user to the homepage (or login page)
       this.$router.push('/')
@@ -163,7 +181,10 @@ export default {
       this.selectedTags = []
     }
   },
+  // eslint-disable-next-line no-dupe-keys
   mounted() {
+    this.getCities() // Fetch cities when component mounts
+
     // Create a link element
     const link = document.createElement('link')
     link.rel = 'stylesheet'
