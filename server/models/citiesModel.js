@@ -3,38 +3,31 @@ var Schema = mongoose.Schema;
 
 // Import models to use ObjectId references
 const PlacesToVisitModel = require('./placesToVisitModel'); // Ensure this exports the model
-const ReviewsModel = require('./reviewsModel'); // Ensure this exports the model
 
 var citiesSchema = new Schema({
     cityName: { type: String, required: true },
     country: { type: String, required: true },
     statistics: { type: String, required: true },
     facts: { type: String, required: true },
+    rating: { type: Number, min: 0.0, max: 5.0 },
     tags: {
         type: [String], 
         required: true,
         validate: {
             validator: function(tags) {
                 const allowedTags = [
-                    'historical', 
-                    'adventurous', 
+                    'historical',  
                     'quiet', 
                     'party', 
                     'architecture', 
-                    'sight-seeing', 
-                    'museum', 
-                    'new', 
-                    'foodie', 
+                    'recently added',  
                     'nature', 
-                    'foresty', 
                     'beachy', 
-                    'hot weather', 
-                    'cold weather', 
-                    'varied weather', 
+                    'warm weather', 
+                    'cold weather',  
                     'popular', 
                     'cheap', 
-                    'pricey', 
-                    'unique'
+                    'high-end', 
                 ];
                 return tags.every(tag => allowedTags.includes(tag));
             },
@@ -45,7 +38,6 @@ var citiesSchema = new Schema({
         type: [{ type: Schema.Types.ObjectId, ref: 'placesToVisit' }], // Ensure 'PlacesToVisit' matches the model name
         default: [] 
     },
-    reviews: [{ type: Schema.Types.ObjectId, ref: 'reviews',default: [] }] // Reference to the reviews model
 });
 
 // Export the cities model

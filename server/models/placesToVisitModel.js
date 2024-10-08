@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-const ReviewsModel = require('./reviewsModel'); // Assuming you're importing the model, not just the schema
 
 var placesToVisitSchema = new Schema({
     placeName: { type: String, required: true },
@@ -15,23 +14,16 @@ var placesToVisitSchema = new Schema({
                 const allowedTags = [
                     'historical', 
                     'adventurous', 
-                    'quiet', 
-                    'party', 
-                    'architecture', 
+                    'party',  
                     'sight-seeing', 
                     'museum', 
-                    'new', 
-                    'foodie', 
-                    'nature', 
-                    'foresty', 
+                    'recently opened', 
+                    'food', 
+                    'nature',
                     'beachy', 
-                    'hot weather', 
-                    'cold weather', 
-                    'varied weather', 
                     'popular', 
                     'cheap', 
-                    'pricey', 
-                    'unique'
+                    'high-end', 
                 ];
                 return tags.every(tag => allowedTags.includes(tag));
             },
@@ -39,7 +31,6 @@ var placesToVisitSchema = new Schema({
         }
     },
     city: { type: Schema.Types.ObjectId, ref: 'cities', required: true },
-    reviews: [{ type: Schema.Types.ObjectId, ref: 'reviews' }]
 });
 
 // Export the model based on the schema

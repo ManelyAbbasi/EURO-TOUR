@@ -1,77 +1,43 @@
 const placesToVisitModel = require("../models/placesToVisitModel");
 const PlacesToVisitModel = require("../models/placesToVisitModel");
-const express = require("express");
-const router = express.Router();
-const ReviewsModel = require("../models/reviewsModel");
 const UsersModel = require("../models/usersModel");
-var passport = require('passport');
-
-
-async function createReviewToPlace(req, res) {
-    const address = req.params.address;
-
-    try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "You need to be logged in to create a review." });
-        }
-
-        const place = await PlacesToVisitModel.findOne({ address });
-        if (!place) {
-            return res.status(404).json({ message: "Place not found" });
-        }
-
-        const user = await UsersModel.findOne({ username: req.user.username });
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        if (typeof req.body.rating !== 'number') {
-            return res.status(400).json({ message: "Invalid rating: must be a number" });
-        }
-        if (req.body.rating < 0.0 || req.body.rating > 5.0) {
-            return res.status(400).json({ message: "Invalid rating: must be between 0.0 and 5.0" });
-        }
-        if (typeof req.body.content !== 'string' || req.body.content.trim() === '') {
-            return res.status(400).json({ message: "Invalid content: must be a non-empty string" });
-        }
-
-        const review = new ReviewsModel({
-            rating: req.body.rating,
-            content: req.body.content,
-            date: Date.now(),
-            user: user._id,
-        });
-
-        await review.save();
-
-        place.reviews.push(review._id);
-        await place.save();
-
-        res.status(201).json({ message: "Review added successfully", review });
-
-    } catch (err) {
-        console.error("Error adding review to place:", err);
-        res.status(500).json({ message: "An error occurred while adding the review.", error: err.message });
-    }
-}
 
 
 async function getAllPlaces(req, res) {
     try {
-        const { tags } = req.query;
+        const { tags, minRating, maxRating, sortByRating } = req.query;
 
+        // Initialize an empty filter object
         let filter = {};
 
-        // If 'tags' are provided in the query, filter places by those tags
+        // If tags are provided, filter places by tags
         if (tags) {
             const tagsArray = tags.split(','); // Convert tags string to array (comma-separated)
-            filter = { tags: { $all: tagsArray } };
+            filter.tags = { $all: tagsArray };
         }
 
-        const placesToVisit = await placesToVisitModel.find(filter);
+        // If minRating or maxRating is provided, filter places by rating range
+        if (minRating || maxRating) {
+            filter.rating = {}; // Initialize the rating filter
+            if (minRating) filter.rating.$gte = parseFloat(minRating); // $gte = greater than or equal
+            if (maxRating) filter.rating.$lte = parseFloat(maxRating); // $lte = less than or equal
+        }
+
+        // Initialize an empty sort option
+        let sortOption = {};
+
+        // If sortByRating is provided, set the sorting order
+        if (sortByRating) {
+            sortOption.rating = sortByRating === 'asc' ? 1 : -1; // Ascending = 1, Descending = -1
+        }
+
+        // Fetch places based on the filter and sort them if sortByRating is passed
+        const placesToVisit = await placesToVisitModel.find(filter).sort(sortOption);
+
         if (!placesToVisit || placesToVisit.length === 0) {
             return res.status(404).json({ error: 'No places found.' });
         }
+
         res.status(200).json({ placesToVisit });
     } catch (error) {
         res.status(500).json({ error: 'An error occurred while fetching places.' });
@@ -94,53 +60,10 @@ async function getOnePlace(req, res) {
 }
 
 
-async function getReviewsForPlace(req, res) {
-    const address = req.params.address;
-    const minRating = parseFloat(req.query.minRating); // Get min rating from query
-    const maxRating = parseFloat(req.query.maxRating); // Get max rating from query
-    const sortOrder = req.query.sortOrder || 'asc';
-
-    try {
-        const place = await PlacesToVisitModel.findOne({ address }).populate('reviews');
-        if (!place) {
-            return res.status(404).json({ message: "Place not found" });
-        }
-
-        let reviews = place.reviews;
-
-        if (!isNaN(minRating) || !isNaN(maxRating)) {
-            reviews = reviews.filter(review => {
-                const reviewRating = review.rating;
-                return (isNaN(minRating) || reviewRating >= minRating) && 
-                       (isNaN(maxRating) || reviewRating <= maxRating);
-            });
-        }
-
-        if (reviews.length > 0) {
-            reviews.sort((a, b) => {
-                if (sortOrder === 'desc') {
-                    return b.rating - a.rating; // Descending order
-                } else {
-                    return a.rating - b.rating; // Ascending order
-                }
-            });
-        }
-
-        res.status(200).json(reviews);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'An error occurred while fetching the reviews.' });
-    }
-}
-
-
 async function updatePlace(req, res, next) {
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "You need to be logged in to update a place." });
-        }
 
-        if (!req.user.isAdmin) {
+        if (!req.body.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can update places." });
         }
 
@@ -193,10 +116,7 @@ async function updatePlace(req, res, next) {
 
 async function patchPlace(req, res) {
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "You need to be logged in to patch a place." });
-        }
-        if (!req.user.isAdmin) {
+        if (!req.body.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can patch places." });
         }
 
@@ -220,10 +140,7 @@ async function deleteOnePlace(req, res) {
     const address = req.params.address;
 
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "You need to be logged in to delete a place." });
-        }
-        if (!req.user.isAdmin) {
+        if (!req.body.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can delete places." });
         }
 
@@ -240,47 +157,10 @@ async function deleteOnePlace(req, res) {
     }
 }
 
-
-async function deleteReviewsByAddress(req, res) {
-    const address = req.params.address;
-
-    try {
-        const place = await PlacesToVisitModel.findOne({ address }).populate('reviews');
-        if (!place) {
-            return res.status(404).json({ error: 'Place not found' });
-        }
-        if (place.reviews.length === 0) {
-            return res.status(404).json({ message: 'No reviews found for this place' });
-        }
-
-        // Retrieve the review objects before deletion
-        const reviewsToDelete = await ReviewsModel.find({ _id: { $in: place.reviews } });
-        if (!reviewsToDelete || reviewsToDelete.length === 0) {
-            return res.status(404).json({ message: 'No reviews found to delete' });
-        }
-
-        const result = await ReviewsModel.deleteMany({ _id: { $in: place.reviews } });
-        place.reviews = [];
-        await place.save();
-
-        res.status(200).json({
-            message: `Successfully deleted ${result.deletedCount} reviews for the place at address: ${address}`,
-            deletedReviews: reviewsToDelete
-        });
-
-    } catch (error) {
-        res.status(500).json({ error: 'An error occurred while deleting reviews', details: error.message });
-    }
-}
- 
-
 module.exports = {
-    createReviewToPlace,
-    getReviewsForPlace,
     getAllPlaces,
     getOnePlace,
     updatePlace,
     patchPlace,
     deleteOnePlace,
-    deleteReviewsByAddress,
 }

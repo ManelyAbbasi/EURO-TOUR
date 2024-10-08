@@ -1,11 +1,11 @@
 <template>
     <div class="maincities-body-container">
       <header class="euro-tour-header">
-        <logo class="logo-wrapper">
+        <div class="logo-wrapper">
           <router-link to="/" class="logo">
             <img src="@/assets/horizontal-logo.png" alt="Euro Tour logo" />
           </router-link>
-        </logo>
+        </div>
         <nav class="navbar">
           <router-link to="/maincities" class="navbar-item maincities-navbar-item"
             ><i class="fa-solid fa-city"></i> cities</router-link>
@@ -19,11 +19,11 @@
             class="navbar-item dropdown"
           >
             <template #button-content>
-              <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
+              <img src="@/assets/signed-in-icon.png" alt="Signed In" class="dropdown-icon" />
             </template>
             <!-- Dropdown items -->
-            <b-dropdown-item class="dropdown-item" to="/login">Log in</b-dropdown-item>
-            <b-dropdown-item class="dropdown-item" to="/signup">Sign up</b-dropdown-item>
+            <b-dropdown-item class="dropdown-item logout" @click="logout">Log out</b-dropdown-item>
+            <b-dropdown-item class="dropdown-item" to="/profile">Profile</b-dropdown-item>
           </b-dropdown>
         </nav>
       </header>
@@ -95,9 +95,9 @@
                 <!--search and trending-->
                 <h2 class="maincities-search-title">Search cities by: <i class="fa-solid fa-filter" style="color: #045768;"></i></h2>
                 <div class="maincities-button-wrapper">
-                    <button class="maincities-tags-btn" type="button">tags</button>
+                  <router-link to="/searchCityByTag" class="maincities-tags-btn">tags</router-link>
                     <h4 class="maincities-or">or</h4>
-                    <button class="maincities-ratings-btn" type="button">ratings</button>
+                    <router-link to="/SearchCityByRating" class="maincities-ratings-btn">ratings</router-link>
                 </div>
                 <h2 class="maincities-search-title">Trending Cities:</h2>
                 <div class="trending-cities-wrapper">
@@ -131,6 +131,8 @@
   </template>
 
 <script>
+import { Api } from '@/Api'
+
 export default {
   data() {
     return {
@@ -156,13 +158,49 @@ export default {
         'Area: 105.4 km²',
         'Area: 318 km²'
       ],
-      tags: []
+      tags: [],
+      message: 'none',
+      loggedInStatus: !!localStorage.getItem('x-auth-token') // Reactive property for login status
+    }
+  },
+  computed: {
+    isLoggedIn() {
+      return this.loggedInStatus // Use reactive `loggedInStatus` property
     }
   },
   methods: {
     toggleFavorite() {
       this.isFavorite = !this.isFavorite // Toggle between true and false
+    },
+    getMessage() {
+      Api.get('/')
+        .then(response => {
+          this.message = response.data.message
+        })
+        .catch(error => {
+          this.message = error
+        })
+    },
+    logout() {
+      // Remove the authentication token from localStorage
+      localStorage.removeItem('x-auth-token')
+      console.log('Logged out successfully')
+      // Update the reactive `loggedInStatus` property to force reactivity
+      this.loggedInStatus = false
+      // Redirect the user to the homepage (or login page)
+      this.$router.push('/')
     }
+  },
+  mounted() {
+    // Create a link element
+    const link = document.createElement('link')
+    link.rel = 'stylesheet'
+    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css'
+    link.integrity = 'sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=='
+    link.crossOrigin = 'anonymous'
+    link.referrerPolicy = 'no-referrer'
+    // Append the link element to the head
+    document.head.appendChild(link)
   }
 }
 </script>
@@ -371,18 +409,24 @@ export default {
     gap: 2rem;
 }
 
-.maincities-button-wrapper button{
-    padding: 0 2rem;
+.maincities-button-wrapper .maincities-tags-btn,
+.maincities-button-wrapper .maincities-ratings-btn {
+    display: inline-block;
+    padding: 0.5rem 2rem;
     color: #edf7fb;
     background-color: #9BA9B6;
     border: none;
+    text-align: center;
     transition: 0.8s all;
     max-width: 7rem;
+    text-decoration: none; /* Removes underline from links */
+
 }
 
-.maincities-button-wrapper button:hover{
-    color: #9BA9B6;
-    background-color: #edf7fb;
+.maincities-button-wrapper .maincities-tags-btn:hover,
+.maincities-button-wrapper .maincities-ratings-btn:hover {
+    color: #edf7fb;
+    background-color: #bc672a;
     transform: scale(1.05);
 }
 

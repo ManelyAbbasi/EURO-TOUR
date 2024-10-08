@@ -2,8 +2,6 @@
 var mongoose = require('mongoose');
 // extracts the Schema constructor from Mongoose
 var Schema = mongoose.Schema;
-// Library for using passport-local with mongoose
-var passportLocalMongoose = require('passport-local-mongoose');
 
 
 // new schema is being defined 
@@ -17,7 +15,21 @@ var usersSchema = new Schema({
         enum: ['male', 'female', 'non-binary', 'other'], 
         default: 'other'  
     },
-    isAdmin: { type: Boolean, default: false }
+    isAdmin: { type: Boolean, default: false },
+    session: {
+        key: {
+            type: mongoose.SchemaTypes.ObjectId,
+            required: true, 
+            unique: true,
+            sparse: true
+        }, 
+        expiry: {type: Date,
+            required: true}
+    },
+    favourites: [{ 
+        city: { type: Schema.Types.ObjectId, ref: 'cities', required: true },  // Reference to city
+        places: [{ type: Schema.Types.ObjectId, ref: 'placesToVisit' }] // Array of references to places
+    }]
 }, {
     toJSON: {
         transform: function(doc, ret) {
@@ -28,8 +40,6 @@ var usersSchema = new Schema({
         }
     }
 });
-
-usersSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model('users', usersSchema);
 

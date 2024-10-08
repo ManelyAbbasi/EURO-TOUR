@@ -1,23 +1,16 @@
 var express = require('express');
 var router = express.Router();
 var placesToVisitControllers = require('../controllers/placesToVisitController');
+const authentication = require('../middleware/authentication');
 
 router.get('/', placesToVisitControllers.getAllPlaces);
 
-//router.post('/', placesToVisitControllers.createPlace);
-
 router.get('/:address', placesToVisitControllers.getOnePlace);
 
-router.put('/:address', placesToVisitControllers.updatePlace);
+router.put('/:address', authentication, placesToVisitControllers.updatePlace);
 
-router.patch('/:address', placesToVisitControllers.patchPlace);
+router.patch('/:address', authentication, placesToVisitControllers.patchPlace);
 
-router.delete('/:address', placesToVisitControllers.deleteOnePlace);
-
-router.get('/:address/reviews', placesToVisitControllers.getReviewsForPlace);
-
-router.post('/:address/reviews', placesToVisitControllers.createReviewToPlace);
-
-router.delete('/:address/reviews', placesToVisitControllers.deleteReviewsByAddress);
+router.delete('/:address', authentication, placesToVisitControllers.deleteOnePlace);
 
 module.exports = router;

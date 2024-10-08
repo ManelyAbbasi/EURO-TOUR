@@ -1,18 +1,12 @@
 const CitiesModel = require("../models/citiesModel");
-const express = require("express");
 const placesToVisitSchema = require("../models/placesToVisitModel");
-const router = express.Router();
-const ReviewsModel = require("../models/reviewsModel");
 const UsersModel = require("../models/usersModel");
 const citiesModel = require("../models/citiesModel");
 
 
 async function createCity(req, res, next) {
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "You need to be logged in to create a city." });
-        }
-        if (!req.user.isAdmin) {
+        if (!req.body.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can create cities." });
         }
 
@@ -46,11 +40,8 @@ async function createCity(req, res, next) {
 async function createPlaceInCity(req, res) {
     const cityId = req.params.id;
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "You need to be logged in to create a place in a city." });
-        }
-        if (!req.user.isAdmin) {
-            return res.status(403).json({ message: "Access denied. Only admins can create places in cities." });
+        if (!req.body.isAdmin) {
+            return res.status(403).json({ message: "Access denied. Only admins can create cities." });
         }
 
         const city = await CitiesModel.findById(cityId);
@@ -79,7 +70,6 @@ async function createPlaceInCity(req, res) {
             rating: req.body.rating,
             content: req.body.content,
             tags: req.body.tags,
-            reviews: req.body.reviews,
             city: city._id,
         });
 
@@ -93,52 +83,6 @@ async function createPlaceInCity(req, res) {
         }
         console.error("Error creating the place to visit:", err);
         res.status(500).json({ message: "An error occurred while creating the place", error: err.message });
-    }
-}
-
-async function createReviewToCity(req, res) {
-    const cityId = req.params.id;
-
-    try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "You need to be logged in to create a review." });
-        }
-
-        const city = await CitiesModel.findById(cityId);
-        if (!city) {
-            return res.status(404).json({ message: "City not found" });
-        }
-        if (!city.reviews) {
-            city.reviews = [];
-        }
-        const user = await UsersModel.findOne({ username: req.user.username });
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-        if (typeof req.body.rating !== 'number') {
-            return res.status(400).json({ message: "Invalid rating: must be a non-empty number" });
-        }
-        if (req.body.rating < 0.0 || req.body.rating > 5.0) {
-            return res.status(400).json({ message: "Invalid rating: must be between 0.0 and 5.0" });
-        }
-        if (typeof req.body.content !== 'string' || req.body.content.trim() === '') {
-            return res.status(400).json({ message: "Invalid content: must be a non-empty string" });
-        }
-
-        const review = new ReviewsModel({
-            rating: req.body.rating,
-            content: req.body.content,
-            date: Date.now(),
-            user: user._id,
-        });
-
-        await review.save();
-        city.reviews.push(review._id);
-        await city.save();
-        res.status(201).json({ message: "Review added successfully", review });
-    } catch (err) {
-        console.error("Error adding review to city:", err);
-        res.status(500).json({ message: "An error occurred while adding the review.", error: err.message });
     }
 }
 
@@ -163,18 +107,30 @@ async function getOneCity(req, res) {
 }
 
 async function getAllCities(req, res) {
-    
     try {
-        const { tags } = req.query;
+        const { tags, minRating, maxRating, sortByRating } = req.query;
 
         let filter = {};
 
         if (tags) {
             const tagsArray = tags.split(','); // Convert tags string to array (comma-separated)
-            filter = { tags: { $all: tagsArray } };
+            filter.tags = { $all: tagsArray };
         }
 
-        const cities = await CitiesModel.find(filter);
+        if (minRating || maxRating) {
+            filter.rating = {};
+            if (minRating) filter.rating.$gte = parseFloat(minRating);
+            if (maxRating) filter.rating.$lte = parseFloat(maxRating);
+        }
+
+        let sortOption = {};
+
+        if (sortByRating) {
+            sortOption.rating = sortByRating === 'asc' ? 1 : -1;
+        }
+
+        const cities = await CitiesModel.find(filter).sort(sortOption);
+
         if (!cities || cities.length === 0) {
             return res.status(404).json({ message: 'No cities found.' });
         }
@@ -224,57 +180,11 @@ async function getPlacesFromCity(req, res){
     }
 }
 
-async function getReviewsForCity(req, res) {
-    const cityId = req.params.id; 
-    const minRating = parseFloat(req.query.minRating); // Get min rating from query
-    const maxRating = parseFloat(req.query.maxRating); // Get max rating from query
-    const sortOrder = req.query.sortOrder || 'asc'; // Get sort order from query (default to ascending)
-
-    try {
-        const city = await CitiesModel.findById(cityId).populate('reviews');
-        if (!city) {
-            return res.status(404).json({ message: "City not found" });
-        }
-
-        const reviews = await ReviewsModel.find({ _id: { $in: city.reviews } }).populate('user', 'username');
-        
-        if (!reviews || reviews.length === 0) {
-            return res.status(404).json({ message: "No reviews found for this city" });
-        }
-
-        const filteredReviews = reviews.filter(review => {
-            const reviewRating = review.rating;
-            return (isNaN(minRating) || reviewRating >= minRating) && 
-                   (isNaN(maxRating) || reviewRating <= maxRating);
-        });
-
-        if (filteredReviews.length === 0) {
-            return res.status(404).json({ message: "No reviews found for this city in the specified rating range." });
-        }
-
-        filteredReviews.sort((a, b) => {
-            if (sortOrder === 'desc') {
-                return b.rating - a.rating; // Descending order
-            } else {
-                return a.rating - b.rating; // Ascending order
-            }
-        });
-        res.status(200).json({ reviews: filteredReviews });
-
-    } catch (err) {
-        console.error("Error retrieving reviews for city:", err);
-        res.status(500).json({ message: "An error occurred while retrieving reviews.", error: err.message });
-    }
-}
-
 async function updateCity(req, res, next) {
     const cityId = req.params.id;
 
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "You need to be logged in to update the city." });
-        }
-        if (!req.user.isAdmin) {
+        if (!req.body.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can update cities." });
         }
 
@@ -327,10 +237,7 @@ async function patchCity(req, res, next){
     const cityId = req.params.id;
 
     try{
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "You need to be logged in to patch a place." });
-        }
-        if (!req.user.isAdmin) {
+        if (!req.body.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can patch places." });
         }
         const city = await CitiesModel.findById(cityId);
@@ -350,43 +257,6 @@ async function patchCity(req, res, next){
     }
 };
 
-async function deleteReviewsById(req, res) { 
-    const cityId = req.params.id;
-
-    try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "You need to be logged in to delete a place." });
-        }
-        if (!req.user.isAdmin) {
-            return res.status(403).json({ message: "Access denied. Only admins can delete places." });
-        }
-        const city = await citiesModel.findOne({ _id: cityId }).populate('reviews');
-        if (!city) {
-            return res.status(404).json({ error: 'City not found' });
-        }
-
-        if (city.reviews.length === 0) {
-            return res.status(404).json({ message: 'No reviews found for this city' });
-        }
-
-        // Retrieve the review objects before deletion
-        const reviewsToDelete = await ReviewsModel.find({ _id: { $in: city.reviews } });
-        if (!reviewsToDelete || reviewsToDelete.length === 0) {
-            return res.status(404).json({ message: 'No reviews found to delete' });
-        }
-
-        await ReviewsModel.deleteMany({ _id: { $in: city.reviews } });
-        city.reviews = [];
-        await city.save();
-        res.status(200).json({
-            message: `Successfully deleted ${reviewsToDelete.length} reviews for the city.`,
-            deletedReviews: reviewsToDelete
-        });
-    } catch (error) {
-        res.status(500).json({ error: 'An error occurred while deleting reviews', details: error.message });
-    }
-}
- 
 
 async function deleteOneCity(req, res) {
     const cityId = req.params.id;
@@ -406,14 +276,11 @@ async function deleteOneCity(req, res) {
 module.exports = {
     createCity,
     createPlaceInCity,
-    createReviewToCity,
     getAllCities,
     getOneCity,
     getPlacesFromCity,
     getOnePlaceFromCity,
-    getReviewsForCity,
     patchCity,
     updateCity,
-    deleteOneCity,
-    deleteReviewsById
+    deleteOneCity
 }
