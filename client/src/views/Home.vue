@@ -119,34 +119,6 @@ import { Api } from '@/Api'
 import EuroMap from '@/views/Map.vue' // Adjust the path as necessary
 import WeatherMap from '@/components/Weather.vue'
 
-const text = document.querySelector('.typewriter-hello')
-const textLoad = () => {
-  setTimeout(() => {
-    text.textContent = 'Hello!'
-  }, 0)
-  setTimeout(() => {
-    text.textContent = 'Hola!'
-  }, 4000)
-  setTimeout(() => {
-    text.textContent = 'Bonjour!'
-  }, 8000)
-  setTimeout(() => {
-    text.textContent = 'Ciao!'
-  }, 12000)
-  setTimeout(() => {
-    text.textContent = 'Salut!'
-  }, 16000)
-  setTimeout(() => {
-    text.textContent = 'Hallo!'
-  }, 20000)
-  setTimeout(() => {
-    text.textContent = 'Cześć!'
-  }, 24000)
-}
-
-textLoad()
-setInterval(28000)
-
 export default {
   components: {
     EuroMap,
@@ -178,6 +150,21 @@ export default {
       localStorage.removeItem('x-auth-token')
       this.loggedInStatus = false
       this.$router.push('/')
+    },
+    textLoad() {
+      const text = document.querySelector('.typewriter-hello')
+      if (!text) return // Prevent errors if the element is not found
+
+      const messages = ['Hello!', 'Hola!', 'Bonjour!', 'Ciao!', 'Salut!', 'Hallo!', 'Cześć!']
+      let index = 0
+
+      const updateText = () => {
+        text.textContent = messages[index]
+        index = (index + 1) % messages.length // Cycle through the messages
+      }
+
+      updateText() // Show the first message immediately
+      setInterval(updateText, 4000) // Change message every 4 seconds
     }
   },
   mounted() {
@@ -190,6 +177,7 @@ export default {
     link.crossOrigin = 'anonymous'
     link.referrerPolicy = 'no-referrer'
     document.head.appendChild(link)
+    this.textLoad() // Call textLoad only after the component is mounted
   }
 }
 </script>
