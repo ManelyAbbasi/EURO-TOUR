@@ -2,7 +2,7 @@
   <div class="home-body-container">
     <header class="euro-tour-header">
       <div class="header-logo-wrapper">
-        <router-link to="/"  class="home-logo"><img src="@/assets/horizontal-logo.png" alt="Euro Tour logo"></router-link>
+        <router-link to="/" class="home-logo"><img src="@/assets/horizontal-logo.png" alt="Euro Tour logo" /></router-link>
       </div>
       <nav class="navbar">
         <a href="#favourites" class="navbar-item" v-if="isLoggedIn"><i class="fa-regular fa-heart" style="color: #edf7fb;"></i> favourites</a>
@@ -19,7 +19,6 @@
           <template #button-content>
             <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
           </template>
-          <!-- Dropdown items -->
           <b-dropdown-item class="dropdown-item" to="/login">Log in</b-dropdown-item>
           <b-dropdown-item class="dropdown-item" to="/signup">Sign up</b-dropdown-item>
         </b-dropdown>
@@ -34,7 +33,6 @@
           <template #button-content>
             <img src="@/assets/signed-in-icon.png" alt="Sign In" class="dropdown-icon" />
           </template>
-          <!-- Dropdown items -->
           <b-dropdown-item class="dropdown-item logout" @click="logout">Log out</b-dropdown-item>
           <b-dropdown-item class="dropdown-item" to="/profile">Profile</b-dropdown-item>
         </b-dropdown>
@@ -42,67 +40,75 @@
     </header>
     <main>
       <div class="home-layout-wrapper">
-          <div class="home-right-side-panel">
-            <h1 class="hello" v-if="!isLoggedIn">Hello!</h1>
-            <h1 class="hello" v-if="isLoggedIn">Welcome back traveler!</h1>
-            <p class="welcome-text" v-if="!isLoggedIn">Make the most of your
-              upcoming travels! </p>
-              <p class="welcome-text" v-if="isLoggedIn">Let's plan for your next travels </p>
-            <p class="welcome-text" v-if="!isLoggedIn">With your <b>preferences</b>
-              and our <b>recommendations</b> you will have
-              the experience of a <b>lifetime</b></p>
-          </div>
-          <div class="home-left-side-panel">
+        <div class="home-right-side-panel">
+          <h1 class="hello" v-if="!isLoggedIn">Hello!</h1>
+          <h1 class="hello" v-if="isLoggedIn">Welcome back traveler!</h1>
+          <p class="welcome-text" v-if="!isLoggedIn">Make the most of your upcoming travels!</p>
+          <p class="welcome-text" v-if="isLoggedIn">Let's plan for your next travels</p>
+          <p class="welcome-text" v-if="!isLoggedIn">
+            With your <b>preferences</b> and our <b>recommendations</b> you will have the experience of a <b>lifetime</b>
+          </p>
+        </div>
+        <div class="home-left-side-panel">
           <!-- map -->
-          <EuroMap class="euromap"/>
-          </div>
+          <EuroMap class="euromap" />
+        </div>
       </div>
+
       <section class="get-to-know-wrapper">
         <h2 class="home-heading">Get to know us!</h2>
         <div class="get-to-know-container">
-            <div class="get-to-know-box">
-                <h3>About us</h3>
-                <div class="get-to-wrapper-text">
-                  <p>Feeling lost in a new city?
-                  Want to know what's out there?</p>
-                <p>We got you!</p>
-                <p> With us you can discover the best
-                  places to visit in your chosen city,
-                  by finding somewhere that
-                  piques your interest.</p>
-                </div>
+          <div class="get-to-know-box">
+            <h3>About us</h3>
+            <div class="get-to-wrapper-text">
+              <p>Feeling lost in a new city? Want to know what's out there?</p>
+              <p>We got you!</p>
+              <p>
+                With us you can discover the best places to visit in your chosen city, by finding somewhere that
+                piques your interest.
+              </p>
             </div>
-            <div class="get-to-know-box">
-                <h3>Our goals</h3>
-                <div class="get-to-wrapper-text">
-                  <p>We want to promote safe travel for all,
-                with putting a focus on</p>
-                <p>• Solo women travelers</p>
-                <p>• POCs</p>
-                <p>• Members of LGBTQIA+</p>
-                <p>We intend for our travelers to be able to make
-                the most of their time in a new city.</p>
-                </div>
+          </div>
+          <div class="get-to-know-box">
+            <h3>Our goals</h3>
+            <div class="get-to-wrapper-text">
+              <p>We want to promote safe travel for all, with putting a focus on</p>
+              <p>• Solo women travelers</p>
+              <p>• POCs</p>
+              <p>• Members of LGBTQIA+</p>
+              <p>We intend for our travelers to be able to make the most of their time in a new city.</p>
             </div>
-            <div class="get-to-know-box">
-                <h3>Why join us?</h3>
-                <div class="get-to-wrapper-text">
-                  <p>With an account you can:</p>
+          </div>
+
+          <!-- Conditionally Render "Why join us?" or Map -->
+          <div class="get-to-know-box">
+            <!-- If not logged in, show "Why Join Us?" section -->
+            <template v-if="!isLoggedIn">
+              <h3>Why join us?</h3>
+              <div class="get-to-wrapper-text">
+                <p>With an account you can:</p>
                 <p>• Get personalised recommendations</p>
                 <p>• Favourite cities and places</p>
                 <p>• Leave reviews and ratings</p>
-                </div>
-            </div>
+              </div>
+            </template>
+
+            <!-- If logged in, show the Weather Map -->
+            <template v-else>
+              <h3 class="weather-warning-title">Weather warnings</h3> <!-- Added header here -->
+              <WeatherMap class="weather-map" />
+            </template>
+          </div>
         </div>
       </section>
     </main>
     <footer class="footer">
-        <div class="footer-text">
-            <p> &copy; 2024 copyright: eurotrip.com</p>
-        </div>
-        <div class="top-icon">
-            <a href="#"><i class="fa-solid fa-caret-up"></i></a>
-        </div>
+      <div class="footer-text">
+        <p> &copy; 2024 copyright: eurotrip.com</p>
+      </div>
+      <div class="top-icon">
+        <a href="#"><i class="fa-solid fa-caret-up"></i></a>
+      </div>
     </footer>
   </div>
 </template>
@@ -111,10 +117,12 @@
 // @ is an alias to /src
 import { Api } from '@/Api'
 import EuroMap from '@/views/Map.vue' // Adjust the path as necessary
+import WeatherMap from '@/components/Weather.vue'
 
 export default {
   components: {
-    EuroMap
+    EuroMap,
+    WeatherMap // Register the WeatherMap component
   },
   name: 'home',
   data() {
@@ -131,35 +139,30 @@ export default {
   methods: {
     getMessage() {
       Api.get('/')
-        .then(response => {
+        .then((response) => {
           this.message = response.data.message
         })
-        .catch(error => {
+        .catch((error) => {
           this.message = error
         })
     },
     logout() {
-      // Remove the authentication token from localStorage
       localStorage.removeItem('x-auth-token')
-      console.log('Logged out successfully')
-      // Update the reactive `loggedInStatus` property to force reactivity
       this.loggedInStatus = false
-      // Redirect the user to the homepage (or login page)
       this.$router.push('/')
     }
   },
   mounted() {
-    // Create a link element for FontAwesome
     const link = document.createElement('link')
     link.rel = 'stylesheet'
-    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css'
-    link.integrity = 'sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=='
+    link.href =
+      'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css'
+    link.integrity =
+      'sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=='
     link.crossOrigin = 'anonymous'
     link.referrerPolicy = 'no-referrer'
-    // Append the link element to the head
     document.head.appendChild(link)
   }
-
 }
 </script>
 
@@ -310,6 +313,10 @@ li.dropdown-item.logout {
     color: #045768;
     margin-bottom: 2rem;
 }
+.get-to-know-box h3.weather-warning-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.4rem;
+}
 
 .get-to-know-box p{
     font-size: 1rem;
@@ -437,4 +444,5 @@ li.dropdown-item.logout {
         flex-direction: column-reverse;
     }
 }
+
 </style>
