@@ -238,7 +238,6 @@ export default {
   white-space: nowrap; /* Prevent wrapping of text inside dropdown */
   padding: 0; /* Ensure padding doesn't push content */
   margin: 0;
-  background-color: purple !important;
   border: 1px solid rgba(0, 0, 0, 0.15); /* Consistent border */
   border-radius: 0.25rem;
 }
@@ -247,13 +246,8 @@ export default {
   display: block;
   width: 100%;
   padding: 0.5rem 1rem; /* Add appropriate padding */
-  color: blueviolet !important;
   text-align: inherit;
   border: none; /* Remove border */
-}
-
-.dropdown-item:hover {
-  background-color: blueviolet /* Hover effect */
 }
 
 .dropdown-icon {
