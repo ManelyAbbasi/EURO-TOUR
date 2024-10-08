@@ -1,0 +1,44 @@
+{
+    "users": [
+      {
+        "username": "renaa",
+        "password": "123", 
+        "birthDate": "2003-09-28",
+        "isLGBTQIA": true,
+        "gender": "female",
+        "isAdmin": true,
+        "session": {
+          "key": null,
+          "expiry": null
+        },
+        "favourites": []
+      },
+      {
+        "username": "manely",
+        "password": "8585", 
+        "birthDate": "2003-03-01",
+        "isLGBTQIA": true,
+        "gender": "female",
+        "isAdmin": true,
+        "session": {
+          "key": null,
+          "expiry": null
+        },
+        "favourites": []
+      },
+      {
+        "username": "celina",
+        "password": "C12345", 
+        "birthDate": "2004-02-25",
+        "isLGBTQIA": false,
+        "gender": "female",
+        "isAdmin": true,
+        "session": {
+          "key": null,
+          "expiry": null
+        },
+        "favourites": []
+      }
+    ]
+  }
+  

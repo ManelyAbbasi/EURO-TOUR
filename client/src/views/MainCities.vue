@@ -7,6 +7,7 @@
           </router-link>
         </div>
         <nav class="navbar">
+          <a href="#favourites" class="navbar-item"><i class="fa-regular fa-heart" style="color: #edf7fb;"></i> favourites</a>
           <router-link to="/maincities" class="navbar-item maincities-navbar-item"
             ><i class="fa-solid fa-city"></i> cities</router-link>
           <a href="#placesToVisit" class="navbar-item"
@@ -235,27 +236,28 @@ export default {
   z-index: 900;
 }
 
-.b-dropdown .dropdown-menu {
-  width: auto; /* Ensure the width adjusts to content */
-  white-space: nowrap; /* Prevent wrapping of text inside dropdown */
-  padding: 0; /* Ensure padding doesn't push content */
-  margin: 0;
-  background-color: purple !important;
-  border: 1px solid rgba(0, 0, 0, 0.15); /* Consistent border */
-  border-radius: 0.25rem;
-}
-
-.b-dropdown .dropdown-item{
+.b-dropdown .dropdown-item {
   display: block;
   width: 100%;
   padding: 0.5rem 1rem;
-  color: blueviolet !important;
   text-align: inherit;
-  border: none; /* Remove border */
+  border: none;
+  font-size: 1.5rem;
+  color: #edf7fb;
+  transition: color 0.3s;
 }
 
-.dropdown-item:hover {
-  background-color: blueviolet /* Hover effect */
+.b-dropdown .dropdown-item:hover {
+  color: #bc672a !important;
+}
+
+.navbar-item.dropdown .dropdown-item {
+  font-size: 1rem;
+  color: #edf7fb !important;
+}
+
+.dropdown-item {
+  margin: 0;
 }
 
 .dropdown-icon {

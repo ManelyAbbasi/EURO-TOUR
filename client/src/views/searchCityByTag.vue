@@ -7,34 +7,26 @@
         </router-link>
       </logo>
       <nav class="navbar">
-        <router-link to="/maincities" class="navbar-item maincities-navbar-item">
-          <i class="fa-solid fa-city"></i> cities
-        </router-link>
-        <a href="#placesToVisit" class="navbar-item">
-          <i class="fa-solid fa-map-pin"></i> places to visit
-        </a>
-        <b-dropdown
-          size="lg"
-          variant="link"
-          toggle-class="text-decoration-none"
-          no-caret
-          class="navbar-item dropdown"
-        >
-          <template #button-content>
-            <img
-              src="@/assets/signed-in-icon.png"
-              alt="Signed In"
-              class="dropdown-icon"
-            />
-          </template>
-          <b-dropdown-item class="dropdown-item logout" @click="logout">
-            Log out
-          </b-dropdown-item>
-          <b-dropdown-item class="dropdown-item" to="/profile">
-            Profile
-          </b-dropdown-item>
-        </b-dropdown>
-      </nav>
+          <a href="#favourites" class="navbar-item"><i class="fa-regular fa-heart" style="color: #edf7fb;"></i> favourites</a>
+          <router-link to="/maincities" class="navbar-item maincities-navbar-item"
+            ><i class="fa-solid fa-city"></i> cities</router-link>
+          <a href="#placesToVisit" class="navbar-item"
+            ><i class="fa-solid fa-map-pin"></i> places to visit</a>
+          <b-dropdown
+            size="lg"
+            variant="link"
+            toggle-class="text-decoration-none"
+            no-caret
+            class="navbar-item dropdown"
+          >
+            <template #button-content>
+              <img src="@/assets/signed-in-icon.png" alt="Signed In" class="dropdown-icon" />
+            </template>
+            <!-- Dropdown items -->
+            <b-dropdown-item class="dropdown-item logout" @click="logout">Log out</b-dropdown-item>
+            <b-dropdown-item class="dropdown-item" to="/profile">Profile</b-dropdown-item>
+          </b-dropdown>
+        </nav>
     </header>
 
     <b-container class="search-by-tag-panel">
@@ -335,7 +327,7 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  padding: 1rem 5%; /* Adjust padding for more space */
+  padding: 1rem 5%;
   background-color: rgba(155, 169, 182, 1);
   display: flex;
   justify-content: space-between;
@@ -343,21 +335,28 @@ export default {
   z-index: 900;
 }
 
-.b-dropdown .dropdown-menu {
-  width: auto; /* Ensure the width adjusts to content */
-  white-space: nowrap; /* Prevent wrapping of text inside dropdown */
-  padding: 0; /* Ensure padding doesn't push content */
-  margin: 0;
-  border: 1px solid rgba(0, 0, 0, 0.15); /* Consistent border */
-  border-radius: 0.25rem;
-}
-
-.b-dropdown .dropdown-item{
+.b-dropdown .dropdown-item {
   display: block;
   width: 100%;
   padding: 0.5rem 1rem;
   text-align: inherit;
-  border: none; /* Remove border */
+  border: none;
+  font-size: 1.5rem;
+  color: #edf7fb;
+  transition: color 0.3s;
+}
+
+.b-dropdown .dropdown-item:hover {
+  color: #bc672a !important;
+}
+
+.navbar-item.dropdown .dropdown-item {
+  font-size: 1rem;
+  color: #edf7fb !important;
+}
+
+.dropdown-item {
+  margin: 0;
 }
 
 .dropdown-icon {
@@ -365,7 +364,7 @@ export default {
 }
 
 .navbar-item {
-  border: none; /* Remove borders to prevent overflow */
+  border: none;
   margin: 0 1rem;
   text-decoration: none;
 }
