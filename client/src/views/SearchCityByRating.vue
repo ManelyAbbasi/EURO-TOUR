@@ -184,11 +184,35 @@
     </b-row>
 
     <b-row>
-    <b-col col="12">
+        <b-col col="12">
+          <div v-if="Array.isArray(cities) && cities.length > 0" class="cities-list">
+            <div v-for="city in cities" :key="city._id" class="city-card">
+              <div class="top-half-card">
+                <div class="city-img-wrapper">
+                  <img src="@/assets/London.jpg" class="city-card-img"/>
+                </div>
+                <div class="city-country-text">
+                  <p class="cityname-text">{{ city.cityName }}, </p>
+                  <p>{{ city.country }}</p>
+                </div>
+              </div>
+                <div class="bottom-half-card">
+                  <p>{{ city.rating }}</p>
+                  <div class="star-rating">
+                    <!-- Display filled stars -->
+                    <i v-for="n in Math.floor(city.rating)" :key="n" class="fa-solid fa-star" style="color: #bc672a;"></i>
+                    <!-- Display empty stars for remaining ones -->
+                    <i v-for="n in 5 - Math.floor(city.rating)" :key="'empty-' + n" class="fa-regular fa-star" style="color: #bc672a;"></i>
+                  </div>
+                </div>
+            </div>
+          </div>
 
-    </b-col >
-
-    </b-row>
+          <div v-else>
+            <h3>No cities found.</h3>
+          </div>
+        </b-col>
+      </b-row>
 
         </b-container>
 
@@ -204,17 +228,25 @@
   </template>
 
 <script>
+import { Api } from '@/Api'
+
 export default {
   data() {
     return {
-      value: '2',
       activeMinRating: null,
       activeMaxRating: null,
-      activeSort: null
+      activeSort: null,
+      cities: [],
+      ratings: [1, 2, 3, 4, 5],
+      sortOptions: [
+        { label: 'Rating: Low to High', value: 'asc' },
+        { label: 'Rating: High to Low', value: 'desc' }
+      ]
     }
   },
 
   mounted() {
+    this.getCities()
     // Create a link element
     const link = document.createElement('link')
     link.rel = 'stylesheet'
@@ -226,19 +258,48 @@ export default {
     document.head.appendChild(link)
   },
   methods: {
+    async getCities() {
+      try {
+        // Query params for minRating, maxRating, and sortByRating
+        const params = {}
+
+        if (this.activeMinRating) params.minRating = this.activeMinRating
+        if (this.activeMaxRating) params.maxRating = this.activeMaxRating
+        if (this.activeSort) params.sortByRating = this.activeSort
+
+        const response = await Api.get('/cities', { params })
+
+        if (response.data && response.data.cities) {
+          this.cities = response.data.cities
+        } else {
+          this.cities = []
+        }
+      } catch (error) {
+        console.error('Error fetching cities:', error)
+        this.cities = []
+      }
+    },
     recordSortOption(option) {
-      this.activeSort = option // Set the active button when clicked
-      // Handle the sorting logic here if needed
+      this.activeSort = option
+      this.getCities()
     },
     selectMinRating(minRating) {
       if (!this.activeMaxRating || Number(minRating) <= Number(this.activeMaxRating)) {
         this.activeMinRating = minRating
+        this.getCities()
       }
     },
     selectMaxRating(maxRating) {
       if (!this.activeMinRating || Number(maxRating) >= Number(this.activeMinRating)) {
         this.activeMaxRating = maxRating
+        this.getCities()
       }
+    },
+    resetFilters() {
+      this.activeMinRating = null
+      this.activeMaxRating = null
+      this.activeSort = null
+      this.getCities()
     }
   }
 }
@@ -265,7 +326,7 @@ export default {
 .search-by-panel {
     background-color: #759cab;
     width: 100rem;
-    height: 50rem;
+    min-height: 50rem;
     margin-bottom: 35px;
     margin-top: 120px;
 }
@@ -591,4 +652,82 @@ a img {
         flex-direction: column-reverse;
     }
 }
+
+.cities-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 2rem;
+}
+
+.city-card {
+    background-color: #9BA9B6;
+    border: 1px solid #bc672a;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 0.5rem;
+    flex: 0 1 calc(30% - 1rem); /* Flex item: grow, shrink, basis (30% width minus margin) */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.city-card-img{
+  max-width: 100%;
+  border-radius: 10%;
+}
+
+.top-half-card{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding-bottom: 0.5rem;
+}
+
+.city-country-text{
+  padding-top: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.city-country-text p {
+  margin: 0;
+  padding: 0;
+  line-height: 1.7;
+}
+
+.cityname-text{
+  font-weight: 700;
+}
+
+.bottom-half-card{
+  gap: 0.5rem;
+  max-height: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+}
+
+.bottom-half-card p{
+  color: #edf7fb;
+  font-size: 1.3rem;
+}
+
+.star-rating i{
+  font-size: 1.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .city-card {
+        flex: 0 1 calc(45% - 1rem); /* 2 cards per row on smaller screens */
+    }
+}
+
+@media (max-width: 576px) {
+    .city-card {
+        flex: 0 1 calc(100% - 1rem); /* 1 card per row on extra small screens */
+    }
+}
+
 </style>
