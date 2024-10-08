@@ -1,115 +1,144 @@
 <template>
-    <div class="maincities-body-container">
-      <header class="euro-tour-header">
-        <logo class="logo-wrapper">
-          <router-link to="/" class="logo">
-            <img src="@/assets/horizontal-logo.png" alt="Euro Tour logo" />
-          </router-link>
-        </logo>
-        <nav class="navbar">
-          <router-link to="/maincities" class="navbar-item maincities-navbar-item"
-            ><i class="fa-solid fa-city"></i> cities</router-link>
-          <a href="#placesToVisit" class="navbar-item"
-            ><i class="fa-solid fa-map-pin"></i> places to visit</a>
-          <b-dropdown
-            size="lg"
-            variant="link"
-            toggle-class="text-decoration-none"
-            no-caret
-            class="navbar-item dropdown"
-          >
-            <template #button-content>
-              <img src="@/assets/signed-in-icon.png" alt="Signed In" class="dropdown-icon" />
-            </template>
-            <!-- Dropdown items -->
-            <b-dropdown-item class="dropdown-item logout" @click="logout">Log out</b-dropdown-item>
-            <b-dropdown-item class="dropdown-item" to="/profile">Profile</b-dropdown-item>
-          </b-dropdown>
-        </nav>
-      </header>
-
-        <b-container class="search-by-tag-panel">
-
-            <b-row>
-            <b-col col="4">
-                <h2 class="search-cities-text">Search cities by:</h2>
-            </b-col>
-
-            <b-col col="8">
-        <div class="filter-options">
-        <router-link to="/searchCityByTag">
-            <button class="tags-button">tags</button>
+  <div class="maincities-body-container">
+    <header class="euro-tour-header">
+      <logo class="logo-wrapper">
+        <router-link to="/" class="logo">
+          <img src="@/assets/horizontal-logo.png" alt="Euro Tour logo" />
         </router-link>
-
-        <router-link to="/SearchCityByRating">
-            <button class="ratings-button">ratings</button>
+      </logo>
+      <nav class="navbar">
+        <router-link to="/maincities" class="navbar-item maincities-navbar-item">
+          <i class="fa-solid fa-city"></i> cities
         </router-link>
+        <a href="#placesToVisit" class="navbar-item">
+          <i class="fa-solid fa-map-pin"></i> places to visit
+        </a>
+        <b-dropdown
+          size="lg"
+          variant="link"
+          toggle-class="text-decoration-none"
+          no-caret
+          class="navbar-item dropdown"
+        >
+          <template #button-content>
+            <img
+              src="@/assets/signed-in-icon.png"
+              alt="Signed In"
+              class="dropdown-icon"
+            />
+          </template>
+          <b-dropdown-item class="dropdown-item logout" @click="logout">
+            Log out
+          </b-dropdown-item>
+          <b-dropdown-item class="dropdown-item" to="/profile">
+            Profile
+          </b-dropdown-item>
+        </b-dropdown>
+      </nav>
+    </header>
 
-        <i class="fa-solid fa-filter"></i>
-        </div>
-    </b-col>
-    </b-row>
+    <b-container class="search-by-tag-panel">
+      <b-row>
+        <b-col col="4">
+          <h2 class="search-cities-text">Search cities by:</h2>
+        </b-col>
 
-    <b-row>
-      <b-col>
-        <div class="available-tags">
-          <button class="tag-button" @click="toggleTag('historical')">historical</button>
-          <button class="tag-button" @click="toggleTag('quiet')">quiet</button>
-          <button class="tag-button" @click="toggleTag('party')">party</button>
-          <button class="tag-button" @click="toggleTag('architecture')">architecture</button>
-          <button class="tag-button" @click="toggleTag('recently added')">recently added</button>
-          <button class="tag-button" @click="toggleTag('nature')">nature</button>
-          <button class="tag-button" @click="toggleTag('beachy')">beachy</button>
-          <button class="tag-button" @click="toggleTag('warm weather')">warm weather</button>
-          <button class="tag-button" @click="toggleTag('cold weather')">cold weather</button>
-          <button class="tag-button" @click="toggleTag('popular')">popular</button>
-          <button class="tag-button" @click="toggleTag('cheap')">cheap</button>
-          <button class="tag-button" @click="toggleTag('high-end')">high-end</button>
-        </div>
-      </b-col>
-    </b-row>
+        <b-col col="8">
+          <div class="filter-options">
+            <router-link to="/searchCityByTag">
+              <button class="tags-button">tags</button>
+            </router-link>
+            <router-link to="/searchCityByRating">
+              <button class="ratings-button">ratings</button>
+            </router-link>
+            <i class="fa-solid fa-filter"></i>
+          </div>
+        </b-col>
+      </b-row>
 
-    <b-row>
-    <b-col>
-    <h2 class="result-text">selected tags:</h2>
-    </b-col>
+      <b-row>
+        <b-col>
+          <div class="available-tags">
+            <button class="tag-button" @click="toggleTag('historical')">historical</button>
+            <button class="tag-button" @click="toggleTag('quiet')">quiet</button>
+            <button class="tag-button" @click="toggleTag('party')">party</button>
+            <button class="tag-button" @click="toggleTag('architecture')">architecture</button>
+            <button class="tag-button" @click="toggleTag('recently added')">recently added</button>
+            <button class="tag-button" @click="toggleTag('nature')">nature</button>
+            <button class="tag-button" @click="toggleTag('beachy')">beachy</button>
+            <button class="tag-button" @click="toggleTag('warm weather')">warm weather</button>
+            <button class="tag-button" @click="toggleTag('cold weather')">cold weather</button>
+            <button class="tag-button" @click="toggleTag('popular')">popular</button>
+            <button class="tag-button" @click="toggleTag('cheap')">cheap</button>
+            <button class="tag-button" @click="toggleTag('high-end')">high-end</button>
+          </div>
+        </b-col>
+      </b-row>
 
-    <b-col cols="7">
-    <div class="selected-tags">
-      <button
-        v-for="tag in selectedTags"
-        :key="tag"
-        class="tag-button-selected"
-      >
-        {{ tag }}
-      </button>
-    </div>
-    </b-col>
+      <b-row>
+        <b-col>
+          <h2 class="result-text">selected tags:</h2>
+        </b-col>
 
-    <b-col>
-        <button class="clear-button" @click="clearTags">clear all tags</button>
-    </b-col>
-    </b-row>
+        <b-col cols="7">
+          <div class="selected-tags">
+            <button
+              v-for="tag in selectedTags"
+              :key="tag"
+              class="tag-button-selected"
+            >
+              {{ tag }}
+            </button>
+          </div>
+        </b-col>
 
-    <b-row>
-    <b-col col="12">
+        <b-col>
+          <button class="clear-button" @click="clearTags">clear all tags</button>
+        </b-col>
+      </b-row>
 
-    </b-col >
+      <b-row>
+        <b-col col="12">
+          <div v-if="Array.isArray(cities) && cities.length > 0" class="cities-list">
+            <div v-for="city in cities" :key="city._id" class="city-card">
+              <div class="top-half-card">
+                <div class="city-img-wrapper">
+                  <img src="@/assets/London.jpg" class="city-card-img"/>
+                </div>
+                <div class="city-country-text">
+                  <p class="cityname-text">{{ city.cityName }}, </p>
+                  <p>{{ city.country }}</p>
+                </div>
+              </div>
+              <div class="bottom-half-card">
+                <div
+                  v-for="tag in city.tags"
+                  :key="tag"
+                  :class="{'tag-bubble': true, 'tag-bubble-selected': selectedTags.includes(tag), 'tag-bubble-nonselected': !selectedTags.includes(tag)}"
+                >
+                  {{ tag }}
+                </div>
+              </div>
+            </div>
+          </div>
 
-    </b-row>
-
-        </b-container>
+          <div v-else>
+            <h3>No cities found.</h3>
+          </div>
+        </b-col>
+      </b-row>
+    </b-container>
 
     <footer class="footer">
-        <div class="footer-text">
-          <p> &copy; 2024 copyright: eurotrip.com</p>
-        </div>
-        <div class="top-icon">
-          <a href="#"><i class="fa-solid fa-caret-up"></i></a>
-        </div>
-      </footer>
-    </div>
-  </template>
+      <div class="footer-text">
+        <p> &copy; 2024 copyright: eurotrip.com</p>
+      </div>
+      <div class="top-icon">
+        <a href="#"><i class="fa-solid fa-caret-up"></i></a>
+      </div>
+    </footer>
+  </div>
+</template>
 
 <script>
 import { Api } from '@/Api'
@@ -123,47 +152,13 @@ export default {
         'recently added', 'nature', 'beachy', 'warm weather',
         'cold weather', 'popular', 'cheap', 'high-end'
       ],
+      cities: [],
       message: 'none',
-      loggedInStatus: !!localStorage.getItem('x-auth-token') // Reactive property for login status
-    }
-  },
-  computed: {
-    isLoggedIn() {
-      return this.loggedInStatus // Use reactive `loggedInStatus` property
-    }
-  },
-  methods: {
-    getMessage() {
-      Api.get('/')
-        .then(response => {
-          this.message = response.data.message
-        })
-        .catch(error => {
-          this.message = error
-        })
-    },
-    logout() {
-      // Remove the authentication token from localStorage
-      localStorage.removeItem('x-auth-token')
-      console.log('Logged out successfully')
-      // Update the reactive `loggedInStatus` property to force reactivity
-      this.loggedInStatus = false
-      // Redirect the user to the homepage (or login page)
-      this.$router.push('/')
-    },
-    toggleTag(tag) {
-      const tagIndex = this.selectedTags.indexOf(tag)
-      if (tagIndex === -1) {
-        this.selectedTags.push(tag)
-      } else {
-        this.selectedTags.splice(tagIndex, 1)
-      }
-    },
-    clearTags() {
-      this.selectedTags = []
+      loggedInStatus: !!localStorage.getItem('x-auth-token')
     }
   },
   mounted() {
+    this.getCities()
     // Create a link element
     const link = document.createElement('link')
     link.rel = 'stylesheet'
@@ -173,6 +168,44 @@ export default {
     link.referrerPolicy = 'no-referrer'
     // Append the link element to the head
     document.head.appendChild(link)
+  },
+  methods: {
+    async getCities() {
+      try {
+        const params = {
+          tags: this.selectedTags.length ? this.selectedTags.join(',') : undefined
+        }
+
+        const response = await Api.get('/cities', { params })
+        if (response.data && response.data.cities) {
+          this.cities = response.data.cities
+        } else {
+          this.cities = []
+        }
+      } catch (error) {
+        console.error('Error fetching cities:', error)
+        this.cities = []
+      }
+    },
+    logout() {
+      localStorage.removeItem('x-auth-token')
+      console.log('Logged out successfully')
+      this.loggedInStatus = false
+      this.$router.push('/')
+    },
+    toggleTag(tag) {
+      const tagIndex = this.selectedTags.indexOf(tag)
+      if (tagIndex === -1) {
+        this.selectedTags.push(tag)
+      } else {
+        this.selectedTags.splice(tagIndex, 1)
+      }
+      this.getCities() // Fetch cities whenever tags change
+    },
+    clearTags() {
+      this.selectedTags = []
+      this.getCities() // Fetch cities after clearing tags
+    }
   }
 }
 </script>
@@ -198,7 +231,7 @@ export default {
 .search-by-tag-panel {
     background-color: #759cab;
     width: 100rem;
-    height: 50rem;
+    min-height: 50rem;
     margin-bottom: 35px;
     margin-top: 120px;
 }
@@ -315,7 +348,6 @@ export default {
   white-space: nowrap; /* Prevent wrapping of text inside dropdown */
   padding: 0; /* Ensure padding doesn't push content */
   margin: 0;
-  background-color: purple !important;
   border: 1px solid rgba(0, 0, 0, 0.15); /* Consistent border */
   border-radius: 0.25rem;
 }
@@ -324,13 +356,8 @@ export default {
   display: block;
   width: 100%;
   padding: 0.5rem 1rem;
-  color: blueviolet !important;
   text-align: inherit;
   border: none; /* Remove border */
-}
-
-.dropdown-item:hover {
-  background-color: blueviolet /* Hover effect */
 }
 
 .dropdown-icon {
@@ -466,4 +493,99 @@ a img {
         flex-direction: column-reverse;
     }
 }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .city-card {
+        flex: 0 1 calc(45% - 1rem); /* 2 cards per row on smaller screens */
+    }
+}
+
+@media (max-width: 576px) {
+    .city-card {
+        flex: 0 1 calc(100% - 1rem); /* 1 card per row on extra small screens */
+    }
+}
+
+.cities-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 2rem;
+}
+
+.city-card {
+    background-color: #9BA9B6;
+    border: 1px solid #bc672a;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 0.5rem;
+    flex: 0 1 calc(30% - 1rem); /* Flex item: grow, shrink, basis (30% width minus margin) */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.city-card-img{
+  max-width: 100%;
+  border-radius: 10%;
+}
+
+.top-half-card{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding-bottom: 0.5rem;
+}
+
+.city-country-text{
+  padding: 1rem 0;
+  justify-content: center;
+}
+
+.city-country-text p {
+  margin: 0;
+  padding: 0;
+  line-height: 1.7;
+}
+
+.cityname-text{
+  font-weight: 700;
+}
+
+.bottom-half-card{
+  gap: 0.5rem;
+}
+
+.tag-bubble {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 5px;
+    font-size: 0.9rem;
+    text-align: center;
+    border-radius: 12px;
+    border: 1px solid #edf7fb;
+}
+
+.tag-bubble-selected {
+    background-color: #8FC6DF;
+    color: #42515e;
+}
+
+.tag-bubble-nonselected {
+    background-color: #CAC4D0;
+    color: #edf7fb;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .city-card {
+        flex: 0 1 calc(45% - 1rem); /* 2 cards per row on smaller screens */
+    }
+}
+
+@media (max-width: 576px) {
+    .city-card {
+        flex: 0 1 calc(100% - 1rem); /* 1 card per row on extra small screens */
+    }
+}
+
 </style>
