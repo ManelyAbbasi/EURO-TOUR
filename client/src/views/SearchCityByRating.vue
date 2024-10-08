@@ -187,9 +187,24 @@
         <b-col col="12">
           <div v-if="Array.isArray(cities) && cities.length > 0" class="cities-list">
             <div v-for="city in cities" :key="city._id" class="city-card">
-                <p>{{ city.cityName }}</p>
-                <p>{{ city.country }}</p>
-                <p>{{ city.rating }}</p>
+              <div class="top-half-card">
+                <div class="city-img-wrapper">
+                  <img src="@/assets/London.jpg" class="city-card-img"/>
+                </div>
+                <div class="city-country-text">
+                  <p class="cityname-text">{{ city.cityName }}, </p>
+                  <p>{{ city.country }}</p>
+                </div>
+              </div>
+                <div class="bottom-half-card">
+                  <p>{{ city.rating }}</p>
+                  <div class="star-rating">
+                    <!-- Display filled stars -->
+                    <i v-for="n in Math.floor(city.rating)" :key="n" class="fa-solid fa-star" style="color: #bc672a;"></i>
+                    <!-- Display empty stars for remaining ones -->
+                    <i v-for="n in 5 - Math.floor(city.rating)" :key="'empty-' + n" class="fa-regular fa-star" style="color: #bc672a;"></i>
+                  </div>
+                </div>
             </div>
           </div>
 
@@ -311,7 +326,7 @@ export default {
 .search-by-panel {
     background-color: #759cab;
     width: 100rem;
-    height: 50rem;
+    min-height: 50rem;
     margin-bottom: 35px;
     margin-top: 120px;
 }
@@ -639,21 +654,67 @@ a img {
 }
 
 .cities-list {
-    display: flex;               /* Use flexbox for layout */
-    flex-wrap: wrap;            /* Allow cards to wrap onto multiple lines */
-    justify-content: space-around; /* Space out the cards */
-    margin: 2rem;               /* Add some margin around the list */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 2rem;
 }
 
 .city-card {
-    background-color: #fff;     /* Background color for the city cards */
-    border: 1px solid #ccc;     /* Optional: Add border to city cards */
-    border-radius: 8px;         /* Rounded corners */
-    padding: 1rem;              /* Inner padding */
-    margin: 0.5rem;             /* Space between cards */
+    background-color: #9BA9B6;
+    border: 1px solid #bc672a;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 0.5rem;
     flex: 0 1 calc(30% - 1rem); /* Flex item: grow, shrink, basis (30% width minus margin) */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better visibility */
-    text-align: center;         /* Center text within each card */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.city-card-img{
+  max-width: 100%;
+  border-radius: 10%;
+}
+
+.top-half-card{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding-bottom: 0.5rem;
+}
+
+.city-country-text{
+  padding-top: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.city-country-text p {
+  margin: 0;
+  padding: 0;
+  line-height: 1.7;
+}
+
+.cityname-text{
+  font-weight: 700;
+}
+
+.bottom-half-card{
+  gap: 0.5rem;
+  max-height: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+}
+
+.bottom-half-card p{
+  color: #edf7fb;
+  font-size: 1.3rem;
+}
+
+.star-rating i{
+  font-size: 1.5rem;
 }
 
 /* Responsive adjustments */
