@@ -7,11 +7,12 @@
           </router-link>
         </logo>
         <nav class="navbar">
+          <a href="#favourites" class="navbar-item"><i class="fa-regular fa-heart" style="color: #edf7fb;"></i> favourites</a>
           <router-link to="/maincities" class="navbar-item maincities-navbar-item"
             ><i class="fa-solid fa-city"></i> cities</router-link>
           <a href="#placesToVisit" class="navbar-item"
             ><i class="fa-solid fa-map-pin"></i> places to visit</a>
-          <b-dropdown
+            <b-dropdown
             size="lg"
             variant="link"
             toggle-class="text-decoration-none"
@@ -19,11 +20,11 @@
             class="navbar-item dropdown"
           >
             <template #button-content>
-              <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
+              <img src="@/assets/signed-in-icon.png" alt="Signed In" class="dropdown-icon" />
             </template>
             <!-- Dropdown items -->
-            <b-dropdown-item class="dropdown-item" to="/login">Log in</b-dropdown-item>
-            <b-dropdown-item class="dropdown-item" to="/signup">Sign up</b-dropdown-item>
+            <b-dropdown-item class="dropdown-item logout" @click="logout">Log out</b-dropdown-item>
+            <b-dropdown-item class="dropdown-item" to="/profile">Profile</b-dropdown-item>
           </b-dropdown>
         </nav>
       </header>
@@ -211,10 +212,6 @@ export default {
   border: none; /* Remove border */
 }
 
-.dropdown-item:hover {
-  background-color: blueviolet /* Hover effect */
-}
-
 .dropdown-icon {
   max-height: 3rem;
 }
@@ -236,11 +233,6 @@ export default {
 .logo-wrapper img,
 .navbar a:hover .fa-solid {
   color: #bc672a !important;
-}
-
-.maincities-navbar-item,
-.maincities-navbar-item i{
-    color: #bc672a!important;
 }
 
 .logo img{
