@@ -9,6 +9,7 @@ var citiesSchema = new Schema({
     country: { type: String, required: true },
     statistics: { type: String, required: true },
     facts: { type: String, required: true },
+    rating: { type: Number, min: 0.0, max: 5.0 },
     tags: {
         type: [String], 
         required: true,

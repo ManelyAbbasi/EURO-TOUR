@@ -6,7 +6,7 @@ const citiesModel = require("../models/citiesModel");
 
 async function createCity(req, res, next) {
     try {
-        if (!req.user.isAdmin) {
+        if (!req.body.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can create cities." });
         }
 
@@ -40,8 +40,8 @@ async function createCity(req, res, next) {
 async function createPlaceInCity(req, res) {
     const cityId = req.params.id;
     try {
-        if (!req.user.isAdmin) {
-            return res.status(403).json({ message: "Access denied. Only admins can create places in cities." });
+        if (!req.body.isAdmin) {
+            return res.status(403).json({ message: "Access denied. Only admins can create cities." });
         }
 
         const city = await CitiesModel.findById(cityId);
@@ -107,18 +107,30 @@ async function getOneCity(req, res) {
 }
 
 async function getAllCities(req, res) {
-    
     try {
-        const { tags } = req.query;
+        const { tags, minRating, maxRating, sortByRating } = req.query;
 
         let filter = {};
 
         if (tags) {
             const tagsArray = tags.split(','); // Convert tags string to array (comma-separated)
-            filter = { tags: { $all: tagsArray } };
+            filter.tags = { $all: tagsArray };
         }
 
-        const cities = await CitiesModel.find(filter);
+        if (minRating || maxRating) {
+            filter.rating = {};
+            if (minRating) filter.rating.$gte = parseFloat(minRating);
+            if (maxRating) filter.rating.$lte = parseFloat(maxRating);
+        }
+
+        let sortOption = {};
+
+        if (sortByRating) {
+            sortOption.rating = sortByRating === 'asc' ? 1 : -1;
+        }
+
+        const cities = await CitiesModel.find(filter).sort(sortOption);
+
         if (!cities || cities.length === 0) {
             return res.status(404).json({ message: 'No cities found.' });
         }
@@ -172,7 +184,7 @@ async function updateCity(req, res, next) {
     const cityId = req.params.id;
 
     try {
-        if (!req.user.isAdmin) {
+        if (!req.body.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can update cities." });
         }
 
@@ -225,7 +237,7 @@ async function patchCity(req, res, next){
     const cityId = req.params.id;
 
     try{
-        if (!req.user.isAdmin) {
+        if (!req.body.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can patch places." });
         }
         const city = await CitiesModel.findById(cityId);

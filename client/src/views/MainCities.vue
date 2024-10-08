@@ -1,11 +1,11 @@
 <template>
     <div class="maincities-body-container">
       <header class="euro-tour-header">
-        <logo class="logo-wrapper">
+        <div class="logo-wrapper">
           <router-link to="/" class="logo">
             <img src="@/assets/horizontal-logo.png" alt="Euro Tour logo" />
           </router-link>
-        </logo>
+        </div>
         <nav class="navbar">
           <router-link to="/maincities" class="navbar-item maincities-navbar-item"
             ><i class="fa-solid fa-city"></i> cities</router-link>
@@ -19,11 +19,11 @@
             class="navbar-item dropdown"
           >
             <template #button-content>
-              <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
+              <img src="@/assets/signed-in-icon.png" alt="Signed In" class="dropdown-icon" />
             </template>
             <!-- Dropdown items -->
-            <b-dropdown-item class="dropdown-item" to="/login">Log in</b-dropdown-item>
-            <b-dropdown-item class="dropdown-item" to="/signup">Sign up</b-dropdown-item>
+            <b-dropdown-item class="dropdown-item logout" @click="logout">Log out</b-dropdown-item>
+            <b-dropdown-item class="dropdown-item" to="/profile">Profile</b-dropdown-item>
           </b-dropdown>
         </nav>
       </header>
@@ -131,6 +131,8 @@
   </template>
 
 <script>
+import { Api } from '@/Api'
+
 export default {
   data() {
     return {
@@ -156,12 +158,37 @@ export default {
         'Area: 105.4 km²',
         'Area: 318 km²'
       ],
-      tags: []
+      tags: [],
+      message: 'none',
+      loggedInStatus: !!localStorage.getItem('x-auth-token') // Reactive property for login status
+    }
+  },
+  computed: {
+    isLoggedIn() {
+      return this.loggedInStatus // Use reactive `loggedInStatus` property
     }
   },
   methods: {
     toggleFavorite() {
       this.isFavorite = !this.isFavorite // Toggle between true and false
+    },
+    getMessage() {
+      Api.get('/')
+        .then(response => {
+          this.message = response.data.message
+        })
+        .catch(error => {
+          this.message = error
+        })
+    },
+    logout() {
+      // Remove the authentication token from localStorage
+      localStorage.removeItem('x-auth-token')
+      console.log('Logged out successfully')
+      // Update the reactive `loggedInStatus` property to force reactivity
+      this.loggedInStatus = false
+      // Redirect the user to the homepage (or login page)
+      this.$router.push('/')
     }
   },
   mounted() {

@@ -19,11 +19,11 @@
             class="navbar-item dropdown"
           >
             <template #button-content>
-              <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
+              <img src="@/assets/signed-in-icon.png" alt="Signed In" class="dropdown-icon" />
             </template>
             <!-- Dropdown items -->
-            <b-dropdown-item class="dropdown-item" to="/login">Log in</b-dropdown-item>
-            <b-dropdown-item class="dropdown-item" to="/signup">Sign up</b-dropdown-item>
+            <b-dropdown-item class="dropdown-item logout" @click="logout">Log out</b-dropdown-item>
+            <b-dropdown-item class="dropdown-item" to="/profile">Profile</b-dropdown-item>
           </b-dropdown>
         </nav>
       </header>
@@ -112,6 +112,8 @@
   </template>
 
 <script>
+import { Api } from '@/Api'
+
 export default {
   data() {
     return {
@@ -120,7 +122,45 @@ export default {
         'historical', 'quiet', 'party', 'architecture',
         'recently added', 'nature', 'beachy', 'warm weather',
         'cold weather', 'popular', 'cheap', 'high-end'
-      ]
+      ],
+      message: 'none',
+      loggedInStatus: !!localStorage.getItem('x-auth-token') // Reactive property for login status
+    }
+  },
+  computed: {
+    isLoggedIn() {
+      return this.loggedInStatus // Use reactive `loggedInStatus` property
+    }
+  },
+  methods: {
+    getMessage() {
+      Api.get('/')
+        .then(response => {
+          this.message = response.data.message
+        })
+        .catch(error => {
+          this.message = error
+        })
+    },
+    logout() {
+      // Remove the authentication token from localStorage
+      localStorage.removeItem('x-auth-token')
+      console.log('Logged out successfully')
+      // Update the reactive `loggedInStatus` property to force reactivity
+      this.loggedInStatus = false
+      // Redirect the user to the homepage (or login page)
+      this.$router.push('/')
+    },
+    toggleTag(tag) {
+      const tagIndex = this.selectedTags.indexOf(tag)
+      if (tagIndex === -1) {
+        this.selectedTags.push(tag)
+      } else {
+        this.selectedTags.splice(tagIndex, 1)
+      }
+    },
+    clearTags() {
+      this.selectedTags = []
     }
   },
   mounted() {
@@ -133,19 +173,6 @@ export default {
     link.referrerPolicy = 'no-referrer'
     // Append the link element to the head
     document.head.appendChild(link)
-  },
-  methods: {
-    toggleTag(tag) {
-      const tagIndex = this.selectedTags.indexOf(tag)
-      if (tagIndex === -1) {
-        this.selectedTags.push(tag)
-      } else {
-        this.selectedTags.splice(tagIndex, 1)
-      }
-    },
-    clearTags() {
-      this.selectedTags = []
-    }
   }
 }
 </script>
