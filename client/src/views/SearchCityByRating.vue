@@ -52,8 +52,16 @@
     </b-row>
     <b-row>
       <b-col><h4>sort by:</h4></b-col>
-      <b-col><button class="sort-by-button" @click="recordSortOption(desc)" :class="{ active: activeSort === 'desc' }" >highest to lowest</button></b-col>
-      <b-col><button class="sort-by-button" @click="recordSortOption(asc)" :class="{ active: activeSort === 'asc' }" >lowest to highest</button></b-col>
+      <b-col><button
+      class="sort-by-button"
+      @click="recordSortOption('desc')"
+      :class="{ active: activeSort === 'desc' }"
+    >highest to lowest</button></b-col>
+      <b-col><button
+      class="sort-by-button"
+      @click="recordSortOption('asc')"
+      :class="{ active: activeSort === 'asc' }"
+    >lowest to highest</button></b-col>
     </b-row>
     <b-row class="range-of-ratings-row" >
       <b-col class="range-rating-title">
@@ -201,7 +209,8 @@ export default {
     return {
       value: '2',
       activeMinRating: null,
-      activeMaxRating: null
+      activeMaxRating: null,
+      activeSort: null
     }
   },
 
