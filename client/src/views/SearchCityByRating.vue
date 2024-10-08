@@ -7,32 +7,17 @@
           </router-link>
         </div>
         <nav class="navbar">
-          <router-link to="/maincities" class="navbar-item maincities-navbar-item" v-if="isLoggedIn"
+          <a href="#favourites" class="navbar-item"><i class="fa-regular fa-heart" style="color: #edf7fb;"></i> favourites</a>
+          <router-link to="/maincities" class="navbar-item maincities-navbar-item"
             ><i class="fa-solid fa-city"></i> cities</router-link>
-          <a href="#placesToVisit" class="navbar-item" v-if="isLoggedIn"
+          <a href="#placesToVisit" class="navbar-item"
             ><i class="fa-solid fa-map-pin"></i> places to visit</a>
-            <b-dropdown
-          size="lg"
-          variant="link"
-          toggle-class="text-decoration-none"
-          no-caret
-          class="navbar-item dropdown"
-          v-if="!isLoggedIn"
-        >
-          <template #button-content>
-            <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
-          </template>
-          <!-- Dropdown items -->
-          <b-dropdown-item class="dropdown-item" to="/login">Log in</b-dropdown-item>
-          <b-dropdown-item class="dropdown-item" to="/signup">Sign up</b-dropdown-item>
-        </b-dropdown>
         <b-dropdown
           size="lg"
           variant="link"
           toggle-class="text-decoration-none"
           no-caret
           class="navbar-item dropdown"
-          v-if="isLoggedIn"
         >
           <template #button-content>
             <img src="@/assets/signed-in-icon.png" alt="Sign In" class="dropdown-icon" />
@@ -462,10 +447,6 @@ h5{
   color: blueviolet !important;
   text-align: inherit;
   border: none; /* Remove border */
-}
-
-.dropdown-item:hover {
-  background-color: blueviolet /* Hover effect */
 }
 
 .dropdown-icon {
