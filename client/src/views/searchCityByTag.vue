@@ -144,12 +144,14 @@ export default {
   },
   mounted() {
     this.getCities()
+    // Create a link element
     const link = document.createElement('link')
     link.rel = 'stylesheet'
     link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css'
     link.integrity = 'sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=='
     link.crossOrigin = 'anonymous'
     link.referrerPolicy = 'no-referrer'
+    // Append the link element to the head
     document.head.appendChild(link)
   },
   methods: {
@@ -158,6 +160,7 @@ export default {
         const params = {
           tags: this.selectedTags.length ? this.selectedTags.join(',') : undefined
         }
+
         const response = await Api.get('/cities', { params })
         if (response.data && response.data.cities) {
           this.cities = response.data.cities
@@ -182,11 +185,11 @@ export default {
       } else {
         this.selectedTags.splice(tagIndex, 1)
       }
-      this.getCities()
+      this.getCities() // Fetch cities whenever tags change
     },
     clearTags() {
       this.selectedTags = []
-      this.getCities()
+      this.getCities() // Fetch cities after clearing tags
     }
   }
 }
@@ -479,6 +482,37 @@ a img {
     }
     .footer{
         flex-direction: column-reverse;
+    }
+}
+
+.cities-list {
+    display: flex;               /* Use flexbox for layout */
+    flex-wrap: wrap;            /* Allow cards to wrap onto multiple lines */
+    justify-content: space-around; /* Space out the cards */
+    margin: 2rem;               /* Add some margin around the list */
+}
+
+.city-card {
+    background-color: #fff;     /* Background color for the city cards */
+    border: 1px solid #ccc;     /* Optional: Add border to city cards */
+    border-radius: 8px;         /* Rounded corners */
+    padding: 1rem;              /* Inner padding */
+    margin: 0.5rem;             /* Space between cards */
+    flex: 0 1 calc(30% - 1rem); /* Flex item: grow, shrink, basis (30% width minus margin) */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better visibility */
+    text-align: center;         /* Center text within each card */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .city-card {
+        flex: 0 1 calc(45% - 1rem); /* 2 cards per row on smaller screens */
+    }
+}
+
+@media (max-width: 576px) {
+    .city-card {
+        flex: 0 1 calc(100% - 1rem); /* 1 card per row on extra small screens */
     }
 }
 
