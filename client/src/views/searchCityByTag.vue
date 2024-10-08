@@ -7,12 +7,12 @@
         </router-link>
       </logo>
       <nav class="navbar">
-        <router-link to="/maincities" class="navbar-item maincities-navbar-item"
-          ><i class="fa-solid fa-city"></i> cities</router-link
-        >
-        <a href="#placesToVisit" class="navbar-item"
-          ><i class="fa-solid fa-map-pin"></i> places to visit</a
-        >
+        <router-link to="/maincities" class="navbar-item maincities-navbar-item">
+          <i class="fa-solid fa-city"></i> cities
+        </router-link>
+        <a href="#placesToVisit" class="navbar-item">
+          <i class="fa-solid fa-map-pin"></i> places to visit
+        </a>
         <b-dropdown
           size="lg"
           variant="link"
@@ -27,10 +27,12 @@
               class="dropdown-icon"
             />
           </template>
-          <b-dropdown-item class="dropdown-item logout" @click="logout"
-            >Log out</b-dropdown-item
-          >
-          <b-dropdown-item class="dropdown-item" to="/profile">Profile</b-dropdown-item>
+          <b-dropdown-item class="dropdown-item logout" @click="logout">
+            Log out
+          </b-dropdown-item>
+          <b-dropdown-item class="dropdown-item" to="/profile">
+            Profile
+          </b-dropdown-item>
         </b-dropdown>
       </nav>
     </header>
@@ -46,11 +48,9 @@
             <router-link to="/searchCityByTag">
               <button class="tags-button">tags</button>
             </router-link>
-
             <router-link to="/searchCityByRating">
               <button class="ratings-button">ratings</button>
             </router-link>
-
             <i class="fa-solid fa-filter"></i>
           </div>
         </b-col>
@@ -59,11 +59,7 @@
       <b-row>
         <b-col>
           <div class="available-tags">
-            <button
-              class="tag-button"
-              @click="toggleTag('historical')"
-              >historical</button
-            >
+            <button class="tag-button" @click="toggleTag('historical')">historical</button>
             <button class="tag-button" @click="toggleTag('quiet')">quiet</button>
             <button class="tag-button" @click="toggleTag('party')">party</button>
             <button class="tag-button" @click="toggleTag('architecture')">architecture</button>
@@ -102,19 +98,20 @@
       </b-row>
 
       <b-row>
-      <b-col col="12">
-        <div v-if="Array.isArray(cities) && cities.length > 0" class="cities-list">
-          <div v-for="city in cities" :key="city._id" class="city-card">
-            <h3>{{ city.name }}</h3>
-            <p>Rating: {{ city.rating }}</p>
-            <p>Tags: {{ city.tags.join(', ') }}</p>
+        <b-col col="12">
+          <div v-if="Array.isArray(cities) && cities.length > 0" class="cities-list">
+    <div v-for="city in cities" :key="city._id" class="city-card">
+        <p>{{ city.cityName }}</p>
+        <p>{{ city.country }}</p>
+        <p>{{ city.tags.join(' ') }}</p>
+    </div>
+</div>
+
+          <div v-else>
+            <h3>No cities found.</h3>
           </div>
-        </div>
-        <div v-else>
-          <h3>No cities found.</h3>
-        </div>
-      </b-col>
-    </b-row>
+        </b-col>
+      </b-row>
     </b-container>
 
     <footer class="footer">
@@ -147,6 +144,15 @@ export default {
   },
   mounted() {
     this.getCities()
+    // Create a link element
+    const link = document.createElement('link')
+    link.rel = 'stylesheet'
+    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css'
+    link.integrity = 'sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=='
+    link.crossOrigin = 'anonymous'
+    link.referrerPolicy = 'no-referrer'
+    // Append the link element to the head
+    document.head.appendChild(link)
   },
   methods: {
     async getCities() {
@@ -166,7 +172,6 @@ export default {
       localStorage.removeItem('x-auth-token')
       console.log('Logged out successfully')
       this.loggedInStatus = false
-      // Redirect the user to the homepage (or login page)
       this.$router.push('/')
     },
     toggleTag(tag) {
@@ -180,20 +185,6 @@ export default {
     clearTags() {
       this.selectedTags = []
     }
-  },
-  // eslint-disable-next-line no-dupe-keys
-  mounted() {
-    this.getCities() // Fetch cities when component mounts
-
-    // Create a link element
-    const link = document.createElement('link')
-    link.rel = 'stylesheet'
-    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css'
-    link.integrity = 'sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=='
-    link.crossOrigin = 'anonymous'
-    link.referrerPolicy = 'no-referrer'
-    // Append the link element to the head
-    document.head.appendChild(link)
   }
 }
 </script>
@@ -487,4 +478,36 @@ a img {
         flex-direction: column-reverse;
     }
 }
+
+.cities-list {
+    display: flex;               /* Use flexbox for layout */
+    flex-wrap: wrap;            /* Allow cards to wrap onto multiple lines */
+    justify-content: space-around; /* Space out the cards */
+    margin: 2rem;               /* Add some margin around the list */
+}
+
+.city-card {
+    background-color: #fff;     /* Background color for the city cards */
+    border: 1px solid #ccc;     /* Optional: Add border to city cards */
+    border-radius: 8px;         /* Rounded corners */
+    padding: 1rem;              /* Inner padding */
+    margin: 0.5rem;             /* Space between cards */
+    flex: 0 1 calc(30% - 1rem); /* Flex item: grow, shrink, basis (30% width minus margin) */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better visibility */
+    text-align: center;         /* Center text within each card */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .city-card {
+        flex: 0 1 calc(45% - 1rem); /* 2 cards per row on smaller screens */
+    }
+}
+
+@media (max-width: 576px) {
+    .city-card {
+        flex: 0 1 calc(100% - 1rem); /* 1 card per row on extra small screens */
+    }
+}
+
 </style>
