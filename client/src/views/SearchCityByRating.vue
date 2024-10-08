@@ -222,7 +222,7 @@ export default {
       activeMaxRating: null,
       activeSort: null,
       cities: [],
-      ratings: [1, 2, 3, 4, 5], // Example ratings for UI selection
+      ratings: [1, 2, 3, 4, 5],
       sortOptions: [
         { label: 'Rating: Low to High', value: 'asc' },
         { label: 'Rating: High to Low', value: 'desc' }
@@ -245,14 +245,13 @@ export default {
   methods: {
     async getCities() {
       try {
-        // Build query params for minRating, maxRating, and sortByRating
+        // Query params for minRating, maxRating, and sortByRating
         const params = {}
 
         if (this.activeMinRating) params.minRating = this.activeMinRating
         if (this.activeMaxRating) params.maxRating = this.activeMaxRating
         if (this.activeSort) params.sortByRating = this.activeSort
 
-        // Make the API request with the query params
         const response = await Api.get('/cities', { params })
 
         if (response.data && response.data.cities) {
@@ -267,25 +266,25 @@ export default {
     },
     recordSortOption(option) {
       this.activeSort = option
-      this.getCities() // Re-fetch cities with the new sort option
+      this.getCities()
     },
-    sselectMinRating(minRating) {
+    selectMinRating(minRating) {
       if (!this.activeMaxRating || Number(minRating) <= Number(this.activeMaxRating)) {
         this.activeMinRating = minRating
-        this.getCities() // Re-fetch cities with the new min rating
+        this.getCities()
       }
     },
     selectMaxRating(maxRating) {
       if (!this.activeMinRating || Number(maxRating) >= Number(this.activeMinRating)) {
         this.activeMaxRating = maxRating
-        this.getCities() // Re-fetch cities with the new max rating
+        this.getCities()
       }
     },
     resetFilters() {
       this.activeMinRating = null
       this.activeMaxRating = null
       this.activeSort = null
-      this.getCities() // Fetch cities without filters
+      this.getCities()
     }
   }
 }
