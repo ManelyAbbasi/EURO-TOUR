@@ -184,11 +184,20 @@
     </b-row>
 
     <b-row>
-    <b-col col="12">
+        <b-col col="12">
+          <div v-if="Array.isArray(cities) && cities.length > 0" class="cities-list">
+            <div v-for="city in cities" :key="city._id" class="city-card">
+                <p>{{ city.cityName }}</p>
+                <p>{{ city.country }}</p>
+                <p>{{ city.rating }}</p>
+            </div>
+          </div>
 
-    </b-col >
-
-    </b-row>
+          <div v-else>
+            <h3>No cities found.</h3>
+          </div>
+        </b-col>
+      </b-row>
 
         </b-container>
 
@@ -204,17 +213,25 @@
   </template>
 
 <script>
+import { Api } from '@/Api'
+
 export default {
   data() {
     return {
-      value: '2',
       activeMinRating: null,
       activeMaxRating: null,
-      activeSort: null
+      activeSort: null,
+      cities: [],
+      ratings: [1, 2, 3, 4, 5], // Example ratings for UI selection
+      sortOptions: [
+        { label: 'Rating: Low to High', value: 'asc' },
+        { label: 'Rating: High to Low', value: 'desc' }
+      ]
     }
   },
 
   mounted() {
+    this.getCities()
     // Create a link element
     const link = document.createElement('link')
     link.rel = 'stylesheet'
@@ -226,19 +243,49 @@ export default {
     document.head.appendChild(link)
   },
   methods: {
-    recordSortOption(option) {
-      this.activeSort = option // Set the active button when clicked
-      // Handle the sorting logic here if needed
+    async getCities() {
+      try {
+        // Build query params for minRating, maxRating, and sortByRating
+        const params = {}
+
+        if (this.activeMinRating) params.minRating = this.activeMinRating
+        if (this.activeMaxRating) params.maxRating = this.activeMaxRating
+        if (this.activeSort) params.sortByRating = this.activeSort
+
+        // Make the API request with the query params
+        const response = await Api.get('/cities', { params })
+
+        if (response.data && response.data.cities) {
+          this.cities = response.data.cities
+        } else {
+          this.cities = []
+        }
+      } catch (error) {
+        console.error('Error fetching cities:', error)
+        this.cities = []
+      }
     },
-    selectMinRating(minRating) {
+    recordSortOption(option) {
+      this.activeSort = option
+      this.getCities() // Re-fetch cities with the new sort option
+    },
+    sselectMinRating(minRating) {
       if (!this.activeMaxRating || Number(minRating) <= Number(this.activeMaxRating)) {
         this.activeMinRating = minRating
+        this.getCities() // Re-fetch cities with the new min rating
       }
     },
     selectMaxRating(maxRating) {
       if (!this.activeMinRating || Number(maxRating) >= Number(this.activeMinRating)) {
         this.activeMaxRating = maxRating
+        this.getCities() // Re-fetch cities with the new max rating
       }
+    },
+    resetFilters() {
+      this.activeMinRating = null
+      this.activeMaxRating = null
+      this.activeSort = null
+      this.getCities() // Fetch cities without filters
     }
   }
 }
@@ -591,4 +638,36 @@ a img {
         flex-direction: column-reverse;
     }
 }
+
+.cities-list {
+    display: flex;               /* Use flexbox for layout */
+    flex-wrap: wrap;            /* Allow cards to wrap onto multiple lines */
+    justify-content: space-around; /* Space out the cards */
+    margin: 2rem;               /* Add some margin around the list */
+}
+
+.city-card {
+    background-color: #fff;     /* Background color for the city cards */
+    border: 1px solid #ccc;     /* Optional: Add border to city cards */
+    border-radius: 8px;         /* Rounded corners */
+    padding: 1rem;              /* Inner padding */
+    margin: 0.5rem;             /* Space between cards */
+    flex: 0 1 calc(30% - 1rem); /* Flex item: grow, shrink, basis (30% width minus margin) */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better visibility */
+    text-align: center;         /* Center text within each card */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .city-card {
+        flex: 0 1 calc(45% - 1rem); /* 2 cards per row on smaller screens */
+    }
+}
+
+@media (max-width: 576px) {
+    .city-card {
+        flex: 0 1 calc(100% - 1rem); /* 1 card per row on extra small screens */
+    }
+}
+
 </style>
