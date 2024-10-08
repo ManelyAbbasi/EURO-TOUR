@@ -327,7 +327,7 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  padding: 1rem 5%; /* Adjust padding for more space */
+  padding: 1rem 5%;
   background-color: rgba(155, 169, 182, 1);
   display: flex;
   justify-content: space-between;
@@ -335,21 +335,28 @@ export default {
   z-index: 900;
 }
 
-.b-dropdown .dropdown-menu {
-  width: auto; /* Ensure the width adjusts to content */
-  white-space: nowrap; /* Prevent wrapping of text inside dropdown */
-  padding: 0; /* Ensure padding doesn't push content */
-  margin: 0;
-  border: 1px solid rgba(0, 0, 0, 0.15); /* Consistent border */
-  border-radius: 0.25rem;
-}
-
-.b-dropdown .dropdown-item{
+.b-dropdown .dropdown-item {
   display: block;
   width: 100%;
   padding: 0.5rem 1rem;
   text-align: inherit;
-  border: none; /* Remove border */
+  border: none;
+  font-size: 1.5rem;
+  color: #edf7fb;
+  transition: color 0.3s;
+}
+
+.b-dropdown .dropdown-item:hover {
+  color: #bc672a !important;
+}
+
+.navbar-item.dropdown .dropdown-item {
+  font-size: 1rem;
+  color: #edf7fb !important;
+}
+
+.dropdown-item {
+  margin: 0;
 }
 
 .dropdown-icon {
@@ -357,7 +364,7 @@ export default {
 }
 
 .navbar-item {
-  border: none; /* Remove borders to prevent overflow */
+  border: none;
   margin: 0 1rem;
   text-decoration: none;
 }

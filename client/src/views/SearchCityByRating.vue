@@ -347,7 +347,7 @@ export default {
 
 .filter-options {
   display: flex;
-  gap: 4rem; /* Adds space between the buttons */
+  gap: 4rem;
   margin-right: 10rem;
 }
 
@@ -457,7 +457,7 @@ h4 {
 .min-rating-buttons,
 .max-rating-buttons {
     display: flex;
-    gap: 1.8rem; /* Space between buttons */
+    gap: 1.8rem;
     margin-left: 2rem;
 }
 
@@ -474,8 +474,8 @@ h4 {
     height: 1.2rem;
     background-color: rgba(0, 0, 0, 0.301);
     cursor: pointer;
-    border: 2px solid transparent; /* For a smooth transition */
-    transition: background-color 0.3s, border-color 0.3s; /* Transition effect */
+    border: 2px solid transparent;
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 .min-button:hover,
@@ -497,7 +497,7 @@ h5{
   top: 0;
   left: 0;
   width: 100%;
-  padding: 1rem 5%; /* Adjust padding for more space */
+  padding: 1rem 5%;
   background-color: rgba(155, 169, 182, 1);
   display: flex;
   justify-content: space-between;
@@ -505,23 +505,28 @@ h5{
   z-index: 900;
 }
 
-.b-dropdown .dropdown-menu {
-  width: auto; /* Ensure the width adjusts to content */
-  white-space: nowrap; /* Prevent wrapping of text inside dropdown */
-  padding: 0; /* Ensure padding doesn't push content */
-  margin: 0;
-  background-color: purple !important;
-  border: 1px solid rgba(0, 0, 0, 0.15); /* Consistent border */
-  border-radius: 0.25rem;
-}
-
-.b-dropdown .dropdown-item{
+.b-dropdown .dropdown-item {
   display: block;
   width: 100%;
   padding: 0.5rem 1rem;
-  color: blueviolet !important;
   text-align: inherit;
-  border: none; /* Remove border */
+  border: none;
+  font-size: 1.5rem;
+  color: #edf7fb;
+  transition: color 0.3s;
+}
+
+.b-dropdown .dropdown-item:hover {
+  color: #bc672a !important;
+}
+
+.navbar-item.dropdown .dropdown-item {
+  font-size: 1rem;
+  color: #edf7fb !important;
+}
+
+.dropdown-item {
+  margin: 0;
 }
 
 .dropdown-icon {
@@ -529,7 +534,7 @@ h5{
 }
 
 .navbar-item {
-  border: none; /* Remove borders to prevent overflow */
+  border: none;
   margin: 0 1rem;
   text-decoration: none;
 }
