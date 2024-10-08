@@ -255,10 +255,6 @@ export default {
   border: none; /* Remove border */
 }
 
-.dropdown-item:hover {
-  background-color: blueviolet /* Hover effect */
-}
-
 .dropdown-icon {
   max-height: 3rem;
 }
