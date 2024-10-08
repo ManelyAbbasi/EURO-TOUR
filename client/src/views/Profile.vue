@@ -147,6 +147,11 @@ export default {
     saveChanges() {
       // Show the "saved!" message when the button is clicked
       this.isSaved = true
+    },
+    logout() {
+      localStorage.removeItem('x-auth-token')
+      this.loggedInStatus = false
+      this.$router.push('/')
     }
   },
   mounted() {

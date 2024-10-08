@@ -239,6 +239,11 @@ export default {
       if (!this.activeMinRating || Number(maxRating) >= Number(this.activeMinRating)) {
         this.activeMaxRating = maxRating
       }
+    },
+    logout() {
+      localStorage.removeItem('x-auth-token')
+      this.loggedInStatus = false
+      this.$router.push('/')
     }
   }
 }
