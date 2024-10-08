@@ -87,9 +87,10 @@
               <h3>Why join us?</h3>
               <div class="get-to-wrapper-text">
                 <p>With an account you can:</p>
-                <p>• Get personalised recommendations</p>
+                <p>• Discover cities to travel to</p>
+                <p>• Look for places to visit in cities</p>
                 <p>• Favourite cities and places</p>
-                <p>• Leave reviews and ratings</p>
+                <p>• Find cities and places to visit based on your preferences</p>
               </div>
             </template>
 
@@ -155,22 +156,28 @@ export default {
       const textElement = document.querySelector('.typewriter-hello')
       if (!textElement) return // Prevent errors if the element is not found
 
-      const messages = ['Hello!', 'Hola!', 'Bonjour!', 'Ciao!', 'Salut!', 'Hallo!', 'Cześć!']
+      const messages = ['Hello!', 'Hola!', 'Bonjour!', 'Ciao!', 'Salut!', 'Hallo!', 'Cześć!', 'Ahoj!', 'Bok!', 'Geia sas!', 'Olá!', 'Jó napot!']
       let index = 0
+      let timeoutId // Variable to store the timeout ID
 
       const updateText = () => {
         textElement.textContent = messages[index] // Update the text content
         index = (index + 1) % messages.length // Cycle through the messages
       }
 
-      // Listen for the animationend event
-      textElement.addEventListener('animationend', () => {
+      const handleAnimationEnd = () => {
+        clearTimeout(timeoutId) // Clear any existing timeout to avoid conflicts
         updateText() // Update the text when animation ends
         textElement.classList.remove('active') // Remove class to reset animation
-        setTimeout(() => {
+
+        // Add a small delay (e.g., 500 milliseconds) before restarting the animation
+        timeoutId = setTimeout(() => {
           textElement.classList.add('active') // Re-add class to trigger animation again
-        }) // Small delay to ensure the animation restarts smoothly
-      })
+        }) // Adjust the delay time here as needed
+      }
+
+      // Listen for the animationend event
+      textElement.addEventListener('animationend', handleAnimationEnd)
 
       // Initialize the first text and start the animation
       updateText()
