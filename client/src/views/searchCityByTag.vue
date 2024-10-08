@@ -231,7 +231,7 @@ export default {
 .search-by-tag-panel {
     background-color: #759cab;
     width: 100rem;
-    height: 50rem;
+    min-height: 50rem;
     margin-bottom: 35px;
     margin-top: 120px;
 }
