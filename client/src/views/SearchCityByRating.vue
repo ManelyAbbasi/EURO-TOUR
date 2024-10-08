@@ -69,7 +69,6 @@
       <b-col><h4>sort by:</h4></b-col>
       <b-col><button class="sort-by-button" @click="recordSortOption(desc)" :class="{ active: activeSort === 'desc' }" >highest to lowest</button></b-col>
       <b-col><button class="sort-by-button" @click="recordSortOption(asc)" :class="{ active: activeSort === 'asc' }" >lowest to highest</button></b-col>
-      <b-col></b-col>
     </b-row>
     <b-row class="range-of-ratings-row" >
       <b-col class="range-rating-title">
@@ -338,6 +337,7 @@ h4 {
     font-size: 1.1rem;
     margin-top: 4.4rem;
     transition: all 0.5s;
+    margin-right: 2.5rem;
 }
 
 .sort-by-button:hover{
