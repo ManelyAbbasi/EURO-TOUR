@@ -7,7 +7,7 @@
 
       <nav class="navbar">
         <router-link to="/Favourites" class="navbar-item" v-if="isLoggedIn">
-          <i class="fa-regular fa-heart" style="color: #edf7fb;"></i> favourites
+          <i class="fa-solid fa-heart" style="color: #edf7fb;"></i> favourites
       </router-link>
       <router-link to="/maincities" class="navbar-item" v-if="isLoggedIn">
           <i class="fa-solid fa-city" style="color: #edf7fb;"></i> cities

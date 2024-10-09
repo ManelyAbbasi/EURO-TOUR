@@ -7,12 +7,15 @@
         </router-link>
       </logo>
       <nav class="navbar">
-        <router-link to="/maincities" class="navbar-item maincities-navbar-item">
+        <router-link to="/favourites" class="navbar-item maincities-navbar-item active">
+          <i class="fa-solid fa-heart"></i> favourites
+        </router-link>
+        <router-link to="/maincities" class="navbar-item">
           <i class="fa-solid fa-city"></i> cities
         </router-link>
-        <a href="#placesToVisit" class="navbar-item">
+        <router-link to="/placesToVisit" class="navbar-item">
           <i class="fa-solid fa-map-pin"></i> places to visit
-        </a>
+        </router-link>
         <b-dropdown
           size="lg"
           variant="link"
@@ -41,7 +44,7 @@
           <i class="fa-regular fa-heart" style="color: #bc672a;"></i>
         </div>
         <h2>You currently have no favourites</h2>
-        <p>cities and places you save will be shown here</p>
+        <p>Cities and places you save will be shown here</p>
       </div>
 
       <!-- Favourites found -->
