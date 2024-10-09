@@ -7,12 +7,12 @@
         </router-link>
       </logo>
       <nav class="navbar">
-        <router-link to="/maincities" class="navbar-item maincities-navbar-item"
-          ><i class="fa-solid fa-city"></i> cities</router-link
-        >
-        <a href="#placesToVisit" class="navbar-item"
-          ><i class="fa-solid fa-map-pin"></i> places to visit</a
-        >
+        <router-link to="/maincities" class="navbar-item maincities-navbar-item">
+          <i class="fa-solid fa-city"></i> cities
+        </router-link>
+        <a href="#placesToVisit" class="navbar-item">
+          <i class="fa-solid fa-map-pin"></i> places to visit
+        </a>
         <b-dropdown
           size="lg"
           variant="link"
@@ -23,7 +23,6 @@
           <template #button-content>
             <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
           </template>
-          <!-- Dropdown items, rendered based on login status -->
           <template v-if="isLoggedIn">
             <b-dropdown-item class="dropdown-item" @click="logout">Log out</b-dropdown-item>
             <b-dropdown-item class="dropdown-item" to="/profile">Profile</b-dropdown-item>
@@ -36,21 +35,31 @@
       </nav>
     </header>
 
-    <!-- No Favourites Page -->
     <div class="favourites-container">
-      <div v-if="favourites.length === 0" class="no-favourites">
-        <!-- No Favourites Layout -->
+      <div v-if="favourites.favouriteCities.length === 0 && favourites.favouritePlaces.length === 0" class="no-favourites">
         <div class="empty-heart-icon">
           <i class="fa-regular fa-heart" style="color: #bc672a;"></i>
         </div>
         <h2>You currently have no favourites</h2>
         <p>cities and places you save will be shown here</p>
       </div>
-    </div>
 
-    <!-- Message indicating if logged in or not -->
-    <div class="login-status-message">
-      <h3>{{ isLoggedIn ? 'You are logged in' : 'You are not logged in' }}</h3>
+      <!-- Favourites found -->
+      <div v-else>
+        <!-- Cities -->
+        <div v-if="Array.isArray(favourites.favouriteCities) && favourites.favouriteCities.length > 0" class="cities-list">
+          <div v-for="city in favourites.favouriteCities" :key="city.cityId" class="favourite-box">
+            <p class="favourite-text">{{ city.cityName }}, {{ city.country }}</p>
+          </div>
+        </div>
+
+        <!-- Places -->
+        <div v-if="Array.isArray(favourites.favouritePlaces) && favourites.favouritePlaces.length > 0" class="places-list">
+          <div v-for="place in favourites.favouritePlaces" :key="place.placeId" class="favourite-box">
+            <p class="favourite-text">{{ place.placeName }}, {{ place.cityName }}</p>
+          </div>
+        </div>
+      </div>
     </div>
 
     <footer class="footer">
@@ -65,10 +74,12 @@
 </template>
 
 <script>
+import { Api } from '@/Api'
+
 export default {
   data() {
     return {
-      favourites: [],
+      favourites: { favouriteCities: [], favouritePlaces: [] }, // Updated to reflect the response structure
       loggedInStatus: !!localStorage.getItem('x-auth-token')
     }
   },
@@ -78,7 +89,23 @@ export default {
     }
   },
   methods: {
-    fetchFavourites() {
+    async fetchFavourites() {
+      try {
+        const response = await Api.get('/users/favorites', {
+          headers: {
+            'x-auth-token': localStorage.getItem('x-auth-token')
+          }
+        })
+        if (response.data) {
+          this.favourites.favouriteCities = response.data.favouriteCities || []
+          this.favourites.favouritePlaces = response.data.favouritePlaces || []
+        } else {
+          this.favourites = { favouriteCities: [], favouritePlaces: [] }
+        }
+      } catch (error) {
+        console.error('Error fetching favourites:', error)
+        this.favourites = { favouriteCities: [], favouritePlaces: [] }
+      }
     },
     logout() {
       localStorage.removeItem('x-auth-token')
@@ -89,19 +116,21 @@ export default {
   },
   mounted() {
     this.loggedInStatus = !!localStorage.getItem('x-auth-token')
-
+    console.log('Is user logged in?', this.isLoggedIn)
     if (!this.isLoggedIn) {
       this.$router.push('/login')
     } else {
       this.fetchFavourites()
     }
 
+    // Create a link element for the font-awesome CSS
     const link = document.createElement('link')
     link.rel = 'stylesheet'
     link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css'
     link.integrity = 'sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=='
     link.crossOrigin = 'anonymous'
     link.referrerPolicy = 'no-referrer'
+    // Append the link element to the head
     document.head.appendChild(link)
   }
 }
@@ -320,4 +349,40 @@ color: #8FC6DF;
       flex-direction: column-reverse;
   }
 }
+
+.favourite-box {
+  background-color: #3498db;
+  color: #ecf0f1;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.favourite-box p {
+  margin: 0;
+}
+
+.cityname {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.country, .city {
+  font-size: 16px;
+}
+
+.no-favourites {
+  text-align: center;
+}
+
+.empty-heart-icon {
+  font-size: 50px;
+  color: #bc672a;
+  margin-bottom: 20px;
+}
+
 </style>
