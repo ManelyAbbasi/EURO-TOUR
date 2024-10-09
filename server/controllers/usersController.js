@@ -48,9 +48,9 @@ async function createUser(req, res, next) {
     }
 };
 
-async function addCitiesToFavorites(req, res) {
+async function addToFavorites(req, res) {
     const sessionKey = req.headers['x-auth-token'];
-    const { cityId } = req.body;
+    const { cityId, address } = req.body;
 
     try {
         const user = await UsersModel.findOne({ "session.key": sessionKey });
@@ -59,31 +59,74 @@ async function addCitiesToFavorites(req, res) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        if (!cityId) {
-            return res.status(400).json({ message: "City ID is required" });
+        let addedFavorite = null;
+
+        if (cityId) {
+            const city = await CitiesModel.findById(cityId);
+
+            if (!city) {
+                return res.status(404).json({ message: "City not found" });
+            }
+
+            const cityAlreadyFavorited = user.favourites.some(fav => fav.city.toString() === city._id.toString());
+
+            if (!cityAlreadyFavorited) {
+                user.favourites.push({ city: city._id, places: [] });
+                addedFavorite = { type: "city", cityName: city.cityName, country: city.country };
+            }
         }
 
-        const city = await CitiesModel.findById(cityId);
+        if (address) {
+            const place = await PlacesToVisitSchema.findOne({ address }).populate('city', 'cityName');
 
-        if (!city) {
-            return res.status(404).json({ message: "City not found" });
-        }
+            if (!place) {
+                return res.status(404).json({ message: "Place not found" });
+            }
 
-        const cityAlreadyFavorited = user.favourites.some(fav => fav.city.toString() === city._id.toString());
+            const placeAlreadyFavorited = user.favourites.some(fav => fav.places && fav.places.includes(place._id));
 
-        if (!cityAlreadyFavorited) {
-            user.favourites.push({ city: city._id });
+            if (!placeAlreadyFavorited) {
+                let favouriteCity = user.favourites.find(fav => fav.city.toString() === place.city._id.toString());
+
+                if (favouriteCity) {
+                    favouriteCity.places.push(place._id);
+                } else {
+                    user.favourites.push({ city: place.city._id, places: [place._id] });
+                }
+
+                addedFavorite = { type: "place", placeName: place.placeName, cityName: place.city.cityName };
+            }
         }
 
         await user.save();
 
-        res.status(200).json({
-            message: "Added to favorites successfully",
-            favouriteCity: {
+        const favouriteCities = [];
+        const favouritePlaces = [];
+
+        for (const fav of user.favourites) {
+            const city = await CitiesModel.findById(fav.city);
+            favouriteCities.push({
                 cityId: city._id,
                 cityName: city.cityName,
                 country: city.country
+            });
+            if (fav.places.length > 0) {
+                const places = await PlacesToVisitSchema.find({ _id: { $in: fav.places } });
+                for (const place of places) {
+                    favouritePlaces.push({
+                        placeId: place._id,
+                        placeName: place.placeName,
+                        cityName: city.cityName
+                    });
+                }
             }
+        }
+        res.status(200).json({
+            message: addedFavorite
+                ? `${addedFavorite.type === 'city' ? 'City' : 'Place'} added to favorites successfully`
+                : "No new favorites added",
+            favouriteCities,
+            favouritePlaces
         });
     } catch (err) {
         console.error(err);
@@ -400,7 +443,6 @@ async function getFavorites(req, res) {
 
 module.exports = {
     createUser,
-    addCitiesToFavorites,
     getAllUsers,
     updateUser,
     patchUser,
@@ -410,5 +452,6 @@ module.exports = {
     deleteCityViaAdmin,
     login,
     removeFromFavorites,
-    getFavorites
+    getFavorites,
+    addToFavorites
 }
