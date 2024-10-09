@@ -434,7 +434,37 @@ async function getFavorites(req, res) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        res.status(200).json({ favourites: user.favourites });
+        const favouriteCities = [];
+        const favouritePlaces = [];
+
+        for (const fav of user.favourites) {
+            const city = await CitiesModel.findById(fav.city);
+
+            if (city) {
+                favouriteCities.push({
+                    cityId: city._id,
+                    cityName: city.cityName,
+                    country: city.country
+                });
+
+                if (fav.places.length > 0) {
+                    const places = await PlacesToVisitSchema.find({ _id: { $in: fav.places } });
+
+                    for (const place of places) {
+                        favouritePlaces.push({
+                            placeId: place._id,
+                            placeName: place.placeName,
+                            cityName: city.cityName
+                        });
+                    }
+                }
+            }
+        }
+        res.status(200).json({
+            favouriteCities,
+            favouritePlaces
+        });
+
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Internal server error" });
