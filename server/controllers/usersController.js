@@ -48,43 +48,43 @@ async function createUser(req, res, next) {
     }
 };
 
-async function addToFavorites(req, res) {
-    const username = req.params.username;
-    const { cityId, address } = req.body;
+async function addCitiesToFavorites(req, res) {
+    const sessionKey = req.headers['x-auth-token'];
+    const { cityId } = req.body;
 
     try {
-        const user = await UsersModel.findOne({ username });
+        const user = await UsersModel.findOne({ "session.key": sessionKey });
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        if (cityId) {
-            const cityExists = await CitiesModel.findById(cityId);
-            if (!cityExists) {
-                return res.status(404).json({ message: "City not found" });
-            }
-            user.favourites.push({ city: cityId, places: [] });
+        if (!cityId) {
+            return res.status(400).json({ message: "City ID is required" });
         }
 
-        if (address) {
-            const placeExists = await PlacesToVisitSchema.findOne({ address });
-            if (!placeExists) {
-                return res.status(404).json({ message: "Place not found" });
-            }
+        const city = await CitiesModel.findById(cityId);
 
-            const favouriteCity = user.favourites.find(fav => fav.city.toString() === placeExists.city.toString());
-            if (favouriteCity) {
-                if (!favouriteCity.places.includes(placeExists._id)) {
-                    favouriteCity.places.push(placeExists._id); 
-                }
-            } else {
-                user.favourites.push({ city: placeExists.city, places: [placeExists._id] });
-            }
+        if (!city) {
+            return res.status(404).json({ message: "City not found" });
+        }
+
+        const cityAlreadyFavorited = user.favourites.some(fav => fav.city.toString() === city._id.toString());
+
+        if (!cityAlreadyFavorited) {
+            user.favourites.push({ city: city._id });
         }
 
         await user.save();
-        res.status(200).json({ message: "Added to favorites successfully", favourites: user.favourites });
+
+        res.status(200).json({
+            message: "Added to favorites successfully",
+            favouriteCity: {
+                cityId: city._id,
+                cityName: city.cityName,
+                country: city.country
+            }
+        });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Internal server error" });
@@ -400,7 +400,7 @@ async function getFavorites(req, res) {
 
 module.exports = {
     createUser,
-    addToFavorites,
+    addCitiesToFavorites,
     getAllUsers,
     updateUser,
     patchUser,

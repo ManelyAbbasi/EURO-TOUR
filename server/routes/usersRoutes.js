@@ -5,7 +5,7 @@ const authentication = require('../middleware/authentication');
 
 router.post('/', usersControllers.createUser);
 
-router.post('/:username/favorites', usersControllers.addToFavorites);
+router.post('/favorites', usersControllers.addCitiesToFavorites);
 
 router.get('/', usersControllers.getAllUsers);
 
