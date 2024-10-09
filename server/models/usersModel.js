@@ -26,10 +26,8 @@ var usersSchema = new Schema({
         expiry: {type: Date,
             required: true}
     },
-    favourites: [{ 
-        city: { type: Schema.Types.ObjectId, ref: 'cities', required: true },  // Reference to city
-        places: [{ type: Schema.Types.ObjectId, ref: 'placesToVisit' }] // Array of references to places
-    }]
+    cityFavs: [{ type: Schema.Types.ObjectId, ref: 'cities' }],  // Separate array for favorite cities
+    placeFavs: [{ type: Schema.Types.ObjectId, ref: 'placesToVisit' }] // Separate array for favorite places
 }, {
     toJSON: {
         transform: function(doc, ret) {
