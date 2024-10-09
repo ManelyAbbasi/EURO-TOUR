@@ -7,11 +7,12 @@
           </router-link>
         </logo>
         <nav class="navbar">
+          <a href="#favourites" class="navbar-item"><i class="fa-regular fa-heart" style="color: #edf7fb;"></i> favourites</a>
           <router-link to="/maincities" class="navbar-item maincities-navbar-item"
             ><i class="fa-solid fa-city"></i> cities</router-link>
           <a href="#placesToVisit" class="navbar-item"
             ><i class="fa-solid fa-map-pin"></i> places to visit</a>
-          <b-dropdown
+            <b-dropdown
             size="lg"
             variant="link"
             toggle-class="text-decoration-none"
@@ -19,11 +20,11 @@
             class="navbar-item dropdown"
           >
             <template #button-content>
-              <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
+              <img src="@/assets/signed-in-icon.png" alt="Signed In" class="dropdown-icon" />
             </template>
             <!-- Dropdown items -->
-            <b-dropdown-item class="dropdown-item" to="/login">Log in</b-dropdown-item>
-            <b-dropdown-item class="dropdown-item" to="/signup">Sign up</b-dropdown-item>
+            <b-dropdown-item class="dropdown-item logout" @click="logout">Log out</b-dropdown-item>
+            <b-dropdown-item class="dropdown-item" to="/profile">Profile</b-dropdown-item>
           </b-dropdown>
         </nav>
       </header>
@@ -146,6 +147,11 @@ export default {
     saveChanges() {
       // Show the "saved!" message when the button is clicked
       this.isSaved = true
+    },
+    logout() {
+      localStorage.removeItem('x-auth-token')
+      this.loggedInStatus = false
+      this.$router.push('/')
     }
   },
   mounted() {
@@ -176,7 +182,7 @@ export default {
     font-family: "Lexend Deca", sans-serif;
     background-color: #42515e;
     display: flex;
-    flex-wrap: wrap; /* Allow wrapping of items */
+    flex-wrap: wrap;
 }
 
 .euro-tour-header {
@@ -184,7 +190,7 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  padding: 1rem 5%; /* Adjust padding for more space */
+  padding: 1rem 5%;
   background-color: rgba(155, 169, 182, 1);
   display: flex;
   justify-content: space-between;
@@ -192,27 +198,28 @@ export default {
   z-index: 900;
 }
 
-.b-dropdown .dropdown-menu {
-  width: auto; /* Ensure the width adjusts to content */
-  white-space: nowrap; /* Prevent wrapping of text inside dropdown */
-  padding: 0; /* Ensure padding doesn't push content */
-  margin: 0;
-  background-color: purple !important;
-  border: 1px solid rgba(0, 0, 0, 0.15); /* Consistent border */
-  border-radius: 0.25rem;
-}
-
-.b-dropdown .dropdown-item{
+.b-dropdown .dropdown-item {
   display: block;
   width: 100%;
   padding: 0.5rem 1rem;
-  color: blueviolet !important;
   text-align: inherit;
-  border: none; /* Remove border */
+  border: none;
+  font-size: 1.5rem;
+  color: #edf7fb;
+  transition: color 0.3s;
 }
 
-.dropdown-item:hover {
-  background-color: blueviolet /* Hover effect */
+.b-dropdown .dropdown-item:hover {
+  color: #bc672a !important;
+}
+
+.navbar-item.dropdown .dropdown-item {
+  font-size: 1rem;
+  color: #edf7fb !important;
+}
+
+.dropdown-item {
+  margin: 0;
 }
 
 .dropdown-icon {
@@ -220,7 +227,7 @@ export default {
 }
 
 .navbar-item {
-  border: none; /* Remove borders to prevent overflow */
+  border: none;
   margin: 0 1rem;
   text-decoration: none;
 }
@@ -236,11 +243,6 @@ export default {
 .logo-wrapper img,
 .navbar a:hover .fa-solid {
   color: #bc672a !important;
-}
-
-.maincities-navbar-item,
-.maincities-navbar-item i{
-    color: #bc672a!important;
 }
 
 .logo img{
@@ -298,7 +300,7 @@ label {
 
 .gender-buttons, .sexuality-buttons {
     display: flex;
-    gap: 4rem; /* Space between buttons */
+    gap: 4rem;
     margin-left: 2rem;
 }
 

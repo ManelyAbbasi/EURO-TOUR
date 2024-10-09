@@ -41,7 +41,7 @@
     <main>
       <div class="home-layout-wrapper">
         <div class="home-right-side-panel">
-          <h1 class="hello" v-if="!isLoggedIn">Hello!</h1>
+          <h1 class="typewriter-hello hello" v-if="!isLoggedIn"></h1>
           <h1 class="hello" v-if="isLoggedIn">Welcome back traveler!</h1>
           <p class="welcome-text" v-if="!isLoggedIn">Make the most of your upcoming travels!</p>
           <p class="welcome-text" v-if="isLoggedIn">Let's plan for your next travels</p>
@@ -87,9 +87,10 @@
               <h3>Why join us?</h3>
               <div class="get-to-wrapper-text">
                 <p>With an account you can:</p>
-                <p>• Get personalised recommendations</p>
+                <p>• Discover cities to travel to</p>
+                <p>• Look for places to visit in cities</p>
                 <p>• Favourite cities and places</p>
-                <p>• Leave reviews and ratings</p>
+                <p>• Find cities and places to visit based on your preferences</p>
               </div>
             </template>
 
@@ -133,7 +134,7 @@ export default {
   },
   computed: {
     isLoggedIn() {
-      return this.loggedInStatus // Use reactive `loggedInStatus` property
+      return this.loggedInStatus // Use reactive loggedInStatus property
     }
   },
   methods: {
@@ -150,6 +151,34 @@ export default {
       localStorage.removeItem('x-auth-token')
       this.loggedInStatus = false
       this.$router.push('/')
+    },
+    textLoad() {
+      const textElement = document.querySelector('.typewriter-hello')
+      if (!textElement) return
+
+      const messages = ['Hello!', 'Hola!', 'Bonjour!', 'Ciao!', 'Salut!', 'Hallo!', 'Cześć!', 'Ahoj!', 'Bok!', 'Geia sas!', 'Olá!', 'Jó napot!']
+      let index = 0
+      let timeoutId
+
+      const updateText = () => {
+        textElement.textContent = messages[index]
+        index = (index + 1) % messages.length // Cycle through the messages
+      }
+
+      const handleAnimationEnd = () => {
+        clearTimeout(timeoutId) // Clear any existing timeout to avoid conflicts
+        updateText()
+        textElement.classList.remove('active') // Remove class to reset animation
+
+        timeoutId = setTimeout(() => {
+          textElement.classList.add('active') // Re-add class to trigger animation again
+        })
+      }
+
+      textElement.addEventListener('animationend', handleAnimationEnd)
+
+      updateText()
+      textElement.classList.add('active')
     }
   },
   mounted() {
@@ -162,11 +191,12 @@ export default {
     link.crossOrigin = 'anonymous'
     link.referrerPolicy = 'no-referrer'
     document.head.appendChild(link)
+    this.textLoad() // Call textLoad only after the component is mounted
   }
 }
 </script>
 
-<style>
+<style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
 
 .home-body-container{
@@ -200,27 +230,28 @@ export default {
   z-index: 900;
 }
 
-.b-dropdown .dropdown-menu {
-  width: auto; /* Ensure the width adjusts to content */
-  white-space: nowrap; /* Prevent wrapping of text inside dropdown */
-  padding: 0; /* Ensure padding doesn't push content */
-  margin: 0;
-  background-color: purple !important;
-  border: 1px solid rgba(0, 0, 0, 0.15); /* Consistent border */
-  border-radius: 0.25rem;
-}
-
-.b-dropdown .dropdown-item{
+.b-dropdown .dropdown-item {
   display: block;
   width: 100%;
-  padding: 0.5rem 1rem; /* Add appropriate padding */
-  color: blueviolet !important;
+  padding: 0.5rem 1rem;
   text-align: inherit;
-  border: none; /* Remove border */
+  border: none;
+  font-size: 1.5rem;
+  color: #edf7fb;
+  transition: color 0.3s;
 }
 
-.dropdown-item:hover {
-  background-color: blueviolet /* Hover effect */
+.b-dropdown .dropdown-item:hover {
+  color: #bc672a !important;
+}
+
+.navbar-item.dropdown .dropdown-item {
+  font-size: 1rem;
+  color: #edf7fb !important;
+}
+
+.dropdown-item {
+  margin: 0;
 }
 
 .dropdown-icon {
@@ -337,6 +368,41 @@ li.dropdown-item.logout {
 
 .hello {
   font-size: 3rem;
+}
+
+.hello {
+  position: relative;
+  font-size: 3rem;
+  white-space: nowrap; /* Ensure the text doesn't break */
+  overflow: hidden;
+  display: inline-block;
+}
+
+.hello:before {
+  content: "";
+  animation: typewriterAnimate 4s steps(12) infinite;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #42515e;
+  border-left: 2px solid #bc672a;
+  display: none; /* Initially hidden */
+}
+
+.hello.active:before {
+  display: block; /* Only display when the animation starts */
+  animation: typewriterAnimate 4s steps(12);
+}
+
+@keyframes typewriterAnimate {
+  40%, 60% {
+    left: 100%;
+  }
+  100% {
+    left: 0%;
+  }
 }
 
 .welcome-text {
