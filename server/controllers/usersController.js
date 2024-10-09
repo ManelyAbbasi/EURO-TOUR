@@ -94,7 +94,7 @@ async function addToFavorites(req, res) {
                     user.favourites.push({ city: place.city._id, places: [place._id] });
                 }
 
-                addedFavorite = { type: "place", placeName: place.placeName, cityName: place.city.cityName };
+                addedFavorite = { type: "place", placeName: place.placeName, cityName: place.city.cityName, address: place.address };
             }
         }
 
@@ -116,11 +116,13 @@ async function addToFavorites(req, res) {
                     favouritePlaces.push({
                         placeId: place._id,
                         placeName: place.placeName,
-                        cityName: city.cityName
+                        cityName: city.cityName,
+                        address: place.address // Add address here
                     });
                 }
             }
         }
+        
         res.status(200).json({
             message: addedFavorite
                 ? `${addedFavorite.type === 'city' ? 'City' : 'Place'} added to favorites successfully`
@@ -133,6 +135,7 @@ async function addToFavorites(req, res) {
         res.status(500).json({ message: "Internal server error" });
     }
 }
+
 
 async function getAllUsers(req, res) {
 
@@ -454,12 +457,14 @@ async function getFavorites(req, res) {
                         favouritePlaces.push({
                             placeId: place._id,
                             placeName: place.placeName,
-                            cityName: city.cityName
+                            cityName: city.cityName,
+                            address: place.address
                         });
                     }
                 }
             }
         }
+        
         res.status(200).json({
             favouriteCities,
             favouritePlaces
@@ -470,6 +475,7 @@ async function getFavorites(req, res) {
         res.status(500).json({ message: "Internal server error" });
     }
 }
+
 
 module.exports = {
     createUser,
