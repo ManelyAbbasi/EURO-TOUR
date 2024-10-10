@@ -67,7 +67,7 @@
                 :class="{ active: activeGender === 'non-binary' }"
                 @click="selectGender('non-binary')"
               ></div>
-              <label for="non-binary" class="gender-label">non-binary</label>
+              <label for="non-binary" class="gender-label non-binary-label">non-binary</label>
             </div>
             <div class="gender-item">
               <div
@@ -140,6 +140,11 @@ export default {
       isSaved: false // Track if the "saved!" message should be shown
     }
   },
+  computed: {
+    isLoggedIn() {
+      return this.loggedInStatus // Use reactive loggedInStatus property
+    }
+  },
   methods: {
     selectGender(gender) {
       this.activeGender = gender // Set active gender to the clicked button
@@ -154,7 +159,8 @@ export default {
         username: this.username,
         password: this.password,
         gender: this.activeGender,
-        isLGBTQIA: this.activeLGBTQIA
+        // eslint-disable-next-line eqeqeq
+        isLGBTQIA: this.activeLGBTQIA === 'yes'
       }
 
       try {
@@ -180,10 +186,18 @@ export default {
         console.error('Update error:', error)
         alert('Failed to update user information. Please try again.')
       }
+    },
+    logout() {
+      localStorage.removeItem('x-auth-token')
+      this.loggedInStatus = false
+      this.$router.push('/')
     }
   },
   mounted() {
-  // Create a link element for Font Awesome (for icons, if needed)
+    // Check login status when the component is mounted
+    const loggedInStatus = !!localStorage.getItem('x-auth-token')
+    console.log('User logged in status:', loggedInStatus)
+    // Create a link element for Font Awesome (for icons, if needed)
     const link = document.createElement('link')
     link.rel = 'stylesheet'
     link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css'
@@ -316,6 +330,10 @@ label {
     display: flex;
     margin-top: 2rem;
     margin-bottom: 2rem;
+}
+
+.non-binary-label {
+  white-space: nowrap; /* Prevents breaking non-binary across lines */
 }
 
 .sexuality-selection {
