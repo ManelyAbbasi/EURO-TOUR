@@ -7,10 +7,12 @@
         </router-link>
       </logo>
       <nav class="navbar">
-        <router-link to="/maincities" class="navbar-item maincities-navbar-item"
-          ><i class="fa-solid fa-city"></i> cities</router-link>
-        <a href="#placesToVisit" class="navbar-item"
-          ><i class="fa-solid fa-map-pin"></i> places to visit</a>
+        <router-link to="/maincities" class="navbar-item maincities-navbar-item">
+          <i class="fa-solid fa-city"></i> cities
+        </router-link>
+        <a href="#placesToVisit" class="navbar-item">
+          <i class="fa-solid fa-map-pin"></i> places to visit
+        </a>
         <b-dropdown
           size="lg"
           variant="link"
@@ -21,7 +23,6 @@
           <template #button-content>
             <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
           </template>
-          <!-- Dropdown items -->
           <b-dropdown-item class="dropdown-item" to="/login">Log in</b-dropdown-item>
           <b-dropdown-item class="dropdown-item" to="/signup">Sign up</b-dropdown-item>
         </b-dropdown>
@@ -30,93 +31,92 @@
 
     <form class="user-form">
       <b-row>
-    <label for="username">username</label>
-    <input type="text" id="username" class="input-field"/>
+        <label for="username">username</label>
+        <input type="text" id="username" class="input-field" v-model="username" />
 
-    <label for="password">password</label>
-    <input type="password" id="password" class="input-field"/>
-  </b-row>
+        <label for="password">password</label>
+        <input type="password" id="password" class="input-field" v-model="password" />
+      </b-row>
 
       <b-row>
-<div class="gender-selection">
-  <label for="gender">What is your gender?</label>
-  <div class="gender-buttons">
-    <div class="gender-item">
-      <div
-        class="gender-button"
-        data-value="male"
-        :class="{ active: activeGender === 'male' }"
-        @click="selectGender('male')"
-      ></div>
-      <label for="male" class="gender-label">male</label>
-    </div>
-    <div class="gender-item">
-      <div
-        class="gender-button"
-        data-value="female"
-        :class="{ active: activeGender === 'female' }"
-        @click="selectGender('female')"
-      ></div>
-      <label for="female" class="gender-label">female</label>
-    </div>
-    <div class="gender-item">
-      <div
-        class="gender-button"
-        data-value="non-binary"
-        :class="{ active: activeGender === 'non-binary' }"
-        @click="selectGender('non-binary')"
-      ></div>
-      <label for="non-binary" class="gender-label">non-binary</label>
-    </div>
-    <div class="gender-item">
-      <div
-        class="gender-button"
-        data-value="other"
-        :class="{ active: activeGender === 'other' }"
-        @click="selectGender('other')"
-      ></div>
-      <label for="other" class="gender-label">other</label>
-    </div>
-  </div>
-</div>
-</b-row>
+        <div class="gender-selection">
+          <label for="gender">What is your gender?</label>
+          <div class="gender-buttons">
+            <div class="gender-item">
+              <div
+                class="gender-button"
+                data-value="male"
+                :class="{ active: activeGender === 'male' }"
+                @click="selectGender('male')"
+              ></div>
+              <label for="male" class="gender-label">male</label>
+            </div>
+            <div class="gender-item">
+              <div
+                class="gender-button"
+                data-value="female"
+                :class="{ active: activeGender === 'female' }"
+                @click="selectGender('female')"
+              ></div>
+              <label for="female" class="gender-label">female</label>
+            </div>
+            <div class="gender-item">
+              <div
+                class="gender-button"
+                data-value="non-binary"
+                :class="{ active: activeGender === 'non-binary' }"
+                @click="selectGender('non-binary')"
+              ></div>
+              <label for="non-binary" class="gender-label">non-binary</label>
+            </div>
+            <div class="gender-item">
+              <div
+                class="gender-button"
+                data-value="other"
+                :class="{ active: activeGender === 'other' }"
+                @click="selectGender('other')"
+              ></div>
+              <label for="other" class="gender-label">other</label>
+            </div>
+          </div>
+        </div>
+      </b-row>
 
-<b-row>
-<div class="sexuality-selection">
-  <label for="lgbtqia">Are you a member of LGBTQIA+?</label>
-  <div class="sexuality-buttons">
-    <div class="sexuality-item">
-      <div
-        class="sexuality-button"
-        data-value="yes"
-        :class="{ active: activeLGBTQIA === 'yes' }"
-        @click="selectLGBTQIA('yes')"
-      ></div>
-      <label for="yes" class="sexuality-label">yes</label>
-    </div>
-    <div class="sexuality-item">
-      <div
-        class="sexuality-button"
-        data-value="no"
-        :class="{ active: activeLGBTQIA === 'no' }"
-        @click="selectLGBTQIA('no')"
-      ></div>
-      <label for="no" class="sexuality-label">no</label>
-    </div>
-  </div>
-</div>
-</b-row>
+      <b-row>
+        <div class="sexuality-selection">
+          <label for="lgbtqia">Are you a member of LGBTQIA+?</label>
+          <div class="sexuality-buttons">
+            <div class="sexuality-item">
+              <div
+                class="sexuality-button"
+                data-value="yes"
+                :class="{ active: activeLGBTQIA === 'yes' }"
+                @click="selectLGBTQIA('yes')"
+              ></div>
+              <label for="yes" class="sexuality-label">yes</label>
+            </div>
+            <div class="sexuality-item">
+              <div
+                class="sexuality-button"
+                data-value="no"
+                :class="{ active: activeLGBTQIA === 'no' }"
+                @click="selectLGBTQIA('no')"
+              ></div>
+              <label for="no" class="sexuality-label">no</label>
+            </div>
+          </div>
+        </div>
+      </b-row>
 
-<b-row>
-<div class="save-changes-container">
-  <button class="save-button" @click="saveChanges">save changes</button>
-  <span class="saved-message" v-if="isSaved">saved!</span>
-</div>
-</b-row>
-
+      <b-row>
+        <div class="save-changes-container">
+          <button class="save-button" type="button" @click="saveChanges($event)">save changes</button>
+          <span class="saved-message" v-if="isSaved">saved!</span>
+        </div>
+      </b-row>
     </form>
 
-  <footer class="footer">
+    <footer class="footer">
       <div class="footer-text">
         <p> &copy; 2024 copyright: eurotrip.com</p>
       </div>
@@ -147,8 +147,9 @@ export default {
     selectLGBTQIA(status) {
       this.activeLGBTQIA = status // Directly set to 'yes' or 'no'
     },
-    async saveChanges() {
-      const authToken = localStorage.getItem('x-auth-token') // Retrieve token from localStorage
+    async saveChanges(event) {
+      event.preventDefault() // Prevent form submission
+
       const userCredentials = {
         username: this.username,
         password: this.password,
@@ -157,15 +158,23 @@ export default {
       }
 
       try {
+        // Get the auth token from local storage (or where it's stored after login)
+        const authToken = localStorage.getItem('x-auth-token')
+
+        // Make sure you have a token
+        if (!authToken) {
+          throw new Error('No auth token found. Please log in.')
+        }
+
         const response = await Api.put(`/users/${this.username}`, userCredentials, {
           headers: {
-            'x-auth-token': authToken // Include token in the request headers
+            'x-auth-token': authToken // Set the token in the request headers
           }
         })
 
         if (response.status === 200) {
-          this.isSaved = true // Show the saved message
-          console.log('User information updated successfully:', response.data) // Log response data
+          this.isSaved = true
+          console.log('User information updated successfully:', response.data)
         }
       } catch (error) {
         console.error('Update error:', error)
