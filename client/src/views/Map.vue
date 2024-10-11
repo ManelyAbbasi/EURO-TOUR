@@ -258,15 +258,25 @@
             @mouseover="showTooltip($event, 'Portugal')"
             @mouseleave="hideTooltip"
             @click="isInSystem('Portugal') ? countryClicked('Portugal') : null"></path>
+
           </svg>
-        <div
-      class="tooltip"
-      v-if="tooltipVisible"
-      :style="tooltipStyle"
-    >
-      {{ tooltipContent }}
-    </div>
-    </div>
+
+<!-- Tooltip for country names -->
+<div v-if="tooltipVisible" :style="tooltipStyle" class="tooltip">{{ tooltipContent }}</div>
+
+<!-- City Popup Window -->
+<div class="city-popup" v-if="isLoggedIn && showCityPopup">
+  <div class="popup-header">
+    <h3>Cities in {{ selectedCountry }}</h3>
+    <button @click="closeCityPopup">X</button>
+  </div>
+  <div class="popup-body">
+    <ul>
+      <li v-for="city in filteredCities" :key="city.cityId">{{ city.cityName }}</li>
+    </ul>
+  </div>
+</div>
+</div>
 </template>
 
 <script>
@@ -282,20 +292,27 @@ export default {
         left: '0px',
         top: '0px'
       },
-      countriesInSystem: []
+      citiesInSystem: [],
+      showCityPopup: false,
+      selectedCountry: '',
+      filteredCities: [],
+      loggedInStatus: !!localStorage.getItem('x-auth-token') // Check login status
     }
   },
   async created() {
     await this.fetchCitiesInSystem()
+  },
+  computed: {
+    isLoggedIn() {
+      return this.loggedInStatus // Use computed property to handle login state
+    }
   },
   methods: {
     async fetchCitiesInSystem() {
       try {
         const response = await Api.get('/cities')
         if (response.data && response.data.cities) {
-          const cities = response.data.cities
-          const countries = new Set(cities.map(city => city.country))
-          this.countriesInSystem = Array.from(countries)
+          this.citiesInSystem = response.data.cities
         } else {
           console.error('No cities found')
         }
@@ -304,7 +321,9 @@ export default {
       }
     },
     countryClicked(country) {
-      console.log(`Country clicked: ${country}`)
+      this.selectedCountry = country
+      this.filteredCities = this.citiesInSystem.filter(city => city.country === country)
+      this.showCityPopup = true
     },
     showTooltip(event, country) {
       this.tooltipContent = country
@@ -318,7 +337,10 @@ export default {
       this.tooltipVisible = false
     },
     isInSystem(country) {
-      return this.countriesInSystem.includes(country)
+      return this.citiesInSystem.some(city => city.country === country)
+    },
+    closeCityPopup() {
+      this.showCityPopup = false
     }
   }
 }
