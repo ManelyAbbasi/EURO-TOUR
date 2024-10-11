@@ -7,7 +7,10 @@
         </router-link>
       </logo>
       <nav class="navbar">
-        <router-link to="/maincities" class="navbar-item maincities-navbar-item">
+        <router-link to="/favourites" class="navbar-item">
+          <i class="fa-regular fa-heart"></i> favourites
+        </router-link>
+        <router-link to="/maincities" class="navbar-item">
           <i class="fa-solid fa-city"></i> cities
         </router-link>
         <a href="#placesToVisit" class="navbar-item">
@@ -21,10 +24,10 @@
           class="navbar-item dropdown"
         >
           <template #button-content>
-            <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
+            <img src="@/assets/signed-in-icon.png" alt="Signed In" class="dropdown-icon" />
           </template>
-          <b-dropdown-item class="dropdown-item" to="/login">Log in</b-dropdown-item>
-          <b-dropdown-item class="dropdown-item" to="/signup">Sign up</b-dropdown-item>
+          <b-dropdown-item class="dropdown-item logout" @click="logout">Log out</b-dropdown-item>
+          <b-dropdown-item class="dropdown-item" to="/profile">Profile</b-dropdown-item>
         </b-dropdown>
       </nav>
     </header>
@@ -245,7 +248,6 @@ export default {
   white-space: nowrap; /* Prevent wrapping of text inside dropdown */
   padding: 0; /* Ensure padding doesn't push content */
   margin: 0;
-  background-color: purple !important;
   border: 1px solid rgba(0, 0, 0, 0.15); /* Consistent border */
   border-radius: 0.25rem;
 }
@@ -254,13 +256,8 @@ export default {
   display: block;
   width: 100%;
   padding: 0.5rem 1rem;
-  color: blueviolet !important;
   text-align: inherit;
   border: none; /* Remove border */
-}
-
-.dropdown-item:hover {
-  background-color: blueviolet /* Hover effect */
 }
 
 .dropdown-icon {
@@ -284,11 +281,6 @@ export default {
 .logo-wrapper img,
 .navbar a:hover .fa-solid {
   color: #bc672a !important;
-}
-
-.maincities-navbar-item,
-.maincities-navbar-item i{
-    color: #bc672a!important;
 }
 
 .logo img{
