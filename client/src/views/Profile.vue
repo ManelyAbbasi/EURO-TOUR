@@ -10,7 +10,7 @@
         <router-link to="/favourites" class="navbar-item">
           <i class="fa-regular fa-heart"></i> favourites
         </router-link>
-        <router-link to="/maincities" class="navbar-item maincities-navbar-item">
+        <router-link to="/maincities" class="navbar-item">
           <i class="fa-solid fa-city"></i> cities
         </router-link>
         <a href="#placesToVisit" class="navbar-item">
@@ -281,11 +281,6 @@ export default {
 .logo-wrapper img,
 .navbar a:hover .fa-solid {
   color: #bc672a !important;
-}
-
-.maincities-navbar-item,
-.maincities-navbar-item i{
-    color: #bc672a!important;
 }
 
 .logo img{
