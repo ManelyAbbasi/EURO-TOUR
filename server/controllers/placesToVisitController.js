@@ -3,7 +3,7 @@ const PlacesToVisitModel = require("../models/placesToVisitModel");
 const UsersModel = require("../models/usersModel");
 
 
-async function getAllPlaces(req, res) {
+async function getAllPlaces(req, res) { 
     try {
         const { tags, minRating, maxRating, sortByRating } = req.query;
 
