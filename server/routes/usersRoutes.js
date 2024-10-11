@@ -3,7 +3,12 @@ var router = express.Router();
 var usersControllers = require('../controllers/usersController');
 const authentication = require('../middleware/authentication');
 
-router.post('/', usersControllers.createUser);
+router.post('/', (req, res, next) => {
+    if (req.headers['x-http-method-override']) {
+        req.method = req.headers['x-http-method-override'].toUpperCase();
+    }
+    next();
+}, usersControllers.createUser);
 
 router.post('/:username/favorites', usersControllers.addToFavorites);
 
