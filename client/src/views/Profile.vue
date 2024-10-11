@@ -7,10 +7,7 @@
         </router-link>
       </logo>
       <nav class="navbar">
-        <router-link to="/favourites" class="navbar-item">
-          <i class="fa-regular fa-heart"></i> favourites
-        </router-link>
-        <router-link to="/maincities" class="navbar-item">
+        <router-link to="/maincities" class="navbar-item maincities-navbar-item">
           <i class="fa-solid fa-city"></i> cities
         </router-link>
         <a href="#placesToVisit" class="navbar-item">
@@ -24,31 +21,21 @@
           class="navbar-item dropdown"
         >
           <template #button-content>
-            <img src="@/assets/signed-in-icon.png" alt="Signed In" class="dropdown-icon" />
+            <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
           </template>
-          <b-dropdown-item class="dropdown-item logout" @click="logout">Log out</b-dropdown-item>
-          <b-dropdown-item class="dropdown-item" to="/profile">Profile</b-dropdown-item>
+          <b-dropdown-item class="dropdown-item" to="/login">Log in</b-dropdown-item>
+          <b-dropdown-item class="dropdown-item" to="/signup">Sign up</b-dropdown-item>
         </b-dropdown>
       </nav>
     </header>
 
     <form class="user-form">
       <b-row>
-        <label for="username">username</label>
-        <input type="text" class="username-input-field" v-model="username" readonly />
-      </b-row>
+        <label for="username">current username</label>
+        <input type="text" id="username" class="input-field" v-model="username" />
 
-        <b-row>
         <label for="password">password</label>
-        <div class="password-wrapper">
-        <input :type="passwordVisible ? 'text' : 'password'" id="password" class="password-input-field" v-model="password"/>
-        <i
-          :class="passwordVisible ? 'fa fa-eye-slash' : 'fa fa-eye'"
-          class="toggle-password"
-          @click="togglePasswordVisibility"
-        ></i>
-      </div>
-      <span class="error-message" v-if="passwordError">{{ passwordError }}</span>
+        <input type="password" id="password" class="input-field" v-model="password" />
       </b-row>
 
       <b-row>
@@ -146,12 +133,11 @@ import { Api } from '../Api' // Assuming your backend API call method is in Api.
 export default {
   data() {
     return {
-      username: 'coraline',
-      password: '',
+      username: '', // Add username field to bind to the input
+      password: '', // Add password field to bind to the input
       activeGender: null, // Initialize active gender
       activeLGBTQIA: null, // Initialize active LGBTQIA status
-      isSaved: false, // Track if the "saved!" message should be shown
-      passwordVisible: false // Controls password visibility
+      isSaved: false // Track if the "saved!" message should be shown
     }
   },
   computed: {
@@ -198,16 +184,13 @@ export default {
         }
       } catch (error) {
         console.error('Update error:', error)
-        alert('Failed to update user information. Please try again.')
+        alert('You are not allowed to change your username, and password can not be empty.')
       }
     },
     logout() {
       localStorage.removeItem('x-auth-token')
       this.loggedInStatus = false
       this.$router.push('/')
-    },
-    togglePasswordVisibility() {
-      this.passwordVisible = !this.passwordVisible // Toggle password visibility
     }
   },
   mounted() {
@@ -262,6 +245,7 @@ export default {
   white-space: nowrap; /* Prevent wrapping of text inside dropdown */
   padding: 0; /* Ensure padding doesn't push content */
   margin: 0;
+  background-color: purple !important;
   border: 1px solid rgba(0, 0, 0, 0.15); /* Consistent border */
   border-radius: 0.25rem;
 }
@@ -270,8 +254,13 @@ export default {
   display: block;
   width: 100%;
   padding: 0.5rem 1rem;
+  color: blueviolet !important;
   text-align: inherit;
   border: none; /* Remove border */
+}
+
+.dropdown-item:hover {
+  background-color: blueviolet /* Hover effect */
 }
 
 .dropdown-icon {
@@ -297,6 +286,11 @@ export default {
   color: #bc672a !important;
 }
 
+.maincities-navbar-item,
+.maincities-navbar-item i{
+    color: #bc672a!important;
+}
+
 .logo img{
   max-height: 4rem;
 }
@@ -320,7 +314,7 @@ label {
   text-align: left;
 }
 
-.username-input-field {
+.input-field {
   color: #bc672a;
   font-size: 1rem;
   padding: 12px 20px;
@@ -330,36 +324,6 @@ label {
   width: 50rem;
   outline: none;
   margin-bottom: 2rem;
-  margin-left: 0.7rem;
-}
-
-.password-input-field {
-  color: #bc672a;
-  font-size: 1rem;
-  padding: 12px 20px;
-  font-family: 'Lexend Deca', sans-serif;
-  border: rgba(0, 0, 0, 0.301);
-  background-color: rgba(0, 0, 0, 0.301);
-  width: 49rem;
-  outline: none;
-  margin-bottom: 2rem;
-  margin-right: 5rem;
-  box-sizing: border-box;
-}
-
-.toggle-password {
-  position: absolute;
-  left: 73%;
-  top: 46.7%;
-  transform: translateY(-50%);
-  font-size: 1.2em;
-  color: #8FC6DF;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-.toggle-password:hover {
-  color: #bc672a;
 }
 
 .gender-selection {
