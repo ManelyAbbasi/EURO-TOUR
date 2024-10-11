@@ -24,7 +24,7 @@
           class="navbar-item dropdown"
         >
           <template #button-content>
-            <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
+            <img src="@/assets/signed-in-icon.png" alt="Signed In" class="dropdown-icon" />
           </template>
           <b-dropdown-item class="dropdown-item" to="/login">Log in</b-dropdown-item>
           <b-dropdown-item class="dropdown-item" to="/signup">Sign up</b-dropdown-item>
