@@ -129,6 +129,7 @@ export default {
   width: 80%;
   max-width: 500px;
   margin-top: 30%;
+  margin-left: 9%;
 }
 
 .row-form {
