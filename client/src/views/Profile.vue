@@ -35,10 +35,20 @@
     <form class="user-form">
       <b-row>
         <label for="username">username</label>
-        <input type="text" id="username" class="input-field" v-model="username" />
+        <input type="text" class="username-input-field" v-model="username" readonly />
+      </b-row>
 
+        <b-row>
         <label for="password">password</label>
-        <input type="password" id="password" class="input-field" v-model="password" />
+        <div class="password-wrapper">
+        <input :type="passwordVisible ? 'text' : 'password'" id="password" class="password-input-field" v-model="password"/>
+        <i
+          :class="passwordVisible ? 'fa fa-eye-slash' : 'fa fa-eye'"
+          class="toggle-password"
+          @click="togglePasswordVisibility"
+        ></i>
+      </div>
+      <span class="error-message" v-if="passwordError">{{ passwordError }}</span>
       </b-row>
 
       <b-row>
@@ -136,11 +146,12 @@ import { Api } from '../Api' // Assuming your backend API call method is in Api.
 export default {
   data() {
     return {
-      username: '', // Add username field to bind to the input
-      password: '', // Add password field to bind to the input
+      username: 'coraline',
+      password: '',
       activeGender: null, // Initialize active gender
       activeLGBTQIA: null, // Initialize active LGBTQIA status
-      isSaved: false // Track if the "saved!" message should be shown
+      isSaved: false, // Track if the "saved!" message should be shown
+      passwordVisible: false // Controls password visibility
     }
   },
   computed: {
@@ -194,6 +205,9 @@ export default {
       localStorage.removeItem('x-auth-token')
       this.loggedInStatus = false
       this.$router.push('/')
+    },
+    togglePasswordVisibility() {
+      this.passwordVisible = !this.passwordVisible // Toggle password visibility
     }
   },
   mounted() {
@@ -306,7 +320,7 @@ label {
   text-align: left;
 }
 
-.input-field {
+.username-input-field {
   color: #bc672a;
   font-size: 1rem;
   padding: 12px 20px;
@@ -316,6 +330,36 @@ label {
   width: 50rem;
   outline: none;
   margin-bottom: 2rem;
+  margin-left: 0.7rem;
+}
+
+.password-input-field {
+  color: #bc672a;
+  font-size: 1rem;
+  padding: 12px 20px;
+  font-family: 'Lexend Deca', sans-serif;
+  border: rgba(0, 0, 0, 0.301);
+  background-color: rgba(0, 0, 0, 0.301);
+  width: 49rem;
+  outline: none;
+  margin-bottom: 2rem;
+  margin-right: 5rem;
+  box-sizing: border-box;
+}
+
+.toggle-password {
+  position: absolute;
+  left: 73%;
+  top: 46.7%;
+  transform: translateY(-50%);
+  font-size: 1.2em;
+  color: #8FC6DF;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.toggle-password:hover {
+  color: #bc672a;
 }
 
 .gender-selection {
