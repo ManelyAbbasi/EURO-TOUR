@@ -264,6 +264,9 @@
 <!-- Tooltip for country names -->
 <div v-if="tooltipVisible" :style="tooltipStyle" class="tooltip">{{ tooltipContent }}</div>
 
+<!-- Overlay for non-logged-in users -->
+<div class="overlay" v-if="!isLoggedIn && showLoginMessage" @click="hideLoginMessage"></div>
+
 <!-- City Popup Window -->
 <div class="city-popup" v-if="isLoggedIn && showCityPopup">
   <div class="popup-header">
@@ -275,6 +278,11 @@
       <li v-for="city in filteredCities" :key="city.cityId">{{ city.cityName }}</li>
     </ul>
   </div>
+</div>
+
+<!-- Message for non-logged-in users -->
+<div v-if="!isLoggedIn && showLoginMessage" class="login-message">
+  You need to log in or create an account to access this feature.
 </div>
 </div>
 </template>
@@ -296,7 +304,8 @@ export default {
       showCityPopup: false,
       selectedCountry: '',
       filteredCities: [],
-      loggedInStatus: !!localStorage.getItem('x-auth-token') // Check login status
+      loggedInStatus: !!localStorage.getItem('x-auth-token'), // Check login status
+      showLoginMessage: false // New property to control the login message visibility
     }
   },
   async created() {
@@ -321,6 +330,10 @@ export default {
       }
     },
     countryClicked(country) {
+      if (!this.isLoggedIn) {
+        this.showLoginMessage = true // Show the login message
+        return // Prevent further execution
+      }
       this.selectedCountry = country
       this.filteredCities = this.citiesInSystem.filter(city => city.country === country)
       this.showCityPopup = true
@@ -341,6 +354,9 @@ export default {
     },
     closeCityPopup() {
       this.showCityPopup = false
+    },
+    hideLoginMessage() {
+      this.showLoginMessage = false // Hide the login message when clicked
     }
   }
 }
@@ -382,4 +398,62 @@ svg path {
   opacity: 0.8; /* Slightly transparent */
   pointer-events: none;
 }
+
+/* Overlay styles */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Dark semi-transparent background */
+  z-index: 9; /* Place it above other content */
+index: 9; /* Place it above other content */
+}
+
+/* Popup styles */
+.city-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the popup */
+  background-color: #fff; /* White background */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+  z-index: 10; /* Place above the overlay */
+  width: 300px; /* Set a width for the popup */
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #f2f2f2; /* Light grey background */
+  border-top-left-radius: 8px; /* Round corners for the header */
+  border-top-right-radius: 8px; /* Round corners for the header */
+}
+.popup-body ul {
+  list-style-type: none; /* Remove the default bullets */
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
+}
+
+.popup-body {
+  padding: 10px;
+}
+.login-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the message */
+  background-color: #fff; /* White background */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+  z-index: 10; /* Place above the overlay */
+  padding: 20px; /* Add padding for better appearance */
+  text-align: center; /* Center the text */
+  width: 300px; /* Set a width for the message */
+}
+
 </style>
