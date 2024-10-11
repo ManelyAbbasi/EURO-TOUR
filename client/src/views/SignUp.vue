@@ -128,7 +128,8 @@ export default {
              this.confirmpassword === '' ||
              this.birthDay === '' ||
              this.birthMonth === '' ||
-             this.birthYear === ''
+             this.birthYear === '' ||
+             this.password !== this.confirmpassword
     }
   }
 }
@@ -224,6 +225,7 @@ export default {
   gap: 30px;
   justify-content: center;
   padding-top: 2%;
+  font-family: 'Lexend Deca', sans-serif;
 }
 
 /* Click animation for the button */
