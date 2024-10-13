@@ -41,6 +41,7 @@ const citiesRoutes = require('./routes/citiesRoutes');
 const usersRoutes = require('./routes/usersRoutes');
 const placesRoutes = require('./routes/placesToVisitRoutes');
 const authentication = require('./middleware/authentication');
+const adminRoutes = require('./routes/adminRoutes');
 
 // Basic API endpoint
 app.get('/api', function(req, res) {
@@ -51,6 +52,7 @@ app.get('/api', function(req, res) {
 app.use('/api/cities', citiesRoutes);
 app.use('/api/users', authentication, usersRoutes);
 app.use('/api/places', placesRoutes);
+app.use('/api/admin', authentication, adminRoutes);
 
 // Catch all non-error handler for API (i.e., 404 Not Found)
 app.use('/api/*', function (req, res) {

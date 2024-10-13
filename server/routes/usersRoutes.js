@@ -16,8 +16,6 @@ router.get('/', usersControllers.getAllUsers);
 
 router.put('/:username', usersControllers.updateUser);
 
-router.patch('/:username', usersControllers.patchUser);
-
 router.delete('/:username', usersControllers.deleteOneUser);
 
 router.delete('/user/:username', usersControllers.deleteUserByAdmin); 
