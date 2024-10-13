@@ -16,6 +16,9 @@ async function createCity(req, res, next) {
         if (typeof req.body.country !== 'string' || req.body.country.trim() === "") {
             return res.status(400).json({ message: "Invalid country: must be a non-empty string" });
         }
+        if (typeof req.body.goodToKnow !== 'string' || req.body.country.trim() === "") {
+            return res.status(400).json({ message: "Invalid good to know: must be a non-empty string" });
+        }
         if (typeof req.body.statistics !== 'string' || req.body.statistics.trim() === "") {
             return res.status(400).json({ message: "Invalid statistics: must be a non-empty string" });
         }
@@ -204,6 +207,12 @@ async function updateCity(req, res, next) {
             }
             city.country = req.body.country;
         }
+        if (req.body.goodToKnow !== undefined) {
+            if (typeof req.body.goodToKnow !== 'string' || req.body.goodToKnow.trim() === "") {
+                return res.status(400).json({ message: "Invalid good to know: must be a non-empty string" });
+            }
+            city.goodToKnow = req.body.goodToKnow;
+        }
         if (req.body.statistics !== undefined) {
             if (typeof req.body.statistics !== 'string' || req.body.statistics.trim() === "") {
                 return res.status(400).json({ message: "Invalid statistics: must be a non-empty string" });
@@ -244,6 +253,7 @@ async function patchCity(req, res, next){
         if (city == null){
             return res.status(404).json({"message": "City not found"});
         }
+        city.goodToKnow = req.body.goodToKnow || city.goodToKnow;
         city.statistics = req.body.statistics || city.statistics;
         city.facts = req.body.facts || city.facts;
         city.tags = req.body.tags || city.tags;

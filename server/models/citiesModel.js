@@ -7,6 +7,7 @@ const PlacesToVisitModel = require('./placesToVisitModel'); // Ensure this expor
 var citiesSchema = new Schema({
     cityName: { type: String, required: true },
     country: { type: String, required: true },
+    goodToKnow: { type: String, required: true },
     statistics: { type: String, required: true },
     facts: { type: String, required: true },
     rating: { type: Number, min: 0.0, max: 5.0 },
