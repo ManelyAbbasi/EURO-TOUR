@@ -41,14 +41,16 @@
     <main>
       <div class="home-layout-wrapper">
         <div class="home-right-side-panel">
+        <h1 class="hello" v-if="isLoggedIn">Welcome back traveler!</h1>
+        <div class="welcome-container">
           <h1 class="typewriter-hello hello" v-if="!isLoggedIn"></h1>
-          <h1 class="hello" v-if="isLoggedIn">Welcome back traveler!</h1>
           <p class="welcome-text" v-if="!isLoggedIn">Make the most of your upcoming travels!</p>
           <p class="welcome-text" v-if="isLoggedIn">Let's plan for your next travels</p>
           <p class="welcome-text" v-if="!isLoggedIn">
             With your <b>preferences</b> and our <b>recommendations</b> you will have the experience of a <b>lifetime</b>
           </p>
         </div>
+      </div>
         <div class="home-left-side-panel">
           <!-- map -->
           <EuroMap class="euromap" />
@@ -89,8 +91,8 @@
                 <p>With an account you can:</p>
                 <p>• Discover cities to travel to</p>
                 <p>• Look for places to visit in cities</p>
-                <p>• Favourite cities and places</p>
                 <p>• Find cities and places to visit based on your preferences</p>
+                <p>• Stay updated on your destination's weather to ensure a safe journey every time</p>
               </div>
             </template>
 
@@ -282,7 +284,7 @@ li.dropdown-item.logout {
 
 .home-layout-wrapper {
   display: grid;
-  grid-template-columns: 1fr 1fr;  /* Create two equal columns */
+  grid-template-columns: 1fr 2fr;  /* Create two equal columns */
   grid-gap: 20px;  /* Optional: Add some space between columns */
   padding: 7rem 9% 2rem;
   width: 100%;
@@ -311,6 +313,7 @@ li.dropdown-item.logout {
 
 .get-to-know-wrapper h2{
     margin-bottom: 3rem;
+    margin-left: 27rem;
     font-size: 3rem;
 }
 
@@ -411,7 +414,7 @@ li.dropdown-item.logout {
 }
 
 .euromap{
-  width: 150%
+  width: 100%
 }
 
 .footer{
