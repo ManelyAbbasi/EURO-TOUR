@@ -44,7 +44,7 @@
       <div id="city-slide">
         <div v-for="city in paginatedCities" :key="city.cityName" class="city-item">
           <div class="detail-about-city">
-            <p class="under-pic">{{ city.cityName }}, {{ city.country }}</p>
+            <span class="slide-title">{{ city.cityName }}, {{ city.country }}</span>
             <div class="star-rating">
                <!-- Display filled stars -->
                <i v-for="n in Math.floor(city.rating)" :key="n" class="fa-solid fa-star" style="color: #bc672a;"></i>
@@ -63,6 +63,18 @@
             <div class="detail-item">
               <p><strong class="heading">Statistics:</strong></p>
               <p>{{ city.statistics }}</p>
+            </div>
+            <div class="detail-item">
+              <p><strong class="heading">Tags:</strong></p>
+              <div class="tag-container">
+              <div
+                  v-for="tag in city.tags"
+                  :key="tag"
+                  class="tag-bubble"
+                >
+                  {{ tag }}
+                </div>
+              </div>
             </div>
             <div class="detail-item">
               <p><strong class="heading">Places to Visit:</strong></p>
@@ -142,14 +154,16 @@ export default {
         const response = await Api.get('/cities') // Make sure this endpoint returns the required fields
         if (response.data && response.data.cities) {
           this.cities = response.data.cities.map(city => ({
-            cityName: city.name,
+            cityName: city.cityName,
             country: city.country,
             rating: city.rating,
             goodToKnow: city.goodToKnow,
             facts: city.facts,
             statistics: city.statistics,
+            tags: city.tags,
             placesToVisit: city.placesToVisit
           }))
+          console.log(this.cities)
         } else {
           this.cities = []
         }
@@ -281,9 +295,8 @@ export default {
   display: grid;
   grid-template-columns: 2fr 1fr;  /* Create two equal columns */
   grid-gap: 20px;
-  padding: 7rem 9% 2rem;
+  padding: 9rem 9% 2rem;
   width: 100%;
-  border: 2px solid brown;
 }
 
 .maincities-right-side-panel .maincities-left-side-panel {
@@ -297,38 +310,6 @@ export default {
   flex-direction: row;
   background-color: #edf7fb;
 
-}
-
-.star-rating{
-  text-align: left;
-  font-size: 2.5em;
-}
-
-.star-rating i {
-  margin-right: 5px; /* Increase space between stars */
-}
-
-.rating-text {
-  margin-left: 0.5rem;
-  font-size: 0.6em;
-  color: #42515E;
-}
-
-.detail-about-city {
-    width: 60%;
-    color: #759CAB;
-    font-size: 1em;
-    margin-right: 20px;
-}
-
-.detail-about-city p {
-  text-align: left;
-  margin: 0.1px;
-  color: #759CAB;
-}
-
-.detail-item {
-    margin-top: 40px; /* Space between items */
 }
 
 .heading {
@@ -458,20 +439,79 @@ a img {
     color: #045768;
 }
 
+.slide-title{
+  font-size: 3rem;
+}
+
 .maincities-left-side-panel{
   display: flex;
-  flex-direction: column-reverse;
-  border: 2px solid blueviolet;
+  flex-direction: column;
   width: 100%;
   min-width: 50vw;
+  align-content: flex-start;
 }
 
 .pagination-wrapper{
-  border: 1px solid red;
+  order: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #city-slide{
-  border: 2px solid green;
+  order: 1;
+  padding: 1.5rem;
+}
+
+.detail-about-city{
+    color: #759CAB;
+    font-size: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.detail-item{
+  padding: 1rem 0;
+}
+
+.detail-about-city p {
+  text-align: left;
+  margin: 0.1px;
+  color: #759CAB;
+  font-size: 1.1rem;
+}
+
+.star-rating{
+  text-align: left;
+  font-size: 2rem;
+}
+
+.star-rating i {
+  margin-right: 5px; /* Increase space between stars */
+}
+
+.rating-text {
+  margin-left: 0.5rem;
+  font-size: 0.6em;
+  color: #42515E;
+}
+
+.tag-bubble{
+  background-color: #CAC4D0;
+  color: #edf7fb;
+  border-radius: 5px;
+  border: 3px solid white;
+  padding: 10px 30px;
+  margin: 12px;
+  font-size: 0.8rem;
+}
+
+.tag-container{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
 @media screen and (max-width:1200px) {
