@@ -89,7 +89,6 @@ async function createPlaceInCity(req, res) {
     }
 }
 
-
 async function getOneCity(req, res) { 
     const cityId = req.params.id;
 
@@ -144,9 +143,9 @@ async function getAllCities(req, res) {
 }
 
 async function getPlacesFromCity(req, res){
-    const cityId = req.params.cityId;
+    const cityId = req.params.id;
     try{
-        const city = await CitiesModel.findOne(cityId).populate('placesToVisit');
+        const city = await CitiesModel.findOne({ _id: cityId }).populate('placesToVisit');
         if (!city){
             return res.status(404).json({ message: "City not found" });
         }
@@ -218,6 +217,36 @@ async function updateCity(req, res, next) {
     }
 }
 
+async function deleteOnePlaceFromCity(req, res) {
+    const cityId = req.params.id;
+    const address = req.params.address;
+
+    try {
+        // Find the city and populate placesToVisit
+        const city = await CitiesModel.findOne({ _id: cityId }).populate('placesToVisit');
+        if (!city) {
+            return res.status(404).json({ message: "City not found" });
+        }
+        if (!city.placesToVisit || city.placesToVisit.length === 0) {
+            return res.status(404).json({ message: "No places are found" });
+        }
+
+        const specificPlace = await placesToVisitSchema.findOne({ address: address });
+        if (!specificPlace) {
+            return res.status(404).json({ message: "Place not found" });
+        }
+
+        city.placesToVisit = city.placesToVisit.filter(place => place._id.toString() !== specificPlace._id.toString());
+
+        await city.save();
+
+        res.status(200).json({ message: "Place deleted successfully", deletedPlace: specificPlace });
+    } catch (err) {
+        console.error(err); 
+        res.status(500).json({ error: 'An error occurred while deleting the place.' });
+    }
+}
+
 
 module.exports = {
     createCity,
@@ -226,4 +255,5 @@ module.exports = {
     getOneCity,
     getPlacesFromCity,
     updateCity,
+    deleteOnePlaceFromCity
 }

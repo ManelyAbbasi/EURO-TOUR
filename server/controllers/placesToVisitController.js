@@ -7,31 +7,25 @@ async function getAllPlaces(req, res) {
     try {
         const { tags, minRating, maxRating, sortByRating } = req.query;
 
-        // Initialize an empty filter object
         let filter = {};
 
-        // If tags are provided, filter places by tags
         if (tags) {
-            const tagsArray = tags.split(','); // Convert tags string to array (comma-separated)
+            const tagsArray = tags.split(','); 
             filter.tags = { $all: tagsArray };
         }
 
-        // If minRating or maxRating is provided, filter places by rating range
         if (minRating || maxRating) {
-            filter.rating = {}; // Initialize the rating filter
+            filter.rating = {}; 
             if (minRating) filter.rating.$gte = parseFloat(minRating); // $gte = greater than or equal
             if (maxRating) filter.rating.$lte = parseFloat(maxRating); // $lte = less than or equal
         }
 
-        // Initialize an empty sort option
         let sortOption = {};
 
-        // If sortByRating is provided, set the sorting order
         if (sortByRating) {
             sortOption.rating = sortByRating === 'asc' ? 1 : -1; // Ascending = 1, Descending = -1
         }
 
-        // Fetch places based on the filter and sort them if sortByRating is passed
         const placesToVisit = await placesToVisitModel.find(filter).sort(sortOption);
 
         if (!placesToVisit || placesToVisit.length === 0) {
