@@ -91,22 +91,6 @@ async function addToFavorites(req, res) {
     }
 }
 
-async function getAllUsers(req, res) {
-
-    try {
-        if (!req.body.isAdmin) {
-            return res.status(403).json({ message: 'Access denied. Admins only.' });
-        }
-        const users = await UsersModel.find(); 
-        if (!users || users.length === 0) {
-            return res.status(404).json({ error: 'No users found.' });
-        }
-        res.status(200).json({ users });
-    } catch (error) {
-        res.status(500).json({ error: 'An error occurred while fetching users.' });
-    }
-}
-
 async function updateUser(req, res, next) {
     try {
         const sessionKey = req.headers['x-auth-token'];
@@ -152,30 +136,6 @@ async function updateUser(req, res, next) {
     }
 }
 
-async function patchUser(req, res, next) {
-
-    try {
-        const user = await UsersModel.findOne({ username: req.params.username });
-
-        if (user == null) {
-            return res.status(404).json({ "message": "User not found" });
-        }
-
-        if (req.body.username !== req.params.username && !req.body.isAdmin) {
-            return res.status(403).json({ "message": "You are not authorized to update this user." });
-        }
-
-        user.password = req.body.password || user.password;
-        await user.save(); // Save the updated user
-
-        res.status(200).json(user); 
-    } catch (err) {
-        next(err); // Pass the error to the next middleware
-    }
-}
-
-
-
 async function deleteOneUser(req, res) {
     const username = req.params.username;
 
@@ -194,78 +154,6 @@ async function deleteOneUser(req, res) {
     } catch (err) {
         console.error(err);
         res.status(500).json({ "message": "Internal server error" });
-    }
-}
-
-async function deleteUserHelper(username, res) {
-    const userToDelete = await UsersModel.findOneAndDelete({ username });
-
-    if (!userToDelete) {
-        return res.status(404).json({ "message": "User not found" });
-    }
-
-    res.status(200).json({ "message": "User deleted successfully", user: userToDelete });
-}
- 
-
-async function deleteUserByAdmin(req, res) {
-    const usernameToDelete = req.params.username; 
-
-    try {
-
-        if (!req.body.isAdmin) {
-            return res.status(403).json({ message: "Access denied. Admins only." });
-        }
-
-        await deleteUserHelper(usernameToDelete, res);
-        
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ "message": "Internal server error" });
-    }
-}
-
-
-async function deletePlaceViaAdmin(req, res) {
-    const address = req.params.address;
-
-    try {
-        if (!req.body.isAdmin) {
-            return res.status(403).json({ message: "Access denied. Admins only." });
-        }
-
-        const deletedPlace = await PlacesToVisitSchema.findOneAndDelete({ address: address });
-
-        if (!deletedPlace) {
-            return res.status(404).json({ message: "Place not found" });
-        }
-
-        res.status(200).json({ message: "Place deleted successfully", place: deletedPlace });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal server error" });
-    }
-}
-
-
-async function deleteCityViaAdmin(req, res) {
-    const cityId = req.params.cityId;
-
-    try {
-        if (!req.body.isAdmin) {
-            return res.status(403).json({ message: "Access denied. Admins only." });
-        }
-
-        const deletedCity = await CitiesModel.findOneAndDelete({cityId: cityId});
-
-        if (!deletedCity) {
-            return res.status(404).json({ message: "City not found" });
-        }
-
-        res.status(200).json({ message: "City deleted successfully", city: deletedCity });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal server error" });
     }
 }
 
@@ -405,13 +293,8 @@ async function getFavorites(req, res) {
 module.exports = {
     createUser,
     addToFavorites,
-    getAllUsers,
     updateUser,
-    patchUser,
     deleteOneUser,
-    deleteUserByAdmin,
-    deletePlaceViaAdmin,
-    deleteCityViaAdmin,
     login,
     removeFromFavorites,
     getFavorites
