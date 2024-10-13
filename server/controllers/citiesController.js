@@ -16,6 +16,9 @@ async function createCity(req, res, next) {
         if (typeof req.body.country !== 'string' || req.body.country.trim() === "") {
             return res.status(400).json({ message: "Invalid country: must be a non-empty string" });
         }
+        if (typeof req.body.goodToKnow !== 'string' || req.body.country.trim() === "") {
+            return res.status(400).json({ message: "Invalid good to know: must be a non-empty string" });
+        }
         if (typeof req.body.statistics !== 'string' || req.body.statistics.trim() === "") {
             return res.status(400).json({ message: "Invalid statistics: must be a non-empty string" });
         }
@@ -86,7 +89,6 @@ async function createPlaceInCity(req, res) {
     }
 }
 
-
 async function getOneCity(req, res) { 
     const cityId = req.params.id;
 
@@ -140,33 +142,10 @@ async function getAllCities(req, res) {
     }
 }
 
-async function getOnePlaceFromCity(req, res){
-    const cityId = req.params.cityId;
-    const address = req.params.address;
-    
-    try{
-        const city = await CitiesModel.findOne(cityId).populate('placesToVisit');
-        if (!city){
-            return res.status(404).json({ message: "City not found" });
-        }
-        if (!city.placesToVisit || city.placesToVisit.length === 0) {
-            return res.status(404).json({ message: "No places are found in this city" });
-        }
-
-        const place = city.placesToVisit.find(place => place.address === address);
-        if (!place) {
-            return res.status(404).json({ message: "Place not found" });
-        }
-        res.status(200).json(place);
-    } catch (err) {
-        res.status(500).json({ error: 'An error occurred while fetching the places.' });
-    }
-}
-
 async function getPlacesFromCity(req, res){
-    const cityId = req.params.cityId;
+    const cityId = req.params.id;
     try{
-        const city = await CitiesModel.findOne(cityId).populate('placesToVisit');
+        const city = await CitiesModel.findOne({ _id: cityId }).populate('placesToVisit');
         if (!city){
             return res.status(404).json({ message: "City not found" });
         }
@@ -204,6 +183,12 @@ async function updateCity(req, res, next) {
             }
             city.country = req.body.country;
         }
+        if (req.body.goodToKnow !== undefined) {
+            if (typeof req.body.goodToKnow !== 'string' || req.body.goodToKnow.trim() === "") {
+                return res.status(400).json({ message: "Invalid good to know: must be a non-empty string" });
+            }
+            city.goodToKnow = req.body.goodToKnow;
+        }
         if (req.body.statistics !== undefined) {
             if (typeof req.body.statistics !== 'string' || req.body.statistics.trim() === "") {
                 return res.status(400).json({ message: "Invalid statistics: must be a non-empty string" });
@@ -232,43 +217,33 @@ async function updateCity(req, res, next) {
     }
 }
 
-
-async function patchCity(req, res, next){
+async function deleteOnePlaceFromCity(req, res) {
     const cityId = req.params.id;
+    const address = req.params.address;
 
-    try{
-        if (!req.body.isAdmin) {
-            return res.status(403).json({ message: "Access denied. Only admins can patch places." });
-        }
-        const city = await CitiesModel.findById(cityId);
-        if (city == null){
-            return res.status(404).json({"message": "City not found"});
-        }
-        city.statistics = req.body.statistics || city.statistics;
-        city.facts = req.body.facts || city.facts;
-        city.tags = req.body.tags || city.tags;
-        await city.save();
-        res.status(200).json(city);
-    } catch (err) {
-        if (err.name === 'ValidationError' && err.errors && err.errors.tags) {
-            return res.status(400).json({ message: "Invalid tag(s) provided. Please provide valid tags." });
-        }
-        next(err);
-    }
-};
-
-
-async function deleteOneCity(req, res) {
-    const cityId = req.params.id;
     try {
-        const city = await CitiesModel.findByIdAndDelete(cityId);
+        // Find the city and populate placesToVisit
+        const city = await CitiesModel.findOne({ _id: cityId }).populate('placesToVisit');
         if (!city) {
-            return res.status(404).json({ "message": "City not found" });
+            return res.status(404).json({ message: "City not found" });
         }
-        res.status(200).json({ "message": "City deleted successfully", city });
+        if (!city.placesToVisit || city.placesToVisit.length === 0) {
+            return res.status(404).json({ message: "No places are found" });
+        }
+
+        const specificPlace = await placesToVisitSchema.findOne({ address: address });
+        if (!specificPlace) {
+            return res.status(404).json({ message: "Place not found" });
+        }
+
+        city.placesToVisit = city.placesToVisit.filter(place => place._id.toString() !== specificPlace._id.toString());
+
+        await city.save();
+
+        res.status(200).json({ message: "Place deleted successfully", deletedPlace: specificPlace });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ "message": "Internal server error" });
+        console.error(err); 
+        res.status(500).json({ error: 'An error occurred while deleting the place.' });
     }
 }
 
@@ -279,8 +254,6 @@ module.exports = {
     getAllCities,
     getOneCity,
     getPlacesFromCity,
-    getOnePlaceFromCity,
-    patchCity,
     updateCity,
-    deleteOneCity
+    deleteOnePlaceFromCity
 }
