@@ -66,10 +66,32 @@ async function deleteCity(req, res) {
     }
 }
 
+async function checkIfAdmin(req, res) {
+    try {
+        const username = req.params.username; // Get the username from the route parameters
+
+        // Find the user by username
+        const user = await UsersModel.findOne({ username });
+
+        // If the user is not found, return 404
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Return the admin status
+        return res.status(200).json({ isAdmin: user.isAdmin });
+    } catch (err) {
+        console.error('Error checking admin status:', err);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+
 
 module.exports ={
     patchAdmin,
     deleteCity,
-    deletePlace
+    deletePlace,
+    checkIfAdmin
 };
    

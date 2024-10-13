@@ -9,4 +9,6 @@ router.delete('/:username/placesToVisit/:address', adminController.deletePlace);
 
 router.delete('/:username/cities/:id', adminController.deleteCity);
 
-module.exports = router;
+router.get('/:username/check-admin', adminController.checkIfAdmin);
+
+module.exports = router; 
