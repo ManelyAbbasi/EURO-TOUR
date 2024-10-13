@@ -5,4 +5,8 @@ const authentication = require('../middleware/authentication');
 
 router.patch('/:username', adminController.patchAdmin);
 
+router.delete('/:username/placesToVisit/:address', adminController.deletePlace);
+
+router.delete('/:username/cities/:id', adminController.deleteCity);
+
 module.exports = router;

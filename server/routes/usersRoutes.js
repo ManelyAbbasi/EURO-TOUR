@@ -12,17 +12,9 @@ router.post('/', (req, res, next) => {
 
 router.post('/:username/favorites', usersControllers.addToFavorites);
 
-router.get('/', usersControllers.getAllUsers);
-
 router.put('/:username', usersControllers.updateUser);
 
 router.delete('/:username', usersControllers.deleteOneUser);
-
-router.delete('/user/:username', usersControllers.deleteUserByAdmin); 
-
-router.delete('/placesToVisit/:address', usersControllers.deletePlaceViaAdmin);
-
-router.delete('/cities/:id', usersControllers.deleteCityViaAdmin);
 
 router.post('/login', usersControllers.login);
 
