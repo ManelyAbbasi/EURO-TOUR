@@ -33,66 +33,60 @@
         <div class="maincities-layout-wrapper">
           <div class="maincities-left-side-panel">
 
-            <!-- carousel of cities -->
-            <div class="carousel-container">
-                <b-carousel id="carousel" v-model="slide" :interval="4000" controls>
-                <!--images -->
-                <b-carousel-slide img-src="https://picsum.photos/600/600/?image=52"></b-carousel-slide>
-                <b-carousel-slide img-src="https://picsum.photos/600/600/?image=54"></b-carousel-slide>
-                <b-carousel-slide img-src="https://picsum.photos/600/600/?image=58"></b-carousel-slide>
-
-              </b-carousel>
-
             <!-- display new text for each slide -->
-            <p class="under-pic">
-            {{ captions[slide] }} <!-- this will dynamically change based on the active slide -->
-            </p>
+              <div class="pagination-wrapper">
+              <div class="mt-3">
+                <b-pagination v-model="currentPage" pills :total-rows="cities.length" :per-page="perPage"></b-pagination>
+              </div>
+            </div>
 
-           <!-- Star Icons -->
-          <div class="star-rating">
-            <i
-              v-for="index in 5"
-              :key="index"
-              :class="index <= 3 ? 'fa-solid fa-star' : 'fa-regular fa-star'"
-              style="color: #bc672a;"
-            ></i>
-            <span class="rating-text">3.1/5.0</span>
+            <!-- City slide -->
+      <div id="city-slide">
+        <div v-for="city in paginatedCities" :key="city.cityName" class="city-item">
+          <div class="detail-about-city">
+            <span class="slide-title">{{ city.cityName }}, {{ city.country }}</span>
+            <div class="star-rating">
+               <!-- Display filled stars -->
+               <i v-for="n in Math.floor(city.rating)" :key="n" class="fa-solid fa-star" style="color: #bc672a;"></i>
+                <!-- Display empty stars for remaining ones -->
+                <i v-for="n in 5 - Math.floor(city.rating)" :key="'empty-' + n" class="fa-regular fa-star" style="color: #bc672a;"></i>
+              <span class="rating-text">{{ city.rating }}/5.0</span>
+            </div>
+            <div class="detail-item">
+              <p><strong class="heading">Good to know:</strong></p>
+              <p>{{ city.goodToKnow }}</p>
+            </div>
+            <div class="detail-item">
+              <p><strong class="heading">Facts:</strong></p>
+              <p>{{ city.facts }}</p>
+            </div>
+            <div class="detail-item">
+              <p><strong class="heading">Statistics:</strong></p>
+              <p>{{ city.statistics }}</p>
+            </div>
+            <div class="detail-item">
+              <p><strong class="heading">Tags:</strong></p>
+              <div class="tag-container">
+              <div
+                  v-for="tag in city.tags"
+                  :key="tag"
+                  class="tag-bubble"
+                >
+                  {{ tag }}
+                </div>
+              </div>
+            </div>
+            <div class="detail-item">
+              <p><strong class="heading">Places to Visit:</strong></p>
+              <p>{{ city.placesToVisit.join(', ') }}</p> <!-- Assuming placesToVisit is an array -->
+            </div>
           </div>
-            </div>
-
-            <div class="detail-about-city">
-            <div class="detail-item">
-                <p><strong class="heading">Good to know:</strong></p>
-                <p>{{ goodToKnow[slide] }}</p>
-            </div>
-            <div class="detail-item">
-                <p><strong class="heading">Facts:</strong></p>
-                <p>{{ facts[slide] }}</p>
-            </div>
-            <div class="detail-item">
-                <p><strong class="heading">Stats:</strong></p>
-                <p>{{ stats[slide] }}</p>
-            </div>
-            <div class="detail-item">
-                <p><strong class="heading">Tags:</strong></p>
-                <p>{{ tags[slide] }}</p>
-            </div>
-            <router-link to="/citiesmore" class="read-more">read more</router-link>
         </div>
-
-            <!-- Heart Icon -->
-            <div class="heart-icon-container">
-            <i :class="isFavorite ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"
-              class="favorite-icon"
-              style="color: #bc672a;"
-              @click="toggleFavorite">
-            </i>
-          </div>
+      </div>
 
         </div>
 
           <div class="maincities-right-side-panel">
-            <div class="maincities-right-side-panel">
                 <!--search and trending-->
                 <h2 class="maincities-search-title">Search cities by: <i class="fa-solid fa-filter" style="color: #045768;"></i></h2>
                 <div class="maincities-button-wrapper">
@@ -100,7 +94,7 @@
                     <h4 class="maincities-or">or</h4>
                     <router-link to="/SearchCityByRating" class="maincities-ratings-btn">ratings</router-link>
                 </div>
-                <h2 class="maincities-search-title">Trending Cities:</h2>
+                <h2 class="maincities-search-title">Admins Picks:</h2>
                 <div class="trending-cities-wrapper">
                   <div class="maincities-amst-wrapper trending-city-wrapper">
                     <img src="@/assets/Amsterdam.jpg" alt="Amsterdam city" class="trending-cities-img"/>
@@ -115,19 +109,18 @@
                     <p class="maincities-trending-paris">3. Paris, France</p>
                   </div>
                 </div>
-            </div>
-            </div>
-            </div>
+              </div>
+          </div>
       </main>
 
-      <footer class="footer">
-        <div class="footer-text">
-          <p> &copy; 2024 copyright: eurotrip.com</p>
-        </div>
-        <div class="top-icon">
-          <a href="#"><i class="fa-solid fa-caret-up"></i></a>
-        </div>
-      </footer>
+<footer class="footer">
+  <div class="footer-text">
+    <p> &copy; 2024 copyright: eurotrip.com</p>
+  </div>
+  <div class="top-icon">
+    <a href="#"><i class="fa-solid fa-caret-up"></i></a>
+  </div>
+</footer>
     </div>
   </template>
 
@@ -137,39 +130,48 @@ import { Api } from '@/Api'
 export default {
   data() {
     return {
-      isFavorite: false,
-      slide: 0,
-      captions: [
-        'London, United Kingdom',
-        'Paris, France',
-        'Dublin, Ireland'
-      ],
-      goodToKnow: [
-        'London is the capital of the United Kingdom.',
-        'Paris is famous for its café culture and iconic landmarks.',
-        'Dublin is known for its literary history and vibrant nightlife.'
-      ],
-      facts: [
-        'Population: 8.9 million',
-        'Population: 2.1 million',
-        'Population: 1.2 million'
-      ],
-      stats: [
-        'Area: 1,572 km²',
-        'Area: 105.4 km²',
-        'Area: 318 km²'
-      ],
-      tags: [],
+      cities: [],
       message: 'none',
-      loggedInStatus: !!localStorage.getItem('x-auth-token') // Reactive property for login status
+      loggedInStatus: !!localStorage.getItem('x-auth-token'), // Reactive property for login status
+      rows: 100,
+      currentPage: 1,
+      perPage: 1
     }
   },
   computed: {
     isLoggedIn() {
       return this.loggedInStatus // Use reactive `loggedInStatus` property
+    },
+    paginatedCities() {
+      const start = (this.currentPage - 1) * this.perPage
+      const end = start + this.perPage
+      return this.cities.slice(start, end) // Slicing based on the current page and per page count
     }
   },
   methods: {
+    async getCities() {
+      try {
+        const response = await Api.get('/cities') // Make sure this endpoint returns the required fields
+        if (response.data && response.data.cities) {
+          this.cities = response.data.cities.map(city => ({
+            cityName: city.cityName,
+            country: city.country,
+            rating: city.rating,
+            goodToKnow: city.goodToKnow,
+            facts: city.facts,
+            statistics: city.statistics,
+            tags: city.tags,
+            placesToVisit: city.placesToVisit
+          }))
+          console.log(this.cities)
+        } else {
+          this.cities = []
+        }
+      } catch (error) {
+        console.error('Error fetching cities:', error)
+        this.cities = []
+      }
+    },
     toggleFavorite() {
       this.isFavorite = !this.isFavorite // Toggle between true and false
     },
@@ -193,6 +195,7 @@ export default {
     }
   },
   mounted() {
+    this.getCities()
     // Create a link element
     const link = document.createElement('link')
     link.rel = 'stylesheet'
@@ -292,7 +295,7 @@ export default {
   display: grid;
   grid-template-columns: 2fr 1fr;  /* Create two equal columns */
   grid-gap: 20px;
-  padding: 7rem 9% 2rem;
+  padding: 9rem 9% 2rem;
   width: 100%;
 }
 
@@ -309,81 +312,9 @@ export default {
 
 }
 
-.carousel-container{
-    width: 100%;
-    margin: 30px;
-    margin-left: 30px;
-}
-
-.under-pic{
-    margin-block: 2px;
-    font-weight: bold;
-    font-size: 2em;
-    text-align: left;
-    color: #759CAB
-}
-
-.star-rating{
-  text-align: left;
-  font-size: 2.5em;
-}
-
-.star-rating i {
-  margin-right: 5px; /* Increase space between stars */
-}
-
-.rating-text {
-  margin-left: 0.5rem;
-  font-size: 0.6em;
-  color: #42515E;
-}
-
-.read-more {
-  font-size: 1.2rem;
-  color: #bc672a;
-  text-decoration: underline;
-  cursor: pointer;
-  margin-left: 9rem; /* Increase margin-left for more right alignment */
-  margin-top: 7.5rem;  /* Add margin-top to move it further down */
-  display: inline-block; /* Ensure margin-top works properly */
-}
-
-.detail-about-city {
-    width: 60%;
-    color: #759CAB;
-    font-size: 1em;
-    margin-right: 20px;
-}
-
-.detail-about-city p {
-  text-align: left;
-  margin: 0.1px;
-  color: #759CAB;
-}
-
-.detail-item {
-    margin-top: 40px; /* Space between items */
-}
-
 .heading {
     font-size: 1.5em;
     font-weight: bold;
-}
-
-.heart-icon-container {
-  margin-right: 25px;
-  margin-block: 20px;
-
-}
-
-.heart-icon-container i {
-  font-size: 3em;
-  cursor: pointer;
-  transition: transform 0.3s ease; /* Add smooth transition on click or hover */
-}
-
-.heart-icon-container i:hover {
-  transform: scale(1.1); /* Slightly enlarge the heart on hover */
 }
 
 .maincities-right-side-panel {
@@ -391,6 +322,7 @@ export default {
     flex-direction: column;
     display: flex;
     align-items: center;
+    min-width: 30vw;
 }
 
 .maincities-right-side-panel h2 {
@@ -505,6 +437,82 @@ a img {
 .top-icon a i{
     font-size: 2rem;
     color: #045768;
+}
+
+.slide-title{
+  font-size: 3rem;
+}
+
+.maincities-left-side-panel{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 50vw;
+  align-content: flex-start;
+}
+
+.pagination-wrapper{
+  order: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 1rem;
+}
+
+#city-slide{
+  order: 1;
+  padding: 1.5rem;
+}
+
+.detail-about-city{
+    color: #759CAB;
+    font-size: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.detail-item{
+  padding: 1rem 0;
+}
+
+.detail-about-city p {
+  text-align: left;
+  margin: 0.1px;
+  color: #759CAB;
+  font-size: 1.1rem;
+}
+
+.star-rating{
+  text-align: left;
+  font-size: 2rem;
+}
+
+.star-rating i {
+  margin-right: 5px; /* Increase space between stars */
+}
+
+.rating-text {
+  margin-left: 0.5rem;
+  font-size: 0.6em;
+  color: #42515E;
+}
+
+.tag-bubble{
+  background-color: #CAC4D0;
+  color: #edf7fb;
+  border-radius: 5px;
+  border: 3px solid white;
+  padding: 10px 30px;
+  margin: 12px;
+  font-size: 0.8rem;
+}
+
+.tag-container{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
 @media screen and (max-width:1200px) {
