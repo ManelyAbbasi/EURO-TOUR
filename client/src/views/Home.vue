@@ -40,22 +40,24 @@
     </header>
     <main>
       <div class="home-layout-wrapper">
-        <div class="home-right-side-panel">
-        <h1 class="hello" v-if="isLoggedIn">Welcome back traveler!</h1>
-        <div class="welcome-container">
-          <h1 class="typewriter-hello hello" v-if="!isLoggedIn"></h1>
-          <p class="welcome-text" v-if="!isLoggedIn">Make the most of your upcoming travels!</p>
-          <p class="welcome-text" v-if="isLoggedIn">Let's plan for your next travels</p>
-          <p class="welcome-text" v-if="!isLoggedIn">
-            With your <b>preferences</b> and our <b>recommendations</b> you will have the experience of a <b>lifetime</b>
-          </p>
-        </div>
+    <div class="home-right-side-panel">
+      <div class="welcome-back-container" v-if="isLoggedIn">
+        <h1 class="hello-in">Welcome back traveler!</h1>
+        <p class="welcome-text-in">Let's plan for your next travels</p>
       </div>
-        <div class="home-left-side-panel">
-          <!-- map -->
-          <EuroMap class="euromap" />
-        </div>
+      <div class="welcome-container" v-if="!isLoggedIn">
+        <h1 class="typewriter-hello hello"></h1>
+        <p class="welcome-text">Make the most of your upcoming travels!</p>
+        <p class="welcome-text">
+          With your <b>preferences</b> and our <b>recommendations</b> you will have the experience of a <b>lifetime</b>
+        </p>
       </div>
+    </div>
+    <div class="home-left-side-panel">
+      <!-- map -->
+      <EuroMap class="euromap" />
+    </div>
+  </div>
 
       <section class="get-to-know-wrapper">
         <h2 class="home-heading">Get to know us!</h2>
@@ -282,9 +284,9 @@ li.dropdown-item.logout {
   color: #bc672a !important;
 }
 
-.home-layout-wrapper {
+.home-layout-wrapper, .welcome-back-container {
   display: grid;
-  grid-template-columns: 1fr 2fr;  /* Create two equal columns */
+  grid-template-columns: 1fr 2fr;
   grid-gap: 20px;  /* Optional: Add some space between columns */
   padding: 7rem 9% 2rem;
   width: 100%;
@@ -299,6 +301,13 @@ li.dropdown-item.logout {
 .home-right-side-panel {
   display: flex;
   flex-direction: column;
+}
+
+.welcome-back-container {
+  display: flex;
+  flex-direction: column;   /* Stack items vertically */
+  text-align: center;       /* Center the text within the container */
+  margin-bottom: 7rem;
 }
 
 .home-right-side-panel p {
