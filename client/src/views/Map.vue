@@ -404,6 +404,10 @@
     </li>
   </ul>
 </div>
+<!-- New Button for Admins to Create a New City -->
+<div v-if="isAdmin" class="popup-footer">
+    <button @click="createNewCity">Create New City</button>
+  </div>
 </div>
 
 <!-- Message for non-logged-in users -->
@@ -551,6 +555,10 @@ export default {
       } catch (error) {
         console.error('Error deleting city:', error)
       }
+    },
+    createNewCity() {
+    // Action to create a new city
+      alert('Redirect to create new city form or popup')
     }
   }
 }
@@ -648,6 +656,27 @@ index: 9; /* Place it above other content */
   padding: 20px; /* Add padding for better appearance */
   text-align: center; /* Center the text */
   width: 300px; /* Set a width for the message */
+}
+.popup-footer {
+  text-align: center;
+  padding: 10px;
+  border-top: 1px solid #ddd; /* Optional: separate footer visually */
+}
+
+.popup-footer button {
+  background-color: #BC672A; /* Green background */
+  color: white; /* White text */
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.popup-footer button:hover {
+  background-color: #a7561c; /* Darker green on hover */
 }
 
 </style>
