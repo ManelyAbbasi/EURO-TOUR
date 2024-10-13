@@ -164,6 +164,7 @@ export default {
   width: 80%;
   max-width: 500px;
   margin-top: 30%;
+  margin-left: 9%;
 }
 
 /* Styling for the row of the name, username and password */
