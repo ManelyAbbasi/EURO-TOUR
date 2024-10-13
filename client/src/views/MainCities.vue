@@ -94,7 +94,7 @@
                     <h4 class="maincities-or">or</h4>
                     <router-link to="/SearchCityByRating" class="maincities-ratings-btn">ratings</router-link>
                 </div>
-                <h2 class="maincities-search-title">Trending Cities:</h2>
+                <h2 class="maincities-search-title">Admins Picks:</h2>
                 <div class="trending-cities-wrapper">
                   <div class="maincities-amst-wrapper trending-city-wrapper">
                     <img src="@/assets/Amsterdam.jpg" alt="Amsterdam city" class="trending-cities-img"/>
@@ -456,6 +456,7 @@ a img {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-bottom: 1rem;
 }
 
 #city-slide{
