@@ -59,7 +59,7 @@
     </div>
   </div>
 
-      <section class="get-to-know-wrapper">
+  <section class="get-to-know-wrapper" v-if="!isLoggedIn">
         <h2 class="home-heading">Get to know us!</h2>
         <div class="get-to-know-container">
           <div class="get-to-know-box">
@@ -83,11 +83,8 @@
               <p>We intend for our travelers to be able to make the most of their time in a new city.</p>
             </div>
           </div>
-
-          <!-- Conditionally Render "Why join us?" or Map -->
           <div class="get-to-know-box">
-            <!-- If not logged in, show "Why Join Us?" section -->
-            <template v-if="!isLoggedIn">
+            <template>
               <h3>Why join us?</h3>
               <div class="get-to-wrapper-text">
                 <p>With an account you can:</p>
@@ -97,15 +94,22 @@
                 <p>• Stay updated on your destination's weather to ensure a safe journey every time</p>
               </div>
             </template>
+          </div>
+        </div>
+      </section>
 
-            <!-- If logged in, show the Weather Map -->
-            <template v-else>
-              <h3 class="weather-warning-title">Weather warnings</h3> <!-- Added header here -->
+      <section class="get-to-know-wrapper-in" v-if="isLoggedIn">
+        <h2 class="home-heading">Weather!</h2>
+        <div class="get-to-know-container-in">
+          <!-- Conditionally Render "Why join us?" or Map -->
+          <div class="get-to-know-box-in" v-if="isLoggedIn">
+            <template v-if="isLoggedIn">
               <WeatherMap class="weather-map" />
             </template>
           </div>
         </div>
       </section>
+
     </main>
     <footer class="footer">
       <div class="footer-text">
@@ -203,6 +207,9 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
 
+*{
+  border: 2px solid red;
+}
 .home-body-container{
     margin: 0;
     padding: 0;
@@ -290,6 +297,7 @@ li.dropdown-item.logout {
   grid-gap: 20px;  /* Optional: Add some space between columns */
   padding: 7rem 9% 2rem;
   width: 100%;
+  align-content: center;
 }
 
 .home-left-side-panel, .home-right-side-panel {
@@ -320,7 +328,13 @@ li.dropdown-item.logout {
     padding: 4rem 9% 2rem;
 }
 
-.get-to-know-wrapper h2{
+.get-to-know-wrapper-in{
+    min-height: 100vh;
+    padding: 4rem 9% 2rem;
+    border: 2px solid yellow;
+}
+
+.get-to-know-wrapper h2, .get-to-know-wrapper-in h2 {
     margin-bottom: 3rem;
     margin-left: 27rem;
     font-size: 3rem;
@@ -346,7 +360,23 @@ li.dropdown-item.logout {
     border: 3px solid #045768;
 }
 
+.get-to-know-container-in .get-to-know-box-in{
+    background-color: #8FC6DF;
+    padding: 3rem 2rem 4rem;
+    border-radius: 2rem;
+    text-align: center;
+    transition: all 0.5s;
+    width: 100%;
+    height: 100%;
+    border: 3px solid #045768;
+}
+
 .get-to-know-container .get-to-know-box:hover{
+    border-color: #bc672a;
+    transform: scale(1.03);
+}
+
+.get-to-know-container-in .get-to-know-box-in:hover{
     border-color: #bc672a;
     transform: scale(1.03);
 }
@@ -355,10 +385,6 @@ li.dropdown-item.logout {
     font-size: 2rem;
     color: #045768;
     margin-bottom: 2rem;
-}
-.get-to-know-box h3.weather-warning-title {
-  font-size: 1.5rem;
-  margin-bottom: 0.4rem;
 }
 
 .get-to-know-box p{
