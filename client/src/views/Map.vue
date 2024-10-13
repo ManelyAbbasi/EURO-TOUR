@@ -275,7 +275,11 @@
   </div>
   <div class="popup-body">
     <ul>
-      <li v-for="city in filteredCities" :key="city.cityId">{{ city.cityName }}</li>
+      <li v-for="city in filteredCities" :key="city._id">
+        {{ city.cityName }}
+        <button v-if="isAdmin" @click="editCity(city._id)">Edit</button>
+        <button v-if="isAdmin" @click="deleteCity(city._id)">Delete</button>
+      </li>
     </ul>
   </div>
 </div>
@@ -305,11 +309,13 @@ export default {
       selectedCountry: '',
       filteredCities: [],
       loggedInStatus: !!localStorage.getItem('x-auth-token'), // Check login status
-      showLoginMessage: false // New property to control the login message visibility
+      showLoginMessage: false, // New property to control the login message visibility
+      isAdmin: false // Add a new property for admin status
     }
   },
   async created() {
     await this.fetchCitiesInSystem()
+    await this.checkIfAdmin() // Check if the user is an admin when the component is created
   },
   computed: {
     isLoggedIn() {
@@ -327,6 +333,18 @@ export default {
         }
       } catch (error) {
         console.error('Error fetching cities:', error)
+      }
+    },
+    async checkIfAdmin() {
+      try {
+        const response = await Api.get('/admin/check-admin', {
+          headers: {
+            'x-auth-token': localStorage.getItem('x-auth-token')
+          }
+        })
+        this.isAdmin = response.data.isAdmin
+      } catch (error) {
+        console.error('Error checking admin status:', error)
       }
     },
     countryClicked(country) {
@@ -357,6 +375,36 @@ export default {
     },
     hideLoginMessage() {
       this.showLoginMessage = false // Hide the login message when clicked
+    },
+    editCity(cityId) {
+    },
+    async deleteCity(cityId) {
+    // Confirm deletion
+      const confirmed = confirm('Are you sure you want to delete this city?')
+      if (!confirmed) {
+        return // Exit if the user cancels
+      }
+
+      if (!cityId) {
+        console.error('City ID is undefined')
+        return
+      }
+      try {
+        const response = await Api.delete(`/admin/cities/${cityId}`, {
+          headers: {
+            'x-auth-token': localStorage.getItem('x-auth-token')
+          }
+        })
+        if (response.status === 200) {
+          // Remove the deleted city from filteredCities
+          this.filteredCities = this.filteredCities.filter(city => city._id !== cityId)
+          alert(response.data.message)
+        } else {
+          console.error('Failed to delete city:', response.data.message)
+        }
+      } catch (error) {
+        console.error('Error deleting city:', error)
+      }
     }
   }
 }

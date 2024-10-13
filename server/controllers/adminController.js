@@ -66,10 +66,35 @@ async function deleteCity(req, res) {
     }
 }
 
+async function checkIfAdmin(req, res) {
+    try {
+        if (!req.headers['x-auth-token']) {
+            return res.status(401).json({ message: "Access denied. No token provided." });
+        }
+
+        const user = await UsersModel.findOne({ "session.key": req.headers['x-auth-token'] });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        if (Date.now() > user.session.expiry) {
+            return res.status(401).json({ message: "Session expired" });
+        }
+
+        // Return the admin status
+        return res.status(200).json({ isAdmin: user.isAdmin });
+    } catch (err) {
+        console.error('Error checking admin status:', err);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+
 
 module.exports ={
     patchAdmin,
     deleteCity,
-    deletePlace
+    deletePlace,
+    checkIfAdmin
 };
    
