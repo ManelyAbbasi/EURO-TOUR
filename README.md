@@ -78,6 +78,12 @@ Places to Visit Page: Once a user has clicked on the place that they would like 
 
 Filter and Sort Pages: For both cities and places to visit, there will be pages to either sort and filter by ratings or filter by tags.
 
+### Proposal for a 5
+
+On our main home page, we want to implement a map of Europe that will showcase all potential weather warnings for the coming week. So when a user is navigating through the map they can select a city, a pop up will display entailing a description of what the expected weather will be. The pop up is colour specific, meaning that the degree of weather intensity will be easily visually described. The purpose of this inclusion is to help our users who are planning their trips to have insight into what they could expect. 
+
+We plan on further integrating this into our cities page, where next to the respective city you view there shall be a coloured indicator [matching the map] that illustrates the intensity of the weather situation currently. Furthermore, when the user hovers over this indicator, a message will appear to detail more about the specifics of the weather (for example thunderstorms, flooding, etc.). 
+
 ### Entity-Relationship (ER) Diagram
 
 ![ER Diagram](./images/er_diagram.png)
