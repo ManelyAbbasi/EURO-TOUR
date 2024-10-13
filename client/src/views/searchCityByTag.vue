@@ -10,8 +10,7 @@
           <a href="#favourites" class="navbar-item"><i class="fa-regular fa-heart" style="color: #edf7fb;"></i> favourites</a>
           <router-link to="/maincities" class="navbar-item maincities-navbar-item"
             ><i class="fa-solid fa-city"></i> cities</router-link>
-          <a href="#placesToVisit" class="navbar-item"
-            ><i class="fa-solid fa-map-pin"></i> places to visit</a>
+          <router-link to="/mainplaces" class="navbar-item"><i class="fa-solid fa-map-pin"></i> places to visit</router-link>
           <b-dropdown
             size="lg"
             variant="link"

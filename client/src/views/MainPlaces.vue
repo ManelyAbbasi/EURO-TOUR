@@ -8,9 +8,9 @@
         </div>
         <nav class="navbar">
           <a href="#favourites" class="navbar-item"><i class="fa-regular fa-heart" style="color: #edf7fb;"></i> favourites</a>
-          <router-link to="/maincities" class="navbar-item maincities-navbar-item"
-            ><i class="fa-solid fa-city"></i> cities</router-link>
-          <router-link to="/mainplaces" class="navbar-item"><i class="fa-solid fa-map-pin" style="color: #edf7fb;"></i> places to visit</router-link>
+          <router-link to="/maincities" class="navbar-item"
+            ><i class="fa-solid fa-city" ></i> cities</router-link>
+        <router-link to="/mainplaces" class="navbar-item mainplaces-navbar-item"><i class="fa-solid fa-map-pin" style="color: #edf7fb;"></i> places to visit</router-link>
           <b-dropdown
             size="lg"
             variant="link"
@@ -87,7 +87,7 @@
 
           <div class="maincities-right-side-panel">
                 <!--search and trending-->
-                <h2 class="maincities-search-title">Search cities by: <i class="fa-solid fa-filter" style="color: #045768;"></i></h2>
+                <h2 class="maincities-search-title">Search places to visit by: <i class="fa-solid fa-filter" style="color: #045768;"></i></h2>
                 <div class="maincities-button-wrapper">
                   <router-link to="/searchCityByTag" class="maincities-tags-btn">tags</router-link>
                     <h4 class="maincities-or">or</h4>
@@ -285,8 +285,8 @@ export default {
   color: #bc672a !important;
 }
 
-.maincities-navbar-item,
-.maincities-navbar-item i{
+.mainplaces-navbar-item,
+.mainplaces-navbar-item i{
     color: #bc672a!important;
 }
 
