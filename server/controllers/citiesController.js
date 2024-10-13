@@ -143,29 +143,6 @@ async function getAllCities(req, res) {
     }
 }
 
-async function getOnePlaceFromCity(req, res){
-    const cityId = req.params.cityId;
-    const address = req.params.address;
-    
-    try{
-        const city = await CitiesModel.findOne(cityId).populate('placesToVisit');
-        if (!city){
-            return res.status(404).json({ message: "City not found" });
-        }
-        if (!city.placesToVisit || city.placesToVisit.length === 0) {
-            return res.status(404).json({ message: "No places are found in this city" });
-        }
-
-        const place = city.placesToVisit.find(place => place.address === address);
-        if (!place) {
-            return res.status(404).json({ message: "Place not found" });
-        }
-        res.status(200).json(place);
-    } catch (err) {
-        res.status(500).json({ error: 'An error occurred while fetching the places.' });
-    }
-}
-
 async function getPlacesFromCity(req, res){
     const cityId = req.params.cityId;
     try{
@@ -242,55 +219,11 @@ async function updateCity(req, res, next) {
 }
 
 
-async function patchCity(req, res, next){
-    const cityId = req.params.id;
-
-    try{
-        if (!req.body.isAdmin) {
-            return res.status(403).json({ message: "Access denied. Only admins can patch places." });
-        }
-        const city = await CitiesModel.findById(cityId);
-        if (city == null){
-            return res.status(404).json({"message": "City not found"});
-        }
-        city.goodToKnow = req.body.goodToKnow || city.goodToKnow;
-        city.statistics = req.body.statistics || city.statistics;
-        city.facts = req.body.facts || city.facts;
-        city.tags = req.body.tags || city.tags;
-        await city.save();
-        res.status(200).json(city);
-    } catch (err) {
-        if (err.name === 'ValidationError' && err.errors && err.errors.tags) {
-            return res.status(400).json({ message: "Invalid tag(s) provided. Please provide valid tags." });
-        }
-        next(err);
-    }
-};
-
-
-async function deleteOneCity(req, res) {
-    const cityId = req.params.id;
-    try {
-        const city = await CitiesModel.findByIdAndDelete(cityId);
-        if (!city) {
-            return res.status(404).json({ "message": "City not found" });
-        }
-        res.status(200).json({ "message": "City deleted successfully", city });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ "message": "Internal server error" });
-    }
-}
-
-
 module.exports = {
     createCity,
     createPlaceInCity,
     getAllCities,
     getOneCity,
     getPlacesFromCity,
-    getOnePlaceFromCity,
-    patchCity,
     updateCity,
-    deleteOneCity
 }

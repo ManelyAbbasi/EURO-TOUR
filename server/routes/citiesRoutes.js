@@ -11,14 +11,8 @@ router.get('/:id', citiesControllers.getOneCity);
 
 router.put('/:id', authentication, citiesControllers.updateCity);
 
-router.patch('/:id', authentication, citiesControllers.patchCity);
-
-router.delete('/:id', authentication, citiesControllers.deleteOneCity);
-
 router.post('/:id/placesToVisit', authentication, citiesControllers.createPlaceInCity);
 
 router.get('/:id/placesToVisit', citiesControllers.getPlacesFromCity);
-
-router.get('/:id/placesToVisit/:address', citiesControllers.getOnePlaceFromCity);
 
 module.exports = router;
