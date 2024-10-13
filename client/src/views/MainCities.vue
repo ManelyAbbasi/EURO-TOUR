@@ -77,7 +77,7 @@
             </div>
             <div class="detail-item">
               <p><strong class="heading">Places to Visit:</strong></p>
-              <p>{{ city.placesToVisit.join(', ') }}</p> <!-- Assuming placesToVisit is an array -->
+              <p>{{ city.placesToVisit.join(', ') }}</p>
             </div>
           </div>
         </div>
@@ -150,7 +150,7 @@ export default {
   methods: {
     async getCities() {
       try {
-        const response = await Api.get('/cities') // Make sure this endpoint returns the required fields
+        const response = await Api.get('/cities')
         if (response.data && response.data.cities) {
           this.cities = response.data.cities.map(city => ({
             cityName: city.cityName,
