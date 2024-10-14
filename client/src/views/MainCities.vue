@@ -77,7 +77,11 @@
             </div>
             <div class="detail-item">
               <p><strong class="heading">Places to Visit:</strong></p>
-              <p>{{ city.placesToVisit.join(', ') }}</p>
+              <ul class="places-list">
+                <li v-for="place in city.placesToVisit" :key="place">
+                  <a :href="`/places/${place}`">{{ place }}</a>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
@@ -160,7 +164,7 @@ export default {
             facts: city.facts,
             statistics: city.statistics,
             tags: city.tags,
-            placesToVisit: city.placesToVisit
+            placesToVisit: city.placesToVisit.map(place => place.placeName)
           }))
           console.log(this.cities)
         } else {
@@ -475,11 +479,22 @@ a img {
   padding: 1rem 0;
 }
 
-.detail-about-city p {
+.detail-about-city p,
+.places-list li a{
   text-align: left;
   margin: 0.1px;
   color: #759CAB;
   font-size: 1.1rem;
+}
+
+.places-list li a{
+  text-decoration: none;
+  transition: all 0.5s;
+}
+
+.places-list li a:hover{
+  text-decoration-line: underline;
+  color: #acbbc1;
 }
 
 .star-rating{

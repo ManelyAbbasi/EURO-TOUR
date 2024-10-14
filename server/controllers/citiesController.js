@@ -131,7 +131,10 @@ async function getAllCities(req, res) {
             sortOption.rating = sortByRating === 'asc' ? 1 : -1;
         }
 
-        const cities = await CitiesModel.find(filter).sort(sortOption);
+        const cities = await CitiesModel.find(filter).sort(sortOption).populate({
+            path: 'placesToVisit',  // Populate the placesToVisit field
+            select: 'placeName'     // Select only the placeName field
+        });
 
         if (!cities || cities.length === 0) {
             return res.status(404).json({ message: 'No cities found.' });
