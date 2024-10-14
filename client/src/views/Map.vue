@@ -804,6 +804,10 @@ input[type="text"], textarea {
   border-radius: 4px; /* Rounded corners */
 }
 
+input[type='checkbox'] {
+    accent-color: #BC672A;
+}
+
 /* Style for tags */
 .tags label {
   display: block; /* Stack tags vertically */
@@ -965,6 +969,7 @@ index: 9; /* Place it above other content */
   margin-left: 1rem;
   border-radius:4px;
   padding-left: 5px; /* Add left padding to text fields as well */
+  border: 1px solid #555;
 }
 
 /* Input Fields Styles */
@@ -976,7 +981,8 @@ index: 9; /* Place it above other content */
 
 /* Change border color on focus */
 .new-city-popup input[type="text"]:focus,
-.new-city-popup textarea:focus {
+.new-city-popup textarea:focus,
+#rating:focus {
   border-color: #BC672A; /* Darker shade on focus */
   outline: none; /* Remove default outline */
 }
