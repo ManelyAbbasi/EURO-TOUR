@@ -157,6 +157,7 @@ export default {
       localStorage.removeItem('x-auth-token')
       this.loggedInStatus = false
       this.$router.push('/')
+      window.location.reload() // careful with this, can create infinite loop
     },
     textLoad() {
       const textElement = document.querySelector('.typewriter-hello')
@@ -187,6 +188,7 @@ export default {
       textElement.classList.add('active')
     }
   },
+
   mounted() {
     const link = document.createElement('link')
     link.rel = 'stylesheet'
