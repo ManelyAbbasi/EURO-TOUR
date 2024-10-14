@@ -84,7 +84,6 @@
             </div>
           </div>
           <div class="get-to-know-box">
-            <template>
               <h3>Why join us?</h3>
               <div class="get-to-wrapper-text">
                 <p>With an account you can:</p>
@@ -93,7 +92,6 @@
                 <p>• Find cities and places to visit based on your preferences</p>
                 <p>• Stay updated on your destination's weather to ensure a safe journey every time</p>
               </div>
-            </template>
           </div>
         </div>
       </section>
@@ -207,9 +205,6 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
 
-*{
-  border: 2px solid red;
-}
 .home-body-container{
     margin: 0;
     padding: 0;
@@ -291,11 +286,19 @@ li.dropdown-item.logout {
   color: #bc672a !important;
 }
 
-.home-layout-wrapper, .welcome-back-container {
+.welcome-back-container {
+  padding: 9rem 2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.home-layout-wrapper {
   display: grid;
   grid-template-columns: 1fr 2fr;
   grid-gap: 20px;  /* Optional: Add some space between columns */
-  padding: 7rem 9% 2rem;
+  padding: 7rem 2rem;
+  padding-left: 7rem;
+  padding-right: 7rem;
   width: 100%;
   align-content: center;
 }
