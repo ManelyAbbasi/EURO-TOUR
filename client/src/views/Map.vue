@@ -393,7 +393,7 @@
 <div class="city-popup" v-if="isLoggedIn && showCityPopup">
   <div class="popup-header">
     <h3>Cities in {{ selectedCountry }}</h3>
-    <button @click="closeCityPopup">X</button>
+    <button class="close-button" @click="closeCityPopup">X</button>
   </div>
   <div class="popup-body">
     <ul>
@@ -419,7 +419,7 @@
 <div class="new-city-popup" :class="{ show: showNewCityForm }" v-if="isLoggedIn && showNewCityForm">
   <div class="popup-header">
     <h3>Create New City</h3>
-    <button @click="closeNewCityForm">X</button>
+    <button class="close-button" @click="closeNewCityForm">X</button>
   </div>
   <div class="popup-body">
     <form @submit.prevent="submitNewCity">
@@ -856,6 +856,7 @@ index: 9; /* Place it above other content */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Shadow for depth */
   z-index: 10; /* Place above the overlay */
   width: 300px; /* Set a width for the popup */
+  padding: 20px;
 }
 
 .popup-body ul {
@@ -938,7 +939,7 @@ index: 9; /* Place it above other content */
 .popup-header {
   position: sticky;
   top: 0;
-  background-color: #f2f2f2; /* Keep the light grey background */
+
   padding: 1px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
@@ -977,5 +978,20 @@ input[type="text"] {
 
 .new-city-popup form button[type="submit"]:hover {
   background-color: #a7561c; /* Darker on hover */
+}
+
+.close-button {
+  background-color: #BC672A;
+  border: 2px solid #BC672A;
+  font-size: 15px;
+  cursor: pointer;
+  color: #fff;
+  transition: color 0.3s ease;
+  width: 25px; /* Set width */
+  height: 25px; /* Set height */
+}
+
+.close-button:hover {
+  background-color:#a7561c;
 }
 </style>
