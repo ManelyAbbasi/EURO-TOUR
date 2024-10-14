@@ -181,7 +181,9 @@
     </b-col>
 
     </b-row>
-
+    <b-row class="reset-options-row">
+      <button @click="resetFilters" class="reset-options-button">reset options</button>
+    </b-row>
     <b-row>
         <b-col col="12">
           <div v-if="Array.isArray(cities) && cities.length > 0" class="cities-list">
@@ -484,6 +486,27 @@ h4 {
 .min-button.active,
 .max-button.active {
     background-color: #bc672a;
+}
+
+.reset-options-row{
+  justify-content: end;
+  padding-right: 4.5rem;
+}
+
+.reset-options-button{
+  padding: 0.5rem;
+  background-color: #233341; /* Red color */
+  color: #edf7fb;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 15%;
+  transition: all 0.3s;
+}
+
+.reset-options-button:hover{
+  background-color: #bc672a;
+  transform: scale(1.03);
 }
 
 h5{
