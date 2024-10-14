@@ -396,52 +396,40 @@
     <button @click="closeCityPopup">X</button>
   </div>
   <div class="popup-body">
-  <ul>
-    <li v-for="city in filteredCities" :key="city._id || city.cityName">
-      {{ city.cityName }}
-      <button v-if="isAdmin && city._id !== 'no-cities'" @click="editCity(city._id)">Edit</button>
-      <button v-if="isAdmin && city._id !== 'no-cities'" @click="deleteCity(city._id)">Delete</button>
-    </li>
-  </ul>
+    <ul>
+      <li v-for="city in filteredCities" :key="city._id || city.cityName">
+        {{ city.cityName }}
+        <button v-if="isAdmin && city._id !== 'no-cities'" @click="editCity(city._id)">Edit</button>
+        <button v-if="isAdmin && city._id !== 'no-cities'" @click="deleteCity(city._id)">Delete</button>
+      </li>
+    </ul>
+  </div>
+  <!-- New Button for Admins to Create a New City -->
+  <div v-if="isAdmin" class="popup-footer">
+    <button @click="createNewCity">Create New City</button>
+  </div>
 </div>
-<!-- New Button for Admins to Create a New City -->
-<!-- New Button for Admins to Create a New City -->
-<div v-if="isAdmin" class="popup-footer">
-    <button @click="showCityForm = true">Create New City</button>
-</div>
 
-<!-- New City Form -->
-<div v-if="showCityForm" class="new-city-form">
-    <div class="form-header">
-        <h3>Create New City</h3>
-        <button @click="showCityForm = false">X</button>
-    </div>
-    <div class="form-body">
-        <label for="cityName">City Name:</label>
-        <input type="text" id="cityName" v-model="newCity.cityName">
+<!-- Overlay for the New City Form -->
+<div class="overlay" v-if="showNewCityForm" @click="closeNewCityForm"></div>
 
-        <label for="countryName">Country Name:</label>
-        <input type="text" id="countryName" v-model="newCity.countryName">
+<!-- New City Form Popup -->
+<div class="new-city-popup" :class="{ show: showNewCityForm }" v-if="isLoggedIn && showNewCityForm">
+  <div class="popup-header">
+    <h3>Create New City</h3>
+    <button @click="closeNewCityForm">X</button>
+  </div>
+  <div class="popup-body">
+    <form @submit.prevent="submitNewCity">
+      <label for="cityName">City Name:</label>
+      <input type="text" id="cityName" v-model="newCityName" required>
 
-        <label for="goodToKnow">Good to Know:</label>
-        <input type="text" id="goodToKnow" v-model="newCity.goodToKnow">
+      <label for="country">Country:</label>
+      <input type="text" id="country" v-model="newCityCountry" required>
 
-        <label for="stats">Stats:</label>
-        <input type="text" id="stats" v-model="newCity.stats">
-
-        <label for="facts">Facts:</label>
-        <input type="text" id="facts" v-model="newCity.facts">
-
-        <label for="rating">Rating:</label>
-        <input type="text" id="rating" v-model="newCity.rating">
-
-        <label for="tags">Tags:</label>
-        <input type="text" id="tags" v-model="newCity.tags">
-    </div>
-    <div class="form-footer">
-        <button @click="saveNewCity">Save</button>
-    </div>
-</div>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
 </div>
 
 <!-- Message for non-logged-in users -->
@@ -464,23 +452,14 @@ export default {
         left: '0px',
         top: '0px'
       },
-      showCityForm: false,
-      newCity: {
-        cityName: '',
-        countryName: '',
-        goodToKnow: '',
-        stats: '',
-        facts: '',
-        rating: '',
-        tags: ''
-      },
       citiesInSystem: [],
       showCityPopup: false,
       selectedCountry: '',
       filteredCities: [],
       loggedInStatus: !!localStorage.getItem('x-auth-token'), // Check login status
       showLoginMessage: false, // New property to control the login message visibility
-      isAdmin: false // Add a new property for admin status
+      isAdmin: false, // Add a new property for admin status
+      showNewCityForm: false // New property to control the new city form visibility
     }
   },
   async created() {
@@ -601,13 +580,23 @@ export default {
       }
     },
     createNewCity() {
-    // Action to create a new city
-      alert('Redirect to create new city form or popup')
+      // Close the current city popup
+      this.showCityPopup = false
+
+      // Show the new city form popup
+      this.showNewCityForm = true // Create a new data property for the new city form visibility
     },
-    saveNewCity() {
-      // Handle the form submission logic here
-      alert(`City Name: ${this.newCity.cityName}, Country Name: ${this.newCity.countryName}`)
-      this.showCityForm = false // Hide the form after saving
+    submitNewCity() {
+    // Handle the submission logic here, such as API call
+      console.log(`City Created: ${this.newCityName} in ${this.newCityCountry}`)
+
+      // Optionally, close the new city form after submission
+      this.newCityName = '' // Reset the city name input
+      this.newCityCountry = '' // Reset the country input
+    },
+    closeNewCityForm() {
+      console.log('closeNewCityForm called')
+      this.showNewCityForm = false
     }
   }
 }
@@ -648,6 +637,16 @@ svg path {
   transition: opacity 0.3s;
   opacity: 0.8; /* Slightly transparent */
   pointer-events: none;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Dark semi-transparent background */
+  z-index: 9; /* Place it above other content */
 }
 
 /* Overlay styles */
@@ -726,6 +725,48 @@ index: 9; /* Place it above other content */
 
 .popup-footer button:hover {
   background-color: #a7561c; /* Darker green on hover */
+}
+
+/* New City Form Popup Styles */
+.new-city-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the popup */
+  background-color: #fff; /* White background */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Strong shadow for depth */
+  z-index: 10; /* Place above the overlay */
+  width: 400px; /* Set a width for the popup */
+  padding: 20px; /* Add padding for better spacing */
+  opacity: 0; /* Start hidden for fade-in effect */
+  transition: opacity 0.3s ease, transform 0.3s ease; /* Add transition for fade-in */
+}
+
+/* Show the popup with opacity */
+.new-city-popup.show {
+  opacity: 1; /* Fully visible */
+  transform: translate(-50%, -50%) scale(1.05); /* Slightly scale up on appearance */
+}
+
+/* Ensure the popup header has consistent styling */
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #f2f2f2; /* Light grey background */
+  border-top-left-radius: 8px; /* Round corners for the header */
+  border-top-right-radius: 8px; /* Round corners for the header */
+}
+
+/* Style for the form inputs */
+input[type="text"] {
+  width: calc(100% - 20px); /* Full width minus padding */
+  padding: 10px; /* Padding for input fields */
+  margin: 10px 0; /* Margin between fields */
+  border: 1px solid #ccc; /* Light grey border */
+  border-radius: 4px; /* Rounded corners */
 }
 
 </style>
