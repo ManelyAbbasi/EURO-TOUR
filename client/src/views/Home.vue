@@ -7,7 +7,7 @@
       <nav class="navbar">
         <a href="#favourites" class="navbar-item" v-if="isLoggedIn"><i class="fa-regular fa-heart" style="color: #edf7fb;"></i> favourites</a>
         <router-link to="/maincities" class="navbar-item" v-if="isLoggedIn"><i class="fa-solid fa-city" style="color: #edf7fb;"></i> cities</router-link>
-        <a href="#placesToVisit" class="navbar-item" v-if="isLoggedIn"><i class="fa-solid fa-map-pin" style="color: #edf7fb;"></i> places to visit</a>
+        <router-link to="/mainplaces" class="navbar-item" v-if="isLoggedIn"><i class="fa-solid fa-map-pin" style="color: #edf7fb;"></i> places to visit</router-link>
         <b-dropdown
           size="lg"
           variant="link"

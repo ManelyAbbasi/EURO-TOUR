@@ -1,5 +1,5 @@
 <template>
-    <div class="maincities-body-container">
+    <div class="mainplaces-body-container">
       <header class="euro-tour-header">
         <div class="logo-wrapper">
           <router-link to="/" class="logo">
@@ -8,9 +8,9 @@
         </div>
         <nav class="navbar">
           <a href="#favourites" class="navbar-item"><i class="fa-regular fa-heart" style="color: #edf7fb;"></i> favourites</a>
-          <router-link to="/maincities" class="navbar-item maincities-navbar-item"
-            ><i class="fa-solid fa-city"></i> cities</router-link>
-          <router-link to="/mainplaces" class="navbar-item"><i class="fa-solid fa-map-pin" style="color: #edf7fb;"></i> places to visit</router-link>
+          <router-link to="/maincities" class="navbar-item"
+            ><i class="fa-solid fa-city" ></i> cities</router-link>
+        <router-link to="/mainplaces" class="navbar-item mainplaces-navbar-item"><i class="fa-solid fa-map-pin" style="color: #edf7fb;"></i> places to visit</router-link>
           <b-dropdown
             size="lg"
             variant="link"
@@ -29,87 +29,70 @@
       </header>
 
       <main>
-        <div class="maincities-layout-wrapper">
-          <div class="maincities-left-side-panel">
+        <div class="mainplaces-layout-wrapper">
+          <div class="mainplaces-left-side-panel">
 
             <!-- display new text for each slide -->
-              <div class="pagination-wrapper">
-              <div class="mt-3">
-                <b-pagination v-model="currentPage" pills :total-rows="cities.length" :per-page="perPage"></b-pagination>
-              </div>
+            <div class="pagination-wrapper">
+            <div class="mt-3">
+              <b-pagination v-model="currentPage" pills :total-rows="places.length" :per-page="perPage"></b-pagination>
             </div>
+          </div>
 
-            <!-- City slide -->
-      <div id="city-slide">
-        <div v-for="city in paginatedCities" :key="city.cityName" class="city-item">
-          <div class="detail-about-city">
-            <span class="slide-title">{{ city.cityName }}, {{ city.country }}</span>
-            <div class="star-rating">
-               <!-- Display filled stars -->
-               <i v-for="n in Math.floor(city.rating)" :key="n" class="fa-solid fa-star" style="color: #bc672a;"></i>
-                <!-- Display empty stars for remaining ones -->
-                <i v-for="n in 5 - Math.floor(city.rating)" :key="'empty-' + n" class="fa-regular fa-star" style="color: #bc672a;"></i>
-              <span class="rating-text">{{ city.rating }}/5.0</span>
-            </div>
-            <div class="detail-item">
-              <p><strong class="heading">Good to know:</strong></p>
-              <p>{{ city.goodToKnow }}</p>
-            </div>
-            <div class="detail-item">
-              <p><strong class="heading">Facts:</strong></p>
-              <p>{{ city.facts }}</p>
-            </div>
-            <div class="detail-item">
-              <p><strong class="heading">Statistics:</strong></p>
-              <p>{{ city.statistics }}</p>
-            </div>
-            <div class="detail-item">
-              <p><strong class="heading">Tags:</strong></p>
-              <div class="tag-container">
-              <div
-                  v-for="tag in city.tags"
-                  :key="tag"
-                  class="tag-bubble"
-                >
-                  {{ tag }}
+          <div id="place-slide">
+            <div v-for="place in paginatedPlaces" :key="place.placeName" class="place-item">
+              <div class="detail-about-place">
+                <span class="slide-title">{{ place.placeName }}</span>
+                <div class="star-rating">
+                  <i v-for="n in Math.floor(place.rating)" :key="n" class="fa-solid fa-star" style="color: #bc672a;"></i>
+                  <i v-for="n in 5 - Math.floor(place.rating)" :key="'empty-' + n" class="fa-regular fa-star" style="color: #bc672a;"></i>
+                  <span class="rating-text">{{ place.rating }}/5.0</span>
                 </div>
-              </div>
-            </div>
-            <div class="detail-item">
-              <p><strong class="heading">Places to Visit:</strong></p>
-              <ul class="places-list">
-                <li v-for="place in city.placesToVisit" :key="place">
-                  <a :href="`/mainplaces/`">{{ place }}</a>
-                </li>
-              </ul>
-            </div>
+                <div class="detail-item">
+                  <p><strong class="heading">City:</strong></p>
+                  <a :href="`/maincities/`" class="city-link">{{ place.city }}</a>
+                </div>
+                <div class="detail-item">
+                  <p><strong class="heading">Address:</strong></p>
+                  <p>{{ place.address }}</p>
+                </div>
+                <div class="detail-item">
+                  <p><strong class="heading">Content:</strong></p>
+                  <p>{{ place.content }}</p>
+                </div>
+                <div class="detail-item">
+                  <p><strong class="heading">Tags:</strong></p>
+                  <div class="tag-container">
+                    <div v-for="tag in place.tags" :key="tag" class="tag-bubble">{{ tag }}</div>
+                  </div>
+                </div>
           </div>
         </div>
       </div>
 
         </div>
 
-          <div class="maincities-right-side-panel">
+          <div class="mainplaces-right-side-panel">
                 <!--search and trending-->
-                <h2 class="maincities-search-title">Search cities by: <i class="fa-solid fa-filter" style="color: #045768;"></i></h2>
-                <div class="maincities-button-wrapper">
-                  <router-link to="/searchCityByTag" class="maincities-tags-btn">tags</router-link>
-                    <h4 class="maincities-or">or</h4>
-                    <router-link to="/SearchCityByRating" class="maincities-ratings-btn">ratings</router-link>
+                <h3 class="mainplaces-search-title">Search places to visit by: <i class="fa-solid fa-filter" style="color: #045768;"></i></h3>
+                <div class="mainplaces-button-wrapper">
+                  <router-link to="/SearchPlaceByTag" class="mainplaces-tags-btn">tags</router-link>
+                    <h4 class="mainplaces-or">or</h4>
+                    <router-link to="/SearchPlaceByRating" class="mainplaces-ratings-btn">ratings</router-link>
                 </div>
-                <h2 class="maincities-search-title">Admins Picks:</h2>
-                <div class="trending-cities-wrapper">
-                  <div class="maincities-amst-wrapper trending-city-wrapper">
-                    <img src="@/assets/Amsterdam.jpg" alt="Amsterdam city" class="trending-cities-img"/>
-                    <p class="maincities-trending-amst">1. Amsterdam, The Netherlands</p>
+                <h2 class="mainplaces-admin-header">Admins Picks:</h2>
+                <div class="trending-places-wrapper">
+                  <div class="mainplaces-amst-wrapper trending-place-wrapper">
+                    <img src="@/assets/Amsterdam.jpg" alt="Amsterdam city" class="trending-places-img"/>
+                    <p class="mainplaces-trending-amst">1. Amsterdam, The Netherlands</p>
                   </div>
-                  <div class="maincities-dublin-wrapper trending-city-wrapper">
-                    <img src="@/assets/Dublin.jpg" alt="Dublin city" class="trending-cities-img"/>
-                    <p class="maincities-trending-dublin">2. Dublin, Republic of Ireland</p>
+                  <div class="mainplaces-dublin-wrapper trending-place-wrapper">
+                    <img src="@/assets/Dublin.jpg" alt="Dublin city" class="trending-places-img"/>
+                    <p class="mainplaces-trending-dublin">2. Dublin, Republic of Ireland</p>
                   </div>
-                  <div class="maincities-paris-wrapper trending-city-wrapper">
-                    <img src="@/assets/Paris.jpg" alt="Paris city" class="trending-cities-img"/>
-                    <p class="maincities-trending-paris">3. Paris, France</p>
+                  <div class="mainplaces-paris-wrapper trending-place-wrapper">
+                    <img src="@/assets/Paris.jpg" alt="Paris city" class="trending-places-img"/>
+                    <p class="mainplaces-trending-paris">3. Paris, France</p>
                   </div>
                 </div>
               </div>
@@ -133,7 +116,7 @@ import { Api } from '@/Api'
 export default {
   data() {
     return {
-      cities: [],
+      places: [],
       message: 'none',
       loggedInStatus: !!localStorage.getItem('x-auth-token'), // Reactive property for login status
       rows: 100,
@@ -145,34 +128,33 @@ export default {
     isLoggedIn() {
       return this.loggedInStatus // Use reactive `loggedInStatus` property
     },
-    paginatedCities() {
+    paginatedPlaces() {
       const start = (this.currentPage - 1) * this.perPage
       const end = start + this.perPage
-      return this.cities.slice(start, end) // Slicing based on the current page and per page count
+      console.log('Paginated places:', this.places.slice(start, end))
+      return this.places.slice(start, end)
     }
   },
   methods: {
-    async getCities() {
+    async getPlaces() {
       try {
-        const response = await Api.get('/cities')
-        if (response.data && response.data.cities) {
-          this.cities = response.data.cities.map(city => ({
-            cityName: city.cityName,
-            country: city.country,
-            rating: city.rating,
-            goodToKnow: city.goodToKnow,
-            facts: city.facts,
-            statistics: city.statistics,
-            tags: city.tags,
-            placesToVisit: city.placesToVisit.map(place => place.placeName)
+        const response = await Api.get('/places')
+        console.log('Fetched places:', response.data.placesToVisit)
+        if (response.data && response.data.placesToVisit) {
+          this.places = response.data.placesToVisit.map(place => ({
+            placeName: place.placeName,
+            address: place.address,
+            rating: place.rating,
+            content: place.content,
+            tags: place.tags,
+            city: place.city.cityName
           }))
-          console.log(this.cities)
         } else {
-          this.cities = []
+          this.places = []
         }
       } catch (error) {
-        console.error('Error fetching cities:', error)
-        this.cities = []
+        console.error('Error fetching places:', error)
+        this.places = []
       }
     },
     toggleFavorite() {
@@ -198,7 +180,7 @@ export default {
     }
   },
   mounted() {
-    this.getCities()
+    this.getPlaces()
     // Create a link element
     const link = document.createElement('link')
     link.rel = 'stylesheet'
@@ -215,7 +197,7 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
 
-.maincities-body-container{
+.mainplaces-body-container{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -289,12 +271,12 @@ export default {
   color: #bc672a !important;
 }
 
-.maincities-navbar-item,
-.maincities-navbar-item i{
+.mainplaces-navbar-item,
+.mainplaces-navbar-item i{
     color: #bc672a!important;
 }
 
-.maincities-layout-wrapper {
+.mainplaces-layout-wrapper {
   display: grid;
   grid-template-columns: 2fr 1fr;  /* Create two equal columns */
   grid-gap: 20px;
@@ -302,13 +284,13 @@ export default {
   width: 100%;
 }
 
-.maincities-right-side-panel .maincities-left-side-panel {
+.mainplaces-right-side-panel .mainplaces-left-side-panel {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.maincities-left-side-panel {
+.mainplaces-left-side-panel {
   display: flex;
   flex-direction: row;
   background-color: #edf7fb;
@@ -320,7 +302,7 @@ export default {
     font-weight: bold;
 }
 
-.maincities-right-side-panel {
+.mainplaces-right-side-panel {
     background-color: #759cab;
     flex-direction: column;
     display: flex;
@@ -328,26 +310,26 @@ export default {
     min-width: 30vw;
 }
 
-.maincities-right-side-panel h2 {
+.mainplaces-right-side-panel h2 {
     color: #045768;
     font-size: 2rem;
     padding: 0.5rem;
     margin: 1rem 0;
 }
 
-.maincities-right-side-panel h4 {
+.mainplaces-right-side-panel h4 {
     color: #045768;
     font-size: 1.5rem;
 }
 
-.maincities-button-wrapper {
+.mainplaces-button-wrapper {
     flex-direction: row;
     display: flex;
     gap: 2rem;
 }
 
-.maincities-button-wrapper .maincities-tags-btn,
-.maincities-button-wrapper .maincities-ratings-btn {
+.mainplaces-button-wrapper .mainplaces-tags-btn,
+.mainplaces-button-wrapper .mainplaces-ratings-btn {
     display: inline-block;
     padding: 0.5rem 2rem;
     color: #edf7fb;
@@ -360,18 +342,21 @@ export default {
 
 }
 
-.maincities-button-wrapper .maincities-tags-btn:hover,
-.maincities-button-wrapper .maincities-ratings-btn:hover {
+.mainplaces-button-wrapper .mainplaces-tags-btn:hover,
+.mainplaces-button-wrapper .mainplaces-ratings-btn:hover {
     color: #edf7fb;
     background-color: #bc672a;
     transform: scale(1.05);
 }
 
-.trending-cities-wrapper {
-  gap: 2rem;
+.mainplaces-right-side-panel h3{
+  font-size: 1.5rem;
+  color: #045768;
+  padding: 0.5rem;
+  margin: 1rem 0;
 }
 
-.trending-city-wrapper {
+.trending-place-wrapper {
   max-width: 20rem;
   display: flex;
   flex-direction: row;
@@ -380,7 +365,7 @@ export default {
   justify-content:last baseline;
 }
 
-.trending-city-wrapper p{
+.trending-place-wrapper p{
   font-size: 1rem;
   align-content: center;
   padding: 0.5rem;
@@ -388,12 +373,12 @@ export default {
   margin: 0.5rem;
 }
 
-.trending-cities-img {
+.trending-places-img {
   max-width: 35%;
   margin: 1rem;
 }
 
-.trending-city-wrapper img{
+.trending-place-wrapper img{
   border: 1px solid #edf7fb;
 }
 
@@ -446,7 +431,7 @@ a img {
   font-size: 3rem;
 }
 
-.maincities-left-side-panel{
+.mainplaces-left-side-panel{
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -462,12 +447,12 @@ a img {
   padding-bottom: 1rem;
 }
 
-#city-slide{
+#place-slide{
   order: 1;
   padding: 1.5rem;
 }
 
-.detail-about-city{
+.detail-about-place{
     color: #759CAB;
     font-size: 1.2rem;
     display: flex;
@@ -479,20 +464,24 @@ a img {
   padding: 1rem 0;
 }
 
-.detail-about-city p,
-.places-list li a{
+.detail-about-place p {
   text-align: left;
   margin: 0.1px;
   color: #759CAB;
   font-size: 1.1rem;
 }
 
-.places-list li a{
+.city-link{
+  text-align: left;
+  margin: 0.1px;
+  color: #759CAB;
+  font-size: 1.5rem;
   text-decoration: none;
   transition: all 0.5s;
+
 }
 
-.places-list li a:hover{
+.city-link:hover{
   text-decoration-line: underline;
   color: #acbbc1;
 }
