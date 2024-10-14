@@ -27,8 +27,12 @@ var citiesSchema = new Schema({
                     'warm weather', 
                     'cold weather',  
                     'popular', 
-                    'cheap', 
-                    'high-end', 
+                    'affordable', 
+                    'high-end',
+                    'lgbtq+ friendly',
+                    'walkable',
+                    'small city',
+                    'big city' 
                 ];
                 return tags.every(tag => allowedTags.includes(tag));
             },

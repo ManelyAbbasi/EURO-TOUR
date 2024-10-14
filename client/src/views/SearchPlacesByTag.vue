@@ -1,5 +1,5 @@
 <template>
-  <div class="maincities-body-container">
+  <div class="tag-places-body-container">
     <header class="euro-tour-header">
       <logo class="logo-wrapper">
         <router-link to="/" class="logo">
@@ -8,9 +8,9 @@
       </logo>
       <nav class="navbar">
           <a href="#favourites" class="navbar-item"><i class="fa-regular fa-heart" style="color: #edf7fb;"></i> favourites</a>
-          <router-link to="/maincities" class="navbar-item maincities-navbar-item"
+          <router-link to="/maincities" class="navbar-item"
             ><i class="fa-solid fa-city"></i> cities</router-link>
-          <router-link to="/mainplaces" class="navbar-item"><i class="fa-solid fa-map-pin"></i> places to visit</router-link>
+          <router-link to="/mainplaces" class="navbar-item mainplaces-navbar-item"><i class="fa-solid fa-map-pin"></i> places to visit</router-link>
           <b-dropdown
             size="lg"
             variant="link"
@@ -31,15 +31,15 @@
     <b-container class="search-by-tag-panel">
       <b-row>
         <b-col col="4">
-          <h2 class="search-cities-text">Search cities by:</h2>
+          <h2 class="search-places-text">Search places to visit by:</h2>
         </b-col>
 
         <b-col col="8">
           <div class="filter-options">
-            <router-link to="/searchCityByTag">
+            <router-link to="/SearchPlacesByTag">
               <button class="tags-button">tags</button>
             </router-link>
-            <router-link to="/searchCityByRating">
+            <router-link to="/SearchPlacesByRating">
               <button class="ratings-button">ratings</button>
             </router-link>
             <i class="fa-solid fa-filter"></i>
@@ -51,27 +51,26 @@
         <b-col>
           <div class="available-tags">
             <button class="tag-button" @click="toggleTag('historical')">historical</button>
-            <button class="tag-button" @click="toggleTag('quiet')">quiet</button>
+            <button class="tag-button" @click="toggleTag('adventurous')">adventurous</button>
             <button class="tag-button" @click="toggleTag('party')">party</button>
-            <button class="tag-button" @click="toggleTag('architecture')">architecture</button>
-            <button class="tag-button" @click="toggleTag('recently added')">recently added</button>
+            <button class="tag-button" @click="toggleTag('sight-seeing')">sight-seeing</button>
+            <button class="tag-button" @click="toggleTag('recently opened')">recently opened</button>
             <button class="tag-button" @click="toggleTag('nature')">nature</button>
             <button class="tag-button" @click="toggleTag('beachy')">beachy</button>
-            <button class="tag-button" @click="toggleTag('warm weather')">warm weather</button>
-            <button class="tag-button" @click="toggleTag('cold weather')">cold weather</button>
+            <button class="tag-button" @click="toggleTag('museum')">museum</button>
+            <button class="tag-button" @click="toggleTag('food')">food</button>
             <button class="tag-button" @click="toggleTag('popular')">popular</button>
-            <button class="tag-button" @click="toggleTag('cheap')">affordable</button>
+            <button class="tag-button" @click="toggleTag('affordable')">affordable</button>
             <button class="tag-button" @click="toggleTag('high-end')">high-end</button>
-            <button class="tag-button" @click="toggleTag('lgbtq+ friendly')">lgbtq+ friendly</button>
-            <button class="tag-button" @click="toggleTag('walkable')">walkable</button>
-            <button class="tag-button" @click="toggleTag('small city')">small city</button>
-            <button class="tag-button" @click="toggleTag('big city')">big city</button>
+            <button class="tag-button" @click="toggleTag('quiet')">quiet</button>
+            <button class="tag-button" @click="toggleTag('shopping')">shopping</button>
+            <button class="tag-button" @click="toggleTag('18+')">18+</button>
 
           </div>
         </b-col>
       </b-row>
 
-      <b-row class="selecting-tags-row">
+      <b-row>
         <b-col>
           <h2 class="result-text">selected tags:</h2>
         </b-col>
@@ -88,27 +87,27 @@
           </div>
         </b-col>
 
-        <b-col class="col-with-clear-button">
+        <b-col>
           <button class="clear-button" @click="clearTags">clear all tags</button>
         </b-col>
       </b-row>
 
       <b-row>
         <b-col col="12">
-          <div v-if="Array.isArray(cities) && cities.length > 0" class="cities-list">
-            <div v-for="city in cities" :key="city._id" class="city-card">
+          <div v-if="Array.isArray(places) && places.length > 0" class="places-list">
+            <div v-for="place in places" :key="place.address" class="place-card">
               <div class="top-half-card">
-                <div class="city-img-wrapper">
-                  <img src="@/assets/London.jpg" class="city-card-img"/>
+                <div class="place-img-wrapper">
+                  <img src="@/assets/London.jpg" class="place-card-img"/>
                 </div>
-                <div class="city-country-text">
-                  <p class="cityname-text">{{ city.cityName }}, </p>
-                  <p>{{ city.country }}</p>
+                <div class="place-city-text">
+                  <p class="placename-text">{{ place.placeName }}, </p>
+                  <p>{{ place.city.cityName }}</p>
                 </div>
               </div>
               <div class="bottom-half-card">
                 <div
-                  v-for="tag in city.tags"
+                  v-for="tag in place.tags"
                   :key="tag"
                   :class="{'tag-bubble': true, 'tag-bubble-selected': selectedTags.includes(tag), 'tag-bubble-nonselected': !selectedTags.includes(tag)}"
                 >
@@ -119,7 +118,7 @@
           </div>
 
           <div v-else>
-            <h3 class="no-cities-found">No cities found.</h3>
+            <h3 class="no-places-found">No places found.</h3>
           </div>
         </b-col>
       </b-row>
@@ -144,18 +143,18 @@ export default {
     return {
       selectedTags: [],
       allTags: [
-        'historical', 'quiet', 'party', 'architecture',
-        'recently added', 'nature', 'beachy', 'warm weather',
-        'cold weather', 'popular', 'affordable', 'high-end',
-        'lgbtq+ friendly', 'walkable', 'small city', 'big city'
+        'historical', 'adventurous', 'party', 'sight-seeing',
+        'museum', 'recently opened', 'food', 'nature',
+        'beachy', 'popular', 'affordable', 'high-end', 'quiet',
+        'shopping', '18+'
       ],
-      cities: [],
+      places: [],
       message: 'none',
       loggedInStatus: !!localStorage.getItem('x-auth-token')
     }
   },
   mounted() {
-    this.getCities()
+    this.getPlaces()
     // Create a link element
     const link = document.createElement('link')
     link.rel = 'stylesheet'
@@ -167,21 +166,21 @@ export default {
     document.head.appendChild(link)
   },
   methods: {
-    async getCities() {
+    async getPlaces() {
       try {
         const params = {
           tags: this.selectedTags.length ? this.selectedTags.join(',') : undefined
         }
 
-        const response = await Api.get('/cities', { params })
-        if (response.data && response.data.cities) {
-          this.cities = response.data.cities
+        const response = await Api.get('/places', { params })
+        if (response.data && response.data.placesToVisit) {
+          this.places = response.data.placesToVisit
         } else {
-          this.cities = []
+          this.places = []
         }
       } catch (error) {
-        console.error('Error fetching cities:', error)
-        this.cities = []
+        console.error('Error fetching places:', error)
+        this.places = []
       }
     },
     logout() {
@@ -197,11 +196,11 @@ export default {
       } else {
         this.selectedTags.splice(tagIndex, 1)
       }
-      this.getCities() // Fetch cities whenever tags change
+      this.getPlaces() // Fetch places whenever tags change
     },
     clearTags() {
       this.selectedTags = []
-      this.getCities() // Fetch cities after clearing tags
+      this.getPlaces() // Fetch places after clearing tags
     }
   }
 }
@@ -210,7 +209,7 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
 
-.maincities-body-container {
+.tag-places-body-container {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -233,19 +232,29 @@ export default {
     margin-top: 120px;
 }
 
-.search-cities-text {
+.search-places-text {
   font-family: "Lexend Deca", sans-serif;
   color: #045768;
-  font-size: 3rem;
+  font-size: 2rem;
   margin-top: 2.5rem;
-  margin-left: 6rem;
-
+  margin-left: 3rem;
+  justify-content: center;
+  text-align: center;
 }
 
 .filter-options {
   display: flex;
   gap: 4rem; /* Adds space between the buttons */
   margin-right: 10rem;
+}
+
+.available-tags{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
 }
 
 .tags-button, .ratings-button {
@@ -279,23 +288,6 @@ export default {
   margin-block: 40px;
 }
 
-.available-tags{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  padding: 8px;
-}
-
-.no-cities-found {
-  color: #233341;
-  justify-content: center;
-  display: flex;
-  padding: 5rem;
-  font-size: 3rem;
-}
-
 .tag-button {
     background-color: #00000025;
     color: #8FC6DF;
@@ -308,6 +300,14 @@ export default {
 
 .tag-button:hover{
     transform: scale(1.05);
+}
+
+.no-places-found {
+    color: #233341;
+    justify-content: center;
+    display: flex;
+    padding: 5rem;
+    font-size: 3rem;
 }
 
 .selected-tags {
@@ -404,8 +404,8 @@ export default {
   color: #bc672a !important;
 }
 
-.maincities-navbar-item,
-.maincities-navbar-item i{
+.mainplaces-navbar-item,
+.mainplaces-navbar-item i{
     color: #bc672a!important;
 }
 
@@ -487,8 +487,7 @@ a img {
         flex-direction: column;
         gap: 2rem;
     }
-    .layout-wrapper,
-    .get-to-know-wrapper{
+    .layout-wrapper {
         flex-direction: column;
         display: flex;
     }
@@ -517,25 +516,25 @@ a img {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .city-card {
+    .place-card {
         flex: 0 1 calc(45% - 1rem); /* 2 cards per row on smaller screens */
     }
 }
 
 @media (max-width: 576px) {
-    .city-card {
+    .place-card {
         flex: 0 1 calc(100% - 1rem); /* 1 card per row on extra small screens */
     }
 }
 
-.cities-list {
+.places-list {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     margin: 2rem;
 }
 
-.city-card {
+.place-card {
     background-color: #9BA9B6;
     border: 1px solid #bc672a;
     border-radius: 8px;
@@ -546,7 +545,7 @@ a img {
     text-align: center;
 }
 
-.city-card-img{
+.place-card-img{
   max-width: 100%;
   border-radius: 10%;
 }
@@ -557,18 +556,18 @@ a img {
   padding-bottom: 0.5rem;
 }
 
-.city-country-text{
+.place-city-text{
   padding: 1rem 0;
   justify-content: center;
 }
 
-.city-country-text p {
+.place-city-text p {
   margin: 0;
   padding: 0;
   line-height: 1.7;
 }
 
-.cityname-text{
+.placename-text{
   font-weight: 700;
 }
 

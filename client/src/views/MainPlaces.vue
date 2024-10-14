@@ -76,9 +76,9 @@
                 <!--search and trending-->
                 <h3 class="mainplaces-search-title">Search places to visit by: <i class="fa-solid fa-filter" style="color: #045768;"></i></h3>
                 <div class="mainplaces-button-wrapper">
-                  <router-link to="/SearchPlaceByTag" class="mainplaces-tags-btn">tags</router-link>
+                  <router-link to="/SearchPlacesByTag" class="mainplaces-tags-btn">tags</router-link>
                     <h4 class="mainplaces-or">or</h4>
-                    <router-link to="/SearchPlaceByRating" class="mainplaces-ratings-btn">ratings</router-link>
+                    <router-link to="/SearchPlacesByRating" class="mainplaces-ratings-btn">ratings</router-link>
                 </div>
                 <h2 class="mainplaces-admin-header">Admins Picks:</h2>
                 <div class="trending-places-wrapper">
