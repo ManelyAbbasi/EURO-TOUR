@@ -399,8 +399,8 @@
     <ul>
       <li v-for="city in filteredCities" :key="city._id || city.cityName">
         {{ city.cityName }}
-        <button v-if="isAdmin && city._id !== 'no-cities'" @click="editCity(city._id)">Edit</button>
-        <button v-if="isAdmin && city._id !== 'no-cities'" @click="deleteCity(city._id)">Delete</button>
+        <button class="edit-button" v-if="isAdmin && city._id !== 'no-cities'" @click="editCity(city._id)">Edit</button>
+        <button class="delete-button" v-if="isAdmin && city._id !== 'no-cities'" @click="deleteCity(city._id)">Delete</button>
       </li>
     </ul>
   </div>
@@ -852,10 +852,11 @@ index: 9; /* Place it above other content */
   left: 50%;
   transform: translate(-50%, -50%); /* Center the popup */
   background-color: #fff; /* White background */
+  color: #045768;
   border-radius: 8px; /* Rounded corners */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Shadow for depth */
   z-index: 10; /* Place above the overlay */
-  width: 300px; /* Set a width for the popup */
+  width: 500px; /* Set a width for the popup */
   padding: 20px;
 }
 
@@ -863,17 +864,26 @@ index: 9; /* Place it above other content */
   list-style-type: none; /* Remove the default bullets */
   padding: 0; /* Remove default padding */
   margin: 0; /* Remove default margin */
+  font-size: 1.2rem;
+
+}
+
+.popup-body li{
+  border-top: 1px solid #ddd; /* Optional: separate footer visually */
+  margin-top: 1rem;
 }
 
 .popup-body {
   padding: 10px 0;
 }
+
 .login-message {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%); /* Center the message */
   background-color: #fff; /* White background */
+  color: #BC672A;
   border-radius: 8px; /* Rounded corners */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Shadow for depth */
   z-index: 10; /* Place above the overlay */
@@ -888,7 +898,7 @@ index: 9; /* Place it above other content */
 }
 
 .popup-footer button {
-  background-color: #BC672A; /* Green background */
+  background-color: #BC672A;
   color: white; /* White text */
   border: none;
   padding: 10px 20px;
@@ -939,7 +949,6 @@ index: 9; /* Place it above other content */
 .popup-header {
   position: sticky;
   top: 0;
-
   padding: 1px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
@@ -991,7 +1000,36 @@ input[type="text"] {
   height: 25px; /* Set height */
 }
 
-.close-button:hover {
+.close-button:hover, .edit-button:hover, .delete-button:hover {
   background-color:#a7561c;
+}
+
+.edit-button{
+  align-self: flex-end;
+  background-color: #BC672A;
+  color: white;
+  border: none;
+  padding: 2px 10px;
+  text-align: center;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: -10px; /* Adjust this value to move it upwards */
+  margin-right: 10px;
+  margin-left: 200px;
+}
+
+.delete-button {
+  align-self: flex-end;
+  background-color: #BC672A;
+  color: white;
+  border: none;
+  padding: 2px 10px;
+  text-align: center;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px; /* Adjust this value to move it upwards */
+  margin-right: 10px;
 }
 </style>
