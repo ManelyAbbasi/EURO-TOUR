@@ -1,5 +1,5 @@
 <template>
-    <div class="maincities-body-container">
+    <div class="rating-places-body-container">
       <header class="euro-tour-header">
         <div class="logo-wrapper">
           <router-link to="/" class="logo">
@@ -8,10 +8,10 @@
         </div>
         <nav class="navbar">
           <a href="#favourites" class="navbar-item"><i class="fa-regular fa-heart" style="color: #edf7fb;"></i> favourites</a>
-          <router-link to="/maincities" class="navbar-item maincities-navbar-item"
+          <router-link to="/maincities" class="navbar-item"
             ><i class="fa-solid fa-city"></i> cities</router-link>
-          <router-link to="/mainplaces" class="navbar-item"><i class="fa-solid fa-map-pin"></i> places to visit</router-link>
-            <b-dropdown
+          <router-link to="/mainplaces" class="navbar-item mainplaces-navbar-item"><i class="fa-solid fa-map-pin"></i> places to visit</router-link>
+          <b-dropdown
             size="lg"
             variant="link"
             toggle-class="text-decoration-none"
@@ -32,16 +32,16 @@
 
             <b-row>
             <b-col col="4">
-                <h2 class="search-cities-text">Search cities by:</h2>
+                <h2 class="search-places-text">Search places to visit by:</h2>
             </b-col>
 
             <b-col col="8">
         <div class="filter-options">
-        <router-link to="/searchCityByTag">
+        <router-link to="/SearchPlacesByTag">
             <button class="tags-button">tags</button>
         </router-link>
 
-        <router-link to="/SearchCityByRating">
+        <router-link to="/SearchPlacesByRating">
             <button class="ratings-button">ratings</button>
         </router-link>
 
@@ -184,31 +184,31 @@
 
     <b-row>
         <b-col col="12">
-          <div v-if="Array.isArray(cities) && cities.length > 0" class="cities-list">
-            <div v-for="city in cities" :key="city._id" class="city-card">
+          <div v-if="Array.isArray(places) && places.length > 0" class="places-list">
+            <div v-for="place in places" :key="place.address" class="place-card">
               <div class="top-half-card">
-                <div class="city-img-wrapper">
-                  <img src="@/assets/London.jpg" class="city-card-img"/>
+                <div class="place-img-wrapper">
+                  <img src="@/assets/London.jpg" class="place-card-img"/>
                 </div>
-                <div class="city-country-text">
-                  <p class="cityname-text">{{ city.cityName }}, </p>
-                  <p>{{ city.country }}</p>
+                <div class="place-city-text">
+                  <p class="placename-text">{{ place.placeName }}, </p>
+                  <p>{{ place.city.cityName }}</p>
                 </div>
               </div>
                 <div class="bottom-half-card">
-                  <p>{{ city.rating }}</p>
+                  <p>{{ place.rating }}</p>
                   <div class="star-rating">
                     <!-- Display filled stars -->
-                    <i v-for="n in Math.floor(city.rating)" :key="n" class="fa-solid fa-star" style="color: #bc672a;"></i>
+                    <i v-for="n in Math.floor(place.rating)" :key="n" class="fa-solid fa-star" style="color: #bc672a;"></i>
                     <!-- Display empty stars for remaining ones -->
-                    <i v-for="n in 5 - Math.floor(city.rating)" :key="'empty-' + n" class="fa-regular fa-star" style="color: #bc672a;"></i>
+                    <i v-for="n in 5 - Math.floor(place.rating)" :key="'empty-' + n" class="fa-regular fa-star" style="color: #bc672a;"></i>
                   </div>
                 </div>
             </div>
           </div>
 
           <div v-else>
-            <h3>No cities found.</h3>
+            <h3 class="no-places-found">No places found.</h3>
           </div>
         </b-col>
       </b-row>
@@ -235,7 +235,7 @@ export default {
       activeMinRating: null,
       activeMaxRating: null,
       activeSort: null,
-      cities: [],
+      places: [],
       ratings: [1, 2, 3, 4, 5],
       sortOptions: [
         { label: 'Rating: Low to High', value: 'asc' },
@@ -245,7 +245,7 @@ export default {
   },
 
   mounted() {
-    this.getCities()
+    this.getPlaces()
     // Create a link element
     const link = document.createElement('link')
     link.rel = 'stylesheet'
@@ -257,7 +257,7 @@ export default {
     document.head.appendChild(link)
   },
   methods: {
-    async getCities() {
+    async getPlaces() {
       try {
         // Query params for minRating, maxRating, and sortByRating
         const params = {}
@@ -266,32 +266,32 @@ export default {
         if (this.activeMaxRating) params.maxRating = this.activeMaxRating
         if (this.activeSort) params.sortByRating = this.activeSort
 
-        const response = await Api.get('/cities', { params })
+        const response = await Api.get('/places', { params })
 
-        if (response.data && response.data.cities) {
-          this.cities = response.data.cities
+        if (response.data && response.data.placesToVisit) {
+          this.places = response.data.placesToVisit
         } else {
-          this.cities = []
+          this.places = []
         }
       } catch (error) {
-        console.error('Error fetching cities:', error)
-        this.cities = []
+        console.error('Error fetching places:', error)
+        this.places = []
       }
     },
     recordSortOption(option) {
       this.activeSort = option
-      this.getCities()
+      this.getPlaces()
     },
     selectMinRating(minRating) {
       if (!this.activeMaxRating || Number(minRating) <= Number(this.activeMaxRating)) {
         this.activeMinRating = minRating
-        this.getCities()
+        this.getPlaces()
       }
     },
     selectMaxRating(maxRating) {
       if (!this.activeMinRating || Number(maxRating) >= Number(this.activeMinRating)) {
         this.activeMaxRating = maxRating
-        this.getCities()
+        this.getPlaces()
       }
     },
     logout() {
@@ -303,7 +303,7 @@ export default {
       this.activeMinRating = null
       this.activeMaxRating = null
       this.activeSort = null
-      this.getCities()
+      this.getPlaces()
     }
   }
 }
@@ -312,7 +312,7 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
 
-.maincities-body-container {
+.rating-places-body-container {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -332,15 +332,17 @@ export default {
     width: 100rem;
     min-height: 50rem;
     margin-bottom: 35px;
-    margin-top: 9rem;}
+    margin-top: 9rem;
+}
 
-.search-cities-text {
+.search-places-text {
   font-family: "Lexend Deca", sans-serif;
   color: #045768;
-  font-size: 3rem;
+  font-size: 2rem;
   margin-top: 2.5rem;
-  margin-left: 6rem;
-
+  margin-left: 3rem;
+  justify-content: center;
+  text-align: center;
 }
 
 .filter-options {
@@ -486,6 +488,14 @@ h4 {
     background-color: #bc672a;
 }
 
+.no-places-found {
+    color: #233341;
+    justify-content: center;
+    display: flex;
+    padding: 5rem;
+    font-size: 3rem;
+}
+
 h5{
   color: #045768;
 }
@@ -550,8 +560,8 @@ h5{
   color: #bc672a !important;
 }
 
-.maincities-navbar-item,
-.maincities-navbar-item i{
+.mainplaces-navbar-item,
+.mainplaces-navbar-item i{
     color: #bc672a!important;
 }
 
@@ -633,8 +643,7 @@ a img {
         flex-direction: column;
         gap: 2rem;
     }
-    .layout-wrapper,
-    .get-to-know-wrapper{
+    .layout-wrapper{
         flex-direction: column;
         display: flex;
     }
@@ -661,14 +670,14 @@ a img {
     }
 }
 
-.cities-list {
+.places-list {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     margin: 2rem;
 }
 
-.city-card {
+.place-card {
     background-color: #9BA9B6;
     border: 1px solid #bc672a;
     border-radius: 8px;
@@ -679,7 +688,7 @@ a img {
     text-align: center;
 }
 
-.city-card-img{
+.place-card-img{
   max-width: 100%;
   border-radius: 10%;
 }
@@ -690,19 +699,19 @@ a img {
   padding-bottom: 0.5rem;
 }
 
-.city-country-text{
+.place-city-text{
   padding-top: 1rem;
   justify-content: center;
   align-items: center;
 }
 
-.city-country-text p {
+.place-city-text p {
   margin: 0;
   padding: 0;
   line-height: 1.7;
 }
 
-.cityname-text{
+.placename-text{
   font-weight: 700;
 }
 
