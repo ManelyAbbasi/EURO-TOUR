@@ -1,11 +1,11 @@
 <template>
   <div class="tag-places-body-container">
     <header class="euro-tour-header">
-      <logo class="logo-wrapper">
+      <div class="logo-wrapper">
         <router-link to="/" class="logo">
           <img src="@/assets/horizontal-logo.png" alt="Euro Tour logo" />
         </router-link>
-      </logo>
+      </div>
       <nav class="navbar">
           <a href="#favourites" class="navbar-item"><i class="fa-regular fa-heart" style="color: #edf7fb;"></i> favourites</a>
           <router-link to="/maincities" class="navbar-item"

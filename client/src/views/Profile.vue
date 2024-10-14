@@ -1,11 +1,11 @@
 <template>
   <div class="maincities-body-container">
     <header class="euro-tour-header">
-      <logo class="logo-wrapper">
+      <div class="logo-wrapper">
         <router-link to="/" class="logo">
           <img src="@/assets/horizontal-logo.png" alt="Euro Tour logo" />
         </router-link>
-      </logo>
+      </div>
       <nav class="navbar">
         <router-link to="/favourites" class="navbar-item">
           <i class="fa-regular fa-heart"></i> favourites
@@ -109,13 +109,36 @@
         </div>
       </b-row>
 
-      <b-row>
+      <b-row class="save-row">
         <div class="save-changes-container">
           <button class="save-button" type="button" @click="saveChanges($event)">save changes</button>
           <span class="saved-message" v-if="isSaved">saved!</span>
         </div>
       </b-row>
+
+      <b-row class="delete-row">
+        <b-col>        <h4 class="delete-title">Do you want to delete your account?</h4>
+        </b-col>
+        <b-col>        <button class="delete-button" type="button" @click="deletePopUp">delete account</button>
+        </b-col>
+      </b-row>
     </form>
+    <div class="delete-popup" v-if="deleteInProcess">
+      <div class="popup-header">
+        <button @click="closeDeletePopUp">X</button>
+      </div>
+      <div class="popup-body">
+        <p>Are you sure you want to delete your account?</p>
+
+        <label for="usernameDeleting">enter your username</label>
+        <input type="text" id="usernameDeleting" class="input-field" v-model="usernameDeleting" />
+        <label for="passwordDeleting">enter your password</label>
+        <input type="password" id="passwordDeleting" class="input-field" v-model="passwordDeleting" />
+        <div class="delete-button-wrapper">
+          <button @click="deleteAccount($event)">Delete Account</button>
+        </div>
+      </div>
+    </div>
 
     <footer class="footer">
       <div class="footer-text">
@@ -138,7 +161,10 @@ export default {
       password: '', // Add password field to bind to the input
       activeGender: null, // Initialize active gender
       activeLGBTQIA: null, // Initialize active LGBTQIA status
-      isSaved: false // Track if the "saved!" message should be shown
+      isSaved: false, // Track if the "saved!" message should be shown
+      deleteInProcess: false,
+      usernameDeleting: '', // For delete popup
+      passwordDeleting: '' // For delete popup
     }
   },
   computed: {
@@ -186,6 +212,35 @@ export default {
       } catch (error) {
         console.error('Update error:', error)
         alert('You are not allowed to change your username, and password can not be empty.')
+      }
+    },
+    deletePopUp() {
+      this.deleteInProcess = true
+    },
+    closeDeletePopUp() {
+      this.deleteInProcess = false
+    },
+    async deleteAccount(event) {
+      if (event) {
+        event.preventDefault() // This prevents the default form or button submission behavior
+      }
+      try {
+        const authToken = localStorage.getItem('x-auth-token') // Get auth token from localStorage
+        if (!authToken) throw new Error('No auth token found. Please log in.')
+        const response = await Api.delete(`/users/${this.usernameDeleting}`, {
+          headers: {
+            'x-auth-token': authToken // Send token for authorization
+          },
+          data: { password: this.passwordDeleting }
+        })
+
+        if (response.status === 200) {
+          console.log('Account deleted successfully')
+          this.logout()
+        }
+      } catch (error) {
+        console.error('Error deleting account:', error)
+        alert('Error deleting account. Please check your credentials.')
       }
     },
     logout() {
@@ -302,6 +357,111 @@ label {
   font-size: 1.1rem;
   font-family: 'Lexend Deca', sans-serif;
   text-align: left;
+}
+
+h4 {
+  color: #edf7fb;
+  font-size: 1.1rem;
+  font-family: 'Lexend Deca', sans-serif;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.delete-button {
+  background-color: #233341;
+  color: #9BA9B6;
+  border: none;
+  padding: 0.3rem 1.3rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.delete-row{
+  display: flex;
+  justify-content: flex-start;
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  gap: 1rem;
+}
+
+.delete-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -35%); /* Center the popup */
+  background-color: aliceblue; /* White background */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+  z-index: 10; /* Place above the overlay */
+  min-width: 300px; /* Set a width for the popup */
+  max-width: 600px;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #cfd3d4; /* Light grey background */
+  border-top-left-radius: 8px; /* Round corners for the header */
+  border-top-right-radius: 8px; /* Round corners for the header */
+}
+
+.popup-header button{
+  margin-left: auto; /* Ensures the button is pushed to the right */
+  border: none;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.popup-body label,
+.popup-body p{
+  list-style-type: none; /* Remove the default bullets */
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
+}
+
+.popup-body {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.popup-body input{
+  width: 100%;
+}
+
+.delete-button-wrapper{
+  justify-content: center;
+  display: flex;
+}
+
+.popup-body button{
+  width: 40%;
+  background-color: #233341;
+  color: #edf7fb;
+  transition: all 0.3s;
+  border: none;
+  padding: 0.5rem 1rem;
+}
+
+.popup-body button:hover{
+  background-color: #edf7fb;
+  color: #233341;
+  transform: scale(1.03);
+  border: 1px solid #233341;
+}
+
+p{
+  color: #233341;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0.5rem 1rem 1.5rem;
+}
+
+.popup-body p,
+.popup-body button{
+  justify-content: center;
+  display: flex;
 }
 
 .input-field {

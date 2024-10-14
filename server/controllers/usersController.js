@@ -137,23 +137,47 @@ async function updateUser(req, res, next) {
 }
 
 async function deleteOneUser(req, res) {
-    const username = req.params.username;
-
     try {
-        if (req.body.username !== username && !req.body.isAdmin) {
-            return res.status(403).json({ message: "You are not authorized to delete this user" });
-        }
-        
-        const user = await UsersModel.findOneAndDelete({ username: username });
-        
-        if (!user) {
-            return res.status(404).json({ "message": "User not found" });
+        const sessionKey = req.headers['x-auth-token'];
+        if (!sessionKey) {
+            return res.status(401).json({ message: "No session token provided, authorization denied" });
         }
 
-        res.status(200).json({ "message": "User deleted successfully", user });
+        // Find the current user based on session key
+        const currentUser = await UsersModel.findOne({ 'session.key': sessionKey });
+        if (!currentUser) {
+            return res.status(401).json({ message: "Invalid session token" });
+        }
+
+        // Find the user to delete
+        const userToDelete = await UsersModel.findOne({ username: req.params.username });
+        if (!userToDelete) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Check if the current user is authorized to delete the user
+        if (currentUser.username !== req.params.username && !currentUser.isAdmin) {
+            return res.status(403).json({ message: "You are not authorized to delete this user." });
+        }
+
+        // Check if the password is provided in the request body
+        if (!req.body.password) {
+            return res.status(400).json({ message: "Password is required for deletion." });
+        }
+        
+        // Check if the password matches
+        if (currentUser.password !== req.body.password) {
+            return res.status(403).json({ message: "Passwords don't match." });
+        }
+        
+        // Delete the user
+        await UsersModel.deleteOne({ username: req.params.username });
+
+        // Respond with success
+        res.status(200).json({ message: "User deleted successfully", username: userToDelete.username });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ "message": "Internal server error" });
+        res.status(500).json({ message: "Internal server error" });
     }
 }
 
