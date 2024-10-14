@@ -658,15 +658,33 @@ export default {
       this.selectedTags = []
     },
     async submitNewCity() {
-      // Handle the submission logic here, such as API call
-      console.log(`City Created: ${this.newCityName} in ${this.newCityCountry}`)
-      console.log(`Good to Know: ${this.goodToKnow}`)
-      console.log(`Stats: ${this.stats}`)
-      console.log(`Facts: ${this.facts}`)
-      console.log(`Rating: ${this.rating}`)
-      console.log(`Tags: ${this.selectedTags}`)
+      const cityData = {
+        cityName: this.newCityName,
+        country: this.newCityCountry,
+        goodToKnow: this.goodToKnow,
+        statistics: this.stats,
+        facts: this.facts,
+        rating: this.rating,
+        tags: this.selectedTags,
+        isAdmin: this.isAdmin
+      }
 
-      // Reset fields after submission
+      try {
+        const response = await Api.post('/cities', cityData, {
+          headers: {
+            'x-auth-token': localStorage.getItem('x-auth-token')
+          }
+        })
+
+        if (response.status === 201) {
+          alert('City successfully created!')
+          this.loadCities()
+        }
+      } catch (error) {
+        console.error('Error creating city:', error)
+        alert('Failed to create city: ' + (error.response?.data?.message || error.message))
+      }
+
       this.newCityName = ''
       this.goodToKnow = ''
       this.stats = ''
@@ -674,7 +692,6 @@ export default {
       this.rating = null
       this.selectedTags = []
 
-      // Close the form after submission (optional)
       this.closeNewCityForm()
     },
     closeNewCityForm() {
