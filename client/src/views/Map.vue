@@ -414,6 +414,7 @@
 <div class="overlay" v-if="showNewCityForm" @click="closeNewCityForm"></div>
 
 <!-- New City Form Popup -->
+<!-- New City Form Popup -->
 <div class="new-city-popup" :class="{ show: showNewCityForm }" v-if="isLoggedIn && showNewCityForm">
   <div class="popup-header">
     <h3>Create New City</h3>
@@ -421,32 +422,36 @@
   </div>
   <div class="popup-body">
     <form @submit.prevent="submitNewCity">
-      <label for="cityName">City Name:</label>
-      <input type="text" id="cityName" v-model="newCityName" required />
+      <div class="form-layout">
+        <div class="form-left">
+          <label for="cityName">City Name:</label>
+          <input type="text" id="cityName" v-model="newCityName" required />
 
-      <label for="country">Country:</label>
-      <input type="text" id="country" v-model="newCityCountry" readonly />
+          <label for="country">Country:</label>
+          <input type="text" id="country" v-model="newCityCountry" readonly />
 
-      <label for="goodToKnow">Good to Know:</label>
-      <textarea id="goodToKnow" v-model="goodToKnow" placeholder="Enter important information..."></textarea>
+          <label for="goodToKnow">Good to Know:</label>
+          <textarea id="goodToKnow" v-model="goodToKnow" placeholder="Enter important information..."></textarea>
 
-      <label for="stats">Stats:</label>
-      <input type="text" id="stats" v-model="stats" placeholder="Enter stats about the city..." />
+          <label for="stats">Stats:</label>
+          <input type="text" id="stats" v-model="stats" placeholder="Enter stats about the city..." />
 
-      <label for="facts">Facts:</label>
-      <textarea id="facts" v-model="facts" placeholder="Enter interesting facts about the city..."></textarea>
+          <label for="facts">Facts:</label>
+          <textarea id="facts" v-model="facts" placeholder="Enter interesting facts about the city..."></textarea>
 
-      <label for="rating">Rating:</label>
-      <input type="number" id="rating" v-model="rating" min="0" max="10" step="0.1" placeholder="Enter a rating (0-10)" />
-
-      <label for="tags">Tags:</label>
-      <div class="tags">
-        <label v-for="tag in tagOptions" :key="tag">
-          <input type="checkbox" :value="tag" v-model="selectedTags" />
-          {{ tag }}
-        </label>
+          <label for="rating">Rating:</label>
+          <input type="number" id="rating" v-model="rating" min="0" max="10" step="0.1" placeholder="Enter a rating (0-5)" />
+        </div>
+        <div class="form-right">
+          <label for="tags">Tags:</label>
+          <div class="tags">
+            <label v-for="tag in tagOptions" :key="tag">
+              <input type="checkbox" :value="tag" v-model="selectedTags" />
+              {{ tag }}
+            </label>
+          </div>
+        </div>
       </div>
-
       <button type="submit">Submit</button>
     </form>
   </div>
@@ -702,7 +707,35 @@ svg path {
   fill: #8FC6DF; /* Optional: Keep the color unchanged */
   cursor: default; /* Countries not in the system have default cursor */
 }
+.form-layout {
+  display: flex; /* Flexbox for layout */
+  justify-content: space-between; /* Space between left and right sections */
+}
 
+/* Left side of the form */
+.form-left {
+  width: 60%; /* Take up 60% of the width */
+}
+
+/* Right side of the form */
+.form-right {
+  width: 35%; /* Take up 35% of the width */
+  padding-left: 20px; /* Space between left and right sections */
+}
+/* Style for the form inputs */
+input[type="text"], textarea {
+  width: calc(100% - 20px); /* Full width minus padding */
+  padding: 10px; /* Padding for input fields */
+  margin: 10px 0; /* Margin between fields */
+  border: 1px solid #ccc; /* Light grey border */
+  border-radius: 4px; /* Rounded corners */
+}
+
+/* Style for tags */
+.tags label {
+  display: block; /* Stack tags vertically */
+  margin: 5px 0; /* Margin for spacing between tags */
+}
 /* Tooltip styles */
 .tooltip {
   position: absolute;
@@ -752,15 +785,6 @@ index: 9; /* Place it above other content */
   width: 300px; /* Set a width for the popup */
 }
 
-.popup-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  background-color: #f2f2f2; /* Light grey background */
-  border-top-left-radius: 8px; /* Round corners for the header */
-  border-top-right-radius: 8px; /* Round corners for the header */
-}
 .popup-body ul {
   list-style-type: none; /* Remove the default bullets */
   padding: 0; /* Remove default padding */
@@ -768,7 +792,7 @@ index: 9; /* Place it above other content */
 }
 
 .popup-body {
-  padding: 10px;
+  padding: 10px 0;
 }
 .login-message {
   position: fixed;
@@ -805,20 +829,29 @@ index: 9; /* Place it above other content */
   background-color: #a7561c; /* Darker green on hover */
 }
 
+.new-city-popup form {
+  display: flex;
+  flex-direction: column;
+}
+
 /* New City Form Popup Styles */
 .new-city-popup {
   position: fixed;
-  top: 50%;
+  top: 55%;
   left: 50%;
   transform: translate(-50%, -50%); /* Center the popup */
-  background-color: #fff; /* White background */
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Strong shadow for depth */
-  z-index: 10; /* Place above the overlay */
-  width: 400px; /* Set a width for the popup */
-  padding: 20px; /* Add padding for better spacing */
-  opacity: 0; /* Start hidden for fade-in effect */
-  transition: opacity 0.3s ease, transform 0.3s ease; /* Add transition for fade-in */
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  width: 650px; /* Increased width */
+  max-width: 90%; /* Ensures the popup fits within smaller screens */
+  height:630px;
+  max-height: 90vh; /* Ensures the popup doesn't go off the screen */
+  padding: 20px;
+  overflow-y: auto; /* Allows scrolling if the content is too long */
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 /* Show the popup with opacity */
@@ -828,14 +861,21 @@ index: 9; /* Place it above other content */
 }
 
 /* Ensure the popup header has consistent styling */
+/* Ensure the popup header has consistent styling */
 .popup-header {
+  position: sticky;
+  top: 0;
+  background-color: #f2f2f2; /* Keep the light grey background */
+  padding: 1px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  z-index: 2; /* Increased z-index to ensure it stays above the content */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  background-color: #f2f2f2; /* Light grey background */
-  border-top-left-radius: 8px; /* Round corners for the header */
-  border-top-right-radius: 8px; /* Round corners for the header */
+}
+#rating {
+  width: 50%; /* Set the width to 100% of its container */
 }
 
 /* Style for the form inputs */
@@ -846,5 +886,23 @@ input[type="text"] {
   border: 1px solid #ccc; /* Light grey border */
   border-radius: 4px; /* Rounded corners */
 }
+.new-city-popup form button[type="submit"] {
+  align-self: flex-end; /* Align the submit button to the right */
+  background-color: #BC672A;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 
+  margin-top: -30px; /* Adjust this value to move it upwards */
+  margin-right: 60px;
+}
+
+.new-city-popup form button[type="submit"]:hover {
+  background-color: #a7561c; /* Darker on hover */
+}
 </style>
