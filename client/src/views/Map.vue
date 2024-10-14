@@ -920,8 +920,8 @@ index: 9; /* Place it above other content */
 
 /* New City Form Popup Styles */
 .new-city-popup {
-  position: fixed;
-  top: 55%;
+  position: sticky;
+  margin-top: -20rem;
   left: 50%;
   transform: translate(-50%, -50%); /* Center the popup */
   background-color: #fff;
