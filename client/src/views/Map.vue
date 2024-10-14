@@ -422,10 +422,10 @@
   <div class="popup-body">
     <form @submit.prevent="submitNewCity">
       <label for="cityName">City Name:</label>
-      <input type="text" id="cityName" v-model="newCityName" required>
+      <input type="text" id="cityName" v-model="newCityName" required />
 
       <label for="country">Country:</label>
-      <input type="text" id="country" v-model="newCityCountry" required>
+      <input type="text" id="country" v-model="newCityCountry" readonly />
 
       <button type="submit">Submit</button>
     </form>
@@ -459,7 +459,9 @@ export default {
       loggedInStatus: !!localStorage.getItem('x-auth-token'), // Check login status
       showLoginMessage: false, // New property to control the login message visibility
       isAdmin: false, // Add a new property for admin status
-      showNewCityForm: false // New property to control the new city form visibility
+      showNewCityForm: false, // New property to control the new city form visibility
+      newCityName: '', // Data property for new city name
+      newCityCountry: '' // Data property for new city country
     }
   },
   async created() {
@@ -501,7 +503,7 @@ export default {
       }
     },
     countryClicked(country) {
-    // 1. Check if the user is logged in
+      // 1. Check if the user is logged in
       if (!this.isLoggedIn) {
         this.showLoginMessage = true // Show the login message for non-logged-in users
         return // Prevent further execution
@@ -550,9 +552,10 @@ export default {
       this.showLoginMessage = false // Hide the login message when clicked
     },
     editCity(cityId) {
+      // Edit city logic
     },
     async deleteCity(cityId) {
-    // Confirm deletion
+      // Confirm deletion
       const confirmed = confirm('Are you sure you want to delete this city?')
       if (!confirmed) {
         return // Exit if the user cancels
@@ -583,11 +586,14 @@ export default {
       // Close the current city popup
       this.showCityPopup = false
 
+      // Set the country for the new city
+      this.newCityCountry = this.selectedCountry
+
       // Show the new city form popup
       this.showNewCityForm = true // Create a new data property for the new city form visibility
     },
     submitNewCity() {
-    // Handle the submission logic here, such as API call
+      // Handle the submission logic here, such as API call
       console.log(`City Created: ${this.newCityName} in ${this.newCityCountry}`)
 
       // Optionally, close the new city form after submission
