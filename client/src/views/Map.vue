@@ -809,6 +809,7 @@ input[type="text"], textarea {
   display: block; /* Stack tags vertically */
   margin: 5px 0; /* Margin for spacing between tags */
 }
+
 /* Tooltip styles */
 .tooltip {
   position: absolute;
@@ -927,6 +928,7 @@ index: 9; /* Place it above other content */
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  color:#045768;
   z-index: 10;
   width: 650px; /* Increased width */
   max-width: 90%; /* Ensures the popup fits within smaller screens */
@@ -957,8 +959,26 @@ index: 9; /* Place it above other content */
   justify-content: space-between;
   align-items: center;
 }
+
 #rating {
   width: 50%; /* Set the width to 100% of its container */
+  margin-left: 1rem;
+  border-radius:4px;
+  padding-left: 5px; /* Add left padding to text fields as well */
+}
+
+/* Input Fields Styles */
+.new-city-popup input[type="text"],
+.new-city-popup textarea,
+#rating {
+  color: #a7561c;
+}
+
+/* Change border color on focus */
+.new-city-popup input[type="text"]:focus,
+.new-city-popup textarea:focus {
+  border-color: #BC672A; /* Darker shade on focus */
+  outline: none; /* Remove default outline */
 }
 
 /* Style for the form inputs */
@@ -969,20 +989,20 @@ input[type="text"] {
   border: 1px solid #ccc; /* Light grey border */
   border-radius: 4px; /* Rounded corners */
 }
+
 .new-city-popup form button[type="submit"] {
   align-self: flex-end; /* Align the submit button to the right */
   background-color: #BC672A;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 10px 40px;
   text-align: center;
   font-size: 14px;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-
   margin-top: -30px; /* Adjust this value to move it upwards */
-  margin-right: 60px;
+  margin-right: 4rem;
 }
 
 .new-city-popup form button[type="submit"]:hover {
