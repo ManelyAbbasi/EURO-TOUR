@@ -97,7 +97,7 @@
       </section>
 
       <section class="get-to-know-wrapper-in" v-if="isLoggedIn">
-        <h2 class="home-heading">Weather!</h2>
+        <h2 class="home-heading">Weather warnings!</h2>
         <div class="get-to-know-container-in">
           <!-- Conditionally Render "Why join us?" or Map -->
           <div class="get-to-know-box-in" v-if="isLoggedIn">
@@ -333,13 +333,13 @@ li.dropdown-item.logout {
 
 .get-to-know-wrapper-in{
     min-height: 100vh;
-    padding: 4rem 9% 2rem;
-    border: 2px solid yellow;
+    padding: 2rem 9% 1rem;
 }
 
 .get-to-know-wrapper h2, .get-to-know-wrapper-in h2 {
     margin-bottom: 3rem;
-    margin-left: 27rem;
+    margin-left: 25rem;
+    margin-right: 25rem;
     font-size: 3rem;
 }
 
@@ -365,13 +365,18 @@ li.dropdown-item.logout {
 
 .get-to-know-container-in .get-to-know-box-in{
     background-color: #8FC6DF;
-    padding: 3rem 2rem 4rem;
+    padding: 2rem 2rem 2rem;
     border-radius: 2rem;
     text-align: center;
     transition: all 0.5s;
     width: 100%;
-    height: 100%;
+    height: 50rem;
     border: 3px solid #045768;
+}
+
+.weather-map {
+  border-radius: 1.5rem;
+  height: 50rem;
 }
 
 .get-to-know-container .get-to-know-box:hover{
