@@ -229,7 +229,7 @@ export default {
     width: 100rem;
     min-height: 50rem;
     margin-bottom: 35px;
-    margin-top: 120px;
+    margin-top: 9rem;
 }
 
 .search-places-text {
