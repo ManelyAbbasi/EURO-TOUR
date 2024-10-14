@@ -405,9 +405,43 @@
   </ul>
 </div>
 <!-- New Button for Admins to Create a New City -->
+<!-- New Button for Admins to Create a New City -->
 <div v-if="isAdmin" class="popup-footer">
-    <button @click="createNewCity">Create New City</button>
-  </div>
+    <button @click="showCityForm = true">Create New City</button>
+</div>
+
+<!-- New City Form -->
+<div v-if="showCityForm" class="new-city-form">
+    <div class="form-header">
+        <h3>Create New City</h3>
+        <button @click="showCityForm = false">X</button>
+    </div>
+    <div class="form-body">
+        <label for="cityName">City Name:</label>
+        <input type="text" id="cityName" v-model="newCity.cityName">
+
+        <label for="countryName">Country Name:</label>
+        <input type="text" id="countryName" v-model="newCity.countryName">
+
+        <label for="goodToKnow">Good to Know:</label>
+        <input type="text" id="goodToKnow" v-model="newCity.goodToKnow">
+
+        <label for="stats">Stats:</label>
+        <input type="text" id="stats" v-model="newCity.stats">
+
+        <label for="facts">Facts:</label>
+        <input type="text" id="facts" v-model="newCity.facts">
+
+        <label for="rating">Rating:</label>
+        <input type="text" id="rating" v-model="newCity.rating">
+
+        <label for="tags">Tags:</label>
+        <input type="text" id="tags" v-model="newCity.tags">
+    </div>
+    <div class="form-footer">
+        <button @click="saveNewCity">Save</button>
+    </div>
+</div>
 </div>
 
 <!-- Message for non-logged-in users -->
@@ -429,6 +463,16 @@ export default {
       tooltipStyle: {
         left: '0px',
         top: '0px'
+      },
+      showCityForm: false,
+      newCity: {
+        cityName: '',
+        countryName: '',
+        goodToKnow: '',
+        stats: '',
+        facts: '',
+        rating: '',
+        tags: ''
       },
       citiesInSystem: [],
       showCityPopup: false,
@@ -559,6 +603,11 @@ export default {
     createNewCity() {
     // Action to create a new city
       alert('Redirect to create new city form or popup')
+    },
+    saveNewCity() {
+      // Handle the form submission logic here
+      alert(`City Name: ${this.newCity.cityName}, Country Name: ${this.newCity.countryName}`)
+      this.showCityForm = false // Hide the form after saving
     }
   }
 }
