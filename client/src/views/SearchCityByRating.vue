@@ -288,12 +288,16 @@ export default {
       if (!this.activeMaxRating || Number(minRating) <= Number(this.activeMaxRating)) {
         this.activeMinRating = minRating
         this.getCities()
+      } else {
+        this.showToast('Minimum rating cannot be greater than maximum rating.')
       }
     },
     selectMaxRating(maxRating) {
       if (!this.activeMinRating || Number(maxRating) >= Number(this.activeMinRating)) {
         this.activeMaxRating = maxRating
         this.getCities()
+      } else {
+        this.showToast('Maximum rating cannot be less than minimum rating.')
       }
     },
     logout() {
@@ -306,6 +310,9 @@ export default {
       this.activeMaxRating = null
       this.activeSort = null
       this.getCities()
+    },
+    showToast(message) {
+      alert(message)
     }
   }
 }
