@@ -608,8 +608,38 @@ export default {
     hideLoginMessage() {
       this.showLoginMessage = false // Hide the login message when clicked
     },
-    editCity(cityId) {
-      // Edit city logic
+    async editCity(cityId) {
+      try {
+      // Fetch the city data from the backend
+        const response = await Api.get(`/cities/${cityId}`, {
+          headers: {
+            'x-auth-token': localStorage.getItem('x-auth-token') // Auth token for admins
+          }
+        })
+
+        if (response.data) {
+          const cityData = response.data
+
+          // Pre-fill the form with current city data
+          this.newCityName = cityData.cityName
+          this.newCityCountry = cityData.country // Lock or readonly this field
+          this.goodToKnow = cityData.goodToKnow
+          this.stats = cityData.statistics
+          this.facts = cityData.facts
+          this.rating = cityData.rating
+          this.selectedTags = cityData.tags
+
+          // Show the form as an edit form instead of a create form
+          this.isEditing = true // Add a flag for edit mode
+          this.editCityId = cityId // Store city ID being edited
+
+          // Display the form
+          this.showNewCityForm = true
+        }
+      } catch (error) {
+        console.error('Error fetching city data:', error)
+        alert('Failed to load city data for editing.')
+      }
     },
     async deleteCity(cityId) {
       // Confirm deletion
@@ -670,21 +700,44 @@ export default {
       }
 
       try {
-        const response = await Api.post('/cities', cityData, {
-          headers: {
-            'x-auth-token': localStorage.getItem('x-auth-token')
-          }
-        })
+        if (this.isEditing) {
+        // Update city API call when editing
+          const response = await Api.put(`cities/${this.editCityId}`, cityData, {
+            headers: {
+              'x-auth-token': localStorage.getItem('x-auth-token')
+            }
+          })
 
-        if (response.status === 201) {
-          alert('City successfully created!')
-          this.loadCities()
+          if (response.status === 200) {
+            alert('City successfully updated!')
+            this.loadCities() // Reload the city list
+          }
+        } else {
+        // Create new city API call when not editing
+          const response = await Api.post('/admin/cities', cityData, {
+            headers: {
+              'x-auth-token': localStorage.getItem('x-auth-token')
+            }
+          })
+
+          if (response.status === 201) {
+            alert('City successfully created!')
+            this.loadCities() // Reload the city list
+          }
         }
       } catch (error) {
-        console.error('Error creating city:', error)
-        alert('Failed to create city: ' + (error.response?.data?.message || error.message))
+        console.error('Error saving city:', error)
+        alert('Failed to save city: ' + (error.response?.data?.message || error.message))
       }
 
+      // Reset the form fields after submission
+      this.resetForm()
+
+      // Close the form after submission
+      this.closeNewCityForm()
+    },
+    resetForm() {
+    // Reset form fields
       this.newCityName = ''
       this.goodToKnow = ''
       this.stats = ''
@@ -692,11 +745,13 @@ export default {
       this.rating = null
       this.selectedTags = []
 
-      this.closeNewCityForm()
+      this.isEditing = false // Reset editing flag
+      this.editCityId = null // Clear city ID being edited
     },
     closeNewCityForm() {
       console.log('closeNewCityForm called')
       this.showNewCityForm = false
+      this.resetForm()
     }
   }
 }
