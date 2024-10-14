@@ -1,11 +1,11 @@
 <template>
   <div class="maincities-body-container">
     <header class="euro-tour-header">
-      <logo class="logo-wrapper">
+      <div class="logo-wrapper">
         <router-link to="/" class="logo">
           <img src="@/assets/horizontal-logo.png" alt="Euro Tour logo" />
         </router-link>
-      </logo>
+      </div>
       <nav class="navbar">
         <router-link to="/favourites" class="navbar-item">
           <i class="fa-regular fa-heart"></i> favourites
@@ -130,12 +130,12 @@
       <div class="popup-body">
         <p>Are you sure you want to delete your account?</p>
 
-        <label for="username">enter your username</label>
+        <label for="usernameDeleting">enter your username</label>
         <input type="text" id="usernameDeleting" class="input-field" v-model="usernameDeleting" />
-        <label for="password">enter your password</label>
+        <label for="passwordDeleting">enter your password</label>
         <input type="password" id="passwordDeleting" class="input-field" v-model="passwordDeleting" />
         <div class="delete-button-wrapper">
-          <button @click="deleteAccount(usernameDeleting, passwordDeleting)">Confirm deletion</button>
+          <button @click="deleteAccount($event)">Delete Account</button>
         </div>
       </div>
     </div>
@@ -220,24 +220,25 @@ export default {
     closeDeletePopUp() {
       this.deleteInProcess = false
     },
-    async deleteAccount(username, password) {
+    async deleteAccount(event) {
+      if (event) {
+        event.preventDefault() // This prevents the default form or button submission behavior
+      }
       try {
-        const authToken = localStorage.getItem('x-auth-token')
+        const authToken = localStorage.getItem('x-auth-token') // Get auth token from localStorage
         if (!authToken) throw new Error('No auth token found. Please log in.')
-
-        const response = await Api.delete(`/users/${username}`, {
-          data: { password }, // Some backends require this format for delete
+        const response = await Api.delete(`/users/${this.usernameDeleting}`, {
           headers: {
-            'x-auth-token': authToken
+            'x-auth-token': authToken // Send token for authorization
           }
         })
 
         if (response.status === 200) {
-          this.$router.push('/') // Redirect to homepage on successful deletion
+          this.$router.push('/') // Redirect to homepage after successful deletion
           console.log('Account deleted successfully')
         }
       } catch (error) {
-        console.error('Deletion error:', error)
+        console.error('Error deleting account:', error)
         alert('Error deleting account. Please check your credentials.')
       }
     },
