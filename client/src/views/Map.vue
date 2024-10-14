@@ -412,6 +412,7 @@
 
 <!-- Overlay for the New City Form -->
 <div class="overlay" v-if="showNewCityForm" @click="closeNewCityForm"></div>
+<div class="overlay" v-if="showCityPopup" @click="closeCityPopup"></div>
 
 <!-- New City Form Popup -->
 <!-- New City Form Popup -->
