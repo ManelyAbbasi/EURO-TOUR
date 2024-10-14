@@ -230,7 +230,8 @@ export default {
         const response = await Api.delete(`/users/${this.usernameDeleting}`, {
           headers: {
             'x-auth-token': authToken // Send token for authorization
-          }
+          },
+          data: { password: this.passwordDeleting }
         })
 
         if (response.status === 200) {

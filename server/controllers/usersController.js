@@ -160,6 +160,16 @@ async function deleteOneUser(req, res) {
             return res.status(403).json({ message: "You are not authorized to delete this user." });
         }
 
+        // Check if the password is provided in the request body
+        if (!req.body.password) {
+            return res.status(400).json({ message: "Password is required for deletion." });
+        }
+        
+        // Check if the password matches
+        if (currentUser.password !== req.body.password) {
+            return res.status(403).json({ message: "Passwords don't match." });
+        }
+        
         // Delete the user
         await UsersModel.deleteOne({ username: req.params.username });
 

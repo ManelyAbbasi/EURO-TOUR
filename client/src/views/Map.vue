@@ -714,7 +714,7 @@ export default {
           }
         } else {
         // Create new city API call when not editing
-          const response = await Api.post('/admin/cities', cityData, {
+          const response = await Api.post('/cities', cityData, {
             headers: {
               'x-auth-token': localStorage.getItem('x-auth-token')
             }
