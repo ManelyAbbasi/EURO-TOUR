@@ -427,6 +427,26 @@
       <label for="country">Country:</label>
       <input type="text" id="country" v-model="newCityCountry" readonly />
 
+      <label for="goodToKnow">Good to Know:</label>
+      <textarea id="goodToKnow" v-model="goodToKnow" placeholder="Enter important information..."></textarea>
+
+      <label for="stats">Stats:</label>
+      <input type="text" id="stats" v-model="stats" placeholder="Enter stats about the city..." />
+
+      <label for="facts">Facts:</label>
+      <textarea id="facts" v-model="facts" placeholder="Enter interesting facts about the city..."></textarea>
+
+      <label for="rating">Rating:</label>
+      <input type="number" id="rating" v-model="rating" min="0" max="10" step="0.1" placeholder="Enter a rating (0-10)" />
+
+      <label for="tags">Tags:</label>
+      <div class="tags">
+        <label v-for="tag in tagOptions" :key="tag">
+          <input type="checkbox" :value="tag" v-model="selectedTags" />
+          {{ tag }}
+        </label>
+      </div>
+
       <button type="submit">Submit</button>
     </form>
   </div>
@@ -461,7 +481,30 @@ export default {
       isAdmin: false, // Add a new property for admin status
       showNewCityForm: false, // New property to control the new city form visibility
       newCityName: '', // Data property for new city name
-      newCityCountry: '' // Data property for new city country
+      newCityCountry: '', // Data property for new city country
+      goodToKnow: '', // New property for "Good to Know"
+      stats: '', // New property for stats
+      facts: '', // New property for facts
+      rating: null, // New property for rating
+      tagOptions: [ // List of tag options
+        'historical',
+        'quiet',
+        'party',
+        'architecture',
+        'recently added',
+        'nature',
+        'beachy',
+        'warm weather',
+        'cold weather',
+        'popular',
+        'affordable',
+        'high-end',
+        'lgbtq+ friendly',
+        'walkable',
+        'small city',
+        'big city'
+      ],
+      selectedTags: [] // Array to hold selected tags
     }
   },
   async created() {
@@ -484,6 +527,15 @@ export default {
         }
       } catch (error) {
         console.error('Error fetching cities:', error)
+      }
+    },
+    async loadCities() {
+      // Load the cities into the citiesInSystem array
+      try {
+        const response = await Api.get('/cities')
+        this.citiesInSystem = response.data // Set the loaded cities
+      } catch (error) {
+        console.error('Error loading cities:', error)
       }
     },
     isClickable(country) {
@@ -591,14 +643,34 @@ export default {
 
       // Show the new city form popup
       this.showNewCityForm = true // Create a new data property for the new city form visibility
+
+      // Reset new city fields
+      this.newCityName = ''
+      this.goodToKnow = ''
+      this.stats = ''
+      this.facts = ''
+      this.rating = null
+      this.selectedTags = []
     },
-    submitNewCity() {
+    async submitNewCity() {
       // Handle the submission logic here, such as API call
       console.log(`City Created: ${this.newCityName} in ${this.newCityCountry}`)
+      console.log(`Good to Know: ${this.goodToKnow}`)
+      console.log(`Stats: ${this.stats}`)
+      console.log(`Facts: ${this.facts}`)
+      console.log(`Rating: ${this.rating}`)
+      console.log(`Tags: ${this.selectedTags}`)
 
-      // Optionally, close the new city form after submission
-      this.newCityName = '' // Reset the city name input
-      this.newCityCountry = '' // Reset the country input
+      // Reset fields after submission
+      this.newCityName = ''
+      this.goodToKnow = ''
+      this.stats = ''
+      this.facts = ''
+      this.rating = null
+      this.selectedTags = []
+
+      // Close the form after submission (optional)
+      this.closeNewCityForm()
     },
     closeNewCityForm() {
       console.log('closeNewCityForm called')
