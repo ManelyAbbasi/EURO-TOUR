@@ -22,8 +22,11 @@ var placesToVisitSchema = new Schema({
                     'nature',
                     'beachy', 
                     'popular', 
-                    'cheap', 
+                    'affordable', 
                     'high-end', 
+                    'quiet',
+                    'shopping',
+                    '18+'
                 ];
                 return tags.every(tag => allowedTags.includes(tag));
             },
