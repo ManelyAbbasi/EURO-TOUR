@@ -109,11 +109,18 @@
         </div>
       </b-row>
 
-      <b-row>
+      <b-row class="save-row">
         <div class="save-changes-container">
           <button class="save-button" type="button" @click="saveChanges($event)">save changes</button>
           <span class="saved-message" v-if="isSaved">saved!</span>
         </div>
+      </b-row>
+
+      <b-row class="delete-row">
+        <b-col>        <h4 class="delete-title">Do you want to delete your account?</h4>
+        </b-col>
+        <b-col>        <button class="delete-button" type="button" @click="deleteAccount($event)">delete account</button>
+        </b-col>
       </b-row>
     </form>
 
@@ -302,6 +309,30 @@ label {
   font-size: 1.1rem;
   font-family: 'Lexend Deca', sans-serif;
   text-align: left;
+}
+
+h4 {
+  color: #edf7fb;
+  font-size: 1.1rem;
+  font-family: 'Lexend Deca', sans-serif;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.delete-button {
+  background-color: #233341;
+  color: #9BA9B6;
+  border: none;
+  padding: 0.3rem 1.3rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.delete-row{
+  display: flex;
+  justify-content: flex-start;
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  gap: 1rem;
 }
 
 .input-field {

@@ -502,7 +502,7 @@ h4 {
 
 .reset-options-button{
   padding: 0.5rem;
-  background-color: #233341; /* Red color */
+  background-color: #233341;
   color: #edf7fb;
   border: none;
   border-radius: 5px;
