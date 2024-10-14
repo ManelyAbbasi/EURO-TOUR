@@ -234,8 +234,8 @@ export default {
         })
 
         if (response.status === 200) {
-          this.$router.push('/') // Redirect to homepage after successful deletion
           console.log('Account deleted successfully')
+          this.logout()
         }
       } catch (error) {
         console.error('Error deleting account:', error)
