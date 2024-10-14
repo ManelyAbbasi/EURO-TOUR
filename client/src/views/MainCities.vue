@@ -79,7 +79,7 @@
               <p><strong class="heading">Places to Visit:</strong></p>
               <ul class="places-list">
                 <li v-for="place in city.placesToVisit" :key="place">
-                  <a :href="`/places/${place}`">{{ place }}</a>
+                  <a :href="`/mainplaces/`">{{ place }}</a>
                 </li>
               </ul>
             </div>

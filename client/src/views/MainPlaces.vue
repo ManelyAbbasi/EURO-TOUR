@@ -50,7 +50,7 @@
                 </div>
                 <div class="detail-item">
                   <p><strong class="heading">City:</strong></p>
-                  <p>{{ place.city }}</p>
+                  <a :href="`/maincities/`" class="city-link">{{ place.city }}</a>
                 </div>
                 <div class="detail-item">
                   <p><strong class="heading">Address:</strong></p>
@@ -147,7 +147,7 @@ export default {
             rating: place.rating,
             content: place.content,
             tags: place.tags,
-            city: place.city
+            city: place.city.cityName
           }))
         } else {
           this.places = []
@@ -466,6 +466,21 @@ a img {
   margin: 0.1px;
   color: #759CAB;
   font-size: 1.1rem;
+}
+
+.city-link{
+  text-align: left;
+  margin: 0.1px;
+  color: #759CAB;
+  font-size: 1.5rem;
+  text-decoration: none;
+  transition: all 0.5s;
+
+}
+
+.city-link:hover{
+  text-decoration-line: underline;
+  color: #acbbc1;
 }
 
 .star-rating{

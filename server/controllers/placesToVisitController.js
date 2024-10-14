@@ -26,7 +26,10 @@ async function getAllPlaces(req, res) {
             sortOption.rating = sortByRating === 'asc' ? 1 : -1; // Ascending = 1, Descending = -1
         }
 
-        const placesToVisit = await placesToVisitModel.find(filter).sort(sortOption);
+        const placesToVisit = await placesToVisitModel.find(filter).sort(sortOption).populate({
+            path: 'city',  // Adjust to match the schema field
+            select: 'cityName'  // Select only the city name field
+        });
 
         if (!placesToVisit || placesToVisit.length === 0) {
             return res.status(404).json({ error: 'No places found.' });
