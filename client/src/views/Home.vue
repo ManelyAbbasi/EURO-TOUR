@@ -40,22 +40,26 @@
     </header>
     <main>
       <div class="home-layout-wrapper">
-        <div class="home-right-side-panel">
-          <h1 class="typewriter-hello hello" v-if="!isLoggedIn"></h1>
-          <h1 class="hello" v-if="isLoggedIn">Welcome back traveler!</h1>
-          <p class="welcome-text" v-if="!isLoggedIn">Make the most of your upcoming travels!</p>
-          <p class="welcome-text" v-if="isLoggedIn">Let's plan for your next travels</p>
-          <p class="welcome-text" v-if="!isLoggedIn">
-            With your <b>preferences</b> and our <b>recommendations</b> you will have the experience of a <b>lifetime</b>
-          </p>
-        </div>
-        <div class="home-left-side-panel">
-          <!-- map -->
-          <EuroMap class="euromap" />
-        </div>
+    <div class="home-right-side-panel">
+      <div class="welcome-back-container" v-if="isLoggedIn">
+        <h1 class="hello-in">Welcome back traveler!</h1>
+        <p class="welcome-text-in">Let's plan for your next travels</p>
       </div>
+      <div class="welcome-container" v-if="!isLoggedIn">
+        <h1 class="typewriter-hello hello"></h1>
+        <p class="welcome-text">Make the most of your upcoming travels!</p>
+        <p class="welcome-text">
+          With your <b>preferences</b> and our <b>recommendations</b> you will have the experience of a <b>lifetime</b>
+        </p>
+      </div>
+    </div>
+    <div class="home-left-side-panel">
+      <!-- map -->
+      <EuroMap class="euromap" />
+    </div>
+  </div>
 
-      <section class="get-to-know-wrapper">
+  <section class="get-to-know-wrapper" v-if="!isLoggedIn">
         <h2 class="home-heading">Get to know us!</h2>
         <div class="get-to-know-container">
           <div class="get-to-know-box">
@@ -79,29 +83,31 @@
               <p>We intend for our travelers to be able to make the most of their time in a new city.</p>
             </div>
           </div>
-
-          <!-- Conditionally Render "Why join us?" or Map -->
           <div class="get-to-know-box">
-            <!-- If not logged in, show "Why Join Us?" section -->
-            <template v-if="!isLoggedIn">
               <h3>Why join us?</h3>
               <div class="get-to-wrapper-text">
                 <p>With an account you can:</p>
                 <p>• Discover cities to travel to</p>
                 <p>• Look for places to visit in cities</p>
-                <p>• Favourite cities and places</p>
                 <p>• Find cities and places to visit based on your preferences</p>
+                <p>• Stay updated on your destination's weather to ensure a safe journey every time</p>
               </div>
-            </template>
+          </div>
+        </div>
+      </section>
 
-            <!-- If logged in, show the Weather Map -->
-            <template v-else>
-              <h3 class="weather-warning-title">Weather warnings</h3> <!-- Added header here -->
+      <section class="get-to-know-wrapper-in" v-if="isLoggedIn">
+        <h2 class="home-heading">Weather warnings!</h2>
+        <div class="get-to-know-container-in">
+          <!-- Conditionally Render "Why join us?" or Map -->
+          <div class="get-to-know-box-in" v-if="isLoggedIn">
+            <template v-if="isLoggedIn">
               <WeatherMap class="weather-map" />
             </template>
           </div>
         </div>
       </section>
+
     </main>
     <footer class="footer">
       <div class="footer-text">
@@ -151,6 +157,7 @@ export default {
       localStorage.removeItem('x-auth-token')
       this.loggedInStatus = false
       this.$router.push('/')
+      window.location.reload() // careful with this, can create infinite loop
     },
     textLoad() {
       const textElement = document.querySelector('.typewriter-hello')
@@ -181,6 +188,7 @@ export default {
       textElement.classList.add('active')
     }
   },
+
   mounted() {
     const link = document.createElement('link')
     link.rel = 'stylesheet'
@@ -280,12 +288,21 @@ li.dropdown-item.logout {
   color: #bc672a !important;
 }
 
+.welcome-back-container {
+  padding: 9rem 2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
 .home-layout-wrapper {
   display: grid;
-  grid-template-columns: 1fr 1fr;  /* Create two equal columns */
+  grid-template-columns: 1fr 2fr;
   grid-gap: 20px;  /* Optional: Add some space between columns */
-  padding: 7rem 9% 2rem;
+  padding: 7rem 2rem;
+  padding-left: 7rem;
+  padding-right: 7rem;
   width: 100%;
+  align-content: center;
 }
 
 .home-left-side-panel, .home-right-side-panel {
@@ -299,6 +316,13 @@ li.dropdown-item.logout {
   flex-direction: column;
 }
 
+.welcome-back-container {
+  display: flex;
+  flex-direction: column;   /* Stack items vertically */
+  text-align: center;       /* Center the text within the container */
+  margin-bottom: 7rem;
+}
+
 .home-right-side-panel p {
   font-size: 1.7rem;
   padding: 0.5rem 0;
@@ -309,8 +333,15 @@ li.dropdown-item.logout {
     padding: 4rem 9% 2rem;
 }
 
-.get-to-know-wrapper h2{
+.get-to-know-wrapper-in{
+    min-height: 100vh;
+    padding: 2rem 9% 1rem;
+}
+
+.get-to-know-wrapper h2, .get-to-know-wrapper-in h2 {
     margin-bottom: 3rem;
+    margin-left: 25rem;
+    margin-right: 25rem;
     font-size: 3rem;
 }
 
@@ -334,7 +365,28 @@ li.dropdown-item.logout {
     border: 3px solid #045768;
 }
 
+.get-to-know-container-in .get-to-know-box-in{
+    background-color: #8FC6DF;
+    padding: 2rem 2rem 2rem;
+    border-radius: 2rem;
+    text-align: center;
+    transition: all 0.5s;
+    width: 100%;
+    height: 50rem;
+    border: 3px solid #045768;
+}
+
+.weather-map {
+  border-radius: 1.5rem;
+  height: 50rem;
+}
+
 .get-to-know-container .get-to-know-box:hover{
+    border-color: #bc672a;
+    transform: scale(1.03);
+}
+
+.get-to-know-container-in .get-to-know-box-in:hover{
     border-color: #bc672a;
     transform: scale(1.03);
 }
@@ -343,10 +395,6 @@ li.dropdown-item.logout {
     font-size: 2rem;
     color: #045768;
     margin-bottom: 2rem;
-}
-.get-to-know-box h3.weather-warning-title {
-  font-size: 1.5rem;
-  margin-bottom: 0.4rem;
 }
 
 .get-to-know-box p{
@@ -411,7 +459,7 @@ li.dropdown-item.logout {
 }
 
 .euromap{
-  width: 150%
+  width: 100%
 }
 
 .footer{
