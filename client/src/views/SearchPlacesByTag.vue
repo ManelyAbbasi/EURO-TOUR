@@ -54,7 +54,7 @@
             <button class="tag-button" @click="toggleTag('adventurous')">adventurous</button>
             <button class="tag-button" @click="toggleTag('party')">party</button>
             <button class="tag-button" @click="toggleTag('sight-seeing')">sight-seeing</button>
-            <button class="tag-button" @click="toggleTag('recently added')">recently added</button>
+            <button class="tag-button" @click="toggleTag('recently opened')">recently opened</button>
             <button class="tag-button" @click="toggleTag('nature')">nature</button>
             <button class="tag-button" @click="toggleTag('beachy')">beachy</button>
             <button class="tag-button" @click="toggleTag('museum')">museum</button>
@@ -118,7 +118,7 @@
           </div>
 
           <div v-else>
-            <h3>No places found.</h3>
+            <h3 class="no-places-found">No places found.</h3>
           </div>
         </b-col>
       </b-row>
@@ -302,6 +302,14 @@ export default {
     transform: scale(1.05);
 }
 
+.no-places-found {
+    color: #233341;
+    justify-content: center;
+    display: flex;
+    padding: 5rem;
+    font-size: 3rem;
+}
+
 .selected-tags {
   display: flex;
   flex-direction: row; /* Arrange in a row */
@@ -324,7 +332,7 @@ export default {
     color: #045768;
     margin-top: 4rem;
     margin-left: 2rem;
-
+    font-size: 1.5rem;
 }
 
 .clear-button {

@@ -71,7 +71,7 @@
         </b-col>
       </b-row>
 
-      <b-row>
+      <b-row class="selecting-tags-row">
         <b-col>
           <h2 class="result-text">selected tags:</h2>
         </b-col>
@@ -88,7 +88,7 @@
           </div>
         </b-col>
 
-        <b-col>
+        <b-col class="col-with-clear-button">
           <button class="clear-button" @click="clearTags">clear all tags</button>
         </b-col>
       </b-row>
@@ -119,7 +119,7 @@
           </div>
 
           <div v-else>
-            <h3>No cities found.</h3>
+            <h3 class="no-cities-found">No cities found.</h3>
           </div>
         </b-col>
       </b-row>
@@ -288,6 +288,14 @@ export default {
   padding: 8px;
 }
 
+.no-cities-found {
+  color: #233341;
+  justify-content: center;
+  display: flex;
+  padding: 5rem;
+  font-size: 3rem;
+}
+
 .tag-button {
     background-color: #00000025;
     color: #8FC6DF;
@@ -324,7 +332,7 @@ export default {
     color: #045768;
     margin-top: 4rem;
     margin-left: 2rem;
-
+    font-size: 1.5rem;
 }
 
 .clear-button {

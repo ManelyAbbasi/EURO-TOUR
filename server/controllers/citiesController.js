@@ -198,6 +198,12 @@ async function updateCity(req, res, next) {
             }
             city.statistics = req.body.statistics;
         }
+        if (req.body.rating !== undefined) {
+            if (typeof req.body.rating !== 'number' || req.body.rating < 0 || req.body.rating > 5) {
+                return res.status(400).json({ message: "Invalid rating: must be a number between 0 and 5" });
+            }
+            city.rating = req.body.rating;
+        }
         if (req.body.facts !== undefined) {
             if (typeof req.body.facts !== 'string' || req.body.facts.trim() === "") {
                 return res.status(400).json({ message: "Invalid facts: must be a non-empty string" });
