@@ -393,14 +393,14 @@
 <div class="city-popup" v-if="isLoggedIn && showCityPopup">
   <div class="popup-header">
     <h3>Cities in {{ selectedCountry }}</h3>
-    <button @click="closeCityPopup">X</button>
+    <button class="close-button" @click="closeCityPopup">X</button>
   </div>
   <div class="popup-body">
     <ul>
       <li v-for="city in filteredCities" :key="city._id || city.cityName">
         {{ city.cityName }}
-        <button v-if="isAdmin && city._id !== 'no-cities'" @click="editCity(city._id)">Edit</button>
-        <button v-if="isAdmin && city._id !== 'no-cities'" @click="deleteCity(city._id)">Delete</button>
+        <button class="edit-button" v-if="isAdmin && city._id !== 'no-cities'" @click="editCity(city._id)">Edit</button>
+        <button class="delete-button" v-if="isAdmin && city._id !== 'no-cities'" @click="deleteCity(city._id)">Delete</button>
       </li>
     </ul>
   </div>
@@ -412,13 +412,14 @@
 
 <!-- Overlay for the New City Form -->
 <div class="overlay" v-if="showNewCityForm" @click="closeNewCityForm"></div>
+<div class="overlay" v-if="showCityPopup" @click="closeCityPopup"></div>
 
 <!-- New City Form Popup -->
 <!-- New City Form Popup -->
 <div class="new-city-popup" :class="{ show: showNewCityForm }" v-if="isLoggedIn && showNewCityForm">
   <div class="popup-header">
     <h3>Create New City</h3>
-    <button @click="closeNewCityForm">X</button>
+    <button class="close-button" @click="closeNewCityForm">X</button>
   </div>
   <div class="popup-body">
     <form @submit.prevent="submitNewCity">
@@ -803,11 +804,16 @@ input[type="text"], textarea {
   border-radius: 4px; /* Rounded corners */
 }
 
+input[type='checkbox'] {
+    accent-color: #BC672A;
+}
+
 /* Style for tags */
 .tags label {
   display: block; /* Stack tags vertically */
   margin: 5px 0; /* Margin for spacing between tags */
 }
+
 /* Tooltip styles */
 .tooltip {
   position: absolute;
@@ -851,27 +857,38 @@ index: 9; /* Place it above other content */
   left: 50%;
   transform: translate(-50%, -50%); /* Center the popup */
   background-color: #fff; /* White background */
+  color: #045768;
   border-radius: 8px; /* Rounded corners */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Shadow for depth */
   z-index: 10; /* Place above the overlay */
-  width: 300px; /* Set a width for the popup */
+  width: 500px; /* Set a width for the popup */
+  padding: 20px;
 }
 
 .popup-body ul {
   list-style-type: none; /* Remove the default bullets */
   padding: 0; /* Remove default padding */
   margin: 0; /* Remove default margin */
+  font-size: 1.2rem;
+
+}
+
+.popup-body li{
+  border-top: 1px solid #ddd; /* Optional: separate footer visually */
+  margin-top: 1rem;
 }
 
 .popup-body {
   padding: 10px 0;
 }
+
 .login-message {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%); /* Center the message */
   background-color: #fff; /* White background */
+  color: #BC672A;
   border-radius: 8px; /* Rounded corners */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Shadow for depth */
   z-index: 10; /* Place above the overlay */
@@ -886,7 +903,7 @@ index: 9; /* Place it above other content */
 }
 
 .popup-footer button {
-  background-color: #BC672A; /* Green background */
+  background-color: #BC672A;
   color: white; /* White text */
   border: none;
   padding: 10px 20px;
@@ -908,13 +925,14 @@ index: 9; /* Place it above other content */
 
 /* New City Form Popup Styles */
 .new-city-popup {
-  position: fixed;
-  top: 55%;
+  position: sticky;
+  margin-top: -20rem;
   left: 50%;
   transform: translate(-50%, -50%); /* Center the popup */
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  color:#045768;
   z-index: 10;
   width: 650px; /* Increased width */
   max-width: 90%; /* Ensures the popup fits within smaller screens */
@@ -937,7 +955,6 @@ index: 9; /* Place it above other content */
 .popup-header {
   position: sticky;
   top: 0;
-  background-color: #f2f2f2; /* Keep the light grey background */
   padding: 1px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
@@ -946,8 +963,28 @@ index: 9; /* Place it above other content */
   justify-content: space-between;
   align-items: center;
 }
+
 #rating {
   width: 50%; /* Set the width to 100% of its container */
+  margin-left: 1rem;
+  border-radius:4px;
+  padding-left: 5px; /* Add left padding to text fields as well */
+  border: 1px solid #555;
+}
+
+/* Input Fields Styles */
+.new-city-popup input[type="text"],
+.new-city-popup textarea,
+#rating {
+  color: #a7561c;
+}
+
+/* Change border color on focus */
+.new-city-popup input[type="text"]:focus,
+.new-city-popup textarea:focus,
+#rating:focus {
+  border-color: #BC672A; /* Darker shade on focus */
+  outline: none; /* Remove default outline */
 }
 
 /* Style for the form inputs */
@@ -958,23 +995,67 @@ input[type="text"] {
   border: 1px solid #ccc; /* Light grey border */
   border-radius: 4px; /* Rounded corners */
 }
+
 .new-city-popup form button[type="submit"] {
   align-self: flex-end; /* Align the submit button to the right */
   background-color: #BC672A;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 10px 40px;
   text-align: center;
   font-size: 14px;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-
   margin-top: -30px; /* Adjust this value to move it upwards */
-  margin-right: 60px;
+  margin-right: 4rem;
 }
 
 .new-city-popup form button[type="submit"]:hover {
   background-color: #a7561c; /* Darker on hover */
+}
+
+.close-button {
+  background-color: #BC672A;
+  border: 2px solid #BC672A;
+  font-size: 15px;
+  cursor: pointer;
+  color: #fff;
+  transition: color 0.3s ease;
+  width: 25px; /* Set width */
+  height: 25px; /* Set height */
+}
+
+.close-button:hover, .edit-button:hover, .delete-button:hover {
+  background-color:#a7561c;
+}
+
+.edit-button{
+  align-self: flex-end;
+  background-color: #BC672A;
+  color: white;
+  border: none;
+  padding: 2px 10px;
+  text-align: center;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: -10px; /* Adjust this value to move it upwards */
+  margin-right: 10px;
+  margin-left: 200px;
+}
+
+.delete-button {
+  align-self: flex-end;
+  background-color: #BC672A;
+  color: white;
+  border: none;
+  padding: 2px 10px;
+  text-align: center;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px; /* Adjust this value to move it upwards */
+  margin-right: 10px;
 }
 </style>
