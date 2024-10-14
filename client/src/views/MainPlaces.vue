@@ -74,14 +74,14 @@
 
           <div class="mainplaces-right-side-panel">
                 <!--search and trending-->
-                <h2 class="mainplaces-search-title">Search places to visit by: <i class="fa-solid fa-filter" style="color: #045768;"></i></h2>
+                <h3 class="mainplaces-search-title">Search places to visit by: <i class="fa-solid fa-filter" style="color: #045768;"></i></h3>
                 <div class="mainplaces-button-wrapper">
                   <router-link to="/SearchPlaceByTag" class="mainplaces-tags-btn">tags</router-link>
                     <h4 class="mainplaces-or">or</h4>
                     <router-link to="/SearchPlaceByRating" class="mainplaces-ratings-btn">ratings</router-link>
                 </div>
-                <h2 class="mainplaces-search-title">Admins Picks:</h2>
-                <div class="trending-cities-wrapper">
+                <h2 class="mainplaces-admin-header">Admins Picks:</h2>
+                <div class="trending-places-wrapper">
                   <div class="mainplaces-amst-wrapper trending-place-wrapper">
                     <img src="@/assets/Amsterdam.jpg" alt="Amsterdam city" class="trending-places-img"/>
                     <p class="mainplaces-trending-amst">1. Amsterdam, The Netherlands</p>
@@ -349,8 +349,11 @@ export default {
     transform: scale(1.05);
 }
 
-.trending-places-wrapper {
-  gap: 2rem;
+.mainplaces-right-side-panel h3{
+  font-size: 1.5rem;
+  color: #045768;
+  padding: 0.5rem;
+  margin: 1rem 0;
 }
 
 .trending-place-wrapper {
