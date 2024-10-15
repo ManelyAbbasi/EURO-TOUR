@@ -42,7 +42,7 @@
             </div>
             <div class="city-wrapper">
                 <p><strong class="heading">City:</strong></p>
-                <p class="detail-text">{{ place.city }}</p>
+                <router-link :to="`/city/${place.cityId}`" class="city-link detail-text">{{ place.cityName }}</router-link>
             </div>
             <div class="address-wrapper">
                 <p><strong class="heading">Address:</strong></p>
@@ -113,7 +113,8 @@ export default {
             rating: response.data.rating,
             content: response.data.content,
             tags: response.data.tags,
-            city: response.data.city.cityName
+            cityName: response.data.city.cityName,
+            cityId: response.data.city._id
           }
           console.log(this.place) // Log the city object for verification
         } else {
@@ -278,6 +279,7 @@ export default {
 .detail-text {
   font-size: 1.2rem;
   color: #045768 !important;
+  text-decoration: none;
 }
 
 .places-list li a{
@@ -307,9 +309,15 @@ export default {
   font-size: 1.6rem;
 }
 
-.main-places-link-wrapper a:hover{
+.city-link{
+  transition: all 0.3s;
+  font-size: 1.4rem;
+}
+
+.main-places-link-wrapper a:hover,
+.city-link:hover{
   text-decoration-line: underline;
-  color: #acbbc1;
+  color: #acbbc1 !important;
   transform: scale(1.05);
 }
 

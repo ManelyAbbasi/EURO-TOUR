@@ -68,7 +68,7 @@
                 <p><strong class="heading">Places to Visit:</strong></p>
                 <ul class="places-list">
                     <li v-for="place in placesToVisit" :key="place.address">
-                    <a :href="`/mainplaces/`">{{ place.placeName }}</a>
+                        <router-link :to="`/place/${place.address}`" class="place-link">{{ place.placeName }}</router-link>
                     </li>
                 </ul>
             </div>

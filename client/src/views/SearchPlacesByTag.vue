@@ -101,7 +101,7 @@
                   <img src="@/assets/London.jpg" class="place-card-img"/>
                 </div>
                 <div class="place-city-text">
-                  <p class="placename-text">{{ place.placeName }}, </p>
+                  <router-link :to="`/place/${place.address}`" class="placename-text">{{ place.placeName }}, </router-link>
                   <p>{{ place.city.cityName }}</p>
                 </div>
               </div>
@@ -578,6 +578,15 @@ a img {
 
 .placename-text{
   font-weight: 700;
+  text-decoration: none;
+  font-size: 1.25rem;
+  color: #196386;
+  transition: all 0.3s;
+}
+
+.placename-text:hover{
+  text-decoration: underline #045768;
+  color: #edf7fb;
 }
 
 .bottom-half-card{
