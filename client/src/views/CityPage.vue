@@ -30,7 +30,13 @@
 
       <main>
       <div class="city-layout-wrapper">
-            <h1 class="title-city">{{ city.cityName }}, {{ city.country }}</h1>
+            <div class="wrapper-header">
+                <h1 class="title-city">{{ city.cityName }}, {{ city.country }}</h1>
+                <div v-if="isAdmin" class="admin-buttons">
+                    <button><i class="fa-solid fa-file-pen" style="color: #bc672a;"></i></button>
+                    <button><i class="fa-solid fa-trash-can" style="color: #bc672a;"></i></button>
+                </div>
+            </div>
             <div class="star-rating">
                 <span class="stars">
                     <i v-for="star in 5"
@@ -97,8 +103,12 @@ export default {
     return {
       city: {}, // Object to hold city details
       placesToVisit: [],
+      isAdmin: false,
       loggedInStatus: !!localStorage.getItem('x-auth-token') // Reactive property for login status
     }
+  },
+  async created() {
+    await this.checkIfAdmin() // Check if the user is an admin when the component is created
   },
   computed: {
     isLoggedIn() {
@@ -153,6 +163,18 @@ export default {
       } catch (error) {
         console.error('Error fetching places details:', error.message)
         this.places = [] // Handle API error gracefully
+      }
+    },
+    async checkIfAdmin() {
+      try {
+        const response = await Api.get('/admin/check-admin', {
+          headers: {
+            'x-auth-token': localStorage.getItem('x-auth-token')
+          }
+        })
+        this.isAdmin = response.data.isAdmin
+      } catch (error) {
+        console.error('Error checking admin status:', error)
       }
     },
     logout() {
@@ -281,6 +303,19 @@ export default {
     color: #759cab;
 }
 
+.wrapper-header{
+    display: grid;
+    justify-content: space-between;
+    grid-template-columns: 6fr 1fr;
+}
+
+.wrapper-header button {
+    border: none;
+    background-color: #edf7fb;
+    padding: 0.5rem 0.5rem;
+    margin: 0 0 0 3rem;
+    font-size: 2rem;
+}
 .title-city{
     font-size: 4rem;
     color: #759cab;
