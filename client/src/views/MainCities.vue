@@ -44,7 +44,7 @@
         <div v-for="city in paginatedCities" :key="city.cityName" class="city-item">
           <div class="detail-about-city">
             <span class="slide-title">{{ city.cityName }}, {{ city.country }}</span>
-            <div class="star-rating">
+              <div class="star-rating">
                <!-- Display filled stars -->
                <i v-for="n in Math.floor(city.rating)" :key="n" class="fa-solid fa-star" style="color: #bc672a;"></i>
                 <!-- Display empty stars for remaining ones -->
@@ -52,36 +52,11 @@
               <span class="rating-text">{{ city.rating }}/5.0</span>
             </div>
             <div class="detail-item">
-              <p><strong class="heading">Good to know:</strong></p>
-              <p>{{ city.goodToKnow }}</p>
-            </div>
-            <div class="detail-item">
-              <p><strong class="heading">Facts:</strong></p>
+              <p><strong class="facts-heading">Facts:</strong></p>
               <p>{{ city.facts }}</p>
             </div>
-            <div class="detail-item">
-              <p><strong class="heading">Statistics:</strong></p>
-              <p>{{ city.statistics }}</p>
-            </div>
-            <div class="detail-item">
-              <p><strong class="heading">Tags:</strong></p>
-              <div class="tag-container">
-              <div
-                  v-for="tag in city.tags"
-                  :key="tag"
-                  class="tag-bubble"
-                >
-                  {{ tag }}
-                </div>
-              </div>
-            </div>
-            <div class="detail-item">
-              <p><strong class="heading">Places to Visit:</strong></p>
-              <ul class="places-list">
-                <li v-for="place in city.placesToVisit" :key="place">
-                  <a :href="`/mainplaces/`">{{ place }}</a>
-                </li>
-              </ul>
+            <div class="read-more-wrapper">
+              <router-link :to="`/city/${city.id}`" class="city-link">read more</router-link>
             </div>
           </div>
         </div>
@@ -164,7 +139,8 @@ export default {
             facts: city.facts,
             statistics: city.statistics,
             tags: city.tags,
-            placesToVisit: city.placesToVisit.map(place => place.placeName)
+            placesToVisit: city.placesToVisit.map(place => place.placeName),
+            id: city._id
           }))
           console.log(this.cities)
         } else {
@@ -315,7 +291,7 @@ export default {
 
 }
 
-.heading {
+.facts-heading {
     font-size: 1.5em;
     font-weight: bold;
 }
@@ -444,6 +420,9 @@ a img {
 
 .slide-title{
   font-size: 3rem;
+  text-decoration: none;
+  transition: all 0.5s;
+  color: #759CAB;
 }
 
 .maincities-left-side-panel{
@@ -487,14 +466,17 @@ a img {
   font-size: 1.1rem;
 }
 
-.places-list li a{
+.read-more-wrapper a{
+  color: #bc672a;
   text-decoration: none;
   transition: all 0.5s;
+  font-size: 1.6rem;
 }
 
-.places-list li a:hover{
+.read-more-wrapper a:hover{
   text-decoration-line: underline;
   color: #acbbc1;
+  transform: scale(1.05);
 }
 
 .star-rating{

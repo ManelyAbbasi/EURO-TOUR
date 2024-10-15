@@ -368,6 +368,7 @@ export default {
   cursor: pointer;
   font-size: 1.2rem;
   margin-block: 40px;
+  transition: all 0.4s;
 }
 
 .tags-button:hover, .ratings-button:hover{
@@ -714,8 +715,15 @@ a img {
     padding: 1rem;
     margin: 0.5rem;
     flex: 0 1 calc(30% - 1rem); /* Flex item: grow, shrink, basis (30% width minus margin) */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
+}
+
+.place-card{
+  transition: box-shadow 0.3s ease;
+}
+
+.place-card:hover{
+  box-shadow: 0 8px 16px #0457688e;
 }
 
 .place-card-img{
@@ -766,13 +774,13 @@ a img {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .city-card {
+    .place-card {
         flex: 0 1 calc(45% - 1rem); /* 2 cards per row on smaller screens */
     }
 }
 
 @media (max-width: 576px) {
-    .city-card {
+    .place-card {
         flex: 0 1 calc(100% - 1rem); /* 1 card per row on extra small screens */
     }
 }

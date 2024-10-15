@@ -60,7 +60,7 @@
             <button class="tag-button" @click="toggleTag('warm weather')">warm weather</button>
             <button class="tag-button" @click="toggleTag('cold weather')">cold weather</button>
             <button class="tag-button" @click="toggleTag('popular')">popular</button>
-            <button class="tag-button" @click="toggleTag('cheap')">affordable</button>
+            <button class="tag-button" @click="toggleTag('affordable')">affordable</button>
             <button class="tag-button" @click="toggleTag('high-end')">high-end</button>
             <button class="tag-button" @click="toggleTag('lgbtq+ friendly')">lgbtq+ friendly</button>
             <button class="tag-button" @click="toggleTag('walkable')">walkable</button>
@@ -102,7 +102,7 @@
                   <img src="@/assets/London.jpg" class="city-card-img"/>
                 </div>
                 <div class="city-country-text">
-                  <p class="cityname-text">{{ city.cityName }}, </p>
+                  <router-link :to="`/city/${city._id}`" class="cityname-text">{{ city.cityName }},</router-link>
                   <p>{{ city.country }}</p>
                 </div>
               </div>
@@ -256,6 +256,7 @@ export default {
   cursor: pointer;
   font-size: 1.2rem;
   margin-block: 40px;
+  transition: all 0.4s;
 }
 
 .tags-button:hover, .ratings-button:hover{
@@ -542,8 +543,15 @@ a img {
     padding: 1rem;
     margin: 0.5rem;
     flex: 0 1 calc(30% - 1rem); /* Flex item: grow, shrink, basis (30% width minus margin) */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
+}
+
+.city-card{
+  transition: box-shadow 0.3s ease;
+}
+
+.city-card:hover{
+  box-shadow: 0 8px 16px #0457688e;
 }
 
 .city-card-img{
@@ -570,6 +578,15 @@ a img {
 
 .cityname-text{
   font-weight: 700;
+  text-decoration: none;
+  font-size: 1.25rem;
+  color: #196386;
+  transition: all 0.3s;
+}
+
+.cityname-text:hover{
+  text-decoration: underline #045768;
+  color: #edf7fb;
 }
 
 .bottom-half-card{

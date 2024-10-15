@@ -193,7 +193,7 @@
                   <img src="@/assets/London.jpg" class="city-card-img"/>
                 </div>
                 <div class="city-country-text">
-                  <p class="cityname-text">{{ city.cityName }}, </p>
+                  <router-link :to="`/city/${city._id}`" class="cityname-text">{{ city.cityName }},</router-link>
                   <p>{{ city.country }}</p>
                 </div>
               </div>
@@ -366,6 +366,7 @@ export default {
   cursor: pointer;
   font-size: 1.2rem;
   margin-block: 40px;
+  transition: all 0.4s;
 }
 
 .tags-button:hover, .ratings-button:hover{
@@ -734,6 +735,23 @@ a img {
 
 .cityname-text{
   font-weight: 700;
+  text-decoration: none;
+  font-size: 1.25rem;
+  color: #196386;
+  transition: all 0.3s;
+}
+
+.cityname-text:hover{
+  text-decoration: underline #045768;
+  color: #edf7fb;
+}
+
+.city-card{
+  transition: box-shadow 0.3s ease;
+}
+
+.city-card:hover{
+  box-shadow: 0 8px 16px #0457688e;
 }
 
 .bottom-half-card{
