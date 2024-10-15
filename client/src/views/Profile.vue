@@ -110,14 +110,18 @@
       </b-row>
 
       <b-row class="button-row">
-        <b-col col="11">
-        <div class="save-changes-container">
+        <b-col cols="3">
+        <div class="save-message-container">
           <span class="saved-message" v-if="isSaved">saved!</span>
-          <button class="save-button" type="button" @click="saveChanges($event)">save changes</button>
         </div>
       </b-col>
+      <b-col cols="3">
+        <div class="save-button-container">
+        <button class="save-button" type="button" @click="saveChanges($event)">save changes</button>
+      </div>
+      </b-col>
 
-      <b-col col="1">
+      <b-col cols="3">
         <div class="delete-button-container">
           <button class="delete-button" type="button" @click="deletePopUp">delete account</button>
         </div>
@@ -426,44 +430,50 @@ label {
 
 .delete-button-container {
   display: flex;
-  align-items: center; /* Aligns button and message vertically */
+  align-items: center; /* Aligns button vertically */
   margin-top: 3rem;
   margin-bottom: 5rem;
 }
 
-.save-changes-container{
+.save-message-container{
   display: flex;
-  align-items: center; /* Aligns button and message vertically */
+  align-items: center; /* Aligns message vertically */
+  margin-top: 3.3rem;
+  margin-bottom: 5rem;
+}
+
+.save-button-container {
+  align-content: center;
+  display: flex;
   margin-top: 3rem;
   margin-bottom: 5rem;
-  gap: 1rem;
 }
 
 .save-button {
   background-color: rgba(0, 0, 0, 0.301);
   color: #edf7fb;
   border: none;
-  padding: 0.3rem 1.3rem;
+  padding: 0.3rem 1rem;
   font-size: 1rem;
   cursor: pointer;
-  width: 50%;
-  margin-left: 12rem;
+  margin-left:2rem;
 }
 
 .saved-message {
   color: #8FC6DF;
   font-size: 1rem;
   font-family: 'Lexend Deca', sans-serif;
+  margin-left: 9rem;
 }
 
 .delete-button {
   background-color: #bc672a;
   color: #edf7fb;
   border: none;
-  padding: 0.3rem 1.3rem;
+  padding: 0.3rem 1rem;
   font-size: 1rem;
   cursor: pointer;
-  width: 50%;
+  margin-right: 0rem;
 }
 
 .delete-popup {
