@@ -68,8 +68,8 @@
             <div class="places-wrapper">
                 <p><strong class="heading">Places to Visit:</strong></p>
                 <ul class="places-list">
-                    <li v-for="place in city.placesToVisit" :key="place">
-                        <a :href="`/mainplaces/`">{{ place }}</a>
+                    <li v-for="place in placesToVisit" :key="place.address">
+                    <a :href="`/mainplaces/`">{{ place.placeName }}</a>
                     </li>
                 </ul>
             </div>
@@ -95,6 +95,7 @@ export default {
   data() {
     return {
       city: {}, // Object to hold city details
+      placesToVisit: [],
       loggedInStatus: !!localStorage.getItem('x-auth-token') // Reactive property for login status
     }
   },
@@ -119,7 +120,6 @@ export default {
             country: response.data.country,
             rating: response.data.rating,
             goodToKnow: response.data.goodToKnow,
-            placesToVisit: response.data.placesToVisit.map(place => place.placeName), // Assuming these are just IDs for places
             facts: response.data.facts, // Include any other fields you need
             statistics: response.data.statistics,
             tags: response.data.tags
@@ -134,6 +134,26 @@ export default {
         this.city = {} // Handle API error gracefully
       }
     },
+    async getPlaces() {
+      try {
+        const cityId = this.$route.params.cityid
+        const response = await Api.get(`/cities/${cityId}/placesToVisit`)
+        console.log('API Response:', response.data)
+        if (response.data && Array.isArray(response.data)) {
+          this.placesToVisit = response.data.map(place => ({
+            placeName: place.placeName,
+            address: place.address
+          }))
+        } else {
+          console.warn('No places found or places is not an array')
+          this.places = [] // Correctly clear the places array
+        }
+        console.log(response.data.placesToVisit)
+      } catch (error) {
+        console.error('Error fetching places details:', error.message)
+        this.places = [] // Handle API error gracefully
+      }
+    },
     logout() {
       // Remove the authentication token from localStorage
       localStorage.removeItem('x-auth-token')
@@ -146,6 +166,7 @@ export default {
   },
   mounted() {
     this.getCityDetails()
+    this.getPlaces()
     // Create a link element
     const link = document.createElement('link')
     link.rel = 'stylesheet'
