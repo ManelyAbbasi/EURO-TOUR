@@ -109,19 +109,21 @@
         </div>
       </b-row>
 
-      <b-row class="save-row">
+      <b-row class="button-row">
+        <b-col col="11">
         <div class="save-changes-container">
-          <button class="save-button" type="button" @click="saveChanges($event)">save changes</button>
           <span class="saved-message" v-if="isSaved">saved!</span>
+          <button class="save-button" type="button" @click="saveChanges($event)">save changes</button>
         </div>
+      </b-col>
+
+      <b-col col="1">
+        <div class="delete-button-container">
+          <button class="delete-button" type="button" @click="deletePopUp">delete account</button>
+        </div>
+      </b-col>
       </b-row>
 
-      <b-row class="delete-row">
-        <b-col>        <h4 class="delete-title">Do you want to delete your account?</h4>
-        </b-col>
-        <b-col>        <button class="delete-button" type="button" @click="deletePopUp">delete account</button>
-        </b-col>
-      </b-row>
     </form>
     <div class="delete-popup" v-if="deleteInProcess">
       <div class="popup-header">
@@ -359,28 +361,109 @@ label {
   text-align: left;
 }
 
-h4 {
-  color: #edf7fb;
-  font-size: 1.1rem;
+.input-field {
+  color: #bc672a;
+  font-size: 1rem;
+  padding: 12px 20px;
   font-family: 'Lexend Deca', sans-serif;
-  text-align: left;
-  white-space: nowrap;
+  border: rgba(0, 0, 0, 0.301);
+  background-color: rgba(0, 0, 0, 0.301);
+  width: 50rem;
+  outline: none;
+  margin-bottom: 2rem;
 }
 
-.delete-button {
-  background-color: #233341;
-  color: #9BA9B6;
+.gender-selection {
+    display: flex;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.non-binary-label {
+  white-space: nowrap; /* Prevents breaking non-binary across lines */
+}
+
+.sexuality-selection {
+    display: flex;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.gender-selection label, .sexuality-selection label {
+    color: #8FC6DF;
+    font-size: 1.1rem;
+    font-family: 'Lexend Deca', sans-serif;
+}
+
+.gender-buttons, .sexuality-buttons {
+    display: flex;
+    gap: 4rem; /* Space between buttons */
+    margin-left: 2rem;
+}
+
+.gender-item, .sexuality-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.gender-button, .sexuality-button {
+    width: 1.2rem;
+    height: 1.2rem;
+    background-color: rgba(0, 0, 0, 0.301);
+    cursor: pointer;
+    border: 2px solid transparent; /* For a smooth transition */
+    transition: background-color 0.3s, border-color 0.3s; /* Transition effect */
+}
+
+.gender-button:hover, .sexuality-button:hover {
+    border-color: #bc672a;
+}
+
+.gender-button.active, .sexuality-button.active {
+    background-color: #bc672a;
+}
+
+.delete-button-container {
+  display: flex;
+  align-items: center; /* Aligns button and message vertically */
+  margin-top: 3rem;
+  margin-bottom: 5rem;
+}
+
+.save-changes-container{
+  display: flex;
+  align-items: center; /* Aligns button and message vertically */
+  margin-top: 3rem;
+  margin-bottom: 5rem;
+  gap: 1rem;
+}
+
+.save-button {
+  background-color: rgba(0, 0, 0, 0.301);
+  color: #edf7fb;
   border: none;
   padding: 0.3rem 1.3rem;
   font-size: 1rem;
   cursor: pointer;
+  width: 50%;
+  margin-left: 12rem;
 }
 
-.delete-row{
-  display: flex;
-  justify-content: flex-start;
-  padding: 0 1.5rem 1.5rem 1.5rem;
-  gap: 1rem;
+.saved-message {
+  color: #8FC6DF;
+  font-size: 1rem;
+  font-family: 'Lexend Deca', sans-serif;
+}
+
+.delete-button {
+  background-color: #bc672a;
+  color: #edf7fb;
+  border: none;
+  padding: 0.3rem 1.3rem;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 50%;
 }
 
 .delete-popup {
@@ -462,93 +545,6 @@ p{
 .popup-body button{
   justify-content: center;
   display: flex;
-}
-
-.input-field {
-  color: #bc672a;
-  font-size: 1rem;
-  padding: 12px 20px;
-  font-family: 'Lexend Deca', sans-serif;
-  border: rgba(0, 0, 0, 0.301);
-  background-color: rgba(0, 0, 0, 0.301);
-  width: 50rem;
-  outline: none;
-  margin-bottom: 2rem;
-}
-
-.gender-selection {
-    display: flex;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-}
-
-.non-binary-label {
-  white-space: nowrap; /* Prevents breaking non-binary across lines */
-}
-
-.sexuality-selection {
-    display: flex;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-}
-
-.gender-selection label, .sexuality-selection label {
-    color: #8FC6DF;
-    font-size: 1.1rem;
-    font-family: 'Lexend Deca', sans-serif;
-}
-
-.gender-buttons, .sexuality-buttons {
-    display: flex;
-    gap: 4rem; /* Space between buttons */
-    margin-left: 2rem;
-}
-
-.gender-item, .sexuality-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.gender-button, .sexuality-button {
-    width: 1.2rem;
-    height: 1.2rem;
-    background-color: rgba(0, 0, 0, 0.301);
-    cursor: pointer;
-    border: 2px solid transparent; /* For a smooth transition */
-    transition: background-color 0.3s, border-color 0.3s; /* Transition effect */
-}
-
-.gender-button:hover, .sexuality-button:hover {
-    border-color: #bc672a;
-}
-
-.gender-button.active, .sexuality-button.active {
-    background-color: #bc672a;
-}
-
-.save-changes-container {
-  display: flex;
-  align-items: center; /* Aligns button and message vertically */
-  margin-left: 18rem;
-  margin-top: 2rem;
-  margin-bottom: 5rem;
-}
-
-.save-button {
-  background-color: #bc672a;
-  color: #edf7fb;
-  border: none;
-  padding: 0.3rem 1.3rem;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.saved-message {
-  margin-left: 1rem; /* Adds space between the button and the saved message */
-  color: #8FC6DF;
-  font-size: 1rem;
-  font-family: 'Lexend Deca', sans-serif;
 }
 
 .footer{
