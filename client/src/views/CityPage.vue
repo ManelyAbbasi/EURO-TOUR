@@ -31,14 +31,48 @@
       <main>
       <div class="city-layout-wrapper">
         <div class="maincities-left-side-panel">
-          <h1>{{ city.cityName }}</h1>
-          <p>Country: {{ city.country }}</p>
-          <p>Rating: {{ city.rating }}</p>
-          <p>Good to Know: {{ city.goodToKnow }}</p>
-          <h2>Places to Visit</h2>
-          <ul>
-            <li v-for="place in city.placesToVisit" :key="place">{{ place }}</li>
-          </ul>
+            <h1>{{ city.cityName }}, {{ city.country }}</h1>
+            <div class="star-rating">
+                <span class="stars">
+                    <i v-for="star in 5"
+                    :key="star"
+                    :class="['fa-star', city.rating >= star ? 'fas' : 'far']"
+                    style="color: #bc672a;"></i>
+                </span>
+                <span class="rating-text">{{ city.rating }}/5.0</span>
+            </div>
+            <div class="good-to-know-wrapper">
+                <p><strong class="heading">Good to know:</strong></p>
+                <p>{{ city.goodToKnow }}</p>
+            </div>
+            <div class="facts-wrapper">
+                <p><strong class="heading">Facts:</strong></p>
+                <p>{{ city.facts }}</p>
+            </div>
+            <div class="statistics-wrapper">
+                <p><strong class="heading">Statistics:</strong></p>
+                <p>{{ city.statistics }}</p>
+            </div>
+            <div class="tags-wrapper">
+                <p><strong class="heading">Tags:</strong></p>
+              <div class="tag-container">
+              <div
+                  v-for="tag in city.tags"
+                  :key="tag"
+                  class="tag-bubble"
+                >
+                  {{ tag }}
+                </div>
+              </div>
+            </div>
+            <div class="places-wrapper">
+                <p><strong class="heading">Places to Visit:</strong></p>
+                <ul class="places-list">
+                    <li v-for="place in city.placesToVisit" :key="place">
+                        <a :href="`/mainplaces/`">{{ place }}</a>
+                    </li>
+                </ul>
+            </div>
         </div>
       </div>
     </main>
@@ -85,7 +119,7 @@ export default {
             country: response.data.country,
             rating: response.data.rating,
             goodToKnow: response.data.goodToKnow,
-            placesToVisit: response.data.placesToVisit.map(placeId => placeId), // Assuming these are just IDs for places
+            placesToVisit: response.data.placesToVisit.map(place => place.placeName), // Assuming these are just IDs for places
             facts: response.data.facts, // Include any other fields you need
             statistics: response.data.statistics,
             tags: response.data.tags

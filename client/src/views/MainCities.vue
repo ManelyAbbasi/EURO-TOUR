@@ -43,7 +43,7 @@
       <div id="city-slide">
         <div v-for="city in paginatedCities" :key="city.cityName" class="city-item">
           <div class="detail-about-city">
-            <router-link :to="`/city/${city.id}`" class="city-link">{{ city.cityName }}, {{ city.country }}</router-link>
+            <router-link :to="`/city/${city.id}`" class="city-link slide-title">{{ city.cityName }}, {{ city.country }}</router-link>
               <div class="star-rating">
                <!-- Display filled stars -->
                <i v-for="n in Math.floor(city.rating)" :key="n" class="fa-solid fa-star" style="color: #bc672a;"></i>
@@ -445,6 +445,9 @@ a img {
 
 .slide-title{
   font-size: 3rem;
+  text-decoration: none;
+  transition: all 0.5s;
+  color: #759CAB;
 }
 
 .maincities-left-side-panel{
@@ -493,7 +496,8 @@ a img {
   transition: all 0.5s;
 }
 
-.places-list li a:hover{
+.places-list li a:hover,
+.slide-title:hover{
   text-decoration-line: underline;
   color: #acbbc1;
 }
