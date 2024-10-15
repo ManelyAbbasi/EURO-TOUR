@@ -127,9 +127,10 @@
         </div>
       </b-col>
       </b-row>
-
     </form>
-    <div class="delete-popup" v-if="deleteInProcess">
+
+    <div class="overlay" v-if="deleteInProcess" @click="closeDeletePopUp"></div>
+    <div class="delete-popup" :class="{ show: deleteInProcess }" v-if="deleteInProcess">
       <div class="popup-header">
         <button @click="closeDeletePopUp">X</button>
       </div>
@@ -137,9 +138,9 @@
         <p>Are you sure you want to delete your account?</p>
 
         <label for="usernameDeleting">enter your username</label>
-        <input type="text" id="usernameDeleting" class="input-field" v-model="usernameDeleting" />
+        <input type="text" id="usernameDeleting" class="input-field-popup" v-model="usernameDeleting" />
         <label for="passwordDeleting">enter your password</label>
-        <input type="password" id="passwordDeleting" class="input-field" v-model="passwordDeleting" />
+        <input type="password" id="passwordDeleting" class="input-field-popup" v-model="passwordDeleting" />
         <div class="delete-button-wrapper">
           <button @click="deleteAccount($event)">Delete Account</button>
         </div>
@@ -481,7 +482,7 @@ label {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -35%); /* Center the popup */
-  background-color: aliceblue; /* White background */
+  background-color: #fff; /* White background */
   border-radius: 8px; /* Rounded corners */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Shadow for depth */
   z-index: 10; /* Place above the overlay */
@@ -489,12 +490,27 @@ label {
   max-width: 600px;
 }
 
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Dark semi-transparent background */
+  z-index: 9; /* Place it above other content */
+}
+
+.delete-popup.show {
+  opacity: 1; /* Fully visible */
+  transform: translate(-50%, -50%) scale(1.05); /* Slightly scale up on appearance */
+}
+
 .popup-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  background-color: #cfd3d4; /* Light grey background */
+  background-color: #bc672a; /* Light grey background */
   border-top-left-radius: 8px; /* Round corners for the header */
   border-top-right-radius: 8px; /* Round corners for the header */
 }
@@ -504,13 +520,22 @@ label {
   border: none;
   display: flex;
   justify-content: flex-end;
+  color:#bc672a;
 }
 
-.popup-body label,
-.popup-body p{
+.popup-body label {
   list-style-type: none; /* Remove the default bullets */
   padding: 0; /* Remove default padding */
   margin: 0; /* Remove default margin */
+  color: #045768;
+}
+
+.popup-body p {
+  list-style-type: none; /* Remove the default bullets */
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
+  color: #045768;
+  margin-bottom: 1rem;
 }
 
 .popup-body {
@@ -521,6 +546,18 @@ label {
 
 .popup-body input{
   width: 100%;
+  color:#bc672a;
+}
+
+.input-field-popup {
+  color: #bc672a;
+  font-size: 1rem;
+  padding: 12px 20px;
+  font-family: 'Lexend Deca', sans-serif;
+  border: 1px solid #555;
+  width: 50rem;
+  outline: none;
+  margin-bottom: 2rem;
 }
 
 .delete-button-wrapper{
@@ -530,7 +567,7 @@ label {
 
 .popup-body button{
   width: 40%;
-  background-color: #233341;
+  background-color: #bc672a;
   color: #edf7fb;
   transition: all 0.3s;
   border: none;
@@ -538,10 +575,9 @@ label {
 }
 
 .popup-body button:hover{
-  background-color: #edf7fb;
-  color: #233341;
+  background-color: #bc672a;
+  color: #edf7fb;
   transform: scale(1.03);
-  border: 1px solid #233341;
 }
 
 p{
