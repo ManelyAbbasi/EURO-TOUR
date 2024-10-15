@@ -31,7 +31,7 @@
     </header>
 
     <form class="user-form">
-      <b-row>
+      <b-row v-if="!isAdmin">
         <label for="username">current username</label>
         <input type="text" id="username" class="input-field" v-model="username" />
 
@@ -39,7 +39,20 @@
         <input type="password" id="password" class="input-field" v-model="password" />
       </b-row>
 
-      <b-row>
+      <b-row v-if="isAdmin">
+        <div class="admin-text">
+        <h1>Admin Profile</h1>
+        <p>as an admin, you are only allowed to modify your password</p>
+        </div>
+      </b-row>
+        <!-- Admins only see the password field -->
+      <b-row v-if="isAdmin">
+        <label for="password">password</label>
+        <input type="password" id="password" class="input-field" v-model="password" />
+      </b-row>
+
+       <!-- Gender and LGBTQIA selection will only appear for non-admin users -->
+      <b-row v-if="!isAdmin">
         <div class="gender-selection">
           <label for="gender">What is your gender?</label>
           <div class="gender-buttons">
@@ -83,7 +96,7 @@
         </div>
       </b-row>
 
-      <b-row>
+      <b-row v-if="!isAdmin">
         <div class="sexuality-selection">
           <label for="lgbtqia">Are you a member of LGBTQIA+?</label>
           <div class="sexuality-buttons">
@@ -109,21 +122,29 @@
         </div>
       </b-row>
 
-      <b-row class="save-row">
-        <div class="save-changes-container">
-          <button class="save-button" type="button" @click="saveChanges($event)">save changes</button>
+      <b-row class="button-row">
+        <b-col cols="3">
+        <div class="save-message-container">
           <span class="saved-message" v-if="isSaved">saved!</span>
         </div>
+      </b-col>
+      <b-col cols="3">
+        <div class="save-button-container">
+        <button class="save-button" type="button" @click="saveChanges($event)">save changes</button>
+      </div>
+      </b-col>
+
+      <b-col cols="3">
+        <div class="delete-button-container">
+          <button class="delete-button" type="button" @click="deletePopUp">delete account</button>
+        </div>
+      </b-col>
       </b-row>
 
-      <b-row class="delete-row">
-        <b-col>        <h4 class="delete-title">Do you want to delete your account?</h4>
-        </b-col>
-        <b-col>        <button class="delete-button" type="button" @click="deletePopUp">delete account</button>
-        </b-col>
-      </b-row>
     </form>
-    <div class="delete-popup" v-if="deleteInProcess">
+
+    <div class="overlay" v-if="deleteInProcess" @click="closeDeletePopUp"></div>
+    <div class="delete-popup" :class="{ show: deleteInProcess }" v-if="deleteInProcess">
       <div class="popup-header">
         <button @click="closeDeletePopUp">X</button>
       </div>
@@ -131,9 +152,9 @@
         <p>Are you sure you want to delete your account?</p>
 
         <label for="usernameDeleting">enter your username</label>
-        <input type="text" id="usernameDeleting" class="input-field" v-model="usernameDeleting" />
+        <input type="text" id="usernameDeleting" class="input-field-popup" v-model="usernameDeleting" />
         <label for="passwordDeleting">enter your password</label>
-        <input type="password" id="passwordDeleting" class="input-field" v-model="passwordDeleting" />
+        <input type="password" id="passwordDeleting" class="input-field-popup" v-model="passwordDeleting" />
         <div class="delete-button-wrapper">
           <button @click="deleteAccount($event)">Delete Account</button>
         </div>
@@ -164,7 +185,8 @@ export default {
       isSaved: false, // Track if the "saved!" message should be shown
       deleteInProcess: false,
       usernameDeleting: '', // For delete popup
-      passwordDeleting: '' // For delete popup
+      passwordDeleting: '', // For delete popup
+      isAdmin: false // Add isAdmin field to track admin status
     }
   },
   computed: {
@@ -191,10 +213,7 @@ export default {
       }
 
       try {
-        // Get the auth token from local storage (or where it's stored after login)
         const authToken = localStorage.getItem('x-auth-token')
-
-        // Make sure you have a token
         if (!authToken) {
           throw new Error('No auth token found. Please log in.')
         }
@@ -211,7 +230,7 @@ export default {
         }
       } catch (error) {
         console.error('Update error:', error)
-        alert('You are not allowed to change your username, and password can not be empty.')
+        alert('You are not allowed to change your username, and password cannot be empty.')
       }
     },
     deletePopUp() {
@@ -221,11 +240,9 @@ export default {
       this.deleteInProcess = false
     },
     async deleteAccount(event) {
-      if (event) {
-        event.preventDefault() // This prevents the default form or button submission behavior
-      }
+      event.preventDefault()
       try {
-        const authToken = localStorage.getItem('x-auth-token') // Get auth token from localStorage
+        const authToken = localStorage.getItem('x-auth-token')
         if (!authToken) throw new Error('No auth token found. Please log in.')
         const response = await Api.delete(`/users/${this.usernameDeleting}`, {
           headers: {
@@ -247,20 +264,34 @@ export default {
       localStorage.removeItem('x-auth-token')
       this.loggedInStatus = false
       this.$router.push('/')
+    },
+    async checkIfAdmin() {
+      try {
+        const response = await Api.get('/admin/check-admin', {
+          headers: {
+            'x-auth-token': localStorage.getItem('x-auth-token')
+          }
+        })
+        this.isAdmin = response.data.isAdmin // Store admin status
+      } catch (error) {
+        console.error('Error checking admin status:', error)
+      }
     }
   },
   mounted() {
     // Check login status when the component is mounted
     const loggedInStatus = !!localStorage.getItem('x-auth-token')
     console.log('User logged in status:', loggedInStatus)
+    // Check if the user is an admin
+    this.checkIfAdmin()
+
     // Create a link element for Font Awesome (for icons, if needed)
     const link = document.createElement('link')
     link.rel = 'stylesheet'
-    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css'
-    link.integrity = 'sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==' // Replace this with the correct integrity hash
+    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css';
+    link.integrity = 'sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=='// Replace this with the correct integrity hash
     link.crossOrigin = 'anonymous'
     link.referrerPolicy = 'no-referrer'
-    // Append the link element to the head
     document.head.appendChild(link)
   }
 }
@@ -352,116 +383,24 @@ a img {
   width: 50%;
 }
 
+.admin-text{
+  color: #bc672a;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  font-family: 'Lexend Deca', sans-serif;
+}
+
+.user-form p{
+  margin-left: 0rem;
+  font-weight: normal;
+  color: rgba(0, 0, 0, 0.301);
+}
+
 label {
   color: #8FC6DF;
   font-size: 1.1rem;
   font-family: 'Lexend Deca', sans-serif;
   text-align: left;
-}
-
-h4 {
-  color: #edf7fb;
-  font-size: 1.1rem;
-  font-family: 'Lexend Deca', sans-serif;
-  text-align: left;
-  white-space: nowrap;
-}
-
-.delete-button {
-  background-color: #233341;
-  color: #9BA9B6;
-  border: none;
-  padding: 0.3rem 1.3rem;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.delete-row{
-  display: flex;
-  justify-content: flex-start;
-  padding: 0 1.5rem 1.5rem 1.5rem;
-  gap: 1rem;
-}
-
-.delete-popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -35%); /* Center the popup */
-  background-color: aliceblue; /* White background */
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Shadow for depth */
-  z-index: 10; /* Place above the overlay */
-  min-width: 300px; /* Set a width for the popup */
-  max-width: 600px;
-}
-
-.popup-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  background-color: #cfd3d4; /* Light grey background */
-  border-top-left-radius: 8px; /* Round corners for the header */
-  border-top-right-radius: 8px; /* Round corners for the header */
-}
-
-.popup-header button{
-  margin-left: auto; /* Ensures the button is pushed to the right */
-  border: none;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.popup-body label,
-.popup-body p{
-  list-style-type: none; /* Remove the default bullets */
-  padding: 0; /* Remove default padding */
-  margin: 0; /* Remove default margin */
-}
-
-.popup-body {
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-}
-
-.popup-body input{
-  width: 100%;
-}
-
-.delete-button-wrapper{
-  justify-content: center;
-  display: flex;
-}
-
-.popup-body button{
-  width: 40%;
-  background-color: #233341;
-  color: #edf7fb;
-  transition: all 0.3s;
-  border: none;
-  padding: 0.5rem 1rem;
-}
-
-.popup-body button:hover{
-  background-color: #edf7fb;
-  color: #233341;
-  transform: scale(1.03);
-  border: 1px solid #233341;
-}
-
-p{
-  color: #233341;
-  font-size: 1.4rem;
-  font-weight: 700;
-  margin: 0.5rem 1rem 1.5rem;
-}
-
-.popup-body p,
-.popup-body button{
-  justify-content: center;
-  display: flex;
 }
 
 .input-field {
@@ -527,28 +466,168 @@ p{
     background-color: #bc672a;
 }
 
-.save-changes-container {
+.delete-button-container {
   display: flex;
-  align-items: center; /* Aligns button and message vertically */
-  margin-left: 18rem;
-  margin-top: 2rem;
+  align-items: center; /* Aligns button vertically */
+  margin-top: 3rem;
+  margin-bottom: 5rem;
+}
+
+.save-message-container{
+  display: flex;
+  align-items: center; /* Aligns message vertically */
+  margin-top: 3.3rem;
+  margin-bottom: 5rem;
+}
+
+.save-button-container {
+  align-content: center;
+  display: flex;
+  margin-top: 3rem;
   margin-bottom: 5rem;
 }
 
 .save-button {
-  background-color: #bc672a;
+  background-color: rgba(0, 0, 0, 0.301);
   color: #edf7fb;
   border: none;
-  padding: 0.3rem 1.3rem;
+  padding: 0.3rem 1rem;
   font-size: 1rem;
   cursor: pointer;
+  margin-left:2rem;
 }
 
 .saved-message {
-  margin-left: 1rem; /* Adds space between the button and the saved message */
   color: #8FC6DF;
   font-size: 1rem;
   font-family: 'Lexend Deca', sans-serif;
+  margin-left: 9rem;
+}
+
+.delete-button {
+  background-color: #bc672a;
+  color: #edf7fb;
+  border: none;
+  padding: 0.3rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-right: 0rem;
+}
+
+.delete-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -35%); /* Center the popup */
+  background-color: #fff; /* White background */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+  z-index: 10; /* Place above the overlay */
+  min-width: 300px; /* Set a width for the popup */
+  max-width: 600px;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Dark semi-transparent background */
+  z-index: 9; /* Place it above other content */
+}
+
+.delete-popup.show {
+  opacity: 1; /* Fully visible */
+  transform: translate(-50%, -50%) scale(1.05); /* Slightly scale up on appearance */
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #bc672a; /* Light grey background */
+  border-top-left-radius: 8px; /* Round corners for the header */
+  border-top-right-radius: 8px; /* Round corners for the header */
+}
+
+.popup-header button{
+  margin-left: auto; /* Ensures the button is pushed to the right */
+  border: none;
+  display: flex;
+  justify-content: flex-end;
+  color:#bc672a;
+}
+
+.popup-body label {
+  list-style-type: none; /* Remove the default bullets */
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
+  color: #045768;
+}
+
+.popup-body p {
+  list-style-type: none; /* Remove the default bullets */
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
+  color: #045768;
+  margin-bottom: 1rem;
+}
+
+.popup-body {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.popup-body input{
+  width: 100%;
+  color:#bc672a;
+}
+
+.input-field-popup {
+  color: #bc672a;
+  font-size: 1rem;
+  padding: 12px 20px;
+  font-family: 'Lexend Deca', sans-serif;
+  border: 1px solid #555;
+  width: 50rem;
+  outline: none;
+  margin-bottom: 2rem;
+}
+
+.delete-button-wrapper{
+  justify-content: center;
+  display: flex;
+}
+
+.popup-body button{
+  width: 40%;
+  background-color: #bc672a;
+  color: #edf7fb;
+  transition: all 0.3s;
+  border: none;
+  padding: 0.5rem 1rem;
+}
+
+.popup-body button:hover{
+  background-color: #bc672a;
+  color: #edf7fb;
+  transform: scale(1.03);
+}
+
+p{
+  color: #233341;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0.5rem 1rem 1.5rem;
+}
+
+.popup-body p,
+.popup-body button{
+  justify-content: center;
+  display: flex;
 }
 
 .footer{
