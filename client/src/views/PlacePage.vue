@@ -40,8 +40,16 @@
                 </span>
                 <span class="rating-text">{{ place.rating }}/5.0</span>
             </div>
-            <div class="facts-wrapper">
-                <p><strong class="heading">Facts:</strong></p>
+            <div class="city-wrapper">
+                <p><strong class="heading">City:</strong></p>
+                <p class="detail-text">{{ place.city }}</p>
+            </div>
+            <div class="address-wrapper">
+                <p><strong class="heading">Address:</strong></p>
+                <p class="detail-text">{{ place.address }}</p>
+            </div>
+            <div class="content-wrapper">
+                <p><strong class="heading">Content:</strong></p>
                 <p class="detail-text">{{ place.content }}</p>
             </div>
             <div class="tags-wrapper">
@@ -105,7 +113,7 @@ export default {
             rating: response.data.rating,
             content: response.data.content,
             tags: response.data.tags,
-            city: response.data.city
+            city: response.data.city.cityName
           }
           console.log(this.place) // Log the city object for verification
         } else {
@@ -285,21 +293,21 @@ export default {
   transform: scale(1.05);
 }
 
-.main-cities-link-wrapper{
+.main-places-link-wrapper{
     justify-content: flex-end;
     display: flex;
     padding: 0;
     margin: 0;
 }
 
-.main-cities-link-wrapper a{
+.main-places-link-wrapper a{
   color: #bc672a;
   text-decoration: none;
   transition: all 0.5s;
   font-size: 1.6rem;
 }
 
-.main-cities-link-wrapper a:hover{
+.main-places-link-wrapper a:hover{
   text-decoration-line: underline;
   color: #acbbc1;
   transform: scale(1.05);

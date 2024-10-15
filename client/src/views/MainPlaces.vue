@@ -56,16 +56,6 @@
                   <p><strong class="heading">Address:</strong></p>
                   <p>{{ place.address }}</p>
                 </div>
-                <div class="detail-item">
-                  <p><strong class="heading">Content:</strong></p>
-                  <p>{{ place.content }}</p>
-                </div>
-                <div class="detail-item">
-                  <p><strong class="heading">Tags:</strong></p>
-                  <div class="tag-container">
-                    <div v-for="tag in place.tags" :key="tag" class="tag-bubble">{{ tag }}</div>
-                  </div>
-                </div>
                 <div class="read-more-wrapper">
                   <router-link :to="`/place/${place.address}`" class="place-link">read more</router-link>
                 </div>
