@@ -30,8 +30,7 @@
 
       <main>
       <div class="city-layout-wrapper">
-        <div class="maincities-left-side-panel">
-            <h1>{{ city.cityName }}, {{ city.country }}</h1>
+            <h1 class="title-city">{{ city.cityName }}, {{ city.country }}</h1>
             <div class="star-rating">
                 <span class="stars">
                     <i v-for="star in 5"
@@ -43,15 +42,15 @@
             </div>
             <div class="good-to-know-wrapper">
                 <p><strong class="heading">Good to know:</strong></p>
-                <p>{{ city.goodToKnow }}</p>
+                <p class="detail-text">{{ city.goodToKnow }}</p>
             </div>
             <div class="facts-wrapper">
                 <p><strong class="heading">Facts:</strong></p>
-                <p>{{ city.facts }}</p>
+                <p class="detail-text">{{ city.facts }}</p>
             </div>
             <div class="statistics-wrapper">
                 <p><strong class="heading">Statistics:</strong></p>
-                <p>{{ city.statistics }}</p>
+                <p class="detail-text">{{ city.statistics }}</p>
             </div>
             <div class="tags-wrapper">
                 <p><strong class="heading">Tags:</strong></p>
@@ -73,7 +72,9 @@
                     </li>
                 </ul>
             </div>
-        </div>
+            <div class="main-cities-link-wrapper">
+              <router-link to="/maincities" class="city-link">back to cities</router-link>
+            </div>
       </div>
     </main>
 
@@ -183,6 +184,8 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
 
+/*EVERY page stylings*/
+
 .city-page-body-container{
     margin: 0;
     padding: 0;
@@ -262,105 +265,83 @@ export default {
     color: #bc672a!important;
 }
 
+/*city page stylings*/
 .city-layout-wrapper {
   display: flex;
-  padding: 9rem 9% 2rem;
-  width: 100%;
-}
-
-.maincities-right-side-panel .maincities-left-side-panel {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.maincities-left-side-panel {
-  display: flex;
-  flex-direction: row;
+  flex-direction: column;
   background-color: #edf7fb;
+  align-content: center;
+  justify-items: center;
+  margin: 10rem 7rem 4rem 7rem;
+  padding: 3rem;
+  gap: 1.5rem;
+}
 
+.city-layout-wrapper p{
+    color: #759cab;
+}
+
+.title-city{
+    font-size: 4rem;
+    color: #759cab;
 }
 
 .heading {
-    font-size: 1.5em;
+    font-size: 2rem;
     font-weight: bold;
 }
 
-.maincities-right-side-panel {
-    background-color: #759cab;
-    flex-direction: column;
+.star-rating{
+  text-align: left;
+  font-size: 2.5rem;
+}
+
+.star-rating i {
+  margin-right: 5px; /* Increase space between stars */
+}
+
+.rating-text {
+  margin-left: 0.5rem;
+  font-size: 0.7em;
+  color: #42515E;
+}
+
+.detail-text {
+  font-size: 1.2rem;
+  color: #045768 !important;
+}
+
+.places-list li a{
+  text-decoration: none;
+  transition: all 0.5s;
+  color: #045768;
+  font-size: 1.2rem;
+}
+
+.places-list li a:hover{
+  text-decoration-line: underline;
+  color: #acbbc1;
+  transform: scale(1.05);
+}
+
+.main-cities-link-wrapper{
+    justify-content: flex-end;
     display: flex;
-    align-items: center;
-    min-width: 30vw;
+    padding: 0;
+    margin: 0;
 }
 
-.maincities-right-side-panel h2 {
-    color: #045768;
-    font-size: 2rem;
-    padding: 0.5rem;
-    margin: 1rem 0;
+.main-cities-link-wrapper a{
+  color: #bc672a;
+  text-decoration: none;
+  transition: all 0.5s;
+  font-size: 1.6rem;
 }
 
-.maincities-right-side-panel h4 {
-    color: #045768;
-    font-size: 1.5rem;
-}
-
-.maincities-button-wrapper {
-    flex-direction: row;
-    display: flex;
-    gap: 2rem;
-}
-
-.maincities-button-wrapper .maincities-tags-btn,
-.maincities-button-wrapper .maincities-ratings-btn {
-    display: inline-block;
-    padding: 0.5rem 2rem;
-    color: #edf7fb;
-    background-color: #9BA9B6;
-    border: none;
-    text-align: center;
-    transition: 0.8s all;
-    max-width: 7rem;
-    text-decoration: none; /* Removes underline from links */
-
-}
-
-.maincities-button-wrapper .maincities-tags-btn:hover,
-.maincities-button-wrapper .maincities-ratings-btn:hover {
-    color: #edf7fb;
-    background-color: #bc672a;
-    transform: scale(1.05);
-}
-
-.trending-cities-wrapper {
-  gap: 2rem;
-}
-
-.trending-city-wrapper {
-  max-width: 20rem;
-  display: flex;
-  flex-direction: row;
-  gap: 0.5rem;
-  align-items: center;
-  justify-content:last baseline;
-}
-
-.trending-city-wrapper p{
-  font-size: 1rem;
-  align-content: center;
-  padding: 0.5rem;
-  justify-items: center;
-  margin: 0.5rem;
-}
-
-.trending-cities-img {
-  max-width: 35%;
-  margin: 1rem;
-}
-
-.trending-city-wrapper img{
-  border: 1px solid #edf7fb;
+.main-cities-link-wrapper a:hover{
+  text-decoration-line: underline;
+  color: #acbbc1;
+  transform: scale(1.05);
 }
 
 .logo img{
@@ -406,76 +387,6 @@ a img {
 .top-icon a i{
     font-size: 2rem;
     color: #045768;
-}
-
-.slide-title{
-  font-size: 3rem;
-}
-
-.maincities-left-side-panel{
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-width: 50vw;
-  align-content: flex-start;
-}
-
-.pagination-wrapper{
-  order: 2;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-bottom: 1rem;
-}
-
-#city-slide{
-  order: 1;
-  padding: 1.5rem;
-}
-
-.detail-about-city{
-    color: #759CAB;
-    font-size: 1.2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.detail-item{
-  padding: 1rem 0;
-}
-
-.detail-about-city p,
-.places-list li a{
-  text-align: left;
-  margin: 0.1px;
-  color: #759CAB;
-  font-size: 1.1rem;
-}
-
-.places-list li a{
-  text-decoration: none;
-  transition: all 0.5s;
-}
-
-.places-list li a:hover{
-  text-decoration-line: underline;
-  color: #acbbc1;
-}
-
-.star-rating{
-  text-align: left;
-  font-size: 2rem;
-}
-
-.star-rating i {
-  margin-right: 5px; /* Increase space between stars */
-}
-
-.rating-text {
-  margin-left: 0.5rem;
-  font-size: 0.6em;
-  color: #42515E;
 }
 
 .tag-bubble{
