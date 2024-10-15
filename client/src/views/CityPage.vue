@@ -1,5 +1,5 @@
 <template>
-    <div class="maincities-body-container">
+    <div class="city-page-body-container">
       <header class="euro-tour-header">
         <div class="logo-wrapper">
           <router-link to="/" class="logo">
@@ -29,92 +29,19 @@
       </header>
 
       <main>
-        <div class="maincities-layout-wrapper">
-          <div class="maincities-left-side-panel">
-
-            <!-- display new text for each slide -->
-              <div class="pagination-wrapper">
-              <div class="mt-3">
-                <b-pagination v-model="currentPage" pills :total-rows="cities.length" :per-page="perPage"></b-pagination>
-              </div>
-            </div>
-
-            <!-- City slide -->
-      <div id="city-slide">
-        <div v-for="city in paginatedCities" :key="city.cityName" class="city-item">
-          <div class="detail-about-city">
-            <router-link :to="`/city/${city.id}`" class="city-link">{{ city.cityName }}, {{ city.country }}</router-link>
-              <div class="star-rating">
-               <!-- Display filled stars -->
-               <i v-for="n in Math.floor(city.rating)" :key="n" class="fa-solid fa-star" style="color: #bc672a;"></i>
-                <!-- Display empty stars for remaining ones -->
-                <i v-for="n in 5 - Math.floor(city.rating)" :key="'empty-' + n" class="fa-regular fa-star" style="color: #bc672a;"></i>
-              <span class="rating-text">{{ city.rating }}/5.0</span>
-            </div>
-            <div class="detail-item">
-              <p><strong class="heading">Good to know:</strong></p>
-              <p>{{ city.goodToKnow }}</p>
-            </div>
-            <div class="detail-item">
-              <p><strong class="heading">Facts:</strong></p>
-              <p>{{ city.facts }}</p>
-            </div>
-            <div class="detail-item">
-              <p><strong class="heading">Statistics:</strong></p>
-              <p>{{ city.statistics }}</p>
-            </div>
-            <div class="detail-item">
-              <p><strong class="heading">Tags:</strong></p>
-              <div class="tag-container">
-              <div
-                  v-for="tag in city.tags"
-                  :key="tag"
-                  class="tag-bubble"
-                >
-                  {{ tag }}
-                </div>
-              </div>
-            </div>
-            <div class="detail-item">
-              <p><strong class="heading">Places to Visit:</strong></p>
-              <ul class="places-list">
-                <li v-for="place in city.placesToVisit" :key="place">
-                  <a :href="`/mainplaces/`">{{ place }}</a>
-                </li>
-              </ul>
-            </div>
-          </div>
+      <div class="city-layout-wrapper">
+        <div class="maincities-left-side-panel">
+          <h1>{{ city.cityName }}</h1>
+          <p>Country: {{ city.country }}</p>
+          <p>Rating: {{ city.rating }}</p>
+          <p>Good to Know: {{ city.goodToKnow }}</p>
+          <h2>Places to Visit</h2>
+          <ul>
+            <li v-for="place in city.placesToVisit" :key="place">{{ place }}</li>
+          </ul>
         </div>
       </div>
-
-        </div>
-
-          <div class="maincities-right-side-panel">
-                <!--search and trending-->
-                <h2 class="maincities-search-title">Search cities by: <i class="fa-solid fa-filter" style="color: #045768;"></i></h2>
-                <div class="maincities-button-wrapper">
-                  <router-link to="/searchCityByTag" class="maincities-tags-btn">tags</router-link>
-                    <h4 class="maincities-or">or</h4>
-                    <router-link to="/SearchCityByRating" class="maincities-ratings-btn">ratings</router-link>
-                </div>
-                <h2 class="maincities-search-title">Admins Picks:</h2>
-                <div class="trending-cities-wrapper">
-                  <div class="maincities-amst-wrapper trending-city-wrapper">
-                    <img src="@/assets/Amsterdam.jpg" alt="Amsterdam city" class="trending-cities-img"/>
-                    <p class="maincities-trending-amst">1. Amsterdam, The Netherlands</p>
-                  </div>
-                  <div class="maincities-dublin-wrapper trending-city-wrapper">
-                    <img src="@/assets/Dublin.jpg" alt="Dublin city" class="trending-cities-img"/>
-                    <p class="maincities-trending-dublin">2. Dublin, Republic of Ireland</p>
-                  </div>
-                  <div class="maincities-paris-wrapper trending-city-wrapper">
-                    <img src="@/assets/Paris.jpg" alt="Paris city" class="trending-cities-img"/>
-                    <p class="maincities-trending-paris">3. Paris, France</p>
-                  </div>
-                </div>
-              </div>
-          </div>
-      </main>
+    </main>
 
 <footer class="footer">
   <div class="footer-text">
@@ -133,60 +60,45 @@ import { Api } from '@/Api'
 export default {
   data() {
     return {
-      cities: [],
-      message: 'none',
-      loggedInStatus: !!localStorage.getItem('x-auth-token'), // Reactive property for login status
-      rows: 100,
-      currentPage: 1,
-      perPage: 1
+      city: {}, // Object to hold city details
+      loggedInStatus: !!localStorage.getItem('x-auth-token') // Reactive property for login status
     }
   },
   computed: {
     isLoggedIn() {
       return this.loggedInStatus // Use reactive `loggedInStatus` property
-    },
-    paginatedCities() {
-      const start = (this.currentPage - 1) * this.perPage
-      const end = start + this.perPage
-      return this.cities.slice(start, end) // Slicing based on the current page and per page count
     }
   },
   methods: {
-    async getCities() {
+    async getCityDetails() {
       try {
-        const response = await Api.get('/cities')
-        if (response.data && response.data.cities) {
-          this.cities = response.data.cities.map(city => ({
-            cityName: city.cityName,
-            country: city.country,
-            rating: city.rating,
-            goodToKnow: city.goodToKnow,
-            facts: city.facts,
-            statistics: city.statistics,
-            tags: city.tags,
-            placesToVisit: city.placesToVisit.map(place => place.placeName),
-            id: city._id
-          }))
-          console.log(this.cities)
+        const cityId = this.$route.params.cityid
+        console.log('City ID:', cityId)
+        const response = await Api.get(`/cities/${cityId}`)
+        console.log('API Response:', response.data) // Log the entire response
+
+        // Check if the response has the necessary fields
+        if (response.data && response.data._id) { // Check if the city ID is present
+        // Directly map the response to your city object
+          this.city = {
+            cityName: response.data.cityName,
+            country: response.data.country,
+            rating: response.data.rating,
+            goodToKnow: response.data.goodToKnow,
+            placesToVisit: response.data.placesToVisit.map(placeId => placeId), // Assuming these are just IDs for places
+            facts: response.data.facts, // Include any other fields you need
+            statistics: response.data.statistics,
+            tags: response.data.tags
+          }
+          console.log(this.city) // Log the city object for verification
         } else {
-          this.cities = []
+          console.warn('City not found in response') // This should not trigger now
+          this.city = {} // Handle case where city is not found
         }
       } catch (error) {
-        console.error('Error fetching cities:', error)
-        this.cities = []
+        console.error('Error fetching city details:', error)
+        this.city = {} // Handle API error gracefully
       }
-    },
-    toggleFavorite() {
-      this.isFavorite = !this.isFavorite // Toggle between true and false
-    },
-    getMessage() {
-      Api.get('/')
-        .then(response => {
-          this.message = response.data.message
-        })
-        .catch(error => {
-          this.message = error
-        })
     },
     logout() {
       // Remove the authentication token from localStorage
@@ -199,7 +111,7 @@ export default {
     }
   },
   mounted() {
-    this.getCities()
+    this.getCityDetails()
     // Create a link element
     const link = document.createElement('link')
     link.rel = 'stylesheet'
@@ -216,7 +128,7 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
 
-.maincities-body-container{
+.city-page-body-container{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -295,10 +207,8 @@ export default {
     color: #bc672a!important;
 }
 
-.maincities-layout-wrapper {
-  display: grid;
-  grid-template-columns: 2fr 1fr;  /* Create two equal columns */
-  grid-gap: 20px;
+.city-layout-wrapper {
+  display: flex;
   padding: 9rem 9% 2rem;
   width: 100%;
 }
@@ -563,8 +473,7 @@ a img {
         flex-direction: column;
         gap: 2rem;
     }
-    .layout-wrapper,
-    .get-to-know-wrapper{
+    .layout-wrapper{
         flex-direction: column;
         display: flex;
     }
