@@ -31,7 +31,7 @@
     </header>
 
     <form class="user-form">
-      <b-row>
+      <b-row v-if="!isAdmin">
         <label for="username">current username</label>
         <input type="text" id="username" class="input-field" v-model="username" />
 
@@ -39,7 +39,20 @@
         <input type="password" id="password" class="input-field" v-model="password" />
       </b-row>
 
-      <b-row>
+      <b-row v-if="isAdmin">
+        <div class="admin-text">
+        <h1>Admin Profile</h1>
+        <p>as an admin, you are only allowed to modify your password</p>
+        </div>
+      </b-row>
+        <!-- Admins only see the password field -->
+      <b-row v-if="isAdmin">
+        <label for="password">password</label>
+        <input type="password" id="password" class="input-field" v-model="password" />
+      </b-row>
+
+       <!-- Gender and LGBTQIA selection will only appear for non-admin users -->
+      <b-row v-if="!isAdmin">
         <div class="gender-selection">
           <label for="gender">What is your gender?</label>
           <div class="gender-buttons">
@@ -83,7 +96,7 @@
         </div>
       </b-row>
 
-      <b-row>
+      <b-row v-if="!isAdmin">
         <div class="sexuality-selection">
           <label for="lgbtqia">Are you a member of LGBTQIA+?</label>
           <div class="sexuality-buttons">
@@ -127,6 +140,7 @@
         </div>
       </b-col>
       </b-row>
+
     </form>
 
     <div class="overlay" v-if="deleteInProcess" @click="closeDeletePopUp"></div>
@@ -171,7 +185,8 @@ export default {
       isSaved: false, // Track if the "saved!" message should be shown
       deleteInProcess: false,
       usernameDeleting: '', // For delete popup
-      passwordDeleting: '' // For delete popup
+      passwordDeleting: '', // For delete popup
+      isAdmin: false // Add isAdmin field to track admin status
     }
   },
   computed: {
@@ -198,10 +213,7 @@ export default {
       }
 
       try {
-        // Get the auth token from local storage (or where it's stored after login)
         const authToken = localStorage.getItem('x-auth-token')
-
-        // Make sure you have a token
         if (!authToken) {
           throw new Error('No auth token found. Please log in.')
         }
@@ -218,7 +230,7 @@ export default {
         }
       } catch (error) {
         console.error('Update error:', error)
-        alert('You are not allowed to change your username, and password can not be empty.')
+        alert('You are not allowed to change your username, and password cannot be empty.')
       }
     },
     deletePopUp() {
@@ -228,11 +240,9 @@ export default {
       this.deleteInProcess = false
     },
     async deleteAccount(event) {
-      if (event) {
-        event.preventDefault() // This prevents the default form or button submission behavior
-      }
+      event.preventDefault()
       try {
-        const authToken = localStorage.getItem('x-auth-token') // Get auth token from localStorage
+        const authToken = localStorage.getItem('x-auth-token')
         if (!authToken) throw new Error('No auth token found. Please log in.')
         const response = await Api.delete(`/users/${this.usernameDeleting}`, {
           headers: {
@@ -254,20 +264,34 @@ export default {
       localStorage.removeItem('x-auth-token')
       this.loggedInStatus = false
       this.$router.push('/')
+    },
+    async checkIfAdmin() {
+      try {
+        const response = await Api.get('/admin/check-admin', {
+          headers: {
+            'x-auth-token': localStorage.getItem('x-auth-token')
+          }
+        })
+        this.isAdmin = response.data.isAdmin // Store admin status
+      } catch (error) {
+        console.error('Error checking admin status:', error)
+      }
     }
   },
   mounted() {
     // Check login status when the component is mounted
     const loggedInStatus = !!localStorage.getItem('x-auth-token')
     console.log('User logged in status:', loggedInStatus)
+    // Check if the user is an admin
+    this.checkIfAdmin()
+
     // Create a link element for Font Awesome (for icons, if needed)
     const link = document.createElement('link')
     link.rel = 'stylesheet'
-    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css'
-    link.integrity = 'sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==' // Replace this with the correct integrity hash
+    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css';
+    link.integrity = 'sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=='// Replace this with the correct integrity hash
     link.crossOrigin = 'anonymous'
     link.referrerPolicy = 'no-referrer'
-    // Append the link element to the head
     document.head.appendChild(link)
   }
 }
@@ -357,6 +381,19 @@ a img {
   margin-top: 10rem;
   margin-left: 23rem;
   width: 50%;
+}
+
+.admin-text{
+  color: #bc672a;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  font-family: 'Lexend Deca', sans-serif;
+}
+
+.user-form p{
+  margin-left: 0rem;
+  font-weight: normal;
+  color: rgba(0, 0, 0, 0.301);
 }
 
 label {
