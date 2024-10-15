@@ -66,6 +66,9 @@
                     <div v-for="tag in place.tags" :key="tag" class="tag-bubble">{{ tag }}</div>
                   </div>
                 </div>
+                <div class="read-more-wrapper">
+                  <router-link :to="`/place/${place.address}`" class="place-link">read more</router-link>
+                </div>
           </div>
         </div>
       </div>
@@ -300,6 +303,19 @@ export default {
 .heading {
     font-size: 1.5em;
     font-weight: bold;
+}
+
+.read-more-wrapper a{
+  color: #bc672a;
+  text-decoration: none;
+  transition: all 0.5s;
+  font-size: 1.6rem;
+}
+
+.read-more-wrapper a:hover{
+  text-decoration-line: underline;
+  color: #acbbc1;
+  transform: scale(1.05);
 }
 
 .mainplaces-right-side-panel {
