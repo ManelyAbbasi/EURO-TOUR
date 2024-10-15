@@ -11,6 +11,7 @@ import MainPlaces from './views/MainPlaces.vue'
 import SearchPlacesByTag from './views/SearchPlacesByTag.vue'
 import SearchPlacesByRating from './views/SearchPlacesByRating.vue'
 import CityPage from './views/CityPage.vue'
+import PlacePage from './views/PlacePage.vue'
 
 const routes = [
   { path: '/', name: 'home', component: Home },
@@ -23,7 +24,8 @@ const routes = [
   { path: '/MainPlaces', name: 'mainplaces', component: MainPlaces },
   { path: '/SearchPlacesByTag', name: 'placestag', component: SearchPlacesByTag },
   { path: '/SearchPlacesByRating', name: 'placesrating', component: SearchPlacesByRating },
-  { path: '/city/:cityid', component: CityPage }
+  { path: '/city/:cityid', component: CityPage },
+  { path: '/place/:address', component: PlacePage }
 ]
 
 const router = createRouter({

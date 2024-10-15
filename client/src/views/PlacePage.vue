@@ -1,5 +1,5 @@
 <template>
-    <div class="city-page-body-container">
+    <div class="place-page-body-container">
       <header class="euro-tour-header">
         <div class="logo-wrapper">
           <router-link to="/" class="logo">
@@ -30,33 +30,33 @@
 
       <main>
       <div class="city-layout-wrapper">
-            <h1 class="title-city">{{ city.cityName }}, {{ city.country }}</h1>
+            <h1 class="title-place">{{ place.placeName }}</h1>
             <div class="star-rating">
                 <span class="stars">
                     <i v-for="star in 5"
                     :key="star"
-                    :class="['fa-star', city.rating >= star ? 'fas' : 'far']"
+                    :class="['fa-star', place.rating >= star ? 'fas' : 'far']"
                     style="color: #bc672a;"></i>
                 </span>
-                <span class="rating-text">{{ city.rating }}/5.0</span>
+                <span class="rating-text">{{ place.rating }}/5.0</span>
             </div>
-            <div class="good-to-know-wrapper">
-                <p><strong class="heading">Good to know:</strong></p>
-                <p class="detail-text">{{ city.goodToKnow }}</p>
+            <div class="city-wrapper">
+                <p><strong class="heading">City:</strong></p>
+                <router-link :to="`/city/${place.cityId}`" class="city-link detail-text">{{ place.cityName }}</router-link>
             </div>
-            <div class="facts-wrapper">
-                <p><strong class="heading">Facts:</strong></p>
-                <p class="detail-text">{{ city.facts }}</p>
+            <div class="address-wrapper">
+                <p><strong class="heading">Address:</strong></p>
+                <p class="detail-text">{{ place.address }}</p>
             </div>
-            <div class="statistics-wrapper">
-                <p><strong class="heading">Statistics:</strong></p>
-                <p class="detail-text">{{ city.statistics }}</p>
+            <div class="content-wrapper">
+                <p><strong class="heading">Content:</strong></p>
+                <p class="detail-text">{{ place.content }}</p>
             </div>
             <div class="tags-wrapper">
                 <p><strong class="heading">Tags:</strong></p>
               <div class="tag-container">
               <div
-                  v-for="tag in city.tags"
+                  v-for="tag in place.tags"
                   :key="tag"
                   class="tag-bubble"
                 >
@@ -64,16 +64,8 @@
                 </div>
               </div>
             </div>
-            <div class="places-wrapper">
-                <p><strong class="heading">Places to Visit:</strong></p>
-                <ul class="places-list">
-                    <li v-for="place in placesToVisit" :key="place.address">
-                        <router-link :to="`/place/${place.address}`" class="place-link">{{ place.placeName }}</router-link>
-                    </li>
-                </ul>
-            </div>
-            <div class="main-cities-link-wrapper">
-              <router-link to="/maincities" class="city-link">back to cities</router-link>
+            <div class="main-places-link-wrapper">
+              <router-link to="/mainplaces" class="place-link">back to places to visit</router-link>
             </div>
       </div>
     </main>
@@ -95,8 +87,7 @@ import { Api } from '@/Api'
 export default {
   data() {
     return {
-      city: {}, // Object to hold city details
-      placesToVisit: [],
+      place: {}, // Object to hold city details
       loggedInStatus: !!localStorage.getItem('x-auth-token') // Reactive property for login status
     }
   },
@@ -106,53 +97,33 @@ export default {
     }
   },
   methods: {
-    async getCityDetails() {
+    async getPlace() {
       try {
-        const cityId = this.$route.params.cityid
-        console.log('City ID:', cityId)
-        const response = await Api.get(`/cities/${cityId}`)
+        const address = decodeURIComponent(this.$route.params.address)
+        console.log('Place address:', address)
+        const response = await Api.get(`/places/${address}`)
         console.log('API Response:', response.data) // Log the entire response
 
         // Check if the response has the necessary fields
-        if (response.data && response.data._id) { // Check if the city ID is present
+        if (response.data && response.data.address) { // Check if the city ID is present
         // Directly map the response to your city object
-          this.city = {
-            cityName: response.data.cityName,
-            country: response.data.country,
+          this.place = {
+            placeName: response.data.placeName,
+            address: response.data.address,
             rating: response.data.rating,
-            goodToKnow: response.data.goodToKnow,
-            facts: response.data.facts, // Include any other fields you need
-            statistics: response.data.statistics,
-            tags: response.data.tags
+            content: response.data.content,
+            tags: response.data.tags,
+            cityName: response.data.city.cityName,
+            cityId: response.data.city._id
           }
-          console.log(this.city) // Log the city object for verification
+          console.log(this.place) // Log the city object for verification
         } else {
-          console.warn('City not found in response') // This should not trigger now
-          this.city = {} // Handle case where city is not found
+          console.warn('Place not found in response') // This should not trigger now
+          this.place = {} // Handle case where city is not found
         }
       } catch (error) {
-        console.error('Error fetching city details:', error)
-        this.city = {} // Handle API error gracefully
-      }
-    },
-    async getPlaces() {
-      try {
-        const cityId = this.$route.params.cityid
-        const response = await Api.get(`/cities/${cityId}/placesToVisit`)
-        console.log('API Response:', response.data)
-        if (response.data && Array.isArray(response.data)) {
-          this.placesToVisit = response.data.map(place => ({
-            placeName: place.placeName,
-            address: place.address
-          }))
-        } else {
-          console.warn('No places found or places is not an array')
-          this.places = [] // Correctly clear the places array
-        }
-        console.log(response.data.placesToVisit)
-      } catch (error) {
-        console.error('Error fetching places details:', error.message)
-        this.places = [] // Handle API error gracefully
+        console.error('Error fetching place details:', error)
+        this.place = {} // Handle API error gracefully
       }
     },
     logout() {
@@ -166,8 +137,7 @@ export default {
     }
   },
   mounted() {
-    this.getCityDetails()
-    this.getPlaces()
+    this.getPlace()
     // Create a link element
     const link = document.createElement('link')
     link.rel = 'stylesheet'
@@ -186,7 +156,7 @@ export default {
 
 /*EVERY page stylings*/
 
-.city-page-body-container{
+.place-page-body-container{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -281,7 +251,7 @@ export default {
     color: #759cab;
 }
 
-.title-city{
+.title-place{
     font-size: 4rem;
     color: #759cab;
 }
@@ -309,6 +279,7 @@ export default {
 .detail-text {
   font-size: 1.2rem;
   color: #045768 !important;
+  text-decoration: none;
 }
 
 .places-list li a{
@@ -324,23 +295,29 @@ export default {
   transform: scale(1.05);
 }
 
-.main-cities-link-wrapper{
+.main-places-link-wrapper{
     justify-content: flex-end;
     display: flex;
     padding: 0;
     margin: 0;
 }
 
-.main-cities-link-wrapper a{
+.main-places-link-wrapper a{
   color: #bc672a;
   text-decoration: none;
   transition: all 0.5s;
   font-size: 1.6rem;
 }
 
-.main-cities-link-wrapper a:hover{
+.city-link{
+  transition: all 0.3s;
+  font-size: 1.4rem;
+}
+
+.main-places-link-wrapper a:hover,
+.city-link:hover{
   text-decoration-line: underline;
-  color: #acbbc1;
+  color: #acbbc1 !important;
   transform: scale(1.05);
 }
 

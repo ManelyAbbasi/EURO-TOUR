@@ -46,7 +46,10 @@ async function getOnePlace(req, res) {
     const address = req.params.address;
 
     try {
-        const placesToVisit = await PlacesToVisitModel.findOne({ address }); 
+        const placesToVisit = await PlacesToVisitModel.findOne({ address }).populate({
+            path: 'city',  // Path to populate
+            select: 'cityName'  // Only select the cityName field from the City model
+        }); 
         if (!placesToVisit) {
             return res.status(404).json({ message: "Place not found" });
         }
