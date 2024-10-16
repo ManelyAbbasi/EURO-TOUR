@@ -8,9 +8,9 @@
         </div>
         <nav class="navbar">
           <a href="#favourites" class="navbar-item"><i class="fa-regular fa-heart" style="color: #edf7fb;"></i> favourites</a>
-          <router-link to="/maincities" class="navbar-item maincities-navbar-item"
+          <router-link to="/maincities" class="navbar-item"
             ><i class="fa-solid fa-city"></i> cities</router-link>
-          <router-link to="/mainplaces" class="navbar-item"><i class="fa-solid fa-map-pin" style="color: #edf7fb;"></i> places to visit</router-link>
+          <router-link to="/mainplaces" class="navbar-item mainplaces-navbar-item"><i class="fa-solid fa-map-pin" style="color: #edf7fb;"></i> places to visit</router-link>
           <b-dropdown
             size="lg"
             variant="link"
@@ -271,8 +271,8 @@ export default {
   color: #bc672a !important;
 }
 
-.maincities-navbar-item,
-.maincities-navbar-item i{
+.mainplaces-navbar-item,
+.mainplaces-navbar-item i{
     color: #bc672a!important;
 }
 
