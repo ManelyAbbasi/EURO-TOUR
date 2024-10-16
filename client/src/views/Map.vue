@@ -610,6 +610,7 @@ export default {
       this.showLoginMessage = false // Hide the login message when clicked
     },
     async editCity(cityId) {
+      this.showCityPopup = false
       try {
       // Fetch the city data from the backend
         const response = await Api.get(`/cities/${cityId}`, {
