@@ -30,13 +30,7 @@
 
       <main>
       <div class="city-layout-wrapper">
-            <div class="wrapper-header">
-                <h1 class="title-city">{{ city.cityName }}, {{ city.country }}</h1>
-                <div v-if="isAdmin" class="admin-buttons">
-                    <button><i class="fa-solid fa-file-pen" style="color: #bc672a;"></i></button>
-                    <button><i class="fa-solid fa-trash-can" style="color: #bc672a;"></i></button>
-                </div>
-            </div>
+            <h1 class="title-city">{{ city.cityName }}, {{ city.country }}</h1>
             <div class="star-rating">
                 <span class="stars">
                     <i v-for="star in 5"
@@ -71,11 +65,19 @@
               </div>
             </div>
             <div class="places-wrapper">
+              <div class="places-wrapper-header">
                 <p><strong class="heading">Places to Visit:</strong></p>
+                <div v-if="isAdmin" class="admin-buttons">
+                    <button class="create-place-button"><i class="fa-solid fa-file-pen" style="color: #bc672a;"></i></button>
+                </div>
+              </div>
                 <ul class="places-list">
                     <li v-for="place in placesToVisit" :key="place.address">
-                        <router-link :to="`/place/${place.address}`" class="place-link">{{ place.placeName }}</router-link>
-                    </li>
+                        <router-link :to="`/place/${place.address}`" class="place-link">• {{ place.placeName }}</router-link>
+                        <div v-if="isAdmin" class="admin-buttons">
+                          <button class="delete-place-button"><i class="fa-solid fa-trash-can" style="color: #bc672a;"></i></button>
+                        </div>
+                     </li>
                 </ul>
             </div>
             <div class="main-cities-link-wrapper">
@@ -303,18 +305,36 @@ export default {
     color: #759cab;
 }
 
-.wrapper-header{
-    display: grid;
-    justify-content: space-between;
-    grid-template-columns: 6fr 1fr;
-}
-
-.wrapper-header button {
+.admin-buttons button {
     border: none;
     background-color: #edf7fb;
     padding: 0.5rem 0.5rem;
     margin: 0 0 0 3rem;
-    font-size: 2rem;
+    font-size: 1.5rem;
+    transition: all 0.4s;
+}
+
+.admin-buttons button:hover{
+  transform: scale(1.07);
+}
+
+.places-list li{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  list-style-type: circle;
+  justify-content: space-between;
+  width: 80%;
+}
+
+.places-wrapper-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.places-wrapper {
+  width: 60%;
 }
 .title-city{
     font-size: 4rem;
