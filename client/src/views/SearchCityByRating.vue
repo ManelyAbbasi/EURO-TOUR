@@ -190,7 +190,7 @@
             <div v-for="city in cities" :key="city._id" class="city-card">
               <div class="top-half-card">
                 <div class="city-img-wrapper">
-                  <img src="@/assets/London.jpg" class="city-card-img"/>
+                  <img src="@/assets/cities.png" class="city-card-img"/>
                 </div>
                 <div class="city-country-text">
                   <router-link :to="`/city/${city._id}`" class="cityname-text">{{ city.cityName }},</router-link>
@@ -713,11 +713,12 @@ a img {
 .city-card-img{
   max-width: 100%;
   border-radius: 10%;
+  margin-left: 1rem;
 }
 
 .top-half-card{
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 2fr;
   padding-bottom: 0.5rem;
 }
 
