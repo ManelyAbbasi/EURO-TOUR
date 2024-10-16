@@ -383,13 +383,10 @@
 
           </svg>
 
-<!-- Tooltip for country names -->
 <div v-if="tooltipVisible" :style="tooltipStyle" class="tooltip">{{ tooltipContent }}</div>
 
-<!-- Overlay for non-logged-in users -->
 <div class="overlay" v-if="!isLoggedIn && showLoginMessage" @click="hideLoginMessage"></div>
 
-<!-- City Popup Window -->
 <div class="city-popup" v-if="isLoggedIn && showCityPopup">
   <div class="popup-header">
     <h3>Cities in {{ selectedCountry }}</h3>
@@ -404,18 +401,14 @@
       </li>
     </ul>
   </div>
-  <!-- New Button for Admins to Create a New City -->
   <div v-if="isAdmin" class="popup-footer">
     <button @click="createNewCity">Create New City</button>
   </div>
 </div>
 
-<!-- Overlay for the New City Form -->
 <div class="overlay" v-if="showNewCityForm" @click="closeNewCityForm"></div>
 <div class="overlay" v-if="showCityPopup" @click="closeCityPopup"></div>
 
-<!-- New City Form Popup -->
-<!-- New City Form Popup -->
 <div class="new-city-popup" :class="{ show: showNewCityForm }" v-if="isLoggedIn && showNewCityForm">
   <div class="popup-header">
     <h3>Create New City</h3>
@@ -458,7 +451,6 @@
   </div>
 </div>
 
-<!-- Message for non-logged-in users -->
 <div v-if="!isLoggedIn && showLoginMessage" class="login-message">
   You need to log in or create an account to access this feature.
 </div>
@@ -482,17 +474,17 @@ export default {
       showCityPopup: false,
       selectedCountry: '',
       filteredCities: [],
-      loggedInStatus: !!localStorage.getItem('x-auth-token'), // Check login status
-      showLoginMessage: false, // New property to control the login message visibility
-      isAdmin: false, // Add a new property for admin status
-      showNewCityForm: false, // New property to control the new city form visibility
-      newCityName: '', // Data property for new city name
-      newCityCountry: '', // Data property for new city country
-      goodToKnow: '', // New property for "Good to Know"
-      stats: '', // New property for stats
-      facts: '', // New property for facts
-      rating: null, // New property for rating
-      tagOptions: [ // List of tag options
+      loggedInStatus: !!localStorage.getItem('x-auth-token'),
+      showLoginMessage: false,
+      isAdmin: false,
+      showNewCityForm: false,
+      newCityName: '',
+      newCityCountry: '',
+      goodToKnow: '',
+      stats: '',
+      facts: '',
+      rating: null,
+      tagOptions: [
         'historical',
         'quiet',
         'party',
@@ -510,16 +502,16 @@ export default {
         'small city',
         'big city'
       ],
-      selectedTags: [] // Array to hold selected tags
+      selectedTags: []
     }
   },
   async created() {
     await this.fetchCitiesInSystem()
-    await this.checkIfAdmin() // Check if the user is an admin when the component is created
+    await this.checkIfAdmin()
   },
   computed: {
     isLoggedIn() {
-      return this.loggedInStatus // Use computed property to handle login state
+      return this.loggedInStatus
     }
   },
   methods: {
@@ -536,17 +528,16 @@ export default {
       }
     },
     async loadCities() {
-      // Load the cities into the citiesInSystem array
       try {
         const response = await Api.get('/cities')
-        this.citiesInSystem = response.data // Set the loaded cities
+        this.citiesInSystem = response.data
       } catch (error) {
         console.error('Error loading cities:', error)
       }
     },
     isClickable(country) {
       const hasCities = this.citiesInSystem.some(city => city.country === country)
-      return hasCities // Only apply the clickable class if there are cities
+      return hasCities
     },
     async checkIfAdmin() {
       try {
@@ -561,29 +552,21 @@ export default {
       }
     },
     countryClicked(country) {
-      // 1. Check if the user is logged in
       if (!this.isLoggedIn) {
-        this.showLoginMessage = true // Show the login message for non-logged-in users
-        return // Prevent further execution
+        this.showLoginMessage = true
+        return
       }
 
-      // 2. Set the selected country
       this.selectedCountry = country
-
-      // 3. Filter cities by the selected country
       this.filteredCities = this.citiesInSystem.filter(city => city.country === country)
 
-      // 4. Admin check: If not an admin and there are no cities, return without showing popup
       if (!this.isAdmin && this.filteredCities.length === 0) {
         return
       }
 
-      // 5. Admin case: If no cities, but the user is an admin, show a placeholder
       if (this.filteredCities.length === 0 && this.isAdmin) {
         this.filteredCities = [{ cityName: 'No cities for this country yet', _id: 'no-cities' }]
       }
-
-      // 6. Show the city popup for both admins and regular users
       this.showCityPopup = true
     },
     showTooltip(event, country) {
@@ -607,48 +590,41 @@ export default {
       this.showCityPopup = false
     },
     hideLoginMessage() {
-      this.showLoginMessage = false // Hide the login message when clicked
+      this.showLoginMessage = false
     },
     async editCity(cityId) {
       this.showCityPopup = false
       try {
-      // Fetch the city data from the backend
         const response = await Api.get(`/cities/${cityId}`, {
           headers: {
-            'x-auth-token': localStorage.getItem('x-auth-token') // Auth token for admins
+            'x-auth-token': localStorage.getItem('x-auth-token')
           }
         })
 
         if (response.data) {
           const cityData = response.data
 
-          // Pre-fill the form with current city data
           this.newCityName = cityData.cityName
-          this.newCityCountry = cityData.country // Lock or readonly this field
+          this.newCityCountry = cityData.country
           this.goodToKnow = cityData.goodToKnow
           this.stats = cityData.statistics
           this.facts = cityData.facts
           this.rating = cityData.rating
           this.selectedTags = cityData.tags
-
-          // Show the form as an edit form instead of a create form
-          this.isEditing = true // Add a flag for edit mode
-          this.editCityId = cityId // Store city ID being edited
-
-          // Display the form
+          this.isEditing = true
+          this.editCityId = cityId
           this.showNewCityForm = true
         }
       } catch (error) {
         console.error('Error fetching city data:', error)
         alert('Failed to load city data for editing.')
       }
-      await this.fetchCitiesInSystem() // Reload the city list
+      await this.fetchCitiesInSystem()
     },
     async deleteCity(cityId) {
-      // Confirm deletion
       const confirmed = confirm('Are you sure you want to delete this city?')
       if (!confirmed) {
-        return // Exit if the user cancels
+        return
       }
 
       if (!cityId) {
@@ -662,7 +638,6 @@ export default {
           }
         })
         if (response.status === 200) {
-          // Remove the deleted city from filteredCities
           this.filteredCities = this.filteredCities.filter(city => city._id !== cityId)
           alert(response.data.message)
         } else {
@@ -671,19 +646,12 @@ export default {
       } catch (error) {
         console.error('Error deleting city:', error)
       }
-      await this.fetchCitiesInSystem() // Reload the city list
+      await this.fetchCitiesInSystem()
     },
     createNewCity() {
-      // Close the current city popup
       this.showCityPopup = false
-
-      // Set the country for the new city
       this.newCityCountry = this.selectedCountry
-
-      // Show the new city form popup
-      this.showNewCityForm = true // Create a new data property for the new city form visibility
-
-      // Reset new city fields
+      this.showNewCityForm = true
       this.newCityName = ''
       this.goodToKnow = ''
       this.stats = ''
@@ -694,7 +662,7 @@ export default {
     async submitNewCity() {
       if (this.rating > 5) {
         alert('Rating cannot be more than 5. Please enter a valid rating.')
-        return // Exit the method if the rating is invalid
+        return
       }
       const cityData = {
         cityName: this.newCityName,
@@ -709,7 +677,6 @@ export default {
 
       try {
         if (this.isEditing) {
-        // Update city API call when editing
           const response = await Api.put(`cities/${this.editCityId}`, cityData, {
             headers: {
               'x-auth-token': localStorage.getItem('x-auth-token')
@@ -718,10 +685,9 @@ export default {
 
           if (response.status === 200) {
             alert('City successfully updated!')
-            this.loadCities() // Reload the city list
+            this.loadCities()
           }
         } else {
-        // Create new city API call when not editing
           const response = await Api.post('/cities', cityData, {
             headers: {
               'x-auth-token': localStorage.getItem('x-auth-token')
@@ -730,7 +696,7 @@ export default {
 
           if (response.status === 201) {
             alert('City successfully created!')
-            this.loadCities() // Reload the city list
+            this.loadCities()
           }
         }
       } catch (error) {
@@ -738,25 +704,20 @@ export default {
         alert('Failed to save city: ' + (error.response?.data?.message || error.message))
       }
 
-      // Reset the form fields after submission
       this.resetForm()
-
-      // Close the form after submission
       this.closeNewCityForm()
 
-      await this.fetchCitiesInSystem() // Reload the city list
+      await this.fetchCitiesInSystem()
     },
     resetForm() {
-    // Reset form fields
       this.newCityName = ''
       this.goodToKnow = ''
       this.stats = ''
       this.facts = ''
       this.rating = null
       this.selectedTags = []
-
-      this.isEditing = false // Reset editing flag
-      this.editCityId = null // Clear city ID being edited
+      this.isEditing = false
+      this.editCityId = null
     },
     closeNewCityForm() {
       console.log('closeNewCityForm called')
@@ -780,28 +741,26 @@ svg path {
 }
 
 .system-country:hover {
-  fill: #BC672A; /* Turns orange on hover */
+  fill: #BC672A;
   transition: 0.6s;
-  cursor: pointer; /* Shows pointer to indicate it's clickable */
+  cursor: pointer;
 }
 
 .not-in-system:hover {
-  fill: #8FC6DF; /* Optional: Keep the color unchanged */
-  cursor: default; /* Countries not in the system have default cursor */
+  fill: #8FC6DF;
+  cursor: default;
 }
 .form-layout {
   display: flex; /* Flexbox for layout */
   justify-content: space-between; /* Space between left and right sections */
 }
 
-/* Left side of the form */
 .form-left {
-  width: 60%; /* Take up 60% of the width */
+  width: 60%;
 }
 
-/* Right side of the form */
 .form-right {
-  width: 35%; /* Take up 35% of the width */
+  width: 35%;
   padding-left: 20px; /* Space between left and right sections */
 }
 /* Style for the form inputs */
@@ -809,7 +768,7 @@ input[type="text"], textarea {
   width: calc(100% - 20px); /* Full width minus padding */
   padding: 10px; /* Padding for input fields */
   margin: 10px 0; /* Margin between fields */
-  border: 1px solid #ccc; /* Light grey border */
+  border: 1px solid #ccc;
   border-radius: 4px; /* Rounded corners */
 }
 
@@ -817,23 +776,21 @@ input[type='checkbox'] {
     accent-color: #BC672A;
 }
 
-/* Style for tags */
 .tags label {
   display: block; /* Stack tags vertically */
-  margin: 5px 0; /* Margin for spacing between tags */
+  margin: 5px 0;
 }
 
-/* Tooltip styles */
 .tooltip {
   position: absolute;
-  background-color: #555; /* Background color */
+  background-color: #555;
   color: #fff; /* Text color */
   text-align: center;
   border-radius: 4px;
   padding: 5px;
   z-index: 10; /* Ensure it's above other elements */
   transition: opacity 0.3s;
-  opacity: 0.8; /* Slightly transparent */
+  opacity: 0.8;
   pointer-events: none;
 }
 
@@ -843,47 +800,45 @@ input[type='checkbox'] {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7); /* Dark semi-transparent background */
+  background: rgba(0, 0, 0, 0.7);
   z-index: 9; /* Place it above other content */
 }
 
-/* Overlay styles */
 .overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7); /* Dark semi-transparent background */
+  background: rgba(0, 0, 0, 0.7);
   z-index: 9; /* Place it above other content */
 index: 9; /* Place it above other content */
 }
 
-/* Popup styles */
 .city-popup {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%); /* Center the popup */
-  background-color: #fff; /* White background */
+  background-color: #fff;
   color: #045768;
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   z-index: 10; /* Place above the overlay */
-  width: 500px; /* Set a width for the popup */
+  width: 500px;
   padding: 20px;
 }
 
 .popup-body ul {
   list-style-type: none; /* Remove the default bullets */
-  padding: 0; /* Remove default padding */
-  margin: 0; /* Remove default margin */
+  padding: 0;
+  margin: 0;
   font-size: 1.2rem;
 
 }
 
 .popup-body li{
-  border-top: 1px solid #ddd; /* Optional: separate footer visually */
+  border-top: 1px solid #ddd;
   margin-top: 1rem;
 }
 
@@ -896,24 +851,24 @@ index: 9; /* Place it above other content */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%); /* Center the message */
-  background-color: #fff; /* White background */
+  background-color: #fff;
   color: #BC672A;
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   z-index: 10; /* Place above the overlay */
-  padding: 20px; /* Add padding for better appearance */
-  text-align: center; /* Center the text */
-  width: 300px; /* Set a width for the message */
+  padding: 20px;
+  text-align: center;
+  width: 300px;
 }
 .popup-footer {
   text-align: center;
   padding: 10px;
-  border-top: 1px solid #ddd; /* Optional: separate footer visually */
+  border-top: 1px solid #ddd;
 }
 
 .popup-footer button {
   background-color: #BC672A;
-  color: white; /* White text */
+  color: white;
   border: none;
   padding: 10px 20px;
   text-align: center;
@@ -924,7 +879,7 @@ index: 9; /* Place it above other content */
 }
 
 .popup-footer button:hover {
-  background-color: #a7561c; /* Darker green on hover */
+  background-color: #a7561c;
 }
 
 .new-city-popup form {
@@ -932,63 +887,57 @@ index: 9; /* Place it above other content */
   flex-direction: column;
 }
 
-/* New City Form Popup Styles */
 .new-city-popup {
   position: sticky;
   margin-top: -20rem;
   left: 50%;
-  transform: translate(-50%, -50%); /* Center the popup */
+  transform: translate(-50%, -50%);
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   color:#045768;
   z-index: 10;
-  width: 650px; /* Increased width */
-  max-width: 90%; /* Ensures the popup fits within smaller screens */
+  width: 650px;
+  max-width: 90%;
   height:630px;
-  max-height: 90vh; /* Ensures the popup doesn't go off the screen */
+  max-height: 90vh;
   padding: 20px;
   overflow-y: auto; /* Allows scrolling if the content is too long */
   opacity: 0;
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* Show the popup with opacity */
 .new-city-popup.show {
   opacity: 1; /* Fully visible */
-  transform: translate(-50%, -50%) scale(1.05); /* Slightly scale up on appearance */
+  transform: translate(-50%, -50%) scale(1.05);
 }
 
-/* Ensure the popup header has consistent styling */
-/* Ensure the popup header has consistent styling */
 .popup-header {
   position: sticky;
   top: 0;
   padding: 1px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
-  z-index: 2; /* Increased z-index to ensure it stays above the content */
+  z-index: 2;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 #rating {
-  width: 50%; /* Set the width to 100% of its container */
+  width: 50%;
   margin-left: 1rem;
   border-radius:4px;
-  padding-left: 5px; /* Add left padding to text fields as well */
+  padding-left: 5px;
   border: 1px solid #555;
 }
 
-/* Input Fields Styles */
 .new-city-popup input[type="text"],
 .new-city-popup textarea,
 #rating {
   color: #a7561c;
 }
 
-/* Change border color on focus */
 .new-city-popup input[type="text"]:focus,
 .new-city-popup textarea:focus,
 #rating:focus {
@@ -996,13 +945,12 @@ index: 9; /* Place it above other content */
   outline: none; /* Remove default outline */
 }
 
-/* Style for the form inputs */
 input[type="text"] {
   width: calc(100% - 20px); /* Full width minus padding */
-  padding: 10px; /* Padding for input fields */
-  margin: 10px 0; /* Margin between fields */
-  border: 1px solid #ccc; /* Light grey border */
-  border-radius: 4px; /* Rounded corners */
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .new-city-popup form button[type="submit"] {
@@ -1016,12 +964,12 @@ input[type="text"] {
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-top: -30px; /* Adjust this value to move it upwards */
+  margin-top: -30px;
   margin-right: 4rem;
 }
 
 .new-city-popup form button[type="submit"]:hover {
-  background-color: #a7561c; /* Darker on hover */
+  background-color: #a7561c;
 }
 
 .close-button {
@@ -1031,8 +979,8 @@ input[type="text"] {
   cursor: pointer;
   color: #fff;
   transition: color 0.3s ease;
-  width: 25px; /* Set width */
-  height: 25px; /* Set height */
+  width: 25px;
+  height: 25px;
 }
 
 .close-button:hover, .edit-button:hover, .delete-button:hover {
@@ -1049,7 +997,7 @@ input[type="text"] {
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-top: -10px; /* Adjust this value to move it upwards */
+  margin-top: -10px;
   margin-right: 10px;
   margin-left: 200px;
 }
@@ -1064,7 +1012,7 @@ input[type="text"] {
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-top: 10px; /* Adjust this value to move it upwards */
+  margin-top: 10px;
   margin-right: 10px;
 }
 </style>
