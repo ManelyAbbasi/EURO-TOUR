@@ -223,6 +223,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   background-color: #42515e;
+  min-width: 1200px;
 }
 
 .euro-tour-header {
@@ -535,6 +536,13 @@ li.dropdown-item.logout {
     .get-to-know-wrapper{
         flex-direction: column;
         display: flex;
+    }
+    .home-right-side-panel{
+      margin: 11rem 0 0 0;
+    }
+    .welcome-back-container p{
+      display: flex;
+      justify-content: center;
     }
     .home-layout-wrapper p{
         font-size: 2.5rem;
