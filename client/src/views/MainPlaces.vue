@@ -50,7 +50,7 @@
                 </div>
                 <div class="detail-item">
                   <p><strong class="heading">City:</strong></p>
-                  <a :href="`/maincities/`" class="city-link">{{ place.city }}</a>
+                  <router-link :to="`/city/${place.city._id}`" class="city-link">{{ place.city.cityName }}</router-link>
                 </div>
                 <div class="detail-item">
                   <p><strong class="heading">Address:</strong></p>
@@ -140,7 +140,7 @@ export default {
             rating: place.rating,
             content: place.content,
             tags: place.tags,
-            city: place.city.cityName
+            city: place.city
           }))
         } else {
           this.places = []
