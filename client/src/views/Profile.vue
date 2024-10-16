@@ -204,12 +204,20 @@ export default {
     async saveChanges(event) {
       event.preventDefault() // Prevent form submission
 
+      // Create userCredentials object
       const userCredentials = {
         username: this.username,
-        password: this.password,
-        gender: this.activeGender,
-        // eslint-disable-next-line eqeqeq
-        isLGBTQIA: this.activeLGBTQIA === 'yes'
+        password: this.password
+      }
+
+      // Include gender only if it has been selected
+      if (this.activeGender !== null) {
+        userCredentials.gender = this.activeGender
+      }
+
+      // Include isLGBTQIA only if it has been selected
+      if (this.activeLGBTQIA !== null) {
+        userCredentials.isLGBTQIA = this.activeLGBTQIA === 'yes'
       }
 
       try {
@@ -288,7 +296,7 @@ export default {
     // Create a link element for Font Awesome (for icons, if needed)
     const link = document.createElement('link')
     link.rel = 'stylesheet'
-    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css';
+    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css'
     link.integrity = 'sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=='// Replace this with the correct integrity hash
     link.crossOrigin = 'anonymous'
     link.referrerPolicy = 'no-referrer'
