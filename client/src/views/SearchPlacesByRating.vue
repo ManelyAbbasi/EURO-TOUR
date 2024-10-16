@@ -190,7 +190,7 @@
             <div v-for="place in places" :key="place.address" class="place-card">
               <div class="top-half-card">
                 <div class="place-img-wrapper">
-                  <img src="@/assets/London.jpg" class="place-card-img"/>
+                  <img src="@/assets/places.png" class="place-card-img"/>
                 </div>
                 <div class="place-city-text">
                   <router-link :to="`/place/${place.address}`" class="placename-text">{{ place.placeName }}, </router-link>
@@ -727,13 +727,14 @@ a img {
 }
 
 .place-card-img{
-  max-width: 100%;
   border-radius: 10%;
+  margin: 1rem;
+  max-height: 4rem;
 }
 
 .top-half-card{
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 2fr;
   padding-bottom: 0.5rem;
 }
 
