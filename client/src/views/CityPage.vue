@@ -145,6 +145,25 @@ export default {
       placesToVisit: [],
       showNewPlaceForm: false,
       isAdmin: false,
+      tagOptions: [ // List of tag options
+        'historical',
+        'adventurous',
+        'party',
+        'sight-seeing',
+        'recently opened',
+        'nature',
+        'beachy',
+        'museum',
+        'food',
+        'popular',
+        'affordable',
+        'high-end',
+        'lgbtq+ friendly',
+        'quiet',
+        'shopping',
+        '18+'
+      ],
+      selectedTags: [],
       loggedInStatus: !!localStorage.getItem('x-auth-token') // Reactive property for login status
     }
   },
@@ -160,94 +179,46 @@ export default {
     async getCityDetails() {
       try {
         const cityId = this.$route.params.cityid
-        console.log('City ID:', cityId)
         const response = await Api.get(`/cities/${cityId}`)
-        console.log('API Response:', response.data) // Log the entire response
-
-        // Check if the response has the necessary fields
-        if (response.data && response.data._id) { // Check if the city ID is present
-        // Directly map the response to your city object
-          this.city = {
-            cityName: response.data.cityName,
-            country: response.data.country,
-            rating: response.data.rating,
-            goodToKnow: response.data.goodToKnow,
-            facts: response.data.facts, // Include any other fields you need
-            statistics: response.data.statistics,
-            tags: response.data.tags
-          }
-          console.log(this.city) // Log the city object for verification
-        } else {
-          console.warn('City not found in response') // This should not trigger now
-          this.city = {} // Handle case where city is not found
+        if (response.data && response.data._id) {
+          this.city = { ...response.data }
         }
       } catch (error) {
         console.error('Error fetching city details:', error)
-        this.city = {} // Handle API error gracefully
       }
     },
     async getPlaces() {
       try {
         const cityId = this.$route.params.cityid
         const response = await Api.get(`/cities/${cityId}/placesToVisit`)
-        console.log('API Response:', response.data)
-        if (response.data && Array.isArray(response.data)) {
-          this.placesToVisit = response.data.map(place => ({
-            placeName: place.placeName,
-            address: place.address
-          }))
-        } else {
-          console.warn('No places found or places is not an array')
-          this.places = [] // Correctly clear the places array
+        if (Array.isArray(response.data)) {
+          this.placesToVisit = response.data
         }
-        console.log(response.data.placesToVisit)
       } catch (error) {
-        console.error('Error fetching places details:', error.message)
-        this.places = [] // Handle API error gracefully
+        console.error('Error fetching places details:', error)
       }
     },
     async deletePlaceFromCity(address) {
-      const cityId = this.$route.params.cityid
-      console.log(cityId)
-      console.log(address)
-      const confirmed = confirm('Are you sure you want to delete this city?')
-      console.log(confirmed)
-      if (!confirmed) {
-        return // Exit if the user cancels
-      }
-
-      if (!address) {
-        console.error('Address is undefined')
-        return
-      }
+      const confirmed = confirm('Are you sure you want to delete this place?')
+      if (!confirmed) return
       try {
+        const cityId = this.$route.params.cityid
         const response = await Api.delete(`/cities/${cityId}/placesToVisit/${address}`, {
-          headers: {
-            'x-auth-token': localStorage.getItem('x-auth-token')
-          }
+          headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
         })
         if (response.status === 200) {
-          // Remove the deleted place from filteredPlaces
           this.placesToVisit = this.placesToVisit.filter(place => place.address !== address)
-          const response2 = await Api.delete(`/places/${address}`, {
-            headers: {
-              'x-auth-token': localStorage.getItem('x-auth-token')
-            }
+          await Api.delete(`/places/${address}`, {
+            headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
           })
-
-          if (response2.status === 200) {
-            alert('Place deleted successfully')
-          }
-        } else {
-          console.error('Failed to delete place:', response.data.message)
+          alert('Place deleted successfully')
         }
       } catch (error) {
         console.error('Error deleting place:', error)
       }
     },
     async createPlaceInCity() {
-      this.showNewPlaceForm = true // Create a new data property for the new city form visibility
-      // Reset new city fields
+      this.showNewPlaceForm = true
       this.newPlaceName = ''
       this.content = ''
       this.address = ''
@@ -255,21 +226,47 @@ export default {
       this.selectedTags = []
     },
     closeNewPlaceForm() {
-      console.log('closeNewPlaceForm called')
       this.showNewPlaceForm = false
       this.resetForm()
+    },
+    async submitNewPlace() {
+      const cityId = this.$route.params.cityid
+      const placeData = {
+        placeName: this.newPlaceName,
+        content: this.content,
+        address: this.address,
+        rating: this.rating,
+        tags: this.selectedTags
+      }
+      try {
+        const response = await Api.post(`/cities/${cityId}/placesToVisit`, placeData, {
+          headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
+        })
+        if (response.status === 201) {
+          alert('Place successfully created!')
+          this.getPlaces()
+        }
+      } catch (error) {
+        console.error('Error saving place:', error)
+      }
+      this.closeNewPlaceForm()
     },
     async checkIfAdmin() {
       try {
         const response = await Api.get('/admin/check-admin', {
-          headers: {
-            'x-auth-token': localStorage.getItem('x-auth-token')
-          }
+          headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
         })
         this.isAdmin = response.data.isAdmin
       } catch (error) {
         console.error('Error checking admin status:', error)
       }
+    },
+    resetForm() {
+      this.newPlaceName = ''
+      this.content = ''
+      this.address = ''
+      this.rating = null
+      this.selectedTags = []
     },
     logout() {
       // Remove the authentication token from localStorage
