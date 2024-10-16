@@ -75,7 +75,7 @@
                     <li v-for="place in placesToVisit" :key="place.address">
                         <router-link :to="`/place/${place.address}`" class="place-link">• {{ place.placeName }}</router-link>
                         <div v-if="isAdmin" class="admin-buttons">
-                          <button class="delete-place-button"><i class="fa-solid fa-trash-can" style="color: #bc672a;"></i></button>
+                          <button class="delete-place-button" @click="deletePlaceFromCity(place.address)"><i class="fa-solid fa-trash-can" style="color: #bc672a;"></i></button>
                         </div>
                      </li>
                 </ul>
@@ -165,6 +165,45 @@ export default {
       } catch (error) {
         console.error('Error fetching places details:', error.message)
         this.places = [] // Handle API error gracefully
+      }
+    },
+    async deletePlaceFromCity(address) {
+      const cityId = this.$route.params.cityid
+      console.log(cityId)
+      console.log(address)
+      const confirmed = confirm('Are you sure you want to delete this city?')
+      console.log(confirmed)
+      if (!confirmed) {
+        return // Exit if the user cancels
+      }
+
+      if (!address) {
+        console.error('Address is undefined')
+        return
+      }
+      try {
+        const response = await Api.delete(`/cities/${cityId}/placesToVisit/${address}`, {
+          headers: {
+            'x-auth-token': localStorage.getItem('x-auth-token')
+          }
+        })
+        if (response.status === 200) {
+          // Remove the deleted place from filteredPlaces
+          this.placesToVisit = this.placesToVisit.filter(place => place.address !== address)
+          const response2 = await Api.delete(`/places/${address}`, {
+            headers: {
+              'x-auth-token': localStorage.getItem('x-auth-token')
+            }
+          })
+
+          if (response2.status === 200) {
+            alert('Place deleted successfully')
+          }
+        } else {
+          console.error('Failed to delete place:', response.data.message)
+        }
+      } catch (error) {
+        console.error('Error deleting place:', error)
       }
     },
     async checkIfAdmin() {

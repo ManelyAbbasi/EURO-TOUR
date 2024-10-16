@@ -711,7 +711,7 @@ export default {
 
           if (response.status === 200) {
             alert('City successfully updated!')
-            this.loadCities() // Reload the city list
+            this.loadCities() // Reload the city
           }
         } else {
         // Create new city API call when not editing
