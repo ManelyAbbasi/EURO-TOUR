@@ -341,8 +341,8 @@ li.dropdown-item.logout {
 
 .get-to-know-wrapper h2, .get-to-know-wrapper-in h2 {
     margin-bottom: 3rem;
-    margin-left: 25rem;
-    margin-right: 25rem;
+    margin-left: 23rem;
+    margin-right: 20rem;
     font-size: 3rem;
 }
 
@@ -379,7 +379,8 @@ li.dropdown-item.logout {
 
 .weather-map {
   border-radius: 1.5rem;
-  height: 50rem;
+  height: 46rem;
+  max-height: 50rem;
 }
 
 .get-to-know-container .get-to-know-box:hover{
@@ -499,29 +500,8 @@ li.dropdown-item.logout {
     color: #045768;
 }
 
-@media screen and (max-width:1200px) {
-    html{
-        font-size: 55%;
-    }
-}
-
-@media screen and (max-width: 991px){
-    .get-to-know-wrapper{
-        padding: 10rem 3% 2rem;
-    }
-    .euro-tour-header{
-        padding: 2rem 3%;
-    }
-    .footer{
-        padding: 2rem 3%;
-    }
-    .get-to-know-wrapper{
-        padding: 7rem;
-    }
-}
-
-@media screen and (max-width: 768px){
-    .navbar{
+@media screen and (max-width: 768px) {
+  .navbar{
         width: 100%;
         display: flex;
         justify-content: space-evenly;
@@ -550,21 +530,64 @@ li.dropdown-item.logout {
     .home-layout-wrapper h1{
         font-size: 5rem;
     }
+    .get-to-know-container-in .get-to-know-box-in{
+    background-color: #8FC6DF;
+    padding: 2rem 2rem 2rem;
+    border-radius: 2rem;
+    text-align: center;
+    transition: all 0.5s;
+    width: 100%;
+    height: 44.5rem;
+    border: 3px solid #045768;
+}
 }
 
-@media screen and (max-width:576px) {
-    html{
-        font-size: 50%;
+@media screen and (max-width: 1200px) {
+  .navbar{
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+        align-items: center;
     }
+    .euro-tour-header{
+        flex-direction: column;
+        gap: 2rem;
+    }
+    .home-layout-wrapper,
+    .get-to-know-wrapper{
+        flex-direction: column;
+        display: flex;
+    }
+    .home-right-side-panel{
+      margin: 11rem 0 0 0;
+    }
+    .welcome-back-container p{
+      display: flex;
+      justify-content: center;
+    }
+    .home-layout-wrapper p{
+        font-size: 2.5rem;
+    }
+    .home-layout-wrapper h1{
+        font-size: 5rem;
+    }
+    .get-to-know-container-in .get-to-know-box-in{
+    background-color: #8FC6DF;
+    padding: 2rem 2rem 2rem;
+    border-radius: 2rem;
+    text-align: center;
+    transition: all 0.5s;
+    width: 100%;
+    height: 44.5rem;
+    border: 3px solid #045768;
 }
-
-@media screen and (max-width:350px) {
-    .home-layout-wrapper img{
-        width: 90vw;
-    }
-    .footer{
-        flex-direction: column-reverse;
-    }
+.get-to-know-wrapper-in h2{
+    margin-bottom: 3rem;
+    margin-left: 18rem;
+    margin-right: 18rem;
+    font-size: 2.5rem;
+}
 }
 
 </style>
