@@ -1,91 +1,107 @@
 <template>
-    <div class="place-page-body-container">
-      <header class="euro-tour-header">
-        <div class="logo-wrapper">
-          <router-link to="/" class="logo">
-            <img src="@/assets/horizontal-logo.png" alt="Euro Tour logo" />
-          </router-link>
-        </div>
-        <nav class="navbar">
-          <a href="#favourites" class="navbar-item"><i class="fa-regular fa-heart" style="color: #edf7fb;"></i> favourites</a>
-          <router-link to="/maincities" class="navbar-item maincities-navbar-item"
-            ><i class="fa-solid fa-city"></i> cities</router-link>
-          <router-link to="/mainplaces" class="navbar-item"><i class="fa-solid fa-map-pin" style="color: #edf7fb;"></i> places to visit</router-link>
-          <b-dropdown
-            size="lg"
-            variant="link"
-            toggle-class="text-decoration-none"
-            no-caret
-            class="navbar-item dropdown"
-          >
-            <template #button-content>
-              <img src="@/assets/signed-in-icon.png" alt="Signed In" class="dropdown-icon" />
-            </template>
-            <!-- Dropdown items -->
-            <b-dropdown-item class="dropdown-item logout" @click="logout">Log out</b-dropdown-item>
-            <b-dropdown-item class="dropdown-item" to="/profile">Profile</b-dropdown-item>
-          </b-dropdown>
-        </nav>
-      </header>
-
-      <main>
-      <div class="city-layout-wrapper">
-            <div class="wrapper-header">
-                <h1 class="title-place">{{ place.placeName }}</h1>
-                <div v-if="isAdmin" class="admin-buttons">
-                  <button><i class="fa-solid fa-file-pen" style="color: #bc672a;"></i></button>
-                  <button @click="deletePlace"><i class="fa-solid fa-trash-can" style="color: #bc672a;"></i></button>
-                </div>
-              </div>
-            <div class="star-rating">
-                <span class="stars">
-                    <i v-for="star in 5"
-                    :key="star"
-                    :class="['fa-star', place.rating >= star ? 'fas' : 'far']"
-                    style="color: #bc672a;"></i>
-                </span>
-                <span class="rating-text">{{ place.rating }}/5.0</span>
-            </div>
-            <div class="city-wrapper">
-                <p><strong class="heading">City:</strong></p>
-                <router-link :to="`/city/${place.cityId}`" class="city-link detail-text">{{ place.cityName }}</router-link>
-            </div>
-            <div class="address-wrapper">
-                <p><strong class="heading">Address:</strong></p>
-                <p class="detail-text">{{ place.address }}</p>
-            </div>
-            <div class="content-wrapper">
-                <p><strong class="heading">Content:</strong></p>
-                <p class="detail-text">{{ place.content }}</p>
-            </div>
-            <div class="tags-wrapper">
-                <p><strong class="heading">Tags:</strong></p>
-              <div class="tag-container">
-              <div
-                  v-for="tag in place.tags"
-                  :key="tag"
-                  class="tag-bubble"
-                >
-                  {{ tag }}
-                </div>
-              </div>
-            </div>
-            <div class="main-places-link-wrapper">
-              <router-link to="/mainplaces" class="place-link">back to places to visit</router-link>
-            </div>
+  <div class="place-page-body-container">
+    <header class="euro-tour-header">
+      <div class="logo-wrapper">
+        <router-link to="/" class="logo">
+          <img src="@/assets/horizontal-logo.png" alt="Euro Tour logo" />
+        </router-link>
       </div>
-    </main>
+      <nav class="navbar">
+        <a href="#favourites" class="navbar-item"><i class="fa-regular fa-heart" style="color: #edf7fb;"></i> favourites</a>
+        <router-link to="/maincities" class="navbar-item maincities-navbar-item"><i class="fa-solid fa-city"></i> cities</router-link>
+        <router-link to="/mainplaces" class="navbar-item"><i class="fa-solid fa-map-pin" style="color: #edf7fb;"></i> places to visit</router-link>
+        <b-dropdown size="lg" variant="link" toggle-class="text-decoration-none" no-caret class="navbar-item dropdown">
+          <template #button-content>
+            <img src="@/assets/signed-in-icon.png" alt="Signed In" class="dropdown-icon" />
+          </template>
+          <!-- Dropdown items -->
+          <b-dropdown-item class="dropdown-item logout" @click="logout">Log out</b-dropdown-item>
+          <b-dropdown-item class="dropdown-item" to="/profile">Profile</b-dropdown-item>
+        </b-dropdown>
+      </nav>
+    </header>
+    <main>
+      <div class="city-layout-wrapper">
+        <div class="wrapper-header">
+          <h1 class="title-place">{{ place.placeName }}</h1>
+          <div v-if="isAdmin" class="admin-buttons">
+            <button @click="showEditPlaceForm(place.content)"><i class="fa-solid fa-file-pen" style="color: #bc672a;"></i></button>
+            <button @click="deletePlace"><i class="fa-solid fa-trash-can" style="color: #bc672a;"></i></button>
+          </div>
+        </div>
+        <div class="star-rating">
+          <span class="stars">
+            <i v-for="star in 5" :key="star" :class="['fa-star', place.rating >= star ? 'fas' : 'far']" style="color: #bc672a;"></i>
+          </span>
+          <span class="rating-text">{{ place.rating }}/5.0</span>
+        </div>
+        <div class="city-wrapper">
+          <p><strong class="heading">City:</strong></p>
+          <router-link :to="`/city/${place.cityId}`" class="city-link detail-text">{{ place.cityName }}</router-link>
+        </div>
+        <div class="address-wrapper">
+          <p><strong class="heading">Address:</strong></p>
+          <p class="detail-text">{{ place.address }}</p>
+        </div>
+        <div class="content-wrapper">
+          <p><strong class="heading">Content:</strong></p>
+          <p class="detail-text">{{ place.content }}</p>
+        </div>
+        <div class="tags-wrapper">
+          <p><strong class="heading">Tags:</strong></p>
+          <div class="tag-container">
+            <div v-for="tag in place.tags" :key="tag" class="tag-bubble">{{ tag }}</div>
+          </div>
+        </div>
+        <div class="main-places-link-wrapper">
+          <router-link to="/mainplaces" class="place-link">back to places to visit</router-link>
+        </div>
+      </div>
 
-<footer class="footer">
-  <div class="footer-text">
-    <p> &copy; 2024 copyright: eurotrip.com</p>
+      <!-- Edit Place Form Popup -->
+<div class="edit-place-popup" :class="{ show: showEditForm }" v-if="showEditForm">
+  <div class="popup-header">
+    <h3>Edit Place Content</h3>
+    <button class="close-button" @click="hideEditPlaceForm">X</button>
   </div>
-  <div class="top-icon">
-    <a href="#"><i class="fa-solid fa-caret-up"></i></a>
+  <div class="popup-body">
+    <form @submit.prevent="submitEditPlace">
+      <label for="placeName">Place Name:</label>
+      <input type="text" id="placeName" v-model="editPlaceName" />
+
+      <label for="address">Address:</label>
+      <input type="text" id="address" v-model="editAddress" />
+
+      <label for="rating">Rating:</label>
+      <input type="number" id="rating" v-model="editRating" min="0" max="5" step="0.1" />
+
+      <label for="content">Content:</label>
+      <textarea v-model="editPlaceContent"></textarea>
+
+      <label for="tags">Tags:</label>
+      <div class="tags">
+        <label v-for="tag in tagOptions" :key="tag">
+          <input type="checkbox" :value="tag" v-model="editTags" />
+          {{ tag }}
+        </label>
+      </div>
+
+      <button type="submit">Save</button>
+    </form>
   </div>
-</footer>
-    </div>
-  </template>
+</div>
+
+    </main>
+    <footer class="footer">
+      <div class="footer-text">
+        <p> &copy; 2024 copyright: eurotrip.com</p>
+      </div>
+      <div class="top-icon">
+        <a href="#"><i class="fa-solid fa-caret-up"></i></a>
+      </div>
+    </footer>
+  </div>
+</template>
 
 <script>
 import { Api } from '@/Api'
@@ -93,13 +109,37 @@ import { Api } from '@/Api'
 export default {
   data() {
     return {
-      place: {}, // Object to hold city details
+      place: {}, // Object to hold place details
       isAdmin: false,
-      loggedInStatus: !!localStorage.getItem('x-auth-token') // Reactive property for login status
+      loggedInStatus: !!localStorage.getItem('x-auth-token'), // Reactive property for login status
+      showEditForm: false,
+      editPlaceName: '', // To hold the place name when editing
+      editAddress: '', // To hold the address when editing
+      editRating: null, // To hold the rating when editing
+      editPlaceContent: '', // To hold the content when editing
+      tagOptions: [ // List of tag options
+        'historical',
+        'adventurous',
+        'party',
+        'sight-seeing',
+        'recently opened',
+        'nature',
+        'beachy',
+        'museum',
+        'food',
+        'popular',
+        'affordable',
+        'high-end',
+        'lgbtq+ friendly',
+        'quiet',
+        'shopping',
+        '18+'
+      ]
     }
   },
   async created() {
     await this.checkIfAdmin() // Check if the user is an admin when the component is created
+    this.getPlace() // Fetch place details
   },
   computed: {
     isLoggedIn() {
@@ -114,9 +154,8 @@ export default {
         const response = await Api.get(`/places/${address}`)
         console.log('API Response:', response.data) // Log the entire response
 
-        // Check if the response has the necessary fields
-        if (response.data && response.data.address) { // Check if the city ID is present
-        // Directly map the response to your city object
+        if (response.data && response.data.address) { // Check if the place data is present
+          // Directly map the response to your place object
           this.place = {
             placeName: response.data.placeName,
             address: response.data.address,
@@ -126,10 +165,10 @@ export default {
             cityName: response.data.city.cityName,
             cityId: response.data.city._id
           }
-          console.log(this.place) // Log the city object for verification
+          console.log(this.place) // Log the place object for verification
         } else {
           console.warn('Place not found in response') // This should not trigger now
-          this.place = {} // Handle case where city is not found
+          this.place = {} // Handle case where place is not found
         }
       } catch (error) {
         console.error('Error fetching place details:', error)
@@ -140,19 +179,50 @@ export default {
       try {
         const address = this.place.address
         const confirmed = confirm(`Are you sure you want to delete ${this.place.placeName}?`)
-
         if (confirmed) {
           await Api.delete(`/places/${address}`, {
             headers: {
               'x-auth-token': localStorage.getItem('x-auth-token')
             }
           })
-
           console.log(`Place ${this.place.placeName} deleted successfully.`)
           this.$router.push('/mainplaces')
         }
       } catch (error) {
         console.error('Error deleting place:', error)
+      }
+    },
+    showEditPlaceForm(place) {
+      this.editPlaceName = place.placeName
+      this.editAddress = place.address
+      this.editRating = place.rating
+      this.editPlaceContent = place.content
+      this.editTags = place.tags
+      this.showEditForm = true
+    },
+    hideEditPlaceForm() {
+      this.showEditForm = false
+      this.editPlaceName = ''
+      this.editAddress = ''
+      this.editRating = null
+      this.editPlaceContent = ''
+      this.editTags = []
+    },
+    async submitEditPlace() {
+      try {
+        const address = this.place.address
+        const response = await Api.patch(`/places/${address}`, {
+          content: this.editPlaceContent
+        }, {
+          headers: {
+            'x-auth-token': localStorage.getItem('x-auth-token')
+          }
+        })
+        console.log('Place updated successfully:', response.data)
+        this.place.content = this.editPlaceContent
+        this.hideEditPlaceForm()
+      } catch (error) {
+        console.error('Error updating place:', error)
       }
     },
     async checkIfAdmin() {
@@ -178,7 +248,6 @@ export default {
     }
   },
   mounted() {
-    this.getPlace()
     // Create a link element
     const link = document.createElement('link')
     link.rel = 'stylesheet'
@@ -497,4 +566,92 @@ a img {
         flex-direction: column-reverse;
     }
 }
+
+/* Styling for the Edit Place Form */
+.edit-place-popup {
+  position: sticky;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  color: #045768;
+  z-index: 10;
+  width: 650px; /* Adjust width as needed */
+  max-width: 90%; /* Ensures the popup fits within smaller screens */
+  padding: 20px;
+  margin-top: 2rem; /* Adjust as needed to fit the design */
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Show the popup with opacity */
+.edit-place-popup.show {
+  opacity: 1; /* Fully visible */
+  transform: translate(-50%, 0) scale(1.05); /* Slightly scale up on appearance */
+}
+
+/* Ensure the popup header has consistent styling */
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+}
+
+/* Style for the form content */
+.popup-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.popup-body textarea {
+  width: 100%;
+  min-height: 100px;
+  margin-bottom: 1rem;
+  padding: 10px;
+  border: 1px solid #ccc; /* Light grey border */
+  border-radius: 4px; /* Rounded corners */
+  color: #a7561c; /* Text color */
+}
+
+/* Change border color on focus */
+.popup-body textarea:focus {
+  border-color: #BC672A; /* Darker shade on focus */
+  outline: none; /* Remove default outline */
+}
+
+.popup-body button {
+  background-color: #BC672A;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-self: flex-end; /* Align button to the right */
+}
+
+.popup-body button:hover {
+  background-color: #a7561c; /* Darker on hover */
+}
+
+.close-button {
+  background-color: #BC672A;
+  border: 2px solid #BC672A;
+  font-size: 15px;
+  cursor: pointer;
+  color: #fff;
+  transition: color 0.3s ease;
+  width: 25px; /* Set width */
+  height: 25px; /* Set height */
+}
+
+.close-button:hover {
+  background-color: #a7561c;
+}
+
 </style>
