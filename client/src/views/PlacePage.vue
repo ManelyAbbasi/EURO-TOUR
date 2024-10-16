@@ -33,10 +33,10 @@
             <div class="wrapper-header">
                 <h1 class="title-place">{{ place.placeName }}</h1>
                 <div v-if="isAdmin" class="admin-buttons">
-                    <button><i class="fa-solid fa-file-pen" style="color: #bc672a;"></i></button>
-                    <button><i class="fa-solid fa-trash-can" style="color: #bc672a;"></i></button>
+                  <button><i class="fa-solid fa-file-pen" style="color: #bc672a;"></i></button>
+                  <button @click="deletePlace"><i class="fa-solid fa-trash-can" style="color: #bc672a;"></i></button>
                 </div>
-            </div>
+              </div>
             <div class="star-rating">
                 <span class="stars">
                     <i v-for="star in 5"
@@ -134,6 +134,25 @@ export default {
       } catch (error) {
         console.error('Error fetching place details:', error)
         this.place = {} // Handle API error gracefully
+      }
+    },
+    async deletePlace() {
+      try {
+        const address = this.place.address
+        const confirmed = confirm(`Are you sure you want to delete ${this.place.placeName}?`)
+
+        if (confirmed) {
+          await Api.delete(`/places/${address}`, {
+            headers: {
+              'x-auth-token': localStorage.getItem('x-auth-token')
+            }
+          })
+
+          console.log(`Place ${this.place.placeName} deleted successfully.`)
+          this.$router.push('/mainplaces')
+        }
+      } catch (error) {
+        console.error('Error deleting place:', error)
       }
     },
     async checkIfAdmin() {
