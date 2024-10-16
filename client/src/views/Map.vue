@@ -642,6 +642,7 @@ export default {
         console.error('Error fetching city data:', error)
         alert('Failed to load city data for editing.')
       }
+      await this.fetchCitiesInSystem() // Reload the city list
     },
     async deleteCity(cityId) {
       // Confirm deletion
@@ -670,6 +671,7 @@ export default {
       } catch (error) {
         console.error('Error deleting city:', error)
       }
+      await this.fetchCitiesInSystem() // Reload the city list
     },
     createNewCity() {
       // Close the current city popup
@@ -690,6 +692,10 @@ export default {
       this.selectedTags = []
     },
     async submitNewCity() {
+      if (this.rating > 5) {
+        alert('Rating cannot be more than 5. Please enter a valid rating.')
+        return // Exit the method if the rating is invalid
+      }
       const cityData = {
         cityName: this.newCityName,
         country: this.newCityCountry,
@@ -737,6 +743,8 @@ export default {
 
       // Close the form after submission
       this.closeNewCityForm()
+
+      await this.fetchCitiesInSystem() // Reload the city list
     },
     resetForm() {
     // Reset form fields
