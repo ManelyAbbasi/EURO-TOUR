@@ -106,6 +106,10 @@
 
           <label for="rating">Rating:</label>
           <input type="number" id="rating" v-model="rating" min="0" max="10" step="0.1" placeholder="Enter a rating (0-5)" />
+
+          <div class="submit-wrapper">
+            <button type="submit">Submit</button>
+          </div>
         </div>
         <div class="form-right">
           <label for="tags">Tags:</label>
@@ -117,7 +121,6 @@
           </div>
         </div>
       </div>
-      <button type="submit">Submit</button>
     </form>
   </div>
 </div>
@@ -551,6 +554,31 @@ a img {
 }
 
 /* pop up form */
+
+.form-layout {
+  display: flex; /* Flexbox for layout */
+  justify-content: space-between; /* Space between left and right sections */
+}
+
+/* Left side of the form */
+.form-left {
+  width: 60%; /* Take up 60% of the width */
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.submit-wrapper{
+  display: flex;
+  justify-content: center;
+  margin: 3rem;
+}
+/* Right side of the form */
+.form-right {
+  width: 35%; /* Take up 35% of the width */
+  padding-left: 20px; /* Space between left and right sections */
+}
+
 .new-place-popup form {
   display: flex;
   flex-direction: column;
@@ -584,7 +612,6 @@ a img {
 }
 
 /* Ensure the popup header has consistent styling */
-/* Ensure the popup header has consistent styling */
 .popup-header {
   position: sticky;
   top: 0;
@@ -603,6 +630,21 @@ a img {
   border-radius:4px;
   padding-left: 5px; /* Add left padding to text fields as well */
   border: 1px solid #555;
+}
+
+/* Style for tags */
+.tags label {
+  display: block; /* Stack tags vertically */
+  margin: 4px 0; /* Margin for spacing between tags */
+  font-size: 0.8rem;
+}
+
+.tags{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0.2rem;
 }
 
 /* Input Fields Styles */
@@ -630,7 +672,6 @@ input[type="text"] {
 }
 
 .new-place-popup form button[type="submit"] {
-  align-self: flex-end; /* Align the submit button to the right */
   background-color: #BC672A;
   color: white;
   border: none;
@@ -646,6 +687,21 @@ input[type="text"] {
 
 .new-place-popup form button[type="submit"]:hover {
   background-color: #a7561c; /* Darker on hover */
+}
+
+.close-button {
+  background-color: #BC672A;
+  border: 2px solid #BC672A;
+  font-size: 15px;
+  cursor: pointer;
+  color: #fff;
+  transition: color 0.3s ease;
+  width: 25px; /* Set width */
+  height: 25px; /* Set height */
+}
+
+.close-button:hover{
+  background-color:#a7561c;
 }
 
 @media screen and (max-width:1200px) {
