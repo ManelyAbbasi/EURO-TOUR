@@ -68,7 +68,7 @@
               <div class="places-wrapper-header">
                 <p><strong class="heading">Places to Visit:</strong></p>
                 <div v-if="isAdmin" class="admin-buttons">
-                    <button class="create-place-button"><i class="fa-solid fa-file-pen" style="color: #bc672a;"></i></button>
+                    <button class="create-place-button" @click="createPlaceInCity()"><i class="fa-solid fa-file-pen" style="color: #bc672a;"></i></button>
                 </div>
               </div>
                 <ul class="places-list">
@@ -84,6 +84,44 @@
               <router-link to="/maincities" class="city-link">back to cities</router-link>
             </div>
       </div>
+
+<!-- New City Form Popup -->
+<div class="new-place-popup" :class="{ show: showNewPlaceForm }" v-if="showNewPlaceForm">
+  <div class="popup-header">
+    <h3>Create New Place</h3>
+    <button class="close-button" @click="closeNewPlaceForm">X</button>
+  </div>
+  <div class="popup-body">
+    <form @submit.prevent="submitNewPlace">
+      <div class="form-layout">
+        <div class="form-left">
+          <label for="placeName">Place Name:</label>
+          <input type="text" id="placeName" v-model="newPlaceName" required />
+
+          <label for="address">Address:</label>
+          <input type="text" id="address" v-model="address" placeholder="Enter the address..." />
+
+          <label for="content">Content:</label>
+          <textarea id="content" v-model="content" placeholder="Enter important information..."></textarea>
+
+          <label for="rating">Rating:</label>
+          <input type="number" id="rating" v-model="rating" min="0" max="10" step="0.1" placeholder="Enter a rating (0-5)" />
+        </div>
+        <div class="form-right">
+          <label for="tags">Tags:</label>
+          <div class="tags">
+            <label v-for="tag in tagOptions" :key="tag">
+              <input type="checkbox" :value="tag" v-model="selectedTags" />
+              {{ tag }}
+            </label>
+          </div>
+        </div>
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+</div>
+
     </main>
 
 <footer class="footer">
@@ -105,6 +143,7 @@ export default {
     return {
       city: {}, // Object to hold city details
       placesToVisit: [],
+      showNewPlaceForm: false,
       isAdmin: false,
       loggedInStatus: !!localStorage.getItem('x-auth-token') // Reactive property for login status
     }
@@ -205,6 +244,20 @@ export default {
       } catch (error) {
         console.error('Error deleting place:', error)
       }
+    },
+    async createPlaceInCity() {
+      this.showNewPlaceForm = true // Create a new data property for the new city form visibility
+      // Reset new city fields
+      this.newPlaceName = ''
+      this.content = ''
+      this.address = ''
+      this.rating = null
+      this.selectedTags = []
+    },
+    closeNewPlaceForm() {
+      console.log('closeNewPlaceForm called')
+      this.showNewPlaceForm = false
+      this.resetForm()
     },
     async checkIfAdmin() {
       try {
@@ -498,6 +551,104 @@ a img {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
+}
+
+/* pop up form */
+.new-place-popup form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* New Place Form Popup Styles */
+.new-place-popup {
+  position: sticky;
+  margin-top: -20rem;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the popup */
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  color:#045768;
+  z-index: 10;
+  width: 650px; /* Increased width */
+  max-width: 90%; /* Ensures the popup fits within smaller screens */
+  height:630px;
+  max-height: 90vh; /* Ensures the popup doesn't go off the screen */
+  padding: 20px;
+  overflow-y: auto; /* Allows scrolling if the content is too long */
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Show the popup with opacity */
+.new-place-popup.show {
+  opacity: 1; /* Fully visible */
+  transform: translate(-50%, -50%) scale(1.05); /* Slightly scale up on appearance */
+}
+
+/* Ensure the popup header has consistent styling */
+/* Ensure the popup header has consistent styling */
+.popup-header {
+  position: sticky;
+  top: 0;
+  padding: 1px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  z-index: 2; /* Increased z-index to ensure it stays above the content */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#rating {
+  width: 50%; /* Set the width to 100% of its container */
+  margin-left: 1rem;
+  border-radius:4px;
+  padding-left: 5px; /* Add left padding to text fields as well */
+  border: 1px solid #555;
+}
+
+/* Input Fields Styles */
+.new-place-popup input[type="text"],
+.new-place-popup textarea,
+#rating {
+  color: #a7561c;
+}
+
+/* Change border color on focus */
+.new-place-popup input[type="text"]:focus,
+.new-place-popup textarea:focus,
+#rating:focus {
+  border-color: #BC672A; /* Darker shade on focus */
+  outline: none; /* Remove default outline */
+}
+
+/* Style for the form inputs */
+input[type="text"] {
+  width: calc(100% - 20px); /* Full width minus padding */
+  padding: 10px; /* Padding for input fields */
+  margin: 10px 0; /* Margin between fields */
+  border: 1px solid #ccc; /* Light grey border */
+  border-radius: 4px; /* Rounded corners */
+}
+
+.new-place-popup form button[type="submit"] {
+  align-self: flex-end; /* Align the submit button to the right */
+  background-color: #BC672A;
+  color: white;
+  border: none;
+  padding: 10px 40px;
+  text-align: center;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: -30px; /* Adjust this value to move it upwards */
+  margin-right: 4rem;
+}
+
+.new-place-popup form button[type="submit"]:hover {
+  background-color: #a7561c; /* Darker on hover */
 }
 
 @media screen and (max-width:1200px) {
