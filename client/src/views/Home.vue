@@ -293,6 +293,10 @@ li.dropdown-item.logout {
   padding: 9rem 2rem;
   padding-left: 2rem;
   padding-right: 2rem;
+  display: flex;
+  flex-direction: column;   /* Stack items vertically */
+  text-align: center;       /* Center the text within the container */
+  margin-bottom: 7rem;
 }
 
 .home-layout-wrapper {
@@ -315,13 +319,6 @@ li.dropdown-item.logout {
 .home-right-side-panel {
   display: flex;
   flex-direction: column;
-}
-
-.welcome-back-container {
-  display: flex;
-  flex-direction: column;   /* Stack items vertically */
-  text-align: center;       /* Center the text within the container */
-  margin-bottom: 7rem;
 }
 
 .home-right-side-panel p {
@@ -566,6 +563,10 @@ li.dropdown-item.logout {
       display: flex;
       justify-content: center;
     }
+    .home-layout-wrapper, .get-to-know-wrapper-in {
+    width: 120%;
+    align-content: center;
+  }
     .home-layout-wrapper p{
         font-size: 2.5rem;
     }
@@ -578,16 +579,27 @@ li.dropdown-item.logout {
     border-radius: 2rem;
     text-align: center;
     transition: all 0.5s;
-    width: 100%;
     height: 44.5rem;
     border: 3px solid #045768;
 }
-.get-to-know-wrapper-in h2{
-    margin-bottom: 3rem;
-    margin-left: 18rem;
-    margin-right: 18rem;
-    font-size: 2.5rem;
-}
+  .get-to-know-wrapper-in h2{
+      margin-bottom: 3rem;
+      margin-left: 18rem;
+      margin-right: 18rem;
+      font-size: 2.5rem;
+  }
+  .welcome-back-container {
+    padding: 3rem 2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    display: flex;
+    flex-direction: column;   /* Stack items vertically */
+    text-align: center;       /* Center the text within the container */
+    margin-bottom: 0rem;
+  }
+  .welcome-back-container h1 {
+    font-size: 4rem;
+  }
 }
 
 </style>
