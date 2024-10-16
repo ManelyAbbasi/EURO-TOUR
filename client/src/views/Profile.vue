@@ -47,6 +47,8 @@
       </b-row>
         <!-- Admins only see the password field -->
       <b-row v-if="isAdmin">
+        <label for="username">username</label>
+        <input type="text" id="username" class="input-field" v-model="username" />
         <label for="password">password</label>
         <input type="password" id="password" class="input-field" v-model="password" />
       </b-row>
@@ -130,8 +132,8 @@
       </b-col>
       <b-col cols="3">
         <div class="save-button-container">
-        <button class="save-button" type="button" @click="saveChanges($event)">save changes</button>
-      </div>
+          <button class="save-button" type="button" @click="handleSaveChanges($event)">save changes</button>
+        </div>
       </b-col>
 
       <b-col cols="3">
@@ -201,15 +203,61 @@ export default {
     selectLGBTQIA(status) {
       this.activeLGBTQIA = status // Directly set to 'yes' or 'no'
     },
+    handleSaveChanges(event) {
+      if (this.isAdmin) {
+        this.saveChangesForAdmin(event)
+      } else {
+        this.saveChanges(event)
+      }
+    },
+    async saveChangesForAdmin(event) {
+      event.preventDefault() // Prevent form submission
+
+      // Create userCredentials object
+      const userCredentials = {
+        username: this.username,
+        password: this.password
+      }
+
+      try {
+        const authToken = localStorage.getItem('x-auth-token')
+        if (!authToken) {
+          throw new Error('No auth token found. Please log in.')
+        }
+
+        const response = await Api.patch(`/admin/${this.username}`, userCredentials, {
+          headers: {
+            'x-auth-token': authToken // Set the token in the request headers
+          }
+        })
+
+        if (response.status === 200) {
+          this.isSaved = true
+          console.log('User information updated successfully:', response.data)
+        }
+      } catch (error) {
+        console.error('Update error:', error)
+        alert('You are not allowed to change your username, and password cannot be empty.')
+      }
+    },
+
     async saveChanges(event) {
       event.preventDefault() // Prevent form submission
 
+      // Create userCredentials object
       const userCredentials = {
         username: this.username,
-        password: this.password,
-        gender: this.activeGender,
-        // eslint-disable-next-line eqeqeq
-        isLGBTQIA: this.activeLGBTQIA === 'yes'
+        password: this.password
+      }
+
+      // Include gender only if it has been selected
+      if (this.activeGender !== null) {
+        userCredentials.gender = this.activeGender
+      }
+
+      // Include isLGBTQIA only if it has been selected
+      if (this.activeLGBTQIA !== null) {
+        userCredentials.isLGBTQIA = this.activeLGBTQIA === 'yes'
       }
 
       try {
@@ -288,7 +336,7 @@ export default {
     // Create a link element for Font Awesome (for icons, if needed)
     const link = document.createElement('link')
     link.rel = 'stylesheet'
-    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css';
+    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css'
     link.integrity = 'sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=='// Replace this with the correct integrity hash
     link.crossOrigin = 'anonymous'
     link.referrerPolicy = 'no-referrer'
