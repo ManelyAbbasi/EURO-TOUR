@@ -43,8 +43,16 @@
             <div v-for="place in paginatedPlaces" :key="place.placeName" class="place-item">
               <div class="detail-about-place">
                 <div class="slide-title-wrapper">
-                  <span class="slide-title">{{ place.placeName }}</span>
-                  <button class="edit-placename-button" v-if="isAdmin" @click="showEditPlaceNameForm(place)">
+                  <span class="slide-title" v-if="!showEditForm" >{{ place.placeName }}</span>
+                  <input type="text" id="placeName" v-model="editPlaceName" required v-else/>
+                  <div class="edit-placename-popup" :class="{ show: showEditForm }" v-if="showEditForm">
+                      <form @submit.prevent="submitNewPlaceName">
+                        <input type="text" id="placeName" v-model="editPlaceName" required class="hidden-input"/>
+                        <button type="submit">Save</button>
+                        <button class="close-button" @click="closeEditForm">X</button>
+                      </form>
+                  </div>
+                  <button class="edit-placename-button" v-if="isAdmin&&!showEditForm" @click="showEditPlaceNameForm(place)">
                     <i class="fa-solid fa-i-cursor fa-beat-fade" style="color: #bc672a;"></i>
                   </button>
                 </div>
@@ -66,20 +74,6 @@
                 </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div class="edit-placename-popup" :class="{ show: showEditForm }" v-if="showEditForm">
-        <div class="popup-header">
-          <button class="close-button" @click="closeEditForm">X</button>
-        </div>
-        <div class="popup-body">
-          <form @submit.prevent="submitNewPlaceName">
-            <label for="placeName">Place Name:</label>
-            <input type="text" id="placeName" v-model="editPlaceName" required />
-
-            <button type="submit">Save</button>
-          </form>
         </div>
       </div>
 
@@ -620,6 +614,73 @@ a img {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
+}
+
+/* FORM STYLINGS */
+form {
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+input[type="text"]:focus{
+  border-color: #BC672A; /* Darker shade on focus */
+  outline: none; /* Remove default outline */
+}
+
+/* Input Fields Styles */
+input[type="text"]{
+  color: #a7561c;
+}
+
+input[type="text"] {
+  width: calc(100% - 20px); /* Full width minus padding */
+  padding: 10px; /* Padding for input fields */
+  margin: 10px 0; /* Margin between fields */
+  border: 1px solid #ccc; /* Light grey border */
+  border-radius: 4px; /* Rounded corners */
+}
+
+.edit-placename-popup form button[type="submit"] {
+  background-color: #BC672A;
+  color: white;
+  border: none;
+  padding: 10px 40px;
+  text-align: center;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 4rem;
+}
+
+.edit-placename-popup form button[type="submit"]:hover {
+  background-color: #a7561c; /* Darker on hover */
+}
+
+.popup-body button:hover {
+  background-color: #a7561c; /* Darker on hover */
+}
+
+.close-button {
+  background-color: #BC672A;
+  border: 2px solid #BC672A;
+  font-size: 15px;
+  cursor: pointer;
+  color: #fff;
+  transition: color 0.3s ease;
+  width: 2.5rem; /* Set width */
+  height: 2.5rem; /* Set height */
+  margin-right: 2rem;
+}
+
+.hidden-input{
+  display: none;
+}
+
+.close-button:hover {
+  background-color: #a7561c;
 }
 
 @media screen and (max-width:1200px) {

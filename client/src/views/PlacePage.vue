@@ -605,10 +605,10 @@ a img {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   color: #045768;
   z-index: 10;
-  width: 650px; /* Adjust width as needed */
-  max-width: 90%; /* Ensures the popup fits within smaller screens */
+  width: 650px;
+  max-width: 90%;
   padding: 20px;
-  margin-top: 2rem; /* Adjust as needed to fit the design */
+  margin-top: 2rem;
   opacity: 0;
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
