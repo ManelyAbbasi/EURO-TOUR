@@ -187,8 +187,8 @@ export default {
         if (response.data && response.data.city) {
           this.city = { ...response.data.city }
 
-          // Store the placesToVisit link
           this.placesToVisitLink = response.data.links.placesToVisit
+          await this.getPlaces()
         }
       } catch (error) {
         console.error('Error fetching city details:', error)
