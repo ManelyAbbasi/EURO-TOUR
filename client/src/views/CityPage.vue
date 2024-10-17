@@ -167,6 +167,7 @@ export default {
         '18+'
       ],
       selectedTags: [],
+      placesToVisitLink: '', // New property to store the link to places to visit
       loggedInStatus: !!localStorage.getItem('x-auth-token') // Reactive property for login status
     }
   },
@@ -183,8 +184,11 @@ export default {
       try {
         const cityId = this.$route.params.cityid
         const response = await Api.get(`/cities/${cityId}`)
-        if (response.data && response.data._id) {
-          this.city = { ...response.data }
+        if (response.data && response.data.city) {
+          this.city = { ...response.data.city }
+
+          // Store the placesToVisit link
+          this.placesToVisitLink = response.data.links.placesToVisit
         }
       } catch (error) {
         console.error('Error fetching city details:', error)
@@ -192,8 +196,7 @@ export default {
     },
     async getPlaces() {
       try {
-        const cityId = this.$route.params.cityid
-        const response = await Api.get(`/cities/${cityId}/placesToVisit`)
+        const response = await Api.get(this.placesToVisitLink)
         if (Array.isArray(response.data)) {
           this.placesToVisit = response.data
         }

@@ -106,30 +106,24 @@ async function createPlaceInCity(req, res) {
 async function getOneCity(req, res) { 
     const cityId = req.params.id;
 
-    // Validate city ID format
     if (!cityId || !cityId.match(/^[0-9a-fA-F]{24}$/)) {
         return res.status(400).json({ message: 'Invalid city ID format.' });
     }
 
     try {
         const city = await CitiesModel.findById(cityId);
-        
         if (!city) {
             return res.status(404).json({ message: "City not found" });
         }
 
-        const response = {
-            city,
-            links: [
-                {
-                    rel: "all-cities",
-                    href: "/api/cities"
-                }
-            ]
+        const links = {
+            placesToVisit: `/api/cities/${cityId}/placesToVisit`, // Link to places to visit in this city
         };
 
-        res.status(200).json(response); 
-
+        res.status(200).json({
+            city,
+            links
+        }); 
     } catch (err) {
         res.status(500).json({ error: 'An error occurred while fetching the city.' }); 
     }
