@@ -225,7 +225,7 @@ export default {
           throw new Error('No auth token found. Please log in.')
         }
 
-        const response = await Api.patch(`/admin/${this.username}`, userCredentials, {
+        const response = await Api.patch(`/api/admin/${this.username}`, userCredentials, {
           headers: {
             'x-auth-token': authToken // Set the token in the request headers
           }
@@ -266,7 +266,7 @@ export default {
           throw new Error('No auth token found. Please log in.')
         }
 
-        const response = await Api.put(`/users/${this.username}`, userCredentials, {
+        const response = await Api.put(`/api/users/${this.username}`, userCredentials, {
           headers: {
             'x-auth-token': authToken // Set the token in the request headers
           }
@@ -292,7 +292,7 @@ export default {
       try {
         const authToken = localStorage.getItem('x-auth-token')
         if (!authToken) throw new Error('No auth token found. Please log in.')
-        const response = await Api.delete(`/users/${this.usernameDeleting}`, {
+        const response = await Api.delete(`/api/users/${this.usernameDeleting}`, {
           headers: {
             'x-auth-token': authToken // Send token for authorization
           },
@@ -315,7 +315,7 @@ export default {
     },
     async checkIfAdmin() {
       try {
-        const response = await Api.get('/admin/check-admin', {
+        const response = await Api.get('/api/admin/check-admin', {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }

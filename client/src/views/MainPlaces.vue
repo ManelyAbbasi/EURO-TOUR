@@ -150,7 +150,7 @@ export default {
   methods: {
     async getPlaces() {
       try {
-        const response = await Api.get('/places')
+        const response = await Api.get('/api/places')
         console.log('Fetched places:', response.data.placesToVisit)
         if (response.data && response.data.placesToVisit) {
           this.places = response.data.placesToVisit.map(place => ({
@@ -173,7 +173,7 @@ export default {
       this.isFavorite = !this.isFavorite // Toggle between true and false
     },
     getMessage() {
-      Api.get('/')
+      Api.get('/api/')
         .then(response => {
           this.message = response.data.message
         })
@@ -183,7 +183,7 @@ export default {
     },
     async checkIfAdmin() {
       try {
-        const response = await Api.get('/admin/check-admin', {
+        const response = await Api.get('/api/admin/check-admin', {
           headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
         })
         this.isAdmin = response.data.isAdmin
@@ -213,7 +213,7 @@ export default {
         }
 
         // Make the API call to update the place
-        const response = await Api.patch(`/places/${address}`, updatedPlaceData, {
+        const response = await Api.patch(`/api/places/${address}`, updatedPlaceData, {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }
