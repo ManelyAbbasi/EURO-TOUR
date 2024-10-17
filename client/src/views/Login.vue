@@ -14,6 +14,7 @@
     <!-- Right side: Form with dark blue background -->
     <div class="right-side">
       <!-- Add the image element you want to display for small screens -->
+    <img src="@/assets/vertical-logo.png" alt="Tablet Logo" class="tablet-logo-img" draggable="false" />
     <img src="@/assets/vertical-logo.png" alt="Mobile Logo" class="mobile-logo-img" draggable="false" />
 
       <div class="container">
@@ -135,6 +136,10 @@ export default {
   margin-left: 9%;
 }
 
+.tablet-logo-img {
+  display: none;
+}
+
 .mobile-logo-img {
   display: none;
 }
@@ -223,6 +228,46 @@ button:active[disabled] {
   margin-left: 13rem;
 }
 
+@media screen and (max-width: 320px) {
+  .mobile-logo-img {
+    display: block;
+    width: 70%; /* Adjust width */
+    margin-bottom: 1rem;
+  }
+
+  .tablet-logo-img {
+    display: none !important;
+  }
+
+  .btn {
+    color: #EDF7FB;
+    font-size: 2.5vh;
+    border: #759CAB;
+    background-color: #759CAB;
+    cursor: pointer;
+    border-radius: 0px;
+    width: 30%;
+    font-family: 'Lexend Deca', sans-serif;
+  }
+
+  .input {
+    color: #759CAB;
+    font-size: 16px;
+    padding: 12px 20px;
+    font-family: 'Lexend Deca', sans-serif;
+    border: rgba(0, 0, 0, 0.301);
+    background-color: rgba(0, 0, 0, 0.301);
+    width: 85%;
+    outline: none;
+    margin-top: 2%;
+  }
+
+  .create-account-container {
+    font-size:smaller;
+  }
+
+}
+
 @media screen and (max-width: 768px) {
   .split-container {
     flex-direction: column; /* Stack the content vertically */
@@ -237,14 +282,14 @@ button:active[disabled] {
   }
 
   .container {
-    margin-bottom:10rem;
+    margin-bottom:7rem;
   }
 
   /* Display the image on small screens */
-  .mobile-logo-img {
+  .tablet-logo-img {
     display: block;
     width: 40%; /* Adjust width */
-    margin-bottom: 4rem;
+    margin-bottom: 1rem;
   }
 
   .input {
@@ -253,7 +298,6 @@ button:active[disabled] {
 
   .btn {
     color: #EDF7FB;
-    font-size: 2.5vh;
     border: #0c556a;
     background-color: #0c556a;
   }
