@@ -373,8 +373,11 @@ li.dropdown-item.logout {
     text-align: center;
     transition: all 0.5s;
     width: 100%;
-    height: 50rem;
     border: 3px solid #045768;
+}
+
+.get-to-know-box-in{
+  margin-bottom: 3rem;
 }
 
 .weather-map {
@@ -532,8 +535,11 @@ li.dropdown-item.logout {
 
     .get-to-know-container-in .get-to-know-box-in{
     padding: 2rem 2rem 2rem;
-    height: 44.5rem;
-  }
+    max-height: 33rem;
+   }
+   .get-to-know-container-in{
+    margin-bottom: 10rem;
+   }
 }
 
 @media screen and (max-width: 1200px) {

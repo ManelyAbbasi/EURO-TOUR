@@ -287,6 +287,7 @@ export default {
   display: flex;
   flex-direction: row;
   background-color: #edf7fb;
+  min-width: 643px;
 
 }
 
@@ -313,7 +314,7 @@ export default {
     flex-direction: column;
     display: flex;
     align-items: center;
-    min-width: 30vw;
+    min-width: 35vw;
 }
 
 .mainplaces-right-side-panel h2 {
