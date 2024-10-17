@@ -34,10 +34,10 @@
 
             <!-- display new text for each slide -->
               <div class="pagination-wrapper">
-              <div class="mt-3">
-                <b-pagination v-model="currentPage" pills :total-rows="cities.length" :per-page="perPage"></b-pagination>
+                <div class="mt-3">
+                  <b-pagination v-model="currentPage" pills :total-rows="cities.length" :per-page="perPage"></b-pagination>
+                </div>
               </div>
-            </div>
 
             <!-- City slide -->
       <div id="city-slide">
@@ -91,14 +91,14 @@
           </div>
       </main>
 
-<footer class="footer">
-  <div class="footer-text">
-    <p> &copy; 2024 copyright: eurotrip.com</p>
-  </div>
-  <div class="top-icon">
-    <a href="#"><i class="fa-solid fa-caret-up"></i></a>
-  </div>
-</footer>
+      <footer class="footer">
+        <div class="footer-text">
+          <p> &copy; 2024 copyright: eurotrip.com</p>
+        </div>
+        <div class="top-icon">
+          <a href="#"><i class="fa-solid fa-caret-up"></i></a>
+        </div>
+      </footer>
     </div>
   </template>
 
@@ -203,6 +203,7 @@ export default {
     background-color: #42515e;
     display: flex;
     flex-wrap: wrap;
+    min-width: 1200px;
 }
 
 .euro-tour-header {
@@ -276,6 +277,7 @@ export default {
   grid-gap: 20px;
   padding: 9rem 9% 2rem;
   width: 100%;
+  justify-content: center;
 }
 
 .maincities-right-side-panel .maincities-left-side-panel {
@@ -288,7 +290,7 @@ export default {
   display: flex;
   flex-direction: row;
   background-color: #edf7fb;
-
+  min-width: 643px;
 }
 
 .facts-heading {
@@ -301,7 +303,7 @@ export default {
     flex-direction: column;
     display: flex;
     align-items: center;
-    min-width: 30vw;
+    min-width: 35vw;
 }
 
 .maincities-right-side-panel h2 {
@@ -512,27 +514,30 @@ a img {
 }
 
 @media screen and (max-width:1200px) {
-    html{
-        font-size: 55%;
+    .navbar{
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
     }
+    .maincities-left-side-panel{
+      min-width: 643px;
+    }
+    .maincities-right-side-panel{
+      min-width: 35vw;
+    }
+    .maincities-layout-wrapper{
+      justify-content: center;
+    }
+
 }
 
-@media screen and (max-width: 991px){
-    section{
-        padding: 10rem 3% 2rem;
-    }
+@media screen and (max-width: 768px){
     .euro-tour-header{
         padding: 2rem 3%;
     }
     .footer{
         padding: 2rem 3%;
     }
-    .get-to-know-wrapper{
-        padding: 7rem;
-    }
-}
-
-@media screen and (max-width: 768px){
     .navbar{
         width: 100%;
         display: flex;
@@ -544,29 +549,75 @@ a img {
         flex-direction: column;
         gap: 2rem;
     }
-    .layout-wrapper,
-    .get-to-know-wrapper{
+    .maincities-layout-wrapper{
         flex-direction: column;
         display: flex;
+        min-width: 1200px;
+        justify-content: center;
     }
-    .layout-wrapper p{
+    .detail-about-city .slide-title{
+      font-size: 3.5rem;
+    }
+    .maincities-layout-wrapper p,
+    .rating-text,
+    .star-rating i,
+    .read-more-wrapper a{
+        font-size: 2rem;
+    }
+    .maincities-layout-wrapper .facts-heading{
         font-size: 2.5rem;
+        font-weight: 400;
     }
-    .layout-wrapper h1{
-        font-size: 5rem;
+    .read-more-wrapper{
+      display: flex;
+      justify-content: end;
+      margin-right: 2rem;
     }
-}
+    .maincities-left-side-panel{
+      min-width: 984px;
+      justify-content: center;
 
-@media screen and (max-width:576px) {
-    html{
-        font-size: 50%;
+    }
+    .maincities-right-side-panel{
+      width: 100%;
+      min-width: 984px;
+      justify-content: center;
+
+    }
+    .maincities-left-side-panel{
+      margin: 9rem 0 2rem 0;
+    }
+    .maincities-left-side-panel,
+    .maincities-right-side-panel{
+      padding: 1.5rem 2rem;
+    }
+    .maincities-right-side-panel h2{
+      font-size: 3.5rem;
+      padding: 0.5rem;
+    }
+    .maincities-button-wrapper{
+      margin: 2.5rem;
+    }
+    h4.maincities-or {
+      font-size: 2.5rem;
+    }
+    .maincities-button-wrapper a{
+      padding: 2rem;
+      font-size: 2rem;
+      min-width: 15rem;
+    }
+    .trending-city-wrapper{
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      justify-content: space-between;
+      min-width: 45rem;
+    }
+    .trending-city-wrapper img{
+      min-width: 10rem;
     }
 }
 
 @media screen and (max-width:350px) {
-    .layout-wrapper img{
-        width: 90vw;
-    }
     .footer{
         flex-direction: column-reverse;
     }

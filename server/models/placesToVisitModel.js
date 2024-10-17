@@ -36,5 +36,4 @@ var placesToVisitSchema = new Schema({
     city: { type: Schema.Types.ObjectId, ref: 'cities', required: true },
 });
 
-// Export the model based on the schema
 module.exports = mongoose.model('placesToVisit', placesToVisitSchema);

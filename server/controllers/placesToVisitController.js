@@ -16,19 +16,30 @@ async function getAllPlaces(req, res) {
 
         if (minRating || maxRating) {
             filter.rating = {}; 
-            if (minRating) filter.rating.$gte = parseFloat(minRating); // $gte = greater than or equal
-            if (maxRating) filter.rating.$lte = parseFloat(maxRating); // $lte = less than or equal
+            if (minRating) {
+                const min = parseFloat(minRating);
+                if (isNaN(min) || min < 0 || min > 5) {
+                    return res.status(400).json({ message: "minRating must be a number between 0 and 5" });
+                }
+                filter.rating.$gte = min;
+            }
+            if (maxRating) {
+                const max = parseFloat(maxRating);
+                if (isNaN(max) || max < 0 || max > 5) {
+                    return res.status(400).json({ message: "maxRating must be a number between 0 and 5" });
+                }
+                filter.rating.$lte = max;
+            }
         }
 
         let sortOption = {};
-
         if (sortByRating) {
-            sortOption.rating = sortByRating === 'asc' ? 1 : -1; // Ascending = 1, Descending = -1
+            sortOption.rating = sortByRating === 'asc' ? 1 : -1;
         }
 
         const placesToVisit = await placesToVisitModel.find(filter).sort(sortOption).populate({
-            path: 'city',  // Adjust to match the schema field
-            select: 'cityName'  // Select only the city name field
+            path: 'city',
+            select: 'cityName'
         });
 
         if (!placesToVisit || placesToVisit.length === 0) {
@@ -62,7 +73,6 @@ async function getOnePlace(req, res) {
 
 async function updatePlace(req, res, next) {
     try {
-
         if (!req.body.isAdmin) {
             return res.status(403).json({ message: "Access denied. Only admins can update places." });
         }
@@ -76,20 +86,36 @@ async function updatePlace(req, res, next) {
             if (typeof req.body.placeName !== 'string' || req.body.placeName.trim() === "") {
                 return res.status(400).json({ message: "Invalid placeName: must be a non-empty string" });
             }
+            if (req.body.placeName.length > 30) {
+                return res.status(400).json({ message: 'placeName cannot be longer than 30 characters' });
+            }
             placesToVisit.placeName = req.body.placeName;
         }
+
+        if (req.body.address !== undefined) {
+            if (typeof req.body.address !== 'string' || req.body.address.trim() === "") {
+                return res.status(400).json({ message: "Invalid address: must be a non-empty string" });
+            }
+            if (req.body.address.length > 60) {
+                return res.status(400).json({ message: 'address cannot be longer than 60 characters' });
+            }
+            placesToVisit.address = req.body.address;
+        }
+
         if (req.body.rating !== undefined) {
             if (req.body.rating < 0.0 || req.body.rating > 5.0) {
                 return res.status(400).json({ message: "Invalid rating: must be between 0.0 and 5.0" });
             }
             placesToVisit.rating = req.body.rating;
         }
+
         if (req.body.content !== undefined) {
             if (typeof req.body.content !== 'string' || req.body.content.trim() === '') {
                 return res.status(400).json({ message: "Invalid content: must be a non-empty string" });
             }
             placesToVisit.content = req.body.content;
         }
+
         if (Array.isArray(req.body.tags)) {
             if (req.body.tags.length === 0) {
                 return res.status(400).json({ message: "Tags cannot be an empty array" });
@@ -103,7 +129,7 @@ async function updatePlace(req, res, next) {
         if (err.name === 'ValidationError' && err.errors && err.errors.tags) {
             return res.status(400).json({ message: "Invalid tag(s) provided. Please provide valid tags." });
         }
-        next(err);
+        return next(err);
     }
 }
 
@@ -136,6 +162,7 @@ async function patchPlace(req, res) {
         return res.status(500).next(err);
     }
 }
+
 
 async function deleteOnePlace(req, res) {
     const address = req.params.address;

@@ -2,8 +2,9 @@ const CitiesModel = require("../models/citiesModel");
 const PlacesToVisit = require("../models/placesToVisitModel");
 const UsersModel = require("../models/usersModel");
 const citiesModel = require("../models/citiesModel");
-async function patchAdmin(req, res, next) {
+const adminsSchema = require("../models/adminsModel");
 
+async function patchAdmin(req, res, next) {
     try {
         const user = await UsersModel.findOne({ username: req.params.username });
 
@@ -14,37 +15,50 @@ async function patchAdmin(req, res, next) {
         if (req.body.username !== req.params.username && !req.body.isAdmin) {
             return res.status(403).json({ "message": "You are not authorized to update this user." });
         }
-
+    
+        if (typeof password !== 'string' || password.trim() === '') {
+            return res.status(400).json({ message: 'Invalid password: must be a non-empty string' });
+        }
         user.password = req.body.password || user.password;
-        await user.save(); // Save the updated user
+        await user.save();
 
         res.status(200).json(user); 
     } catch (err) {
-        next(err); // Pass the error to the next middleware
+        next(err);
     }
 }
 
-async function deletePlace(req, res) {
-    const address = req.params.address;
-
+async function createAdmin(req, res, next) {
     try {
-        if (!req.body.isAdmin) {
-            return res.status(403).json({ message: "Access denied. Admins only." });
+        const { username, password } = req.body;
+
+        const existingAdmin = await adminsSchema.findOne({ username });
+
+        if (existingAdmin) {
+            return res.status(400).json({ message: 'User with this username already exists' });
         }
 
-        const deletedPlace = await PlacesToVisit.findOneAndDelete({ address: address });
-
-        if (!deletedPlace) {
-            return res.status(404).json({ message: "Place not found" });
+        if (typeof username !== 'string' || username.trim() === '') {
+            return res.status(400).json({ message: 'Invalid username: must be a non-empty string' });
+        }
+        if (username.length > 20) {
+            return res.status(400).json({ message: 'Username cannot be longer than 20 characters' });
         }
 
-        res.status(200).json({ message: "Place deleted successfully", place: deletedPlace });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal server error" });
+        if (typeof password !== 'string' || password.trim() === '') {
+            return res.status(400).json({ message: 'Invalid password: must be a non-empty string' });
+        }
+        if (password.length > 25) {
+            return res.status(400).json({ message: 'Password cannot be longer than 25 characters' });
+        }
+
+        const admin = new adminsSchema(req.body);
+        await admin.save();
+        res.status(201).json(admin);
+    } catch (err) {
+        next(err);
     }
 }
-
 
 async function deleteCity(req, res) {
     const cityId = req.params.id;
@@ -94,7 +108,6 @@ async function checkIfAdmin(req, res) {
 module.exports ={
     patchAdmin,
     deleteCity,
-    deletePlace,
-    checkIfAdmin
+    checkIfAdmin,
+    createAdmin
 };
-   

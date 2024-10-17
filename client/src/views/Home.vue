@@ -53,6 +53,7 @@
         </p>
       </div>
     </div>
+
     <div class="home-left-side-panel">
       <!-- map -->
       <EuroMap class="euromap" />
@@ -98,14 +99,12 @@
 
       <section class="get-to-know-wrapper-in" v-if="isLoggedIn">
         <h2 class="home-heading">Weather warnings!</h2>
-        <div class="get-to-know-container-in">
           <!-- Conditionally Render "Why join us?" or Map -->
           <div class="get-to-know-box-in" v-if="isLoggedIn">
             <template v-if="isLoggedIn">
               <WeatherMap class="weather-map" />
             </template>
           </div>
-        </div>
       </section>
 
     </main>
@@ -117,6 +116,7 @@
         <a href="#"><i class="fa-solid fa-caret-up"></i></a>
       </div>
     </footer>
+
   </div>
 </template>
 
@@ -208,21 +208,19 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
 
 .home-body-container{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    list-style-type: none;
-    text-decoration: none;
-    border: none;
-    outline: none;
-    font-family: "Lexend Deca", sans-serif;
-    color: #bc672a;
-}
-
-.home-body-container{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style-type: none;
+  text-decoration: none;
+  border: none;
+  outline: none;
+  font-family: "Lexend Deca", sans-serif;
+  color: #bc672a;
   display: flex;
   flex-wrap: wrap;
   background-color: #42515e;
+  min-width: 1200px;
 }
 
 .euro-tour-header {
@@ -292,6 +290,10 @@ li.dropdown-item.logout {
   padding: 9rem 2rem;
   padding-left: 2rem;
   padding-right: 2rem;
+  display: flex;
+  flex-direction: column;   /* Stack items vertically */
+  text-align: center;       /* Center the text within the container */
+  margin-bottom: 7rem;
 }
 
 .home-layout-wrapper {
@@ -299,8 +301,6 @@ li.dropdown-item.logout {
   grid-template-columns: 1fr 2fr;
   grid-gap: 20px;  /* Optional: Add some space between columns */
   padding: 7rem 2rem;
-  padding-left: 7rem;
-  padding-right: 7rem;
   width: 100%;
   align-content: center;
 }
@@ -316,13 +316,6 @@ li.dropdown-item.logout {
   flex-direction: column;
 }
 
-.welcome-back-container {
-  display: flex;
-  flex-direction: column;   /* Stack items vertically */
-  text-align: center;       /* Center the text within the container */
-  margin-bottom: 7rem;
-}
-
 .home-right-side-panel p {
   font-size: 1.7rem;
   padding: 0.5rem 0;
@@ -336,12 +329,20 @@ li.dropdown-item.logout {
 .get-to-know-wrapper-in{
     min-height: 100vh;
     padding: 2rem 9% 1rem;
+    justify-content: center;
 }
 
-.get-to-know-wrapper h2, .get-to-know-wrapper-in h2 {
+.get-to-know-wrapper-in h2 {
+    margin-bottom: 3rem;
+    margin-left: 23rem;
+    margin-right: 20rem;
+    font-size: 3rem;
+    justify-content: center;
+}
+
+.get-to-know-wrapper h2 {
     margin-bottom: 3rem;
     margin-left: 25rem;
-    margin-right: 25rem;
     font-size: 3rem;
 }
 
@@ -365,28 +366,32 @@ li.dropdown-item.logout {
     border: 3px solid #045768;
 }
 
-.get-to-know-container-in .get-to-know-box-in{
+.get-to-know-box-in{
     background-color: #8FC6DF;
-    padding: 2rem 2rem 2rem;
+    padding: 2rem;
     border-radius: 2rem;
     text-align: center;
     transition: all 0.5s;
     width: 100%;
-    height: 50rem;
     border: 3px solid #045768;
+}
+
+.get-to-know-box-in{
+  margin-bottom: 3rem;
 }
 
 .weather-map {
   border-radius: 1.5rem;
-  height: 50rem;
+  height: 46rem;
+  max-height: 50rem;
 }
 
-.get-to-know-container .get-to-know-box:hover{
+.get-to-know-box:hover{
     border-color: #bc672a;
     transform: scale(1.03);
 }
 
-.get-to-know-container-in .get-to-know-box-in:hover{
+.get-to-know-box-in:hover{
     border-color: #bc672a;
     transform: scale(1.03);
 }
@@ -453,11 +458,6 @@ li.dropdown-item.logout {
   }
 }
 
-.welcome-text {
-  font-size: 2rem;
-  border: 2rem;;
-}
-
 .euromap{
   width: 100%
 }
@@ -498,65 +498,127 @@ li.dropdown-item.logout {
     color: #045768;
 }
 
-@media screen and (max-width:1200px) {
-    html{
-        font-size: 55%;
-    }
-}
-
-@media screen and (max-width: 991px){
-    .get-to-know-wrapper{
-        padding: 10rem 3% 2rem;
-    }
-    .euro-tour-header{
-        padding: 2rem 3%;
-    }
-    .footer{
-        padding: 2rem 3%;
-    }
-    .get-to-know-wrapper{
-        padding: 7rem;
-    }
-}
-
-@media screen and (max-width: 768px){
-    .navbar{
+@media screen and (max-width: 768px) {
+  .navbar{
         width: 100%;
         display: flex;
         justify-content: space-evenly;
         flex-wrap: wrap;
         align-items: center;
     }
+
     .euro-tour-header{
         flex-direction: column;
         gap: 2rem;
     }
-    .home-layout-wrapper,
-    .get-to-know-wrapper{
-        flex-direction: column;
-        display: flex;
+
+    .home-layout-wrapper{
+      max-width: 768px;
     }
+
+    .home-right-side-panel{
+      margin: 11rem 0 0 0;
+    }
+
+    .welcome-back-container p{
+      display: flex;
+      justify-content: center;
+    }
+
     .home-layout-wrapper p{
         font-size: 2.5rem;
     }
+
     .home-layout-wrapper h1{
         font-size: 5rem;
     }
+
+  .get-to-know-box-in{
+    max-height: 33rem;
+   }
+   .get-to-know-box-in{
+    margin-bottom: 10rem;
+   }
 }
 
-@media screen and (max-width:576px) {
-    html{
-        font-size: 50%;
+@media screen and (max-width: 1200px) {
+  .navbar{
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+        align-items: center;
     }
-}
 
-@media screen and (max-width:350px) {
-    .home-layout-wrapper img{
-        width: 90vw;
+    .euro-tour-header{
+        flex-direction: column;
+        gap: 2rem;
     }
-    .footer{
-        flex-direction: column-reverse;
+
+    .home-layout-wrapper{
+      max-width: 1200px;
+      flex-direction: column;
+      display: flex;
     }
+
+    .home-right-side-panel{
+      margin: 11rem 0 0 0;
+    }
+
+    .home-layout-wrapper, .get-to-know-wrapper-in {
+    width: 120%;
+    align-content: center;
+    }
+
+    .home-layout-wrapper p{
+        font-size: 2.5rem;
+    }
+
+    .home-layout-wrapper h1{
+        font-size: 5rem;
+    }
+
+    .welcome-container p {
+      font-size: 2rem;
+    }
+
+    .welcome-back-container {
+    padding: 3rem 2rem;
+    margin-bottom: 0rem;
+   }
+
+  .welcome-back-container h1 {
+    font-size: 4rem;
+  }
+
+  .welcome-back-container p{
+      display: flex;
+      justify-content: center;
+    }
+
+    .get-to-know-box-in{
+    background-color: #8FC6DF;
+    padding: 2rem 2rem 2rem;
+    height: 44.5rem;
+    margin: 2rem;
+    }
+
+    .get-to-know-wrapper h2{
+      margin-left: 19rem;
+      font-size: 3rem;
+  }
+
+    .get-to-wrapper-text p{
+      font-size: 0.9rem;
+
+  }
+
+  .get-to-know-wrapper-in h2{
+      margin-bottom: 3rem;
+      margin-left: 18rem;
+      margin-right: 18rem;
+      font-size: 2.5rem;
+  }
 }
 
 </style>

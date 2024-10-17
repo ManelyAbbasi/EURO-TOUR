@@ -15,8 +15,14 @@ async function createUser(req, res, next) {
         if (typeof req.body.username !== 'string' || req.body.username.trim() === '') {
             return res.status(400).json({ "message": "Invalid username: must be a non-empty string" });
         }
+        if (req.body.username.length > 20) {
+            return res.status(400).json({ message: 'Username cannot be longer than 20 characters' });
+        }
         if (typeof req.body.password !== 'string' || req.body.password.trim() === '') {
             return res.status(400).json({ "message": "Invalid password: must be a non-empty string" });
+        }
+        if (req.body.password.length > 25) {
+            return res.status(400).json({ message: 'Password cannot be longer than 25 characters' });
         }
         if (!req.body.birthDate || isNaN(Date.parse(req.body.birthDate))) {
             return res.status(400).json({ "message": "Invalid birth date: must be a valid date format" });
@@ -34,7 +40,7 @@ async function createUser(req, res, next) {
         }
         const validGenders = ['male', 'female', 'non-binary', 'other'];
         if (!validGenders.includes(req.body.gender)) {
-            return res.status(400).json({ message: 'Invalid gender value' });
+            return res.status(400).json({ message: 'Invalid gender value. Must be male, female, non-binary, or other.' });
         }
         if (typeof req.body.isAdmin !== 'boolean') {
             return res.status(400).json({ "message": "Invalid isAdmin: must be a boolean value" });
@@ -97,30 +103,46 @@ async function updateUser(req, res, next) {
         if (!sessionKey) {
             return res.status(401).json({ message: "No session token provided, authorization denied" });
         }
+
         const currentUser = await UsersModel.findOne({ 'session.key': sessionKey });
         if (!currentUser) {
             return res.status(401).json({ message: "Invalid session token" });
         }
+
         const userToUpdate = await UsersModel.findOne({ username: req.params.username });
         if (!userToUpdate) {
             return res.status(404).json({ message: "User not found" });
         }
+
+        // Check authorization
         if (currentUser.username !== req.params.username && !currentUser.isAdmin) {
             return res.status(403).json({ message: "You are not authorized to update this user." });
         }
+
+        // Update password
         if (req.body.password !== undefined) {  
             if (typeof req.body.password !== 'string' || req.body.password.trim() === "") {
                 return res.status(400).json({ message: "Invalid password: must be a non-empty string" });
             }
+            if (req.body.password.length > 25) {
+                return res.status(400).json({ message: 'Password cannot be longer than 25 characters' });
+            }
             userToUpdate.password = req.body.password; 
         }
+
+        // Update gender
         if (req.body.gender !== undefined) {
             const validGenders = ['male', 'female', 'non-binary', 'other'];
+            if (typeof req.body.gender !== 'string' || req.body.gender.trim() === "") {
+                return res.status(400).json({ message: "Invalid gender: must be a non-empty string" });
+            }
             if (!validGenders.includes(req.body.gender)) {
-                return res.status(400).json({ message: 'Invalid gender value' });
+                return res.status(400).json({ message: 'Invalid gender value. Must be male, female, non-binary, or other.' });
             }
             userToUpdate.gender = req.body.gender;
         }
+
+        // Update isLGBTQIA
         if (req.body.isLGBTQIA !== undefined) {
             if (typeof req.body.isLGBTQIA !== 'boolean') {
                 return res.status(400).json({ message: "Invalid isLGBTQIA: must be a boolean value" });
@@ -143,37 +165,30 @@ async function deleteOneUser(req, res) {
             return res.status(401).json({ message: "No session token provided, authorization denied" });
         }
 
-        // Find the current user based on session key
         const currentUser = await UsersModel.findOne({ 'session.key': sessionKey });
         if (!currentUser) {
             return res.status(401).json({ message: "Invalid session token" });
         }
 
-        // Find the user to delete
         const userToDelete = await UsersModel.findOne({ username: req.params.username });
         if (!userToDelete) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        // Check if the current user is authorized to delete the user
         if (currentUser.username !== req.params.username && !currentUser.isAdmin) {
             return res.status(403).json({ message: "You are not authorized to delete this user." });
         }
 
-        // Check if the password is provided in the request body
         if (!req.body.password) {
             return res.status(400).json({ message: "Password is required for deletion." });
         }
         
-        // Check if the password matches
         if (currentUser.password !== req.body.password) {
             return res.status(403).json({ message: "Passwords don't match." });
         }
         
-        // Delete the user
         await UsersModel.deleteOne({ username: req.params.username });
 
-        // Respond with success
         res.status(200).json({ message: "User deleted successfully", username: userToDelete.username });
     } catch (err) {
         console.error(err);
@@ -185,8 +200,18 @@ async function login(req, res, next) {
     try {
         const { username, password } = req.body;
 
-        if (!username || !password) {
-            return res.status(400).json({ message: "Username and password are required" });
+        if (typeof username !== 'string' || username.trim() === '') {
+            return res.status(400).json({ message: "Invalid username: must be a non-empty string" });
+        }
+        if (username.length > 20) {
+            return res.status(400).json({ message: 'Username cannot be longer than 20 characters' });
+        }
+
+        if (typeof password !== 'string' || password.trim() === '') {
+            return res.status(400).json({ message: "Invalid password: must be a non-empty string" });
+        }
+        if (password.length > 25) {
+            return res.status(400).json({ message: 'Password cannot be longer than 25 characters' });
         }
 
         const user = await UsersModel.findOne({ username });
@@ -198,8 +223,9 @@ async function login(req, res, next) {
         if (password !== user.password) {
             return res.status(401).json({ message: "Invalid password" });
         }
+
         const sessionKey = new mongoose.Types.ObjectId();
-        const sessionExpiry = Date.now() + 60 * 60 * 1000; // 1 hour session expiry
+        const sessionExpiry = Date.now() + 60 * 60 * 1000;
         user.session = {
             key: sessionKey,
             expiry: sessionExpiry,
