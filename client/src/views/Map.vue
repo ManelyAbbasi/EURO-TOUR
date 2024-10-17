@@ -519,7 +519,7 @@ export default {
   methods: {
     async fetchCitiesInSystem() {
       try {
-        const response = await Api.get('/cities')
+        const response = await Api.get('/api/cities')
         if (response.data && response.data.cities) {
           this.citiesInSystem = response.data.cities
         } else {
@@ -531,7 +531,7 @@ export default {
     },
     async loadCities() {
       try {
-        const response = await Api.get('/cities')
+        const response = await Api.get('/api/cities')
         this.citiesInSystem = response.data
       } catch (error) {
         console.error('Error loading cities:', error)
@@ -543,7 +543,7 @@ export default {
     },
     async checkIfAdmin() {
       try {
-        const response = await Api.get('/admin/check-admin', {
+        const response = await Api.get('/api/admin/check-admin', {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }
@@ -597,7 +597,7 @@ export default {
     async editCity(cityId) {
       this.showCityPopup = false
       try {
-        const response = await Api.get(`/cities/${cityId}`, {
+        const response = await Api.get(`/api/cities/${cityId}`, {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }
@@ -634,7 +634,7 @@ export default {
         return
       }
       try {
-        const response = await Api.delete(`/admin/cities/${cityId}`, {
+        const response = await Api.delete(`/api/admin/cities/${cityId}`, {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }
@@ -679,7 +679,7 @@ export default {
 
       try {
         if (this.isEditing) {
-          const response = await Api.put(`cities/${this.editCityId}`, cityData, {
+          const response = await Api.put(`/api/cities/${this.editCityId}`, cityData, {
             headers: {
               'x-auth-token': localStorage.getItem('x-auth-token')
             }
@@ -690,7 +690,7 @@ export default {
             this.loadCities()
           }
         } else {
-          const response = await Api.post('/cities', cityData, {
+          const response = await Api.post('/api/cities', cityData, {
             headers: {
               'x-auth-token': localStorage.getItem('x-auth-token')
             }

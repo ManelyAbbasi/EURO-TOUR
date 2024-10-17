@@ -145,7 +145,7 @@ export default {
   },
   methods: {
     getMessage() {
-      Api.get('/')
+      Api.get('/api/')
         .then((response) => {
           this.message = response.data.message
         })

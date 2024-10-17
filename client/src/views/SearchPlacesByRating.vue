@@ -268,7 +268,7 @@ export default {
         if (this.activeMaxRating) params.maxRating = this.activeMaxRating
         if (this.activeSort) params.sortByRating = this.activeSort
 
-        const response = await Api.get('/places', { params })
+        const response = await Api.get('/api/places', { params })
 
         if (response.data && response.data.placesToVisit) {
           this.places = response.data.placesToVisit

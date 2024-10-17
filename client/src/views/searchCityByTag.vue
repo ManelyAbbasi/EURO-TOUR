@@ -173,7 +173,7 @@ export default {
           tags: this.selectedTags.length ? this.selectedTags.join(',') : undefined
         }
 
-        const response = await Api.get('/cities', { params })
+        const response = await Api.get('/api/cities', { params })
         if (response.data && response.data.cities) {
           this.cities = response.data.cities
         } else {

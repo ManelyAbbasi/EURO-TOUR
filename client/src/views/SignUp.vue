@@ -108,7 +108,7 @@ export default {
         }
 
         console.log('User object:', user)
-        const response = await Api.post('/users', user)
+        const response = await Api.post('/api/users', user)
         console.log('response', response)
         console.log('header', response.headers)
         localStorage.setItem('x-auth-token', response.headers['x-auth-token'])

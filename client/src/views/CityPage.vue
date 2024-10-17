@@ -167,6 +167,7 @@ export default {
         '18+'
       ],
       selectedTags: [],
+      placesToVisitLink: '', // New property to store the link to places to visit
       loggedInStatus: !!localStorage.getItem('x-auth-token') // Reactive property for login status
     }
   },
@@ -182,9 +183,12 @@ export default {
     async getCityDetails() {
       try {
         const cityId = this.$route.params.cityid
-        const response = await Api.get(`/cities/${cityId}`)
-        if (response.data && response.data._id) {
-          this.city = { ...response.data }
+        const response = await Api.get(`/api/cities/${cityId}`)
+        if (response.data && response.data.city) {
+          this.city = { ...response.data.city }
+
+          this.placesToVisitLink = response.data.links.placesToVisit
+          await this.getPlaces()
         }
       } catch (error) {
         console.error('Error fetching city details:', error)
@@ -192,8 +196,7 @@ export default {
     },
     async getPlaces() {
       try {
-        const cityId = this.$route.params.cityid
-        const response = await Api.get(`/cities/${cityId}/placesToVisit`)
+        const response = await Api.get(this.placesToVisitLink)
         if (Array.isArray(response.data)) {
           this.placesToVisit = response.data
         }
@@ -206,12 +209,12 @@ export default {
       if (!confirmed) return
       try {
         const cityId = this.$route.params.cityid
-        const response = await Api.delete(`/cities/${cityId}/placesToVisit/${address}`, {
+        const response = await Api.delete(`/api/cities/${cityId}/placesToVisit/${address}`, {
           headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
         })
         if (response.status === 200) {
           this.placesToVisit = this.placesToVisit.filter(place => place.address !== address)
-          await Api.delete(`/places/${address}`, {
+          await Api.delete(`/api/places/${address}`, {
             headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
           })
           alert('Place deleted successfully')
@@ -242,7 +245,7 @@ export default {
         tags: this.selectedTags
       }
       try {
-        const response = await Api.post(`/cities/${cityId}/placesToVisit`, placeData, {
+        const response = await Api.post(`/api/cities/${cityId}/placesToVisit`, placeData, {
           headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
         })
         if (response.status === 201) {
@@ -256,7 +259,7 @@ export default {
     },
     async checkIfAdmin() {
       try {
-        const response = await Api.get('/admin/check-admin', {
+        const response = await Api.get('/api/admin/check-admin', {
           headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
         })
         this.isAdmin = response.data.isAdmin

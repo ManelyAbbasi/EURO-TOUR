@@ -115,7 +115,15 @@ async function getOneCity(req, res) {
         if (!city) {
             return res.status(404).json({ message: "City not found" });
         }
-        res.status(200).json(city); 
+
+        const links = {
+            placesToVisit: `/api/cities/${cityId}/placesToVisit`, // Link to places to visit in this city
+        };
+
+        res.status(200).json({
+            city,
+            links
+        }); 
     } catch (err) {
         res.status(500).json({ error: 'An error occurred while fetching the city.' }); 
     }

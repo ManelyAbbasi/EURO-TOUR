@@ -70,7 +70,7 @@ export default {
             password: this.password
           }
 
-          const response = await Api.post('/users/login', userCredentials)
+          const response = await Api.post('/api/users/login', userCredentials)
 
           const authToken = response.headers['x-auth-token']
           if (authToken) {
