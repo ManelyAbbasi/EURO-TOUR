@@ -42,7 +42,12 @@
           <div id="place-slide">
             <div v-for="place in paginatedPlaces" :key="place.placeName" class="place-item">
               <div class="detail-about-place">
-                <span class="slide-title">{{ place.placeName }}</span>
+                <div class="slide-title-wrapper">
+                  <span class="slide-title">{{ place.placeName }}</span>
+                  <button class="edit-placename-button" v-if="isAdmin" @click="editPlaceName()">
+                    <i class="fa-solid fa-i-cursor fa-beat-fade" style="color: #bc672a;"></i>
+                  </button>
+                </div>
                 <div class="star-rating">
                   <i v-for="n in Math.floor(place.rating)" :key="n" class="fa-solid fa-star" style="color: #bc672a;"></i>
                   <i v-for="n in 5 - Math.floor(place.rating)" :key="'empty-' + n" class="fa-regular fa-star" style="color: #bc672a;"></i>
@@ -114,8 +119,12 @@ export default {
       loggedInStatus: !!localStorage.getItem('x-auth-token'), // Reactive property for login status
       rows: 100,
       currentPage: 1,
-      perPage: 1
+      perPage: 1,
+      isAdmin: false
     }
+  },
+  async created() {
+    await this.checkIfAdmin() // Check if the user is an admin when the component is created
   },
   computed: {
     isLoggedIn() {
@@ -161,6 +170,16 @@ export default {
         .catch(error => {
           this.message = error
         })
+    },
+    async checkIfAdmin() {
+      try {
+        const response = await Api.get('/admin/check-admin', {
+          headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
+        })
+        this.isAdmin = response.data.isAdmin
+      } catch (error) {
+        console.error('Error checking admin status:', error)
+      }
     },
     logout() {
       // Remove the authentication token from localStorage
@@ -431,6 +450,24 @@ a img {
 .top-icon a i{
     font-size: 2rem;
     color: #045768;
+}
+
+.slide-title-wrapper{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+
+.edit-placename-button {
+  border: none;
+  background-color: #edf7fb;
+  margin-right: 2rem;
+  margin-top: 0.5rem;
+}
+
+.edit-placename-button i {
+  font-size: 1.7rem;
 }
 
 .slide-title{
