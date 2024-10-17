@@ -53,6 +53,7 @@
         </p>
       </div>
     </div>
+
     <div class="home-left-side-panel">
       <!-- map -->
       <EuroMap class="euromap" />
@@ -117,6 +118,7 @@
         <a href="#"><i class="fa-solid fa-caret-up"></i></a>
       </div>
     </footer>
+
   </div>
 </template>
 
@@ -208,18 +210,15 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
 
 .home-body-container{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    list-style-type: none;
-    text-decoration: none;
-    border: none;
-    outline: none;
-    font-family: "Lexend Deca", sans-serif;
-    color: #bc672a;
-}
-
-.home-body-container{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style-type: none;
+  text-decoration: none;
+  border: none;
+  outline: none;
+  font-family: "Lexend Deca", sans-serif;
+  color: #bc672a;
   display: flex;
   flex-wrap: wrap;
   background-color: #42515e;
@@ -304,8 +303,6 @@ li.dropdown-item.logout {
   grid-template-columns: 1fr 2fr;
   grid-gap: 20px;  /* Optional: Add some space between columns */
   padding: 7rem 2rem;
-  padding-left: 7rem;
-  padding-right: 7rem;
   width: 100%;
   align-content: center;
 }
@@ -336,10 +333,16 @@ li.dropdown-item.logout {
     padding: 2rem 9% 1rem;
 }
 
-.get-to-know-wrapper h2, .get-to-know-wrapper-in h2 {
+.get-to-know-wrapper-in h2 {
     margin-bottom: 3rem;
     margin-left: 23rem;
     margin-right: 20rem;
+    font-size: 3rem;
+}
+
+.get-to-know-wrapper h2 {
+    margin-bottom: 3rem;
+    margin-left: 25rem;
     font-size: 3rem;
 }
 
@@ -452,11 +455,6 @@ li.dropdown-item.logout {
   }
 }
 
-.welcome-text {
-  font-size: 2rem;
-  border: 2rem;;
-}
-
 .euromap{
   width: 100%
 }
@@ -514,6 +512,9 @@ li.dropdown-item.logout {
         flex-direction: column;
         display: flex;
     }
+    .home-layout-wrapper{
+      max-width: 768px;
+    }
     .home-right-side-panel{
       margin: 11rem 0 0 0;
     }
@@ -547,32 +548,62 @@ li.dropdown-item.logout {
         flex-wrap: wrap;
         align-items: center;
     }
+
     .euro-tour-header{
         flex-direction: column;
         gap: 2rem;
     }
+
+    .home-layout-wrapper{
+      max-width: 1200px;
+    }
+
     .home-layout-wrapper,
     .get-to-know-wrapper{
         flex-direction: column;
         display: flex;
     }
+
     .home-right-side-panel{
       margin: 11rem 0 0 0;
     }
-    .welcome-back-container p{
-      display: flex;
-      justify-content: center;
-    }
+
     .home-layout-wrapper, .get-to-know-wrapper-in {
     width: 120%;
     align-content: center;
-  }
+    }
+
     .home-layout-wrapper p{
         font-size: 2.5rem;
     }
+
     .home-layout-wrapper h1{
         font-size: 5rem;
     }
+
+    .welcome-container p {
+      font-size: 2rem;
+    }
+
+    .welcome-back-container {
+    padding: 3rem 2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    display: flex;
+    flex-direction: column;   /* Stack items vertically */
+    text-align: center;       /* Center the text within the container */
+    margin-bottom: 0rem;
+   }
+
+  .welcome-back-container h1 {
+    font-size: 4rem;
+  }
+
+  .welcome-back-container p{
+      display: flex;
+      justify-content: center;
+    }
+
     .get-to-know-container-in .get-to-know-box-in{
     background-color: #8FC6DF;
     padding: 2rem 2rem 2rem;
@@ -581,25 +612,15 @@ li.dropdown-item.logout {
     transition: all 0.5s;
     height: 44.5rem;
     border: 3px solid #045768;
-}
+    }
+
   .get-to-know-wrapper-in h2{
       margin-bottom: 3rem;
       margin-left: 18rem;
       margin-right: 18rem;
       font-size: 2.5rem;
   }
-  .welcome-back-container {
-    padding: 3rem 2rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    display: flex;
-    flex-direction: column;   /* Stack items vertically */
-    text-align: center;       /* Center the text within the container */
-    margin-bottom: 0rem;
-  }
-  .welcome-back-container h1 {
-    font-size: 4rem;
-  }
+
 }
 
 </style>
