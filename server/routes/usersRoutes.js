@@ -10,8 +10,6 @@ router.post('/', (req, res, next) => {
     next();
 }, usersControllers.createUser);
 
-router.post('/:username/favorites', usersControllers.addToFavorites);
-
 router.put('/:username', usersControllers.updateUser);
 
 router.delete('/:username', usersControllers.deleteOneUser);
@@ -22,5 +20,6 @@ router.delete('/:username/favorites', usersControllers.removeFromFavorites);
 
 router.get('/:username/favorites', usersControllers.getFavorites);
 
+router.post('/:username/favorites', usersControllers.addToFavorites);
 
 module.exports = router;
