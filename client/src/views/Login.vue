@@ -13,6 +13,9 @@
 
     <!-- Right side: Form with dark blue background -->
     <div class="right-side">
+      <!-- Add the image element you want to display for small screens -->
+    <img src="@/assets/vertical-logo.png" alt="Mobile Logo" class="mobile-logo-img" draggable="false" />
+
       <div class="container">
         <!-- Container for the form -->
         <div class="form-entries">
@@ -128,13 +131,16 @@ export default {
 .logo-img {
   width: 80%;
   max-width: 500px;
-  margin-top: 30%;
+  margin-top: 40%;
   margin-left: 9%;
+}
+
+.mobile-logo-img {
+  display: none;
 }
 
 .row-form {
   display: flex;
-
   align-items: center;
   flex-direction: column;
 }
@@ -215,6 +221,65 @@ button:active[disabled] {
   font-family: 'Lexend Deca', sans-serif;
   font-size: 12px;
   margin-left: 13rem;
+}
+
+@media screen and (max-width: 768px) {
+  .split-container {
+    flex-direction: column; /* Stack the content vertically */
+  }
+
+  .left-side {
+    display: none; /* Hide the left side */
+  }
+
+  .right-side {
+    background-color: #759CAB;
+  }
+
+  .container {
+    margin-bottom:10rem;
+  }
+
+  /* Display the image on small screens */
+  .mobile-logo-img {
+    display: block;
+    width: 40%; /* Adjust width */
+    margin-bottom: 4rem;
+  }
+
+  .input {
+  color: #0c556a;
+  }
+
+  .btn {
+    color: #EDF7FB;
+    font-size: 2.5vh;
+    border: #0c556a;
+    background-color: #0c556a;
+  }
+
+.btn:disabled {
+  border: 2px solid #0c556a;
+  background-color: #759CAB;
+}
+
+.create-account-container {
+  color: #0c556a;
+}
+
+.create-account-link {
+  color: #0c556a;
+}
+
+.create-account-link:hover {
+  color: #EDF7FB;
+}
+}
+
+@media screen and (max-width: 1200px){
+  .logo-img {
+  margin-top: 50%;
+}
 }
 
 </style>
