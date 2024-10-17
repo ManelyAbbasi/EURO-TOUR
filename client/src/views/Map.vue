@@ -396,8 +396,10 @@
     <ul>
       <li v-for="city in filteredCities" :key="city._id || city.cityName">
         {{ city.cityName }}
+        <admin-button>
         <button class="edit-button" v-if="isAdmin && city._id !== 'no-cities'" @click="editCity(city._id)">Edit</button>
         <button class="delete-button" v-if="isAdmin && city._id !== 'no-cities'" @click="deleteCity(city._id)">Delete</button>
+      </admin-button>
       </li>
     </ul>
   </div>
@@ -751,8 +753,8 @@ svg path {
   cursor: default;
 }
 .form-layout {
-  display: flex; /* Flexbox for layout */
-  justify-content: space-between; /* Space between left and right sections */
+  display: flex;
+  justify-content: space-between;
 }
 
 .form-left {
@@ -761,15 +763,15 @@ svg path {
 
 .form-right {
   width: 35%;
-  padding-left: 20px; /* Space between left and right sections */
+  padding-left: 20px;
 }
-/* Style for the form inputs */
+
 input[type="text"], textarea {
-  width: calc(100% - 20px); /* Full width minus padding */
-  padding: 10px; /* Padding for input fields */
-  margin: 10px 0; /* Margin between fields */
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin: 10px 0;
   border: 1px solid #ccc;
-  border-radius: 4px; /* Rounded corners */
+  border-radius: 4px;
 }
 
 input[type='checkbox'] {
@@ -784,11 +786,11 @@ input[type='checkbox'] {
 .tooltip {
   position: absolute;
   background-color: #555;
-  color: #fff; /* Text color */
+  color: #fff;
   text-align: center;
   border-radius: 4px;
   padding: 5px;
-  z-index: 10; /* Ensure it's above other elements */
+  z-index: 10;
   transition: opacity 0.3s;
   opacity: 0.8;
   pointer-events: none;
@@ -801,18 +803,7 @@ input[type='checkbox'] {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.7);
-  z-index: 9; /* Place it above other content */
-}
-
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 9; /* Place it above other content */
-index: 9; /* Place it above other content */
+  z-index: 9;
 }
 
 .city-popup {
@@ -834,12 +825,14 @@ index: 9; /* Place it above other content */
   padding: 0;
   margin: 0;
   font-size: 1.2rem;
-
 }
 
 .popup-body li{
   border-top: 1px solid #ddd;
   margin-top: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .popup-body {
@@ -850,16 +843,17 @@ index: 9; /* Place it above other content */
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /* Center the message */
+  transform: translate(-50%, -50%);
   background-color: #fff;
   color: #BC672A;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  z-index: 10; /* Place above the overlay */
+  z-index: 10;
   padding: 20px;
   text-align: center;
   width: 300px;
 }
+
 .popup-footer {
   text-align: center;
   padding: 10px;
@@ -897,12 +891,13 @@ index: 9; /* Place it above other content */
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   color:#045768;
   z-index: 10;
-  width: 650px;
+  margin-right: -25rem;
+  width: 900px;
   max-width: 90%;
   height:630px;
   max-height: 90vh;
   padding: 20px;
-  overflow-y: auto; /* Allows scrolling if the content is too long */
+  overflow-y: auto;
   opacity: 0;
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
@@ -941,12 +936,12 @@ index: 9; /* Place it above other content */
 .new-city-popup input[type="text"]:focus,
 .new-city-popup textarea:focus,
 #rating:focus {
-  border-color: #BC672A; /* Darker shade on focus */
-  outline: none; /* Remove default outline */
+  border-color: #BC672A;
+  outline: none;
 }
 
 input[type="text"] {
-  width: calc(100% - 20px); /* Full width minus padding */
+  width: calc(100% - 20px);
   padding: 10px;
   margin: 10px 0;
   border: 1px solid #ccc;
@@ -954,7 +949,7 @@ input[type="text"] {
 }
 
 .new-city-popup form button[type="submit"] {
-  align-self: flex-end; /* Align the submit button to the right */
+  align-self: flex-end;
   background-color: #BC672A;
   color: white;
   border: none;
@@ -965,7 +960,7 @@ input[type="text"] {
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-top: -30px;
-  margin-right: 4rem;
+  margin-right: 8.5rem;
 }
 
 .new-city-popup form button[type="submit"]:hover {
@@ -999,7 +994,6 @@ input[type="text"] {
   transition: background-color 0.3s ease;
   margin-top: -10px;
   margin-right: 10px;
-  margin-left: 200px;
 }
 
 .delete-button {
@@ -1015,4 +1009,29 @@ input[type="text"] {
   margin-top: 10px;
   margin-right: 10px;
 }
+
+@media screen and (max-width: 768px) {
+  .new-city-popup {
+    max-height: 100vh;
+    margin-right: -25rem;
+    width: 900px;
+    max-width: 90%;
+  }
+  .new-city-popup form button[type="submit"] {
+  margin-right: 10rem;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .new-city-popup {
+    max-height: 100vh;
+    margin-right: -25rem;
+    width: 900px;
+    max-width: 90%;
+  }
+  .new-city-popup form button[type="submit"] {
+  margin-right: 10rem;
+  }
+}
+
 </style>
