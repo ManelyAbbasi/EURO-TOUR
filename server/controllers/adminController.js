@@ -15,28 +15,41 @@ async function patchAdmin(req, res, next) {
         if (req.body.username !== req.params.username && !req.body.isAdmin) {
             return res.status(403).json({ "message": "You are not authorized to update this user." });
         }
-
+    
+        if (typeof password !== 'string' || password.trim() === '') {
+            return res.status(400).json({ message: 'Invalid password: must be a non-empty string' });
+        }
         user.password = req.body.password || user.password;
-        await user.save(); // Save the updated user
+        await user.save();
 
         res.status(200).json(user); 
     } catch (err) {
-        next(err); // Pass the error to the next middleware
+        next(err);
     }
 }
 
 async function createAdmin(req, res, next) {
     try {
-        const existingAdmin = await adminsSchema.findOne({ username: req.body.username });
+        const { username, password } = req.body;
+
+        const existingAdmin = await adminsSchema.findOne({ username });
 
         if (existingAdmin) {
             return res.status(400).json({ message: 'User with this username already exists' });
         }
-        if (typeof req.body.username !== 'string' || req.body.username.trim() === '') {
-            return res.status(400).json({ "message": "Invalid username: must be a non-empty string" });
+
+        if (typeof username !== 'string' || username.trim() === '') {
+            return res.status(400).json({ message: 'Invalid username: must be a non-empty string' });
         }
-        if (typeof req.body.password !== 'string' || req.body.password.trim() === '') {
-            return res.status(400).json({ "message": "Invalid password: must be a non-empty string" });
+        if (username.length > 20) {
+            return res.status(400).json({ message: 'Username cannot be longer than 20 characters' });
+        }
+
+        if (typeof password !== 'string' || password.trim() === '') {
+            return res.status(400).json({ message: 'Invalid password: must be a non-empty string' });
+        }
+        if (password.length > 25) {
+            return res.status(400).json({ message: 'Password cannot be longer than 25 characters' });
         }
 
         const admin = new adminsSchema(req.body);
@@ -45,7 +58,7 @@ async function createAdmin(req, res, next) {
     } catch (err) {
         next(err);
     }
-};
+}
 
 async function deletePlace(req, res) {
     const address = req.params.address;
@@ -121,4 +134,3 @@ module.exports ={
     checkIfAdmin,
     createAdmin
 };
-   

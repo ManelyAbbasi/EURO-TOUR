@@ -1,30 +1,26 @@
-// Imports the mongoose library
 var mongoose = require('mongoose');
-
-// Extracts the Schema constructor from Mongoose
 var Schema = mongoose.Schema;
 
-// New schema is being defined
 var adminsSchema = new Schema({
-    username: { 
-        type: String, 
-        required: true, 
-        unique: true 
-    }, 
-    password: { 
-        type: String 
+    username: {
+        type: String,
+        required: true,
+        unique: true
     },
-    isAdmin: { 
-        type: Boolean, 
-        default: true 
+    password: {
+        type: String
+    },
+    isAdmin: {
+        type: Boolean,
+        default: true
     },
     session: {
         key: {
             type: mongoose.SchemaTypes.ObjectId,
-            required: true, 
+            required: true,
             unique: true,
             sparse: true
-        }, 
+        },
         expiry: {
             type: Date,
             required: true
