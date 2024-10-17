@@ -598,7 +598,7 @@ a img {
   width: 650px; /* Increased width */
   max-width: 90%; /* Ensures the popup fits within smaller screens */
   height:630px;
-  max-height: 90vh; /* Ensures the popup doesn't go off the screen */
+  max-height: 100vh; /* Ensures the popup doesn't go off the screen */
   padding: 20px;
   overflow-y: auto; /* Allows scrolling if the content is too long */
   opacity: 0;
@@ -626,10 +626,9 @@ a img {
 
 #rating {
   width: 50%; /* Set the width to 100% of its container */
-  margin-left: 1rem;
   border-radius:4px;
   padding-left: 5px; /* Add left padding to text fields as well */
-  border: 1px solid #555;
+  border: 1px solid #ccc;
 }
 
 /* Style for tags */
@@ -663,12 +662,17 @@ a img {
 }
 
 /* Style for the form inputs */
-input[type="text"] {
+input[type="text"],
+input[type="textarea"] {
   width: calc(100% - 20px); /* Full width minus padding */
   padding: 10px; /* Padding for input fields */
   margin: 10px 0; /* Margin between fields */
   border: 1px solid #ccc; /* Light grey border */
   border-radius: 4px; /* Rounded corners */
+}
+
+input[type='checkbox'] {
+    accent-color: #BC672A;
 }
 
 .new-place-popup form button[type="submit"] {

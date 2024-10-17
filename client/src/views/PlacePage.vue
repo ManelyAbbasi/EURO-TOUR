@@ -46,7 +46,11 @@
         <div class="tags-wrapper">
           <p><strong class="heading">Tags:</strong></p>
           <div class="tag-container">
-            <div v-for="tag in place.tags" :key="tag" class="tag-bubble">{{ tag }}</div>
+            <div
+              v-for="tag in place.tags"
+              :key="tag"
+              class="tag-bubble">
+              {{ tag }}</div>
           </div>
         </div>
         <div class="main-places-link-wrapper">
@@ -592,9 +596,10 @@ a img {
 /* Styling for the Edit Place Form */
 .edit-place-popup {
   position: sticky;
-  top: 0;
+  margin-top: -20rem;
   left: 50%;
-  transform: translate(-50%, 0);
+  top: 0;
+  transform: translate(-50%, -50%);
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
@@ -611,15 +616,70 @@ a img {
 /* Show the popup with opacity */
 .edit-place-popup.show {
   opacity: 1; /* Fully visible */
-  transform: translate(-50%, 0) scale(1.05); /* Slightly scale up on appearance */
+  transform: translate(-45%, -140%) scale(1.05); /* Slightly scale up on appearance */
 }
 
 /* Ensure the popup header has consistent styling */
 .popup-header {
+  position: sticky;
+  top: 0;
+  padding: 1px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  z-index: 2; /* Increased z-index to ensure it stays above the content */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 1rem;
+}
+
+input[type='checkbox'] {
+    accent-color: #BC672A;
+}
+
+#rating {
+  width: 50%; /* Set the width to 100% of its container */
+  border-radius:4px;
+  padding-left: 5px; /* Add left padding to text fields as well */
+  border: 1px solid #ccc;
+}
+
+/* Style for tags */
+.tags label {
+  display: block; /* Stack tags vertically */
+  margin: 4px 0; /* Margin for spacing between tags */
+  font-size: 0.8rem;
+}
+
+.tags{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0.2rem;
+}
+
+.form-layout {
+  display: flex; /* Flexbox for layout */
+  justify-content: space-between; /* Space between left and right sections */
+}
+
+/* Left side of the form */
+.form-left {
+  width: 60%; /* Take up 60% of the width */
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.submit-wrapper{
+  display: flex;
+  justify-content: center;
+}
+
+/* Right side of the form */
+.form-right {
+  width: 35%; /* Take up 35% of the width */
+  padding-left: 20px; /* Space between left and right sections */
 }
 
 /* Style for the form content */
@@ -630,8 +690,7 @@ a img {
 
 .popup-body textarea {
   width: 100%;
-  min-height: 100px;
-  margin-bottom: 1rem;
+  min-height: 225px;
   padding: 10px;
   border: 1px solid #ccc; /* Light grey border */
   border-radius: 4px; /* Rounded corners */
@@ -639,9 +698,26 @@ a img {
 }
 
 /* Change border color on focus */
-.popup-body textarea:focus {
+.edit-place-popup input[type="text"]:focus,
+.popup-body textarea:focus,
+#rating:focus {
   border-color: #BC672A; /* Darker shade on focus */
   outline: none; /* Remove default outline */
+}
+
+/* Input Fields Styles */
+.edit-place-popup input[type="text"],
+.edit-place-popup textarea,
+#rating {
+  color: #a7561c;
+}
+
+input[type="text"] {
+  width: calc(100% - 20px); /* Full width minus padding */
+  padding: 10px; /* Padding for input fields */
+  margin: 10px 0; /* Margin between fields */
+  border: 1px solid #ccc; /* Light grey border */
+  border-radius: 4px; /* Rounded corners */
 }
 
 .popup-body button {
@@ -655,6 +731,24 @@ a img {
   cursor: pointer;
   transition: background-color 0.3s ease;
   align-self: flex-end; /* Align button to the right */
+}
+
+.edit-place-popup form button[type="submit"] {
+  background-color: #BC672A;
+  color: white;
+  border: none;
+  padding: 10px 40px;
+  text-align: center;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: -30px; /* Adjust this value to move it upwards */
+  margin-right: 4rem;
+}
+
+.edit-place-popup form button[type="submit"]:hover {
+  background-color: #a7561c; /* Darker on hover */
 }
 
 .popup-body button:hover {
