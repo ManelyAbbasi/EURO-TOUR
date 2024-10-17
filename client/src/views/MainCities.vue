@@ -34,10 +34,10 @@
 
             <!-- display new text for each slide -->
               <div class="pagination-wrapper">
-              <div class="mt-3">
-                <b-pagination v-model="currentPage" pills :total-rows="cities.length" :per-page="perPage"></b-pagination>
+                <div class="mt-3">
+                  <b-pagination v-model="currentPage" pills :total-rows="cities.length" :per-page="perPage"></b-pagination>
+                </div>
               </div>
-            </div>
 
             <!-- City slide -->
       <div id="city-slide">
@@ -91,14 +91,14 @@
           </div>
       </main>
 
-<footer class="footer">
-  <div class="footer-text">
-    <p> &copy; 2024 copyright: eurotrip.com</p>
-  </div>
-  <div class="top-icon">
-    <a href="#"><i class="fa-solid fa-caret-up"></i></a>
-  </div>
-</footer>
+      <footer class="footer">
+        <div class="footer-text">
+          <p> &copy; 2024 copyright: eurotrip.com</p>
+        </div>
+        <div class="top-icon">
+          <a href="#"><i class="fa-solid fa-caret-up"></i></a>
+        </div>
+      </footer>
     </div>
   </template>
 
@@ -277,6 +277,7 @@ export default {
   grid-gap: 20px;
   padding: 9rem 9% 2rem;
   width: 100%;
+  justify-content: center;
 }
 
 .maincities-right-side-panel .maincities-left-side-panel {
@@ -289,7 +290,7 @@ export default {
   display: flex;
   flex-direction: row;
   background-color: #edf7fb;
-
+  min-width: 643px;
 }
 
 .facts-heading {
@@ -302,7 +303,7 @@ export default {
     flex-direction: column;
     display: flex;
     align-items: center;
-    min-width: 30vw;
+    min-width: 35vw;
 }
 
 .maincities-right-side-panel h2 {
@@ -513,13 +514,19 @@ a img {
 }
 
 @media screen and (max-width:1200px) {
-    html{
-        font-size: 55%;
-    }
     .navbar{
         width: 100%;
         display: flex;
         justify-content: space-evenly;
+    }
+    .maincities-left-side-panel{
+      min-width: 643px;
+    }
+    .maincities-right-side-panel{
+      min-width: 35vw;
+    }
+    .maincities-layout-wrapper{
+      justify-content: center;
     }
 
 }
@@ -545,6 +552,8 @@ a img {
     .maincities-layout-wrapper{
         flex-direction: column;
         display: flex;
+        min-width: 1200px;
+        justify-content: center;
     }
     .detail-about-city .slide-title{
       font-size: 3.5rem;
@@ -563,6 +572,17 @@ a img {
       display: flex;
       justify-content: end;
       margin-right: 2rem;
+    }
+    .maincities-left-side-panel{
+      min-width: 984px;
+      justify-content: center;
+
+    }
+    .maincities-right-side-panel{
+      width: 100%;
+      min-width: 984px;
+      justify-content: center;
+
     }
     .maincities-left-side-panel{
       margin: 9rem 0 2rem 0;
@@ -598,9 +618,6 @@ a img {
 }
 
 @media screen and (max-width:350px) {
-    .layout-wrapper img{
-        width: 90vw;
-    }
     .footer{
         flex-direction: column-reverse;
     }
