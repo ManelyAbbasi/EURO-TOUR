@@ -396,8 +396,10 @@
     <ul>
       <li v-for="city in filteredCities" :key="city._id || city.cityName">
         {{ city.cityName }}
+        <admin-button>
         <button class="edit-button" v-if="isAdmin && city._id !== 'no-cities'" @click="editCity(city._id)">Edit</button>
         <button class="delete-button" v-if="isAdmin && city._id !== 'no-cities'" @click="deleteCity(city._id)">Delete</button>
+      </admin-button>
       </li>
     </ul>
   </div>
@@ -823,12 +825,14 @@ input[type='checkbox'] {
   padding: 0;
   margin: 0;
   font-size: 1.2rem;
-
 }
 
 .popup-body li{
   border-top: 1px solid #ddd;
   margin-top: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .popup-body {
@@ -849,6 +853,7 @@ input[type='checkbox'] {
   text-align: center;
   width: 300px;
 }
+
 .popup-footer {
   text-align: center;
   padding: 10px;
@@ -989,7 +994,6 @@ input[type="text"] {
   transition: background-color 0.3s ease;
   margin-top: -10px;
   margin-right: 10px;
-  margin-left: 200px;
 }
 
 .delete-button {
