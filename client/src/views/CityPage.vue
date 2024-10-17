@@ -709,27 +709,17 @@ input[type='checkbox'] {
 }
 
 @media screen and (max-width:1200px) {
-    html{
-        font-size: 55%;
-    }
-}
-
-@media screen and (max-width: 991px){
-    section{
-        padding: 10rem 3% 2rem;
-    }
-    .euro-tour-header{
-        padding: 2rem 3%;
-    }
-    .footer{
-        padding: 2rem 3%;
-    }
-    .get-to-know-wrapper{
-        padding: 7rem;
+    .navbar{
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
     }
 }
 
 @media screen and (max-width: 768px){
+    .footer{
+        padding: 2rem 3%;
+    }
     .navbar{
         width: 100%;
         display: flex;
@@ -737,34 +727,82 @@ input[type='checkbox'] {
         flex-wrap: wrap;
         align-items: center;
     }
+    .navbar a{
+      font-size: 100%;
+    }
+    .navbar img{
+      max-width: 50%;
+    }
     .euro-tour-header{
         flex-direction: column;
-        gap: 2rem;
+        gap: 0.7rem;
+        padding: 0.5rem ;
     }
-    .layout-wrapper{
-        flex-direction: column;
-        display: flex;
+    .city-layout-wrapper{
+      margin: 12.5rem 2rem 4rem 2rem;
+      display: flex;
+      justify-content: center;
     }
-    .layout-wrapper p{
-        font-size: 2.5rem;
+    .places-wrapper{
+      width: 100%;
     }
-    .layout-wrapper h1{
-        font-size: 5rem;
+    .main-cities-link-wrapper{
+      justify-content: center;
+    }
+    .title-city{
+    font-size: 3rem;
     }
 }
 
-@media screen and (max-width:576px) {
-    html{
-        font-size: 50%;
-    }
+@media screen and (max-width:580px) {
+  .title-city{
+    font-size: 2rem;
+  }
+  .star-rating{
+    font-size: 2rem;
+  }
+  .heading{
+    font-size: 1.3rem;
+  }
+  .detail-text{
+    font-size: 1rem;
+  }
+  .tag-bubble{
+    margin: 8px;
+  }
+  .main-cities-link-wrapper a{
+    font-size: 1.3rem;
+  }
+  .admin-buttons button {
+    font-size: 1.3rem;
+  }
 }
 
 @media screen and (max-width:350px) {
-    .layout-wrapper img{
-        width: 90vw;
-    }
     .footer{
         flex-direction: column-reverse;
     }
+    .city-layout-wrapper{
+      margin: 1rem 1rem 1rem 1rem;
+      display: flex;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .euro-tour-header{
+      position: static;
+    }
+    .navbar a{
+      font-size: 80%;
+    }
+    .heading{
+      justify-content: center;
+      display: flex;
+    }
+    .detail-text {
+      text-align:center;
+    }
+    .main-cities-link-wrapper a{
+    font-size: 1rem;
+  }
 }
 </style>
