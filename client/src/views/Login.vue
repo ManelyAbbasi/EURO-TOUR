@@ -241,26 +241,11 @@ button:active[disabled] {
   }
 
   .btn {
-    color: #EDF7FB;
-    font-size: 2.5vh;
-    border: #759CAB;
-    background-color: #759CAB;
-    cursor: pointer;
-    border-radius: 0px;
     width: 30%;
-    font-family: 'Lexend Deca', sans-serif;
   }
 
   .input {
-    color: #759CAB;
-    font-size: 16px;
-    padding: 12px 20px;
-    font-family: 'Lexend Deca', sans-serif;
-    border: rgba(0, 0, 0, 0.301);
-    background-color: rgba(0, 0, 0, 0.301);
     width: 85%;
-    outline: none;
-    margin-top: 2%;
   }
 
   .create-account-container {
