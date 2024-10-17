@@ -531,14 +531,8 @@ li.dropdown-item.logout {
     }
 
     .get-to-know-container-in .get-to-know-box-in{
-    background-color: #8FC6DF;
     padding: 2rem 2rem 2rem;
-    border-radius: 2rem;
-    text-align: center;
-    transition: all 0.5s;
-    width: 100%;
     height: 44.5rem;
-    border: 3px solid #045768;
   }
 }
 
@@ -585,11 +579,6 @@ li.dropdown-item.logout {
 
     .welcome-back-container {
     padding: 3rem 2rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    display: flex;
-    flex-direction: column;   /* Stack items vertically */
-    text-align: center;       /* Center the text within the container */
     margin-bottom: 0rem;
    }
 
@@ -605,11 +594,8 @@ li.dropdown-item.logout {
     .get-to-know-container-in .get-to-know-box-in{
     background-color: #8FC6DF;
     padding: 2rem 2rem 2rem;
-    border-radius: 2rem;
-    text-align: center;
-    transition: all 0.5s;
     height: 44.5rem;
-    border: 3px solid #045768;
+    margin: 2rem;
     }
 
     .get-to-know-wrapper h2{
