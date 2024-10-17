@@ -107,7 +107,6 @@ async function updatePlace(req, res, next) {
     }
 }
 
-
 async function patchPlace(req, res) {
     try {
         if (!req.body.isAdmin) {
@@ -119,13 +118,21 @@ async function patchPlace(req, res) {
             return res.status(404).json({ message: "Place not found" });
         }
 
-        placesToVisit.content = req.body.content || placesToVisit.content;
+        if (req.body.placeName !== undefined) {
+            if (typeof req.body.placeName !== 'string' || req.body.placeName.trim() === "") {
+                return res.status(400).json({ message: "Invalid placeName: must be a non-empty string" });
+            }
+            if (req.body.placeName.length > 30) {
+                return res.status(400).json({ message: 'placeName cannot be longer than 30 characters' });
+            }
+            placesToVisit.placeName = req.body.placeName;
+        } else {
+            return res.status(400).json({ message: "placeName is required to update." });
+        }
+
         await placesToVisit.save();
         res.status(200).json(placesToVisit);
     } catch (err) {
-        if (err.name === 'ValidationError' && err.errors && err.errors.tags) {
-            return res.status(400).json({ message: "Invalid tag(s) provided. Please provide valid tags." });
-        }
         return res.status(500).next(err);
     }
 }
