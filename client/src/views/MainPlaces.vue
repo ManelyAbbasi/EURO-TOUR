@@ -1,5 +1,5 @@
 <template>
-    <div class="mainplaces-body-container">
+  <div class="mainplaces-body-container">
       <header class="euro-tour-header">
         <div class="logo-wrapper">
           <router-link to="/" class="logo">
@@ -33,37 +33,36 @@
           <div class="mainplaces-left-side-panel">
 
             <!-- display new text for each slide -->
-            <div class="pagination-wrapper">
-            <div class="mt-3">
-              <b-pagination v-model="currentPage" pills :total-rows="places.length" :per-page="perPage"></b-pagination>
+              <div class="pagination-wrapper">
+                <div class="mt-3">
+                  <b-pagination v-model="currentPage" pills :total-rows="places.length" :per-page="perPage"></b-pagination>
+                </div>
+            </div> <!-- end of pagination -->
+
+            <div id="place-slide">
+              <div v-for="place in paginatedPlaces" :key="place.placeName" class="place-item">
+                <div class="detail-about-place">
+                  <span class="slide-title">{{ place.placeName }}</span>
+                  <div class="star-rating">
+                    <i v-for="n in Math.floor(place.rating)" :key="n" class="fa-solid fa-star" style="color: #bc672a;"></i>
+                    <i v-for="n in 5 - Math.floor(place.rating)" :key="'empty-' + n" class="fa-regular fa-star" style="color: #bc672a;"></i>
+                    <span class="rating-text">{{ place.rating }}/5.0</span>
+                  </div>
+                  <div class="detail-item">
+                    <p><strong class="heading">City:</strong></p>
+                    <a :href="`/maincities/`" class="city-link">{{ place.city }}</a>
+                  </div>
+                  <div class="detail-item">
+                    <p><strong class="heading">Address:</strong></p>
+                    <p>{{ place.address }}</p>
+                  </div>
+                  <div class="read-more-wrapper">
+                    <router-link :to="`/place/${place.address}`" class="place-link">read more</router-link>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-
-          <div id="place-slide">
-            <div v-for="place in paginatedPlaces" :key="place.placeName" class="place-item">
-              <div class="detail-about-place">
-                <span class="slide-title">{{ place.placeName }}</span>
-                <div class="star-rating">
-                  <i v-for="n in Math.floor(place.rating)" :key="n" class="fa-solid fa-star" style="color: #bc672a;"></i>
-                  <i v-for="n in 5 - Math.floor(place.rating)" :key="'empty-' + n" class="fa-regular fa-star" style="color: #bc672a;"></i>
-                  <span class="rating-text">{{ place.rating }}/5.0</span>
-                </div>
-                <div class="detail-item">
-                  <p><strong class="heading">City:</strong></p>
-                  <a :href="`/maincities/`" class="city-link">{{ place.city }}</a>
-                </div>
-                <div class="detail-item">
-                  <p><strong class="heading">Address:</strong></p>
-                  <p>{{ place.address }}</p>
-                </div>
-                <div class="read-more-wrapper">
-                  <router-link :to="`/place/${place.address}`" class="place-link">read more</router-link>
-                </div>
-          </div>
-        </div>
-      </div>
-
-        </div>
+          </div> <!-- end of left side -->
 
           <div class="mainplaces-right-side-panel">
                 <!--search and trending-->
@@ -92,16 +91,16 @@
           </div>
       </main>
 
-<footer class="footer">
-  <div class="footer-text">
-    <p> &copy; 2024 copyright: eurotrip.com</p>
+      <footer class="footer">
+        <div class="footer-text">
+          <p> &copy; 2024 copyright: eurotrip.com</p>
+        </div>
+        <div class="top-icon">
+          <a href="#"><i class="fa-solid fa-caret-up"></i></a>
+        </div>
+      </footer>
   </div>
-  <div class="top-icon">
-    <a href="#"><i class="fa-solid fa-caret-up"></i></a>
-  </div>
-</footer>
-    </div>
-  </template>
+</template>
 
 <script>
 import { Api } from '@/Api'
@@ -275,6 +274,9 @@ export default {
   grid-gap: 20px;
   padding: 9rem 9% 2rem;
   width: 100%;
+  background-color: #42515e;
+  justify-content: center;
+
 }
 
 .mainplaces-right-side-panel .mainplaces-left-side-panel {
@@ -398,7 +400,7 @@ a img {
   color: #42515e;
 }
 
-.footer{
+footer{
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -531,12 +533,23 @@ a img {
         display: flex;
         justify-content: space-evenly;
     }
+    .mainplaces-left-side-panel{
+      min-width: 643px;
+    }
+    .mainplaces-right-side-panel{
+      min-width: 35vw;
+    }
+    .mainplaces-layout-wrapper{
+      min-width: 1200px;
+      justify-content: center;
+    }
+    footer{
+      min-width: 1200px;
+    }
+
 }
 
 @media screen and (max-width: 1024px){
-  #places-slide{
-    min-width: 680px;
-  }
 }
 
 @media screen and (max-width: 768px){
@@ -560,17 +573,20 @@ a img {
     .mainplaces-layout-wrapper{
         flex-direction: column;
         display: flex;
+        min-width: 1200px;
+        background-color: #42515E;
     }
-    .detail-about-place .slide-title{
+    .slide-title{
       font-size: 3.5rem;
     }
     .mainplaces-layout-wrapper p,
     .rating-text,
     .star-rating i,
-    .read-more-wrapper a{
+    .read-more-wrapper a,
+    .city-link{
         font-size: 2rem;
     }
-    .mainplaces-layout-wrapper .facts-heading{
+    .mainplaces-layout-wrapper .heading{
         font-size: 2.5rem;
         font-weight: 400;
     }
@@ -580,12 +596,23 @@ a img {
       margin-right: 2rem;
     }
     .mainplaces-left-side-panel{
+      min-width: 984px;
+      justify-content: center;
+    }
+    .mainplaces-right-side-panel{
+      width: 100%;
+      min-width: 984px;
+      justify-content: center;
+
+    }
+    .mainplaces-left-side-panel{
       margin: 9rem 0 2rem 0;
     }
     .mainplaces-left-side-panel,
     .mainplaces-right-side-panel{
       padding: 1.5rem 2rem;
     }
+    .mainplaces-right-side-panel h3,
     .mainplaces-right-side-panel h2{
       font-size: 3.5rem;
       padding: 0.5rem;
@@ -593,7 +620,7 @@ a img {
     .mainplaces-button-wrapper{
       margin: 2.5rem;
     }
-    h4.maincities-or {
+    h4.mainplaces-or {
       font-size: 2.5rem;
     }
     .mainplaces-button-wrapper a{
@@ -612,16 +639,7 @@ a img {
     }
 }
 
-@media screen and (max-width:576px) {
-    html{
-        font-size: 50%;
-    }
-}
-
 @media screen and (max-width:350px) {
-    .layout-wrapper img{
-        width: 90vw;
-    }
     .footer{
         flex-direction: column-reverse;
     }

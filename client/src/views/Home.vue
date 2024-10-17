@@ -99,14 +99,12 @@
 
       <section class="get-to-know-wrapper-in" v-if="isLoggedIn">
         <h2 class="home-heading">Weather warnings!</h2>
-        <div class="get-to-know-container-in">
           <!-- Conditionally Render "Why join us?" or Map -->
           <div class="get-to-know-box-in" v-if="isLoggedIn">
             <template v-if="isLoggedIn">
               <WeatherMap class="weather-map" />
             </template>
           </div>
-        </div>
       </section>
 
     </main>
@@ -331,6 +329,7 @@ li.dropdown-item.logout {
 .get-to-know-wrapper-in{
     min-height: 100vh;
     padding: 2rem 9% 1rem;
+    justify-content: center;
 }
 
 .get-to-know-wrapper-in h2 {
@@ -338,6 +337,7 @@ li.dropdown-item.logout {
     margin-left: 23rem;
     margin-right: 20rem;
     font-size: 3rem;
+    justify-content: center;
 }
 
 .get-to-know-wrapper h2 {
@@ -366,9 +366,9 @@ li.dropdown-item.logout {
     border: 3px solid #045768;
 }
 
-.get-to-know-container-in .get-to-know-box-in{
+.get-to-know-box-in{
     background-color: #8FC6DF;
-    padding: 2rem 2rem 2rem;
+    padding: 2rem;
     border-radius: 2rem;
     text-align: center;
     transition: all 0.5s;
@@ -386,12 +386,12 @@ li.dropdown-item.logout {
   max-height: 50rem;
 }
 
-.get-to-know-container .get-to-know-box:hover{
+.get-to-know-box:hover{
     border-color: #bc672a;
     transform: scale(1.03);
 }
 
-.get-to-know-container-in .get-to-know-box-in:hover{
+.get-to-know-box-in:hover{
     border-color: #bc672a;
     transform: scale(1.03);
 }
@@ -533,11 +533,10 @@ li.dropdown-item.logout {
         font-size: 5rem;
     }
 
-    .get-to-know-container-in .get-to-know-box-in{
-    padding: 2rem 2rem 2rem;
+  .get-to-know-box-in{
     max-height: 33rem;
    }
-   .get-to-know-container-in{
+   .get-to-know-box-in{
     margin-bottom: 10rem;
    }
 }
@@ -597,7 +596,7 @@ li.dropdown-item.logout {
       justify-content: center;
     }
 
-    .get-to-know-container-in .get-to-know-box-in{
+    .get-to-know-box-in{
     background-color: #8FC6DF;
     padding: 2rem 2rem 2rem;
     height: 44.5rem;
@@ -620,7 +619,6 @@ li.dropdown-item.logout {
       margin-right: 18rem;
       font-size: 2.5rem;
   }
-
 }
 
 </style>

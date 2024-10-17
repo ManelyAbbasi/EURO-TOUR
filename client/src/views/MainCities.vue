@@ -34,10 +34,10 @@
 
             <!-- display new text for each slide -->
               <div class="pagination-wrapper">
-              <div class="mt-3">
-                <b-pagination v-model="currentPage" pills :total-rows="cities.length" :per-page="perPage"></b-pagination>
+                <div class="mt-3">
+                  <b-pagination v-model="currentPage" pills :total-rows="cities.length" :per-page="perPage"></b-pagination>
+                </div>
               </div>
-            </div>
 
             <!-- City slide -->
       <div id="city-slide">
@@ -91,14 +91,14 @@
           </div>
       </main>
 
-<footer class="footer">
-  <div class="footer-text">
-    <p> &copy; 2024 copyright: eurotrip.com</p>
-  </div>
-  <div class="top-icon">
-    <a href="#"><i class="fa-solid fa-caret-up"></i></a>
-  </div>
-</footer>
+      <footer class="footer">
+        <div class="footer-text">
+          <p> &copy; 2024 copyright: eurotrip.com</p>
+        </div>
+        <div class="top-icon">
+          <a href="#"><i class="fa-solid fa-caret-up"></i></a>
+        </div>
+      </footer>
     </div>
   </template>
 
@@ -277,6 +277,7 @@ export default {
   grid-gap: 20px;
   padding: 9rem 9% 2rem;
   width: 100%;
+  justify-content: center;
 }
 
 .maincities-right-side-panel .maincities-left-side-panel {
@@ -524,6 +525,9 @@ a img {
     .maincities-right-side-panel{
       min-width: 35vw;
     }
+    .maincities-layout-wrapper{
+      justify-content: center;
+    }
 
 }
 
@@ -549,6 +553,7 @@ a img {
         flex-direction: column;
         display: flex;
         min-width: 1200px;
+        justify-content: center;
     }
     .detail-about-city .slide-title{
       font-size: 3.5rem;
