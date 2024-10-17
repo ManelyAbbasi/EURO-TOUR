@@ -349,6 +349,8 @@ export default {
   grid-gap: 20px;
   padding: 9rem 9% 2rem;
   width: 100%;
+  background-color: #42515e;
+  justify-content: center;
 }
 
 .mainplaces-right-side-panel .mainplaces-left-side-panel {
@@ -361,7 +363,7 @@ export default {
   display: flex;
   flex-direction: row;
   background-color: #edf7fb;
-
+  min-width: 643px;
 }
 
 .heading {
@@ -387,7 +389,7 @@ export default {
     flex-direction: column;
     display: flex;
     align-items: center;
-    min-width: 30vw;
+    min-width: 35vw;
 }
 
 .mainplaces-right-side-panel h2 {
@@ -599,23 +601,6 @@ a img {
   color: #42515E;
 }
 
-.tag-bubble{
-  background-color: #CAC4D0;
-  color: #edf7fb;
-  border-radius: 5px;
-  border: 3px solid white;
-  padding: 10px 30px;
-  margin: 12px;
-  font-size: 0.8rem;
-}
-
-.tag-container{
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-around;
-}
-
 /* FORM STYLINGS */
 form {
   display:flex;
@@ -684,27 +669,37 @@ input[type="text"] {
 }
 
 @media screen and (max-width:1200px) {
-    html{
-        font-size: 55%;
+    .navbar{
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
     }
+    .mainplaces-left-side-panel{
+      min-width: 643px;
+    }
+    .mainplaces-right-side-panel{
+      min-width: 35vw;
+    }
+    .mainplaces-layout-wrapper{
+      min-width: 1200px;
+      justify-content: center;
+    }
+    footer{
+      min-width: 1200px;
+    }
+
 }
 
-@media screen and (max-width: 991px){
-    section{
-        padding: 10rem 3% 2rem;
-    }
+@media screen and (max-width: 1024px){
+}
+
+@media screen and (max-width: 768px){
     .euro-tour-header{
         padding: 2rem 3%;
     }
     .footer{
         padding: 2rem 3%;
     }
-    .get-to-know-wrapper{
-        padding: 7rem;
-    }
-}
-
-@media screen and (max-width: 768px){
     .navbar{
         width: 100%;
         display: flex;
@@ -716,29 +711,76 @@ input[type="text"] {
         flex-direction: column;
         gap: 2rem;
     }
-    .layout-wrapper,
-    .get-to-know-wrapper{
+    .mainplaces-layout-wrapper{
         flex-direction: column;
         display: flex;
+        min-width: 1200px;
+        background-color: #42515E;
     }
-    .layout-wrapper p{
+    .slide-title{
+      font-size: 3.5rem;
+    }
+    .mainplaces-layout-wrapper p,
+    .rating-text,
+    .star-rating i,
+    .read-more-wrapper a,
+    .city-link{
+        font-size: 2rem;
+    }
+    .mainplaces-layout-wrapper .heading{
         font-size: 2.5rem;
+        font-weight: 400;
     }
-    .layout-wrapper h1{
-        font-size: 5rem;
+    .read-more-wrapper{
+      display: flex;
+      justify-content: end;
+      margin-right: 2rem;
     }
-}
+    .mainplaces-left-side-panel{
+      min-width: 984px;
+      justify-content: center;
+    }
+    .mainplaces-right-side-panel{
+      width: 100%;
+      min-width: 984px;
+      justify-content: center;
 
-@media screen and (max-width:576px) {
-    html{
-        font-size: 50%;
+    }
+    .mainplaces-left-side-panel{
+      margin: 9rem 0 2rem 0;
+    }
+    .mainplaces-left-side-panel,
+    .mainplaces-right-side-panel{
+      padding: 1.5rem 2rem;
+    }
+    .mainplaces-right-side-panel h3,
+    .mainplaces-right-side-panel h2{
+      font-size: 3.5rem;
+      padding: 0.5rem;
+    }
+    .mainplaces-button-wrapper{
+      margin: 2.5rem;
+    }
+    h4.mainplaces-or {
+      font-size: 2.5rem;
+    }
+    .mainplaces-button-wrapper a{
+      padding: 2rem;
+      font-size: 2rem;
+      min-width: 15rem;
+    }
+    .trending-place-wrapper{
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      justify-content: space-between;
+      min-width: 45rem;
+    }
+    .trending-place-wrapper img{
+      min-width: 10rem;
     }
 }
 
 @media screen and (max-width:350px) {
-    .layout-wrapper img{
-        width: 90vw;
-    }
     .footer{
         flex-direction: column-reverse;
     }
