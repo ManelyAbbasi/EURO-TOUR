@@ -897,7 +897,8 @@ index: 9; /* Place it above other content */
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   color:#045768;
   z-index: 10;
-  width: 650px;
+  margin-right: -25rem;
+  width: 900px;
   max-width: 90%;
   height:630px;
   max-height: 90vh;
@@ -965,7 +966,7 @@ input[type="text"] {
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-top: -30px;
-  margin-right: 4rem;
+  margin-right: 8.5rem;
 }
 
 .new-city-popup form button[type="submit"]:hover {
@@ -1015,4 +1016,29 @@ input[type="text"] {
   margin-top: 10px;
   margin-right: 10px;
 }
+
+@media screen and (max-width: 768px) {
+  .new-city-popup {
+    max-height: 100vh; /* Ensure it fits well within the viewport height */
+    margin-right: -25rem;
+    width: 900px;
+    max-width: 90%;
+  }
+  .new-city-popup form button[type="submit"] {
+  margin-right: 10rem;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .new-city-popup {
+    max-height: 100vh; /* Ensure it fits well within the viewport height */
+    margin-right: -25rem;
+    width: 900px;
+    max-width: 90%;
+  }
+  .new-city-popup form button[type="submit"] {
+  margin-right: 10rem;
+  }
+}
+
 </style>
