@@ -1,5 +1,5 @@
 <template>
-  <div class="mainplaces-body-container">
+    <div class="mainplaces-body-container">
       <header class="euro-tour-header">
         <div class="logo-wrapper">
           <router-link to="/" class="logo">
@@ -33,36 +33,49 @@
           <div class="mainplaces-left-side-panel">
 
             <!-- display new text for each slide -->
-              <div class="pagination-wrapper">
-                <div class="mt-3">
-                  <b-pagination v-model="currentPage" pills :total-rows="places.length" :per-page="perPage"></b-pagination>
-                </div>
-            </div> <!-- end of pagination -->
-
-            <div id="place-slide">
-              <div v-for="place in paginatedPlaces" :key="place.placeName" class="place-item">
-                <div class="detail-about-place">
-                  <span class="slide-title">{{ place.placeName }}</span>
-                  <div class="star-rating">
-                    <i v-for="n in Math.floor(place.rating)" :key="n" class="fa-solid fa-star" style="color: #bc672a;"></i>
-                    <i v-for="n in 5 - Math.floor(place.rating)" :key="'empty-' + n" class="fa-regular fa-star" style="color: #bc672a;"></i>
-                    <span class="rating-text">{{ place.rating }}/5.0</span>
-                  </div>
-                  <div class="detail-item">
-                    <p><strong class="heading">City:</strong></p>
-                    <a :href="`/maincities/`" class="city-link">{{ place.city }}</a>
-                  </div>
-                  <div class="detail-item">
-                    <p><strong class="heading">Address:</strong></p>
-                    <p>{{ place.address }}</p>
-                  </div>
-                  <div class="read-more-wrapper">
-                    <router-link :to="`/place/${place.address}`" class="place-link">read more</router-link>
-                  </div>
-                </div>
-              </div>
+            <div class="pagination-wrapper">
+            <div class="mt-3">
+              <b-pagination v-model="currentPage" pills :total-rows="places.length" :per-page="perPage"></b-pagination>
             </div>
-          </div> <!-- end of left side -->
+          </div>
+
+          <div id="place-slide">
+            <div v-for="place in paginatedPlaces" :key="place.placeName" class="place-item">
+              <div class="detail-about-place">
+                <div class="slide-title-wrapper">
+                  <span class="slide-title" v-if="!showEditForm" >{{ place.placeName }}</span>
+                  <input type="text" id="placeName" v-model="editPlaceName" required v-else/>
+                  <div class="edit-placename-popup" :class="{ show: showEditForm }" v-if="showEditForm">
+                      <form @submit.prevent="submitNewPlaceName">
+                        <input type="text" id="placeName" v-model="editPlaceName" required class="hidden-input"/>
+                        <button type="submit">Save</button>
+                        <button class="close-button" @click="closeEditForm">X</button>
+                      </form>
+                  </div>
+                  <button class="edit-placename-button" v-if="isAdmin&&!showEditForm" @click="showEditPlaceNameForm(place)">
+                    <i class="fa-solid fa-i-cursor fa-beat-fade" style="color: #bc672a;"></i>
+                  </button>
+                </div>
+                <div class="star-rating">
+                  <i v-for="n in Math.floor(place.rating)" :key="n" class="fa-solid fa-star" style="color: #bc672a;"></i>
+                  <i v-for="n in 5 - Math.floor(place.rating)" :key="'empty-' + n" class="fa-regular fa-star" style="color: #bc672a;"></i>
+                  <span class="rating-text">{{ place.rating }}/5.0</span>
+                </div>
+                <div class="detail-item">
+                  <p><strong class="heading">City:</strong></p>
+                  <router-link :to="`/city/${place.city._id}`" class="city-link">{{ place.city.cityName }}</router-link>
+                </div>
+                <div class="detail-item">
+                  <p><strong class="heading">Address:</strong></p>
+                  <p>{{ place.address }}</p>
+                </div>
+                <div class="read-more-wrapper">
+                  <router-link :to="`/place/${place.address}`" class="place-link">read more</router-link>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
           <div class="mainplaces-right-side-panel">
                 <!--search and trending-->
@@ -91,16 +104,16 @@
           </div>
       </main>
 
-      <footer class="footer">
-        <div class="footer-text">
-          <p> &copy; 2024 copyright: eurotrip.com</p>
-        </div>
-        <div class="top-icon">
-          <a href="#"><i class="fa-solid fa-caret-up"></i></a>
-        </div>
-      </footer>
+<footer class="footer">
+  <div class="footer-text">
+    <p> &copy; 2024 copyright: eurotrip.com</p>
   </div>
-</template>
+  <div class="top-icon">
+    <a href="#"><i class="fa-solid fa-caret-up"></i></a>
+  </div>
+</footer>
+    </div>
+  </template>
 
 <script>
 import { Api } from '@/Api'
@@ -113,8 +126,15 @@ export default {
       loggedInStatus: !!localStorage.getItem('x-auth-token'), // Reactive property for login status
       rows: 100,
       currentPage: 1,
-      perPage: 1
+      perPage: 1,
+      showEditForm: false,
+      editPlaceName: '',
+      selectedPlace: null,
+      isAdmin: false
     }
+  },
+  async created() {
+    await this.checkIfAdmin() // Check if the user is an admin when the component is created
   },
   computed: {
     isLoggedIn() {
@@ -139,7 +159,7 @@ export default {
             rating: place.rating,
             content: place.content,
             tags: place.tags,
-            city: place.city.cityName
+            city: place.city
           }))
         } else {
           this.places = []
@@ -160,6 +180,61 @@ export default {
         .catch(error => {
           this.message = error
         })
+    },
+    async checkIfAdmin() {
+      try {
+        const response = await Api.get('/admin/check-admin', {
+          headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
+        })
+        this.isAdmin = response.data.isAdmin
+      } catch (error) {
+        console.error('Error checking admin status:', error)
+      }
+    },
+    closeEditForm() {
+      this.showEditForm = false
+    },
+    showEditPlaceNameForm(place) {
+      this.selectedPlace = place // Store the place being edited
+      this.editPlaceName = place.placeName
+      this.showEditForm = true
+    },
+    async submitNewPlaceName() {
+      if (!this.editPlaceName) {
+        alert('You cannot change the Place Name to be empty.')
+        return
+      }
+      try {
+        const address = this.selectedPlace.address
+        console.log(address)
+
+        const updatedPlaceData = {
+          placeName: this.editPlaceName
+        }
+
+        // Make the API call to update the place
+        const response = await Api.patch(`/places/${address}`, updatedPlaceData, {
+          headers: {
+            'x-auth-token': localStorage.getItem('x-auth-token')
+          }
+        })
+
+        // Update the place details in the places array
+        const placeIndex = this.places.findIndex(p => p.address === address)
+        if (placeIndex !== -1) {
+          this.places[placeIndex].placeName = this.editPlaceName // Update the place name
+        }
+
+        console.log('Place updated successfully:', response.data)
+
+        // Update the place details in the UI
+        // this.place.placeName = this.editPlaceName
+
+        // Hide the edit form after submission
+        this.closeEditForm()
+      } catch (error) {
+        console.error('Error updating place:', error)
+      }
     },
     logout() {
       // Remove the authentication token from localStorage
@@ -274,9 +349,6 @@ export default {
   grid-gap: 20px;
   padding: 9rem 9% 2rem;
   width: 100%;
-  background-color: #42515e;
-  justify-content: center;
-
 }
 
 .mainplaces-right-side-panel .mainplaces-left-side-panel {
@@ -289,7 +361,6 @@ export default {
   display: flex;
   flex-direction: row;
   background-color: #edf7fb;
-  min-width: 643px;
 
 }
 
@@ -316,7 +387,7 @@ export default {
     flex-direction: column;
     display: flex;
     align-items: center;
-    min-width: 35vw;
+    min-width: 30vw;
 }
 
 .mainplaces-right-side-panel h2 {
@@ -400,7 +471,7 @@ a img {
   color: #42515e;
 }
 
-footer{
+.footer{
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -434,6 +505,24 @@ footer{
 .top-icon a i{
     font-size: 2rem;
     color: #045768;
+}
+
+.slide-title-wrapper{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+
+.edit-placename-button {
+  border: none;
+  background-color: #edf7fb;
+  margin-right: 2rem;
+  margin-top: 0.5rem;
+}
+
+.edit-placename-button i {
+  font-size: 1.7rem;
 }
 
 .slide-title{
@@ -527,38 +616,95 @@ footer{
   justify-content: space-around;
 }
 
+/* FORM STYLINGS */
+form {
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+input[type="text"]:focus{
+  border-color: #BC672A; /* Darker shade on focus */
+  outline: none; /* Remove default outline */
+}
+
+/* Input Fields Styles */
+input[type="text"]{
+  color: #a7561c;
+}
+
+input[type="text"] {
+  width: calc(100% - 20px); /* Full width minus padding */
+  padding: 10px; /* Padding for input fields */
+  margin: 10px 0; /* Margin between fields */
+  border: 1px solid #ccc; /* Light grey border */
+  border-radius: 4px; /* Rounded corners */
+}
+
+.edit-placename-popup form button[type="submit"] {
+  background-color: #BC672A;
+  color: white;
+  border: none;
+  padding: 10px 40px;
+  text-align: center;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 4rem;
+}
+
+.edit-placename-popup form button[type="submit"]:hover {
+  background-color: #a7561c; /* Darker on hover */
+}
+
+.popup-body button:hover {
+  background-color: #a7561c; /* Darker on hover */
+}
+
+.close-button {
+  background-color: #BC672A;
+  border: 2px solid #BC672A;
+  font-size: 15px;
+  cursor: pointer;
+  color: #fff;
+  transition: color 0.3s ease;
+  width: 2.5rem; /* Set width */
+  height: 2.5rem; /* Set height */
+  margin-right: 2rem;
+}
+
+.hidden-input{
+  display: none;
+}
+
+.close-button:hover {
+  background-color: #a7561c;
+}
+
 @media screen and (max-width:1200px) {
-    .navbar{
-        width: 100%;
-        display: flex;
-        justify-content: space-evenly;
+    html{
+        font-size: 55%;
     }
-    .mainplaces-left-side-panel{
-      min-width: 643px;
-    }
-    .mainplaces-right-side-panel{
-      min-width: 35vw;
-    }
-    .mainplaces-layout-wrapper{
-      min-width: 1200px;
-      justify-content: center;
-    }
-    footer{
-      min-width: 1200px;
-    }
-
 }
 
-@media screen and (max-width: 1024px){
-}
-
-@media screen and (max-width: 768px){
+@media screen and (max-width: 991px){
+    section{
+        padding: 10rem 3% 2rem;
+    }
     .euro-tour-header{
         padding: 2rem 3%;
     }
     .footer{
         padding: 2rem 3%;
     }
+    .get-to-know-wrapper{
+        padding: 7rem;
+    }
+}
+
+@media screen and (max-width: 768px){
     .navbar{
         width: 100%;
         display: flex;
@@ -570,76 +716,29 @@ footer{
         flex-direction: column;
         gap: 2rem;
     }
-    .mainplaces-layout-wrapper{
+    .layout-wrapper,
+    .get-to-know-wrapper{
         flex-direction: column;
         display: flex;
-        min-width: 1200px;
-        background-color: #42515E;
     }
-    .slide-title{
-      font-size: 3.5rem;
-    }
-    .mainplaces-layout-wrapper p,
-    .rating-text,
-    .star-rating i,
-    .read-more-wrapper a,
-    .city-link{
-        font-size: 2rem;
-    }
-    .mainplaces-layout-wrapper .heading{
+    .layout-wrapper p{
         font-size: 2.5rem;
-        font-weight: 400;
     }
-    .read-more-wrapper{
-      display: flex;
-      justify-content: end;
-      margin-right: 2rem;
+    .layout-wrapper h1{
+        font-size: 5rem;
     }
-    .mainplaces-left-side-panel{
-      min-width: 984px;
-      justify-content: center;
-    }
-    .mainplaces-right-side-panel{
-      width: 100%;
-      min-width: 984px;
-      justify-content: center;
+}
 
-    }
-    .mainplaces-left-side-panel{
-      margin: 9rem 0 2rem 0;
-    }
-    .mainplaces-left-side-panel,
-    .mainplaces-right-side-panel{
-      padding: 1.5rem 2rem;
-    }
-    .mainplaces-right-side-panel h3,
-    .mainplaces-right-side-panel h2{
-      font-size: 3.5rem;
-      padding: 0.5rem;
-    }
-    .mainplaces-button-wrapper{
-      margin: 2.5rem;
-    }
-    h4.mainplaces-or {
-      font-size: 2.5rem;
-    }
-    .mainplaces-button-wrapper a{
-      padding: 2rem;
-      font-size: 2rem;
-      min-width: 15rem;
-    }
-    .trending-place-wrapper{
-      display: grid;
-      grid-template-columns: 1fr 3fr;
-      justify-content: space-between;
-      min-width: 45rem;
-    }
-    .trending-place-wrapper img{
-      min-width: 10rem;
+@media screen and (max-width:576px) {
+    html{
+        font-size: 50%;
     }
 }
 
 @media screen and (max-width:350px) {
+    .layout-wrapper img{
+        width: 90vw;
+    }
     .footer{
         flex-direction: column-reverse;
     }

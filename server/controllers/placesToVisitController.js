@@ -133,7 +133,6 @@ async function updatePlace(req, res, next) {
     }
 }
 
-
 async function patchPlace(req, res) {
     try {
         if (!req.body.isAdmin) {

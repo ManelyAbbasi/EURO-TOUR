@@ -65,17 +65,66 @@
               </div>
             </div>
             <div class="places-wrapper">
+              <div class="places-wrapper-header">
                 <p><strong class="heading">Places to Visit:</strong></p>
+                <div v-if="isAdmin" class="admin-buttons">
+                    <button class="create-place-button" @click="createPlaceInCity()"><i class="fa-solid fa-file-pen" style="color: #bc672a;"></i></button>
+                </div>
+              </div>
                 <ul class="places-list">
                     <li v-for="place in placesToVisit" :key="place.address">
-                        <router-link :to="`/place/${place.address}`" class="place-link">{{ place.placeName }}</router-link>
-                    </li>
+                        <router-link :to="`/place/${place.address}`" class="place-link">• {{ place.placeName }}</router-link>
+                        <div v-if="isAdmin" class="admin-buttons">
+                          <button class="delete-place-button" @click="deletePlaceFromCity(place.address)"><i class="fa-solid fa-trash-can" style="color: #bc672a;"></i></button>
+                        </div>
+                     </li>
                 </ul>
             </div>
             <div class="main-cities-link-wrapper">
               <router-link to="/maincities" class="city-link">back to cities</router-link>
             </div>
       </div>
+
+<!-- New City Form Popup -->
+<div class="new-place-popup" :class="{ show: showNewPlaceForm }" v-if="showNewPlaceForm">
+  <div class="popup-header">
+    <h3>Create New Place</h3>
+    <button class="close-button" @click="closeNewPlaceForm">X</button>
+  </div>
+  <div class="popup-body">
+    <form @submit.prevent="submitNewPlace">
+      <div class="form-layout">
+        <div class="form-left">
+          <label for="placeName">Place Name:</label>
+          <input type="text" id="placeName" v-model="newPlaceName" required />
+
+          <label for="address">Address:</label>
+          <input type="text" id="address" v-model="address" placeholder="Enter the address..." />
+
+          <label for="content">Content:</label>
+          <textarea id="content" v-model="content" placeholder="Enter important information..."></textarea>
+
+          <label for="rating">Rating:</label>
+          <input type="number" id="rating" v-model="rating" min="0" max="10" step="0.1" placeholder="Enter a rating (0-5)" />
+
+          <div class="submit-wrapper">
+            <button type="submit">Submit</button>
+          </div>
+        </div>
+        <div class="form-right">
+          <label for="tags">Tags:</label>
+          <div class="tags">
+            <label v-for="tag in tagOptions" :key="tag">
+              <input type="checkbox" :value="tag" v-model="selectedTags" />
+              {{ tag }}
+            </label>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
     </main>
 
 <footer class="footer">
@@ -97,8 +146,32 @@ export default {
     return {
       city: {}, // Object to hold city details
       placesToVisit: [],
+      showNewPlaceForm: false,
+      isAdmin: false,
+      tagOptions: [ // List of tag options
+        'historical',
+        'adventurous',
+        'party',
+        'sight-seeing',
+        'recently opened',
+        'nature',
+        'beachy',
+        'museum',
+        'food',
+        'popular',
+        'affordable',
+        'high-end',
+        'lgbtq+ friendly',
+        'quiet',
+        'shopping',
+        '18+'
+      ],
+      selectedTags: [],
       loggedInStatus: !!localStorage.getItem('x-auth-token') // Reactive property for login status
     }
+  },
+  async created() {
+    await this.checkIfAdmin() // Check if the user is an admin when the component is created
   },
   computed: {
     isLoggedIn() {
@@ -109,51 +182,94 @@ export default {
     async getCityDetails() {
       try {
         const cityId = this.$route.params.cityid
-        console.log('City ID:', cityId)
         const response = await Api.get(`/cities/${cityId}`)
-        console.log('API Response:', response.data) // Log the entire response
-
-        // Check if the response has the necessary fields
-        if (response.data && response.data._id) { // Check if the city ID is present
-        // Directly map the response to your city object
-          this.city = {
-            cityName: response.data.cityName,
-            country: response.data.country,
-            rating: response.data.rating,
-            goodToKnow: response.data.goodToKnow,
-            facts: response.data.facts, // Include any other fields you need
-            statistics: response.data.statistics,
-            tags: response.data.tags
-          }
-          console.log(this.city) // Log the city object for verification
-        } else {
-          console.warn('City not found in response') // This should not trigger now
-          this.city = {} // Handle case where city is not found
+        if (response.data && response.data._id) {
+          this.city = { ...response.data }
         }
       } catch (error) {
         console.error('Error fetching city details:', error)
-        this.city = {} // Handle API error gracefully
       }
     },
     async getPlaces() {
       try {
         const cityId = this.$route.params.cityid
         const response = await Api.get(`/cities/${cityId}/placesToVisit`)
-        console.log('API Response:', response.data)
-        if (response.data && Array.isArray(response.data)) {
-          this.placesToVisit = response.data.map(place => ({
-            placeName: place.placeName,
-            address: place.address
-          }))
-        } else {
-          console.warn('No places found or places is not an array')
-          this.places = [] // Correctly clear the places array
+        if (Array.isArray(response.data)) {
+          this.placesToVisit = response.data
         }
-        console.log(response.data.placesToVisit)
       } catch (error) {
-        console.error('Error fetching places details:', error.message)
-        this.places = [] // Handle API error gracefully
+        console.error('Error fetching places details:', error)
       }
+    },
+    async deletePlaceFromCity(address) {
+      const confirmed = confirm('Are you sure you want to delete this place?')
+      if (!confirmed) return
+      try {
+        const cityId = this.$route.params.cityid
+        const response = await Api.delete(`/cities/${cityId}/placesToVisit/${address}`, {
+          headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
+        })
+        if (response.status === 200) {
+          this.placesToVisit = this.placesToVisit.filter(place => place.address !== address)
+          await Api.delete(`/places/${address}`, {
+            headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
+          })
+          alert('Place deleted successfully')
+        }
+      } catch (error) {
+        console.error('Error deleting place:', error)
+      }
+    },
+    async createPlaceInCity() {
+      this.showNewPlaceForm = true
+      this.newPlaceName = ''
+      this.content = ''
+      this.address = ''
+      this.rating = null
+      this.selectedTags = []
+    },
+    closeNewPlaceForm() {
+      this.showNewPlaceForm = false
+      this.resetForm()
+    },
+    async submitNewPlace() {
+      const cityId = this.$route.params.cityid
+      const placeData = {
+        placeName: this.newPlaceName,
+        content: this.content,
+        address: this.address,
+        rating: this.rating,
+        tags: this.selectedTags
+      }
+      try {
+        const response = await Api.post(`/cities/${cityId}/placesToVisit`, placeData, {
+          headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
+        })
+        if (response.status === 201) {
+          alert('Place successfully created!')
+          this.getPlaces()
+        }
+      } catch (error) {
+        console.error('Error saving place:', error)
+      }
+      this.closeNewPlaceForm()
+    },
+    async checkIfAdmin() {
+      try {
+        const response = await Api.get('/admin/check-admin', {
+          headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
+        })
+        this.isAdmin = response.data.isAdmin
+      } catch (error) {
+        console.error('Error checking admin status:', error)
+      }
+    },
+    resetForm() {
+      this.newPlaceName = ''
+      this.content = ''
+      this.address = ''
+      this.rating = null
+      this.selectedTags = []
     },
     logout() {
       // Remove the authentication token from localStorage
@@ -281,6 +397,37 @@ export default {
     color: #759cab;
 }
 
+.admin-buttons button {
+    border: none;
+    background-color: #edf7fb;
+    padding: 0.5rem 0.5rem;
+    margin: 0 0 0 3rem;
+    font-size: 1.5rem;
+    transition: all 0.4s;
+}
+
+.admin-buttons button:hover{
+  transform: scale(1.07);
+}
+
+.places-list li{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  list-style-type: circle;
+  justify-content: space-between;
+  width: 80%;
+}
+
+.places-wrapper-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.places-wrapper {
+  width: 60%;
+}
 .title-city{
     font-size: 4rem;
     color: #759cab;
@@ -404,6 +551,161 @@ a img {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
+}
+
+/* pop up form */
+
+.form-layout {
+  display: flex; /* Flexbox for layout */
+  justify-content: space-between; /* Space between left and right sections */
+}
+
+/* Left side of the form */
+.form-left {
+  width: 60%; /* Take up 60% of the width */
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.submit-wrapper{
+  display: flex;
+  justify-content: center;
+  margin: 3rem;
+}
+/* Right side of the form */
+.form-right {
+  width: 35%; /* Take up 35% of the width */
+  padding-left: 20px; /* Space between left and right sections */
+}
+
+.new-place-popup form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* New Place Form Popup Styles */
+.new-place-popup {
+  position: sticky;
+  margin-top: -20rem;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the popup */
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  color:#045768;
+  z-index: 10;
+  width: 650px; /* Increased width */
+  max-width: 90%; /* Ensures the popup fits within smaller screens */
+  height:630px;
+  max-height: 100vh; /* Ensures the popup doesn't go off the screen */
+  padding: 20px;
+  overflow-y: auto; /* Allows scrolling if the content is too long */
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Show the popup with opacity */
+.new-place-popup.show {
+  opacity: 1; /* Fully visible */
+  transform: translate(-50%, -50%) scale(1.05); /* Slightly scale up on appearance */
+}
+
+/* Ensure the popup header has consistent styling */
+.popup-header {
+  position: sticky;
+  top: 0;
+  padding: 1px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  z-index: 2; /* Increased z-index to ensure it stays above the content */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#rating {
+  width: 50%; /* Set the width to 100% of its container */
+  border-radius:4px;
+  padding-left: 5px; /* Add left padding to text fields as well */
+  border: 1px solid #ccc;
+}
+
+/* Style for tags */
+.tags label {
+  display: block; /* Stack tags vertically */
+  margin: 4px 0; /* Margin for spacing between tags */
+  font-size: 0.8rem;
+}
+
+.tags{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0.2rem;
+}
+
+/* Input Fields Styles */
+.new-place-popup input[type="text"],
+.new-place-popup textarea,
+#rating {
+  color: #a7561c;
+}
+
+/* Change border color on focus */
+.new-place-popup input[type="text"]:focus,
+.new-place-popup textarea:focus,
+#rating:focus {
+  border-color: #BC672A; /* Darker shade on focus */
+  outline: none; /* Remove default outline */
+}
+
+/* Style for the form inputs */
+input[type="text"],
+input[type="textarea"] {
+  width: calc(100% - 20px); /* Full width minus padding */
+  padding: 10px; /* Padding for input fields */
+  margin: 10px 0; /* Margin between fields */
+  border: 1px solid #ccc; /* Light grey border */
+  border-radius: 4px; /* Rounded corners */
+}
+
+input[type='checkbox'] {
+    accent-color: #BC672A;
+}
+
+.new-place-popup form button[type="submit"] {
+  background-color: #BC672A;
+  color: white;
+  border: none;
+  padding: 10px 40px;
+  text-align: center;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: -30px; /* Adjust this value to move it upwards */
+  margin-right: 4rem;
+}
+
+.new-place-popup form button[type="submit"]:hover {
+  background-color: #a7561c; /* Darker on hover */
+}
+
+.close-button {
+  background-color: #BC672A;
+  border: 2px solid #BC672A;
+  font-size: 15px;
+  cursor: pointer;
+  color: #fff;
+  transition: color 0.3s ease;
+  width: 25px; /* Set width */
+  height: 25px; /* Set height */
+}
+
+.close-button:hover{
+  background-color:#a7561c;
 }
 
 @media screen and (max-width:1200px) {
