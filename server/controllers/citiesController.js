@@ -204,17 +204,23 @@ async function updateCity(req, res, next) {
             if (typeof req.body.cityName !== 'string' || req.body.cityName.trim() === "") {
                 return res.status(400).json({ message: "Invalid cityName: must be a non-empty string" });
             }
+            if (req.body.cityName.length > 20) {
+                return res.status(400).json({ message: "cityName cannot be longer than 20 characters" });
+            }
             city.cityName = req.body.cityName;
         }
         if (req.body.country !== undefined) {
             if (typeof req.body.country !== 'string' || req.body.country.trim() === "") {
                 return res.status(400).json({ message: "Invalid country: must be a non-empty string" });
             }
+            if (req.body.country.length > 25) {
+                return res.status(400).json({ message: "country cannot be longer than 25 characters" });
+            }
             city.country = req.body.country;
         }
         if (req.body.goodToKnow !== undefined) {
             if (typeof req.body.goodToKnow !== 'string' || req.body.goodToKnow.trim() === "") {
-                return res.status(400).json({ message: "Invalid good to know: must be a non-empty string" });
+                return res.status(400).json({ message: "Invalid goodToKnow: must be a non-empty string" });
             }
             city.goodToKnow = req.body.goodToKnow;
         }
@@ -257,7 +263,6 @@ async function deleteOnePlaceFromCity(req, res) {
     const address = req.params.address;
 
     try {
-        // Find the city and populate placesToVisit
         const city = await CitiesModel.findOne({ _id: cityId }).populate('placesToVisit');
         if (!city) {
             return res.status(404).json({ message: "City not found" });

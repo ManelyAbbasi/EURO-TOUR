@@ -60,28 +60,6 @@ async function createAdmin(req, res, next) {
     }
 }
 
-async function deletePlace(req, res) {
-    const address = req.params.address;
-
-    try {
-        if (!req.body.isAdmin) {
-            return res.status(403).json({ message: "Access denied. Admins only." });
-        }
-
-        const deletedPlace = await PlacesToVisit.findOneAndDelete({ address: address });
-
-        if (!deletedPlace) {
-            return res.status(404).json({ message: "Place not found" });
-        }
-
-        res.status(200).json({ message: "Place deleted successfully", place: deletedPlace });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal server error" });
-    }
-}
-
-
 async function deleteCity(req, res) {
     const cityId = req.params.id;
     try {
@@ -130,7 +108,6 @@ async function checkIfAdmin(req, res) {
 module.exports ={
     patchAdmin,
     deleteCity,
-    deletePlace,
     checkIfAdmin,
     createAdmin
 };

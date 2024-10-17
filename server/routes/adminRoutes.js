@@ -4,8 +4,6 @@ var adminController = require('../controllers/adminController');
 
 router.patch('/:username', adminController.patchAdmin);
 
-router.delete('/placesToVisit/:address', adminController.deletePlace);
-
 router.delete('/cities/:id', adminController.deleteCity);
 
 router.get('/check-admin', adminController.checkIfAdmin);
