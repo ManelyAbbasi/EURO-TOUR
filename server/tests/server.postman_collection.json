@@ -15,8 +15,8 @@
 					"script": {
 						"exec": [
 							"",
-							"pm.test(\"Response status code is 201\", function () {",
-							"  pm.expect(pm.response.code).to.equal(201);",
+							"pm.test(\"Response status code is 404\", function () {",
+							"  pm.expect(pm.response.code).to.equal(404);",
 							"});"
 						],
 						"type": "text/javascript",
@@ -473,7 +473,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/cities/670ffe5d90535428702471db",
+					"raw": "http://localhost:3000/api/cities/670db586757bb3ff2d423949",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -482,7 +482,7 @@
 					"path": [
 						"api",
 						"cities",
-						"670ffe5d90535428702471db"
+						"670db586757bb3ff2d423949"
 					]
 				}
 			},
@@ -495,8 +495,8 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Response status code is 400\", function () {",
-							"  pm.expect(pm.response.code).to.equal(400);",
+							"pm.test(\"Response status code is 404\", function () {",
+							"  pm.expect(pm.response.code).to.equal(404);",
 							"});",
 							"",
 							"",
@@ -836,8 +836,8 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Response status code is 400\", function () {\r",
-							"  pm.expect(pm.response.code).to.equal(400);\r",
+							"pm.test(\"Response status code is 404\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(404);\r",
 							"});"
 						],
 						"type": "text/javascript",
