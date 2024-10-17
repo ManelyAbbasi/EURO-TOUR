@@ -11,4 +11,6 @@ router.delete('/cities/:id', adminController.deleteCity);
 
 router.get('/check-admin', adminController.checkIfAdmin);
 
+router.post('/', adminController.createAdmin);
+
 module.exports = router; 

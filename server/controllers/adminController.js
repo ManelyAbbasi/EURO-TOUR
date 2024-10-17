@@ -2,8 +2,9 @@ const CitiesModel = require("../models/citiesModel");
 const PlacesToVisit = require("../models/placesToVisitModel");
 const UsersModel = require("../models/usersModel");
 const citiesModel = require("../models/citiesModel");
-async function patchAdmin(req, res, next) {
+const adminsSchema = require("../models/adminsModel");
 
+async function patchAdmin(req, res, next) {
     try {
         const user = await UsersModel.findOne({ username: req.params.username });
 
@@ -23,6 +24,28 @@ async function patchAdmin(req, res, next) {
         next(err); // Pass the error to the next middleware
     }
 }
+
+async function createAdmin(req, res, next) {
+    try {
+        const existingAdmin = await adminsSchema.findOne({ username: req.body.username });
+
+        if (existingAdmin) {
+            return res.status(400).json({ message: 'User with this username already exists' });
+        }
+        if (typeof req.body.username !== 'string' || req.body.username.trim() === '') {
+            return res.status(400).json({ "message": "Invalid username: must be a non-empty string" });
+        }
+        if (typeof req.body.password !== 'string' || req.body.password.trim() === '') {
+            return res.status(400).json({ "message": "Invalid password: must be a non-empty string" });
+        }
+
+        const admin = new adminsSchema(req.body);
+        await admin.save();
+        res.status(201).json(admin);
+    } catch (err) {
+        next(err);
+    }
+};
 
 async function deletePlace(req, res) {
     const address = req.params.address;
@@ -95,6 +118,7 @@ module.exports ={
     patchAdmin,
     deleteCity,
     deletePlace,
-    checkIfAdmin
+    checkIfAdmin,
+    createAdmin
 };
    
