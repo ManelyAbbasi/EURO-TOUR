@@ -44,7 +44,7 @@
               <div class="detail-about-place">
                 <div class="slide-title-wrapper">
                   <span class="slide-title">{{ place.placeName }}</span>
-                  <button class="edit-placename-button" v-if="isAdmin" @click="editPlaceName()">
+                  <button class="edit-placename-button" v-if="isAdmin" @click="showEditPlaceNameForm(place)">
                     <i class="fa-solid fa-i-cursor fa-beat-fade" style="color: #bc672a;"></i>
                   </button>
                 </div>
@@ -64,11 +64,24 @@
                 <div class="read-more-wrapper">
                   <router-link :to="`/place/${place.address}`" class="place-link">read more</router-link>
                 </div>
+            </div>
           </div>
         </div>
       </div>
 
+      <div class="edit-placename-popup" :class="{ show: showEditForm }" v-if="showEditForm">
+        <div class="popup-header">
+          <button class="close-button" @click="closeEditForm">X</button>
         </div>
+        <div class="popup-body">
+          <form @submit.prevent="submitNewPlaceName">
+            <label for="placeName">Place Name:</label>
+            <input type="text" id="placeName" v-model="editPlaceName" required />
+
+            <button type="submit">Save</button>
+          </form>
+        </div>
+      </div>
 
           <div class="mainplaces-right-side-panel">
                 <!--search and trending-->
@@ -120,6 +133,9 @@ export default {
       rows: 100,
       currentPage: 1,
       perPage: 1,
+      showEditForm: false,
+      editPlaceName: '',
+      selectedPlace: null,
       isAdmin: false
     }
   },
@@ -179,6 +195,51 @@ export default {
         this.isAdmin = response.data.isAdmin
       } catch (error) {
         console.error('Error checking admin status:', error)
+      }
+    },
+    closeEditForm() {
+      this.showEditForm = false
+    },
+    showEditPlaceNameForm(place) {
+      this.selectedPlace = place // Store the place being edited
+      this.editPlaceName = place.placeName
+      this.showEditForm = true
+    },
+    async submitNewPlaceName() {
+      if (!this.editPlaceName) {
+        alert('You cannot change the Place Name to be empty.')
+        return
+      }
+      try {
+        const address = this.selectedPlace.address
+        console.log(address)
+
+        const updatedPlaceData = {
+          placeName: this.editPlaceName
+        }
+
+        // Make the API call to update the place
+        const response = await Api.patch(`/places/${address}`, updatedPlaceData, {
+          headers: {
+            'x-auth-token': localStorage.getItem('x-auth-token')
+          }
+        })
+
+        // Update the place details in the places array
+        const placeIndex = this.places.findIndex(p => p.address === address)
+        if (placeIndex !== -1) {
+          this.places[placeIndex].placeName = this.editPlaceName // Update the place name
+        }
+
+        console.log('Place updated successfully:', response.data)
+
+        // Update the place details in the UI
+        // this.place.placeName = this.editPlaceName
+
+        // Hide the edit form after submission
+        this.closeEditForm()
+      } catch (error) {
+        console.error('Error updating place:', error)
       }
     },
     logout() {
