@@ -103,7 +103,7 @@ async function updatePlace(req, res, next) {
         if (err.name === 'ValidationError' && err.errors && err.errors.tags) {
             return res.status(400).json({ message: "Invalid tag(s) provided. Please provide valid tags." });
         }
-        return next(err);
+        next(err);
     }
 }
 

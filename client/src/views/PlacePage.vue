@@ -62,6 +62,8 @@
   </div>
   <div class="popup-body">
     <form @submit.prevent="submitEditPlace">
+      <div class="form-layout">
+        <div class="form-left">
       <label for="placeName">Place Name:</label>
       <input type="text" id="placeName" v-model="editPlaceName" />
 
@@ -70,15 +72,17 @@
 
       <label for="content">Content:</label>
       <textarea v-model="editPlaceContent"></textarea>
-
-      <label for="tags">Tags:</label>
-      <div class="tags">
-        <label v-for="tag in tagOptions" :key="tag">
-          <input type="checkbox" :value="tag" v-model="editTags" />
-          {{ tag }}
-        </label>
+    </div>
+    <div class="form-right">
+          <label for="tags">Tags:</label>
+          <div class="tags">
+            <label v-for="tag in tagOptions" :key="tag">
+              <input type="checkbox" :value="tag" v-model="selectedTags" />
+              {{ tag }}
+            </label>
+          </div>
+        </div>
       </div>
-
       <button type="submit">Save</button>
     </form>
   </div>
@@ -126,7 +130,8 @@ export default {
         'quiet',
         'shopping',
         '18+'
-      ]
+      ],
+      selectedTags: []
     }
   },
   async created() {
@@ -146,17 +151,19 @@ export default {
         const response = await Api.get(`/places/${address}`)
         console.log('API Response:', response.data) // Log the entire response
 
-        if (response.data && response.data.address) { // Check if the place data is present
-          // Directly map the response to your place object
+        if (response.data && response.data.address) {
+          // Log the entire response to see structure
+          console.log('API Response:', response.data)
           this.place = {
             placeName: response.data.placeName,
             address: response.data.address,
             rating: response.data.rating,
             content: response.data.content,
-            tags: response.data.tags,
+            tags: response.data.tags, // Ensure tags are present here
             cityName: response.data.city.cityName,
             cityId: response.data.city._id
           }
+
           console.log(this.place) // Log the place object for verification
         } else {
           console.warn('Place not found in response') // This should not trigger now
@@ -199,17 +206,44 @@ export default {
       this.editTags = []
     },
     async submitEditPlace() {
+      // Validate the form fields
+      if (!this.editPlaceName || !this.editPlaceContent || this.editRating === null || this.editRating === undefined) {
+        alert('Please fill in all the required fields (Place Name, Content, and Rating).')
+        return
+      }
+
+      if (this.editRating < 0 || this.editRating > 5) {
+        alert('Rating must be between 0 and 5.')
+        return
+      }
+
       try {
         const address = this.place.address
-        const response = await Api.patch(`/places/${address}`, {
-          content: this.editPlaceContent
-        }, {
+
+        // Prepare the updated place data
+        const updatedPlaceData = {
+          placeName: this.editPlaceName,
+          rating: this.editRating,
+          content: this.editPlaceContent,
+          tags: this.editTags
+        }
+
+        // Make the API call to update the place
+        const response = await Api.put(`/places/${address}`, updatedPlaceData, {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }
         })
+
         console.log('Place updated successfully:', response.data)
+
+        // Update the place details in the UI
+        this.place.placeName = this.editPlaceName
+        this.place.rating = this.editRating
         this.place.content = this.editPlaceContent
+        this.place.tags = this.editTags
+
+        // Hide the edit form after submission
         this.hideEditPlaceForm()
       } catch (error) {
         console.error('Error updating place:', error)
