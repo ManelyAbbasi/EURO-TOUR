@@ -78,11 +78,35 @@ Places to Visit Page: Once a user has clicked on the place that they would like 
 
 Filter and Sort Pages: For both cities and places to visit, there will be pages to either sort and filter by ratings or filter by tags.
 
-### Proposal for a 5
+### Proposal for a 5 (SVG-map)
 
-On our main home page, we want to implement a map of Europe that will showcase all potential weather warnings for the coming week. So when a user is navigating through the map they can select a city, a pop up will display entailing a description of what the expected weather will be. The pop up is colour specific, meaning that the degree of weather intensity will be easily visually described. The purpose of this inclusion is to help our users who are planning their trips to have insight into what they could expect. 
+#### Frontend Aspects:
+**Interactive Map with Multiple Stages:**
+- Stage 1 (Hover Interaction): As users hover over the map, countries with cities in the system will light up in orange and become clickable, displaying the country's name. This immediate visual feedback helps users understand which countries are available for exploration.
+- Stage 2 (Unauthenticated Users): If someone isn't logged in, clicking on any country will trigger a pop-up saying, "You need to log in to see this feature."
+- Stage 3 (Admin vs Regular Users): Once logged in, regular users can see a list of available cities, while admins get additional features like creating, editing, and deleting cities.
 
-We plan on further integrating this into our cities page, where next to the respective city you view there shall be a coloured indicator [matching the map] that illustrates the intensity of the weather situation currently. Furthermore, when the user hovers over this indicator, a message will appear to detail more about the specifics of the weather (for example thunderstorms, flooding, etc.). 
+**City Management UI for Admins:**
+- Admins have direct access to city management features from the city pop-up interface:
+- Create New Cities: Admins can fill out a form with details like city name, country, good-to-know info, statistics, facts, rating (0-5 scale), and tags.
+- Edit Existing Cities: Admins can click the "Edit" button next to the city name to open the same form, pre-filled with the city's current information.
+- Delete Cities: Admins can instantly remove cities from the system. These features are hidden from regular users, ensuring a role-specific interface.
+
+#### Backend Aspects:
+**Fetching City Data:**
+- GET /cities: This route retrieves all cities stored in the system. It populates the map and the city lists for both admin and regular users, ensuring the map is always updated with the latest data.
+- GET /cities/${cityId}: When an admin clicks on a city to edit, this route is used to fetch all the relevant data for that city (city name, country, stats, etc.).
+
+**Checking Admin Privileges:**
+- GET /admin/check-admin: For role-based access control we use this route to check if the logged-in user has admin privileges. It is triggered when the page is loaded to conditionally render the admin-only buttons for creating, editing, and deleting cities.
+
+**Managing Cities (Admin Only):**
+- Create: POST /cities: When an admin submits the city creation form, this route is triggered. The new city data is sent to the backend, where it is validated and stored in the database.
+- Edit: PUT /cities/${this.editCityId}:  This route is used when an admin updates an existing city. The backend processes the update request, modifies the existing city data, and returns a success response if the operation is successful.
+- Delete: DELETE /admin/cities/${cityId}: Admins can delete a city using this route. Upon confirmation, the backend removes the specified city from the database and sends a response indicating the outcome.
+
+**Authentication and Security:**
+- All backend routes that modify city data (create, edit, delete) are protected by an authentication token (x-auth-token). For regular users, the routes are read-only, preventing unauthorized data manipulation.
 
 ### Entity-Relationship (ER) Diagram
 
