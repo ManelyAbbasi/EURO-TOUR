@@ -25,7 +25,7 @@
         <div class="wrapper-header">
           <h1 class="title-place">{{ place.placeName }}</h1>
           <div v-if="isAdmin" class="admin-buttons">
-            <button @click="showEditPlaceForm(place.content)"><i class="fa-solid fa-file-pen" style="color: #bc672a;"></i></button>
+            <button @click="showEditPlaceForm(place)"><i class="fa-solid fa-file-pen" style="color: #bc672a;"></i></button>
             <button @click="deletePlace"><i class="fa-solid fa-trash-can" style="color: #bc672a;"></i></button>
           </div>
         </div>
@@ -55,43 +55,43 @@
       </div>
 
       <!-- Edit Place Form Popup -->
-<div class="edit-place-popup" :class="{ show: showEditForm }" v-if="showEditForm">
-  <div class="popup-header">
-    <h3>Edit Place Content</h3>
-    <button class="close-button" @click="hideEditPlaceForm">X</button>
-  </div>
-  <div class="popup-body">
-    <form @submit.prevent="submitEditPlace">
-      <div class="form-layout">
-        <div class="form-left">
-      <label for="placeName">Place Name:</label>
-      <input type="text" id="placeName" v-model="editPlaceName" />
+      <div class="edit-place-popup" :class="{ show: showEditForm }" v-if="showEditForm">
+        <div class="popup-header">
+          <h3>Edit Place Content</h3>
+          <button class="close-button" @click="hideEditPlaceForm">X</button>
+        </div>
+        <div class="popup-body">
+          <form @submit.prevent="submitEditPlace">
+            <div class="form-layout">
+              <div class="form-left">
+                <label for="placeName">Place Name:</label>
+                <input type="text" id="placeName" v-model="editPlaceName" required />
 
-      <label for="rating">Rating:</label>
-      <input type="number" id="rating" v-model="editRating" min="0" max="5" step="0.1" />
+                <label for="rating">Rating:</label>
+                <input type="number" id="rating" v-model.number="editRating" min="0" max="5" step="0.1" required />
 
-      <label for="content">Content:</label>
-      <textarea v-model="editPlaceContent"></textarea>
-    </div>
-    <div class="form-right">
-          <label for="tags">Tags:</label>
-          <div class="tags">
-            <label v-for="tag in tagOptions" :key="tag">
-              <input type="checkbox" :value="tag" v-model="selectedTags" />
-              {{ tag }}
-            </label>
-          </div>
+                <label for="content">Content:</label>
+                <textarea id="content" v-model="editPlaceContent" required></textarea>
+              </div>
+              <div class="form-right">
+                <label for="tags">Tags:</label>
+                <div class="tags">
+                  <label v-for="tag in tagOptions" :key="tag">
+                    <input type="checkbox" :value="tag" v-model="selectedTags" />
+                    {{ tag }}
+                  </label>
+                </div>
+              </div>
+            </div>
+            <button type="submit">Save</button>
+          </form>
         </div>
       </div>
-      <button type="submit">Save</button>
-    </form>
-  </div>
-</div>
 
     </main>
     <footer class="footer">
       <div class="footer-text">
-        <p> &copy; 2024 copyright: eurotrip.com</p>
+        <p>&copy; 2024 copyright: eurotrip.com</p>
       </div>
       <div class="top-icon">
         <a href="#"><i class="fa-solid fa-caret-up"></i></a>
@@ -131,7 +131,7 @@ export default {
         'shopping',
         '18+'
       ],
-      selectedTags: []
+      selectedTags: [] // Store selected tags
     }
   },
   async created() {
@@ -152,8 +152,6 @@ export default {
         console.log('API Response:', response.data) // Log the entire response
 
         if (response.data && response.data.address) {
-          // Log the entire response to see structure
-          console.log('API Response:', response.data)
           this.place = {
             placeName: response.data.placeName,
             address: response.data.address,
@@ -195,7 +193,7 @@ export default {
       this.editPlaceName = place.placeName
       this.editRating = place.rating
       this.editPlaceContent = place.content
-      this.editTags = place.tags
+      this.selectedTags = place.tags || [] // Set selected tags from the place object
       this.showEditForm = true
     },
     hideEditPlaceForm() {
@@ -203,11 +201,11 @@ export default {
       this.editPlaceName = ''
       this.editRating = null
       this.editPlaceContent = ''
-      this.editTags = []
+      this.selectedTags = [] // Reset selected tags
     },
     async submitEditPlace() {
       // Validate the form fields
-      if (!this.editPlaceName || !this.editPlaceContent || this.editRating === null || this.editRating === undefined) {
+      if (!this.editPlaceName || !this.editPlaceContent || this.editRating === null) {
         alert('Please fill in all the required fields (Place Name, Content, and Rating).')
         return
       }
@@ -225,7 +223,7 @@ export default {
           placeName: this.editPlaceName,
           rating: this.editRating,
           content: this.editPlaceContent,
-          tags: this.editTags
+          tags: this.selectedTags
         }
 
         // Make the API call to update the place
@@ -241,7 +239,7 @@ export default {
         this.place.placeName = this.editPlaceName
         this.place.rating = this.editRating
         this.place.content = this.editPlaceContent
-        this.place.tags = this.editTags
+        this.place.tags = this.selectedTags
 
         // Hide the edit form after submission
         this.hideEditPlaceForm()
