@@ -1,8 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-// Import models to use ObjectId references
-const PlacesToVisitModel = require('./placesToVisitModel'); // Ensure this exports the model
+const PlacesToVisitModel = require('./placesToVisitModel');
 
 var citiesSchema = new Schema({
     cityName: { type: String, required: true },
@@ -40,10 +39,8 @@ var citiesSchema = new Schema({
         }
     },
     placesToVisit: { 
-        type: [{ type: Schema.Types.ObjectId, ref: 'placesToVisit' }], // Ensure 'PlacesToVisit' matches the model name
-        default: [] 
+        type: [{ type: Schema.Types.ObjectId, ref: 'placesToVisit' }],
     },
 });
 
-// Export the cities model
 module.exports = mongoose.model('cities', citiesSchema);
