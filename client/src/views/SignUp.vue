@@ -15,6 +15,7 @@
       <div class="signup-right-side">
 
         <img src="@/assets/vertical-logo.png" alt="Tablet Logo" class="signup-tablet-logo-img" draggable="false" />
+        <img src="@/assets/vertical-logo.png" alt="Mobile Logo" class="signup-mobile-logo-img" draggable="false" />
 
         <div class="signup-container">
           <!-- Container for the form -->
@@ -174,6 +175,10 @@ export default {
   display: none;
 }
 
+.signup-mobile-logo-img {
+  display: none;
+}
+
 /* Styling for the row of the name, username and password */
 .signup-row-form {
   display: flex;
@@ -287,6 +292,34 @@ button:active[disabled] {
 
 .login-link:hover {
   color: #759CAB;
+}
+
+@media screen and (max-width: 320px) {
+
+.signup-mobile-logo-img {
+  display: block;
+  width: 70%;
+  margin-bottom: 1rem;
+}
+
+.signup-tablet-logo-img {
+  display: none !important;
+}
+
+.signup-input {
+  width: 80%;
+}
+
+.dob-container {
+  width: 81%;
+  margin-top: -10px;
+  margin-left: 4px;
+}
+
+.signup-row-form label {
+  left: -60px;
+  top: 10px;
+}
 }
 
 @media screen and (max-width: 768px) {
