@@ -645,8 +645,8 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Response status code is 401\", function () {\r",
-							"  pm.expect(pm.response.code).to.equal(401);\r",
+							"pm.test(\"Response status code is 404\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(404);\r",
 							"});"
 						],
 						"type": "text/javascript",
