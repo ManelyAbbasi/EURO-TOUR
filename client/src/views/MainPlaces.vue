@@ -525,27 +525,26 @@ a img {
 }
 
 @media screen and (max-width:1200px) {
-    html{
-        font-size: 55%;
+    .navbar{
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
     }
 }
 
-@media screen and (max-width: 991px){
-    section{
-        padding: 10rem 3% 2rem;
-    }
+@media screen and (max-width: 1024px){
+  #places-slide{
+    min-width: 680px;
+  }
+}
+
+@media screen and (max-width: 768px){
     .euro-tour-header{
         padding: 2rem 3%;
     }
     .footer{
         padding: 2rem 3%;
     }
-    .get-to-know-wrapper{
-        padding: 7rem;
-    }
-}
-
-@media screen and (max-width: 768px){
     .navbar{
         width: 100%;
         display: flex;
@@ -557,16 +556,58 @@ a img {
         flex-direction: column;
         gap: 2rem;
     }
-    .layout-wrapper,
-    .get-to-know-wrapper{
+    .mainplaces-layout-wrapper{
         flex-direction: column;
         display: flex;
     }
-    .layout-wrapper p{
-        font-size: 2.5rem;
+    .detail-about-place .slide-title{
+      font-size: 3.5rem;
     }
-    .layout-wrapper h1{
-        font-size: 5rem;
+    .mainplaces-layout-wrapper p,
+    .rating-text,
+    .star-rating i,
+    .read-more-wrapper a{
+        font-size: 2rem;
+    }
+    .mainplaces-layout-wrapper .facts-heading{
+        font-size: 2.5rem;
+        font-weight: 400;
+    }
+    .read-more-wrapper{
+      display: flex;
+      justify-content: end;
+      margin-right: 2rem;
+    }
+    .mainplaces-left-side-panel{
+      margin: 9rem 0 2rem 0;
+    }
+    .mainplaces-left-side-panel,
+    .mainplaces-right-side-panel{
+      padding: 1.5rem 2rem;
+    }
+    .mainplaces-right-side-panel h2{
+      font-size: 3.5rem;
+      padding: 0.5rem;
+    }
+    .mainplaces-button-wrapper{
+      margin: 2.5rem;
+    }
+    h4.maincities-or {
+      font-size: 2.5rem;
+    }
+    .mainplaces-button-wrapper a{
+      padding: 2rem;
+      font-size: 2rem;
+      min-width: 15rem;
+    }
+    .trending-place-wrapper{
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      justify-content: space-between;
+      min-width: 45rem;
+    }
+    .trending-place-wrapper img{
+      min-width: 10rem;
     }
 }
 

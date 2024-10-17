@@ -289,7 +289,7 @@ export default {
   display: flex;
   flex-direction: row;
   background-color: #edf7fb;
-
+  min-width: 643px;
 }
 
 .facts-heading {
@@ -302,7 +302,7 @@ export default {
     flex-direction: column;
     display: flex;
     align-items: center;
-    min-width: 30vw;
+    min-width: 35vw;
 }
 
 .maincities-right-side-panel h2 {
@@ -513,13 +513,16 @@ a img {
 }
 
 @media screen and (max-width:1200px) {
-    html{
-        font-size: 55%;
-    }
     .navbar{
         width: 100%;
         display: flex;
         justify-content: space-evenly;
+    }
+    .maincities-left-side-panel{
+      min-width: 643px;
+    }
+    .maincities-right-side-panel{
+      min-width: 35vw;
     }
 
 }
@@ -545,6 +548,7 @@ a img {
     .maincities-layout-wrapper{
         flex-direction: column;
         display: flex;
+        min-width: 1200px;
     }
     .detail-about-city .slide-title{
       font-size: 3.5rem;
@@ -563,6 +567,17 @@ a img {
       display: flex;
       justify-content: end;
       margin-right: 2rem;
+    }
+    .maincities-left-side-panel{
+      min-width: 984px;
+      justify-content: center;
+
+    }
+    .maincities-right-side-panel{
+      width: 100%;
+      min-width: 984px;
+      justify-content: center;
+
     }
     .maincities-left-side-panel{
       margin: 9rem 0 2rem 0;
@@ -598,9 +613,6 @@ a img {
 }
 
 @media screen and (max-width:350px) {
-    .layout-wrapper img{
-        width: 90vw;
-    }
     .footer{
         flex-direction: column-reverse;
     }
