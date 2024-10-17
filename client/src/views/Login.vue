@@ -226,7 +226,7 @@ button:active[disabled] {
   color: #bc672a;
   font-family: 'Lexend Deca', sans-serif;
   font-size: 12px;
-  margin-left: 13rem;
+  margin-left: 12rem;
 }
 
 @media screen and (max-width: 320px) {
@@ -251,6 +251,10 @@ button:active[disabled] {
   .create-account-container {
     font-size:smaller;
   }
+
+  .error-message {
+  font-size: 0.6rem;
+}
 
 }
 
@@ -308,11 +312,20 @@ button:active[disabled] {
 .create-account-link:hover {
   color: #EDF7FB;
 }
+
+.error-message {
+  margin-right: 0rem;
+}
+
 }
 
 @media screen and (max-width: 1200px){
   .logo-img {
   margin-top: 50%;
+}
+
+.error-message {
+  margin-left: 4rem;
 }
 }
 
