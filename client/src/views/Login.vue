@@ -13,7 +13,8 @@
 
     <!-- Right side: Form with dark blue background -->
     <div class="right-side">
-      <!-- Add the image element you want to display for small screens -->
+
+    <!-- Display for small screens -->
     <img src="@/assets/vertical-logo.png" alt="Tablet Logo" class="tablet-logo-img" draggable="false" />
     <img src="@/assets/vertical-logo.png" alt="Mobile Logo" class="mobile-logo-img" draggable="false" />
 
@@ -214,7 +215,7 @@ button:active[disabled] {
 .create-account-link {
   text-decoration: underline;
   color: #757575;
-  transition: color 0.3s; /* Smooth transition for color change */
+  transition: color 0.3s;
 }
 
 .create-account-link:hover {
@@ -231,7 +232,7 @@ button:active[disabled] {
 @media screen and (max-width: 320px) {
   .mobile-logo-img {
     display: block;
-    width: 70%; /* Adjust width */
+    width: 70%;
     margin-bottom: 1rem;
   }
 
@@ -270,37 +271,36 @@ button:active[disabled] {
 
 @media screen and (max-width: 768px) {
   .split-container {
-    flex-direction: column; /* Stack the content vertically */
+    flex-direction: column;
   }
 
-  .left-side {
-    display: none; /* Hide the left side */
-  }
+.left-side {
+  display: none;
+}
 
-  .right-side {
-    background-color: #759CAB;
-  }
+.right-side {
+  background-color: #759CAB;
+}
 
-  .container {
-    margin-bottom:7rem;
-  }
+.container {
+  margin-bottom:7rem;
+}
 
-  /* Display the image on small screens */
-  .tablet-logo-img {
-    display: block;
-    width: 40%; /* Adjust width */
-    margin-bottom: 1rem;
-  }
+.tablet-logo-img {
+  display: block;
+  width: 40%;
+  margin-bottom: 1rem;
+}
 
-  .input {
+.input {
   color: #0c556a;
-  }
+}
 
-  .btn {
-    color: #EDF7FB;
-    border: #0c556a;
-    background-color: #0c556a;
-  }
+.btn {
+  color: #EDF7FB;
+  border: #0c556a;
+  background-color: #0c556a;
+}
 
 .btn:disabled {
   border: 2px solid #0c556a;

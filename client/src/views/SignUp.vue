@@ -13,6 +13,9 @@
 
       <!-- Right side: Form with dark blue background -->
       <div class="signup-right-side">
+
+        <img src="@/assets/vertical-logo.png" alt="Tablet Logo" class="signup-tablet-logo-img" draggable="false" />
+
         <div class="signup-container">
           <!-- Container for the form -->
           <div class="signup-form-entries">
@@ -138,7 +141,7 @@ export default {
 <style scoped>
 /* Split container for vertical layout */
 .split-container {
-  display: flex;                /* Horizontal layout */
+  display: flex;
   height: 100vh;
 }
 
@@ -163,8 +166,12 @@ export default {
 .signup-logo-img {
   width: 80%;
   max-width: 500px;
-  margin-top: 30%;
+  margin-top: 35%;
   margin-left: 9%;
+}
+
+.signup-tablet-logo-img {
+  display: none;
 }
 
 /* Styling for the row of the name, username and password */
@@ -280,6 +287,80 @@ button:active[disabled] {
 
 .login-link:hover {
   color: #759CAB;
+}
+
+@media screen and (max-width: 768px) {
+
+.signup-left-side {
+  display: none;
+}
+
+.signup-right-side {
+  background-color: #759CAB;
+}
+
+.split-container {
+    flex-direction: column;
+  }
+
+.signup-tablet-logo-img {
+  display: block;
+  width: 40%;
+  margin-bottom: 1rem;
+}
+
+::placeholder {
+  color: #42515e;
+  opacity: 1;
+}
+
+.signup-row-form label {
+  color: #42515e;
+  opacity: 1;
+}
+
+.dob-container select {
+  color:#42515e;
+}
+
+.dob-container select:focus {
+  color: #0c556a;
+}
+
+.signup-input {
+  color: #0c556a;
+  text-decoration-color: #42515e;
+}
+
+.signup-btn {
+  color: #EDF7FB;
+  border: #0c556a;
+  background-color: #0c556a;
+  margin-top:1rem;
+}
+
+.signup-btn:disabled {
+  border: 2px solid #0c556a;
+  background-color: #759CAB;
+}
+
+.signup-login-container {
+  color: #0c556a;
+}
+
+.login-link {
+  color: #0c556a;
+}
+
+.login-link:hover {
+  color: #EDF7FB;
+}
+}
+
+@media screen and (max-width: 1200px){
+  .signup-logo {
+    margin-top: 10%;
+  }
 }
 
 </style>
