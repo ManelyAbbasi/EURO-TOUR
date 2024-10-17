@@ -395,7 +395,7 @@
   <div class="popup-body">
     <ul>
       <li v-for="city in filteredCities" :key="city._id || city.cityName">
-        {{ city.cityName }}
+        <router-link :to="`/city/${city._id}`" class="city-link">{{ city.cityName }}</router-link>
         <admin-button>
         <button class="edit-button" v-if="isAdmin && city._id !== 'no-cities'" @click="editCity(city._id)">Edit</button>
         <button class="delete-button" v-if="isAdmin && city._id !== 'no-cities'" @click="deleteCity(city._id)">Delete</button>
@@ -833,6 +833,19 @@ input[type='checkbox'] {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.popup-body a{
+  text-decoration: none;
+  color: #196386;
+  transition: all 0.3s;
+  padding-top:0.5rem;
+}
+
+.popup-body a:hover{
+  text-decoration: underline #045768;
+  color: #8FC6DF;
+  transform: scale(1.05);
 }
 
 .popup-body {
