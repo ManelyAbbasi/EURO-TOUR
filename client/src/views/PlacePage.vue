@@ -39,10 +39,6 @@
           <p><strong class="heading">City:</strong></p>
           <router-link :to="`/city/${place.cityId}`" class="city-link detail-text">{{ place.cityName }}</router-link>
         </div>
-        <div class="address-wrapper">
-          <p><strong class="heading">Address:</strong></p>
-          <p class="detail-text">{{ place.address }}</p>
-        </div>
         <div class="content-wrapper">
           <p><strong class="heading">Content:</strong></p>
           <p class="detail-text">{{ place.content }}</p>
@@ -68,9 +64,6 @@
     <form @submit.prevent="submitEditPlace">
       <label for="placeName">Place Name:</label>
       <input type="text" id="placeName" v-model="editPlaceName" />
-
-      <label for="address">Address:</label>
-      <input type="text" id="address" v-model="editAddress" />
 
       <label for="rating">Rating:</label>
       <input type="number" id="rating" v-model="editRating" min="0" max="5" step="0.1" />
@@ -114,7 +107,6 @@ export default {
       loggedInStatus: !!localStorage.getItem('x-auth-token'), // Reactive property for login status
       showEditForm: false,
       editPlaceName: '', // To hold the place name when editing
-      editAddress: '', // To hold the address when editing
       editRating: null, // To hold the rating when editing
       editPlaceContent: '', // To hold the content when editing
       tagOptions: [ // List of tag options
@@ -194,7 +186,6 @@ export default {
     },
     showEditPlaceForm(place) {
       this.editPlaceName = place.placeName
-      this.editAddress = place.address
       this.editRating = place.rating
       this.editPlaceContent = place.content
       this.editTags = place.tags
@@ -203,7 +194,6 @@ export default {
     hideEditPlaceForm() {
       this.showEditForm = false
       this.editPlaceName = ''
-      this.editAddress = ''
       this.editRating = null
       this.editPlaceContent = ''
       this.editTags = []

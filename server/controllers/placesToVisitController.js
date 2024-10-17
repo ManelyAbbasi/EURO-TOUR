@@ -78,12 +78,6 @@ async function updatePlace(req, res, next) {
             }
             placesToVisit.placeName = req.body.placeName;
         }
-        if (req.body.address !== undefined) {
-            if (typeof req.body.address !== 'string' || req.body.address.trim() === "") {
-                return res.status(400).json({ message: "Invalid address: must be a non-empty string" });
-            }
-            placesToVisit.address = req.body.address;
-        }
         if (req.body.rating !== undefined) {
             if (req.body.rating < 0.0 || req.body.rating > 5.0) {
                 return res.status(400).json({ message: "Invalid rating: must be between 0.0 and 5.0" });
