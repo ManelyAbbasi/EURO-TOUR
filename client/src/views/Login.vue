@@ -270,9 +270,9 @@ button:active[disabled] {
 }
 
 @media screen and (max-width: 768px) {
-  .split-container {
-    flex-direction: column;
-  }
+.split-container {
+  flex-direction: column;
+}
 
 .left-side {
   display: none;
@@ -294,6 +294,11 @@ button:active[disabled] {
 
 .input {
   color: #0c556a;
+}
+
+::placeholder {
+  color: #42515e;
+  opacity: 1;
 }
 
 .btn {
