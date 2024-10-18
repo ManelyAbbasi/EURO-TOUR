@@ -12,7 +12,6 @@ var usersSchema = new Schema({
         enum: ['male', 'female', 'non-binary', 'other'], 
         default: 'other'  
     },
-    isAdmin: { type: Boolean, default: false },
     session: {
         key: {
             type: mongoose.SchemaTypes.ObjectId,

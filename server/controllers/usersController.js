@@ -42,9 +42,6 @@ async function createUser(req, res, next) {
         if (!validGenders.includes(req.body.gender)) {
             return res.status(400).json({ message: 'Invalid gender value. Must be male, female, non-binary, or other.' });
         }
-        if (typeof req.body.isAdmin !== 'boolean') {
-            return res.status(400).json({ "message": "Invalid isAdmin: must be a boolean value" });
-        }
 
         const user = new usersModel(req.body);
         await user.save();

@@ -2,13 +2,12 @@ const CitiesModel = require("../models/citiesModel");
 const placesToVisitSchema = require("../models/placesToVisitModel");
 const UsersModel = require("../models/usersModel");
 const citiesModel = require("../models/citiesModel");
+const adminsSchema = require("../models/adminsModel");
 
 
 async function createCity(req, res, next) {
     try {
-        if (!req.body.isAdmin) {
-            return res.status(403).json({ message: "Access denied. Only admins can create cities." });
-        }
+
 
         if (typeof req.body.cityName !== 'string' || req.body.cityName.trim() === "") {
             return res.status(400).json({ message: "Invalid cityName: must be a non-empty string" });
