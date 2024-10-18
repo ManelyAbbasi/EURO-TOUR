@@ -82,10 +82,12 @@ export default {
           if (userResponse.status === 'fulfilled' && userResponse.value.headers['x-auth-token']) {
             const userAuthToken = userResponse.value.headers['x-auth-token']
             localStorage.setItem('x-auth-token', userAuthToken)
+            console.log('User')
             this.$router.push({ name: 'home' })
           } else if (adminResponse.status === 'fulfilled' && adminResponse.value.headers['x-auth-token']) {
             const adminAuthToken = adminResponse.value.headers['x-auth-token']
             localStorage.setItem('x-auth-token', adminAuthToken)
+            console.log('Admin')
             this.$router.push({ name: 'home' })
           } else {
             if (userResponse.status === 'rejected' && userResponse.reason.response && userResponse.reason.response.status === 404) {

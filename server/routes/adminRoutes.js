@@ -7,6 +7,9 @@ router.patch('/:name', adminController.patchAdmin);
 router.delete('/cities/:id', adminController.deleteCity);
 
 router.get('/check-admin', adminController.checkIfAdmin);
+
+router.get('/verify-admin', adminController.verifyAdmin);
+
 router.get('/', adminController.getAllAdmins);
 
 

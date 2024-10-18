@@ -124,6 +124,31 @@ async function checkIfAdmin(req) {
     return { isAdmin: false, message: "User or admin not found" };
 }
 
+async function verifyAdmin(req, res) {
+    if (!req.headers['x-auth-token']) {
+        return { isAdmin: false, message: "Access denied. No token provided." };
+    }
+
+    const token = req.headers['x-auth-token'];
+
+    const admin = await adminsSchema.findOne({ "session.key": token });
+    if (admin) {
+        if (Date.now() > admin.session.expiry) {
+            return res.status(404).json({ isAdmin: false, message: "Session expired" });
+        }
+        return res.status(200).json({ isAdmin : true });
+    }
+
+    const user = await UsersModel.findOne({ "session.key": token });
+    if (user) {
+        if (Date.now() > user.session.expiry) {
+            return res.status(404).json({ isAdmin: false, message: "Session expired" });
+        }
+        return res.status(404).json({ isAdmin: false });
+    }
+    return res.status(404).json({ isAdmin: false, message: "User or admin not found" });
+}
+
 async function login(req, res, next) {
     try {
         const { username, password } = req.body;
@@ -188,6 +213,7 @@ module.exports ={
     patchAdmin,
     deleteCity,
     checkIfAdmin, 
+    verifyAdmin,
     createAdmin,
     login,
     getAllAdmins
