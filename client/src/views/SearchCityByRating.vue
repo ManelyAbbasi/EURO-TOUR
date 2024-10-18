@@ -30,8 +30,8 @@
 
         <b-container class="search-by-panel">
 
-            <b-row>
-            <b-col col="4">
+            <b-row class="search-options-row">
+            <b-col col="4" class="search-places-text-col">
                 <h2 class="search-cities-text">Search cities by:</h2>
             </b-col>
 
@@ -50,7 +50,7 @@
     </b-col>
     </b-row>
     <b-row>
-      <b-col><h4>sort by:</h4></b-col>
+      <b-col><h4 id="sort-by">sort by:</h4></b-col>
       <b-col><button
       class="sort-by-button"
       @click="recordSortOption('desc')"
@@ -210,7 +210,7 @@
           </div>
 
           <div v-else>
-            <h3>No cities found.</h3>
+            <h3 class="no-cities-found">No cities found.</h3>
           </div>
         </b-col>
       </b-row>
@@ -521,6 +521,14 @@ h5{
   color: #045768;
 }
 
+.no-cities-found {
+    color: #233341;
+    justify-content: center;
+    display: flex;
+    padding: 5rem;
+    font-size: 3rem;
+}
+
 .euro-tour-header {
   position: fixed;
   top: 0;
@@ -631,67 +639,6 @@ a img {
     color: #045768;
 }
 
-@media screen and (max-width:1200px) {
-    html{
-        font-size: 55%;
-    }
-}
-
-@media screen and (max-width: 991px){
-    section{
-        padding: 10rem 3% 2rem;
-    }
-    .euro-tour-header{
-        padding: 2rem 3%;
-    }
-    .footer{
-        padding: 2rem 3%;
-    }
-    .get-to-know-wrapper{
-        padding: 7rem;
-    }
-}
-
-@media screen and (max-width: 768px){
-    .navbar{
-        width: 100%;
-        display: flex;
-        justify-content: space-evenly;
-        flex-wrap: wrap;
-        align-items: center;
-    }
-    .euro-tour-header{
-        flex-direction: column;
-        gap: 2rem;
-    }
-    .layout-wrapper,
-    .get-to-know-wrapper{
-        flex-direction: column;
-        display: flex;
-    }
-    .layout-wrapper p{
-        font-size: 2.5rem;
-    }
-    .layout-wrapper h1{
-        font-size: 5rem;
-    }
-}
-
-@media screen and (max-width:576px) {
-    html{
-        font-size: 50%;
-    }
-}
-
-@media screen and (max-width:350px) {
-    .layout-wrapper img{
-        width: 90vw;
-    }
-    .footer{
-        flex-direction: column-reverse;
-    }
-}
-
 .cities-list {
     display: flex;
     flex-wrap: wrap;
@@ -774,17 +721,114 @@ a img {
   font-size: 1.5rem;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
+@media screen and (max-width:1200px){
+
+.euro-tour-header{
+  padding: 2rem 3%;
+}
+
+.footer{
+  padding: 2rem 3%;
+}
+
+.search-options-row {
+    flex-direction: column;
+    gap: 0rem;
+    }
+
+    #sort-by {
+    margin-left:2rem;
+    }
+
+    .filter-options {
+    gap: 3rem;
+    }
+
+    .maincities-body-container{
+      min-width: 1200px;
+    }
+
+    .search-by-panel{
+      margin-top: 11rem;
+      min-width: 1000px
+    }
+
+    .search-options-row .search-cities-text-col{
+      width: 100%;
+      justify-content: center;
+    }
+
+    .search-cities-text{
+      text-align: center;
+    }
+
+    .search-options-row .filter-options{
+      width: 100%;
+      justify-content: center;
+    }
+
+    @media (max-width: 768px) {
+    .navbar{
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .euro-tour-header{
+        flex-direction: column;
+        gap: 0.7rem;
+        padding: 0.5rem ;
+    }
+
+    .navbar a{
+      font-size: 100%;
+    }
+
+    .navbar img{
+      max-width: 50%;
+    }
+
     .city-card {
-        flex: 0 1 calc(45% - 1rem); /* 2 cards per row on smaller screens */
+        flex: 0 1 calc(45% - 1rem);
+    }
+
+    .city-img-wrapper{
+      max-width: 100px;
     }
 }
 
 @media (max-width: 576px) {
     .city-card {
-        flex: 0 1 calc(100% - 1rem); /* 1 card per row on extra small screens */
+       flex: 0 1 calc(100% - 1rem);
+        flex-direction: row;
+        display: flex;
+        align-items: center;
     }
+
+    .top-half-card{
+      gap: 1rem;
+      justify-content: space-between;
+      width: 40%;
+    }
+
+    .bottom-half-card{
+      width: 60%;
+    }
+}
+
+@media screen and (max-width:350px) {
+    .footer{
+        flex-direction: column-reverse;
+    }
+
+    .container.search-by-panel{
+      width: 900px
+    }
+
+}
+
 }
 
 </style>

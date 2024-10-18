@@ -49,7 +49,7 @@
         </div>
     </b-col>
     </b-row>
-    <b-row class="sort-row">
+    <b-row>
       <b-col><h4 id="sort-by">sort by:</h4></b-col>
       <b-col><button
       class="sort-by-button"
