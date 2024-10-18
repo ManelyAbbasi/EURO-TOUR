@@ -253,7 +253,7 @@ export default {
     },
     async checkIfAdmin() {
       try {
-        const response = await Api.get('/api/admin/check-admin', {
+        const response = await Api.get('/api/admin/verify-admin', {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }
