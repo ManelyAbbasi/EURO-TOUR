@@ -170,6 +170,21 @@ export default {
         this.places = []
       }
     },
+    async deleteAllPlaces() {
+      const confirmed = confirm('Are you sure you want to delete this place?')
+      if (!confirmed) return
+      try {
+        const response = await Api.delete('/api/places', {
+          headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
+        })
+        if ((response.status === 200)) {
+          alert('Place deleted successfully')
+          window.location.reload()
+        }
+      } catch (error) {
+        console.error('Error deleting place:', error)
+      }
+    },
     toggleFavorite() {
       this.isFavorite = !this.isFavorite // Toggle between true and false
     },
