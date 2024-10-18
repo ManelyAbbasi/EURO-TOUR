@@ -79,8 +79,10 @@ async function createAdmin(req, res, next) {
 async function deleteCity(req, res) {
     const cityId = req.params.id;
     try {
-        if (!req.body.isAdmin) {
-            return res.status(403).json({ message: "Access denied. Admins only." });
+        const adminCheckResponse = await checkIfAdmin(req);
+
+        if (!adminCheckResponse.isAdmin) {
+            return res.status(403).json({ message: "Access denied. Only admins can delete a city." });
         }
 
         const deletedCity = await CitiesModel.findByIdAndDelete(cityId);
@@ -89,34 +91,37 @@ async function deleteCity(req, res) {
             return res.status(404).json({ message: "City not found" });
         }
 
-        res.status(200).json({ message: "City deleted successfully", city: deletedCity });
+        return res.status(200).json({ message: "City deleted successfully", city: deletedCity });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal server error" });
+        console.error('Error deleting city:', error);
+        return res.status(500).json({ message: "Internal server error" });
     }
 }
 
-async function checkIfAdmin(req, res) {
-    try {
-        if (!req.headers['x-auth-token']) {
-            return res.status(401).json({ message: "Access denied. No token provided." });
-        }
-
-        const user = await UsersModel.findOne({ "session.key": req.headers['x-auth-token'] });
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        if (Date.now() > user.session.expiry) {
-            return res.status(401).json({ message: "Session expired" });
-        }
-
-        // Return the admin status
-        return res.status(200).json({ isAdmin: user.isAdmin });
-    } catch (err) {
-        console.error('Error checking admin status:', err);
-        return res.status(500).json({ message: "Internal server error" });
+async function checkIfAdmin(req) {
+    if (!req.headers['x-auth-token']) {
+        return { isAdmin: false, message: "Access denied. No token provided." };
     }
+
+    const token = req.headers['x-auth-token'];
+
+    const admin = await adminsSchema.findOne({ "session.key": token });
+    if (admin) {
+        if (Date.now() > admin.session.expiry) {
+            return { isAdmin: false, message: "Session expired" };
+        }
+        return { isAdmin: true };
+    }
+
+    const user = await UsersModel.findOne({ "session.key": token });
+    if (user) {
+        if (Date.now() > user.session.expiry) {
+            return { isAdmin: false, message: "Session expired" };
+        }
+        return { isAdmin: false };
+    }
+
+    return { isAdmin: false, message: "User or admin not found" };
 }
 
 async function login(req, res, next) {
