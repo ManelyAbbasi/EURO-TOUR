@@ -1,5 +1,5 @@
 <template>
-  <div class="maincities-body-container">
+  <div class="city-tags-body-container">
     <header class="euro-tour-header">
       <div class="logo-wrapper">
         <router-link to="/" class="logo">
@@ -29,8 +29,8 @@
     </header>
 
     <b-container class="search-by-tag-panel">
-      <b-row>
-        <b-col col="4">
+      <b-row class="search-options-row">
+        <b-col col="4" class="search-cities-text-col">
           <h2 class="search-cities-text">Search cities by:</h2>
         </b-col>
 
@@ -42,7 +42,7 @@
             <router-link to="/searchCityByRating">
               <button class="ratings-button">ratings</button>
             </router-link>
-            <i class="fa-solid fa-filter"></i>
+            <i class="fa-solid fa-filter" style="color: #045768;"></i>
           </div>
         </b-col>
       </b-row>
@@ -72,11 +72,11 @@
       </b-row>
 
       <b-row class="selecting-tags-row">
-        <b-col>
+        <b-col class="selected-title-col">
           <h2 class="result-text">selected tags:</h2>
         </b-col>
 
-        <b-col cols="7">
+        <b-col cols="7" class="selected-tags-col">
           <div class="selected-tags">
             <button
               v-for="tag in selectedTags"
@@ -173,7 +173,7 @@ export default {
           tags: this.selectedTags.length ? this.selectedTags.join(',') : undefined
         }
 
-        const response = await Api.get('/api/cities', { params })
+        const response = await Api.get('/cities', { params })
         if (response.data && response.data.cities) {
           this.cities = response.data.cities
         } else {
@@ -210,7 +210,7 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
 
-.maincities-body-container {
+.city-tags-body-container {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -227,7 +227,7 @@ export default {
 
 .search-by-tag-panel {
     background-color: #759cab;
-    width: 100rem;
+    width: 80%;
     min-height: 50rem;
     margin-bottom: 35px;
     margin-top: 9rem;
@@ -455,80 +455,6 @@ a img {
     color: #045768;
 }
 
-@media screen and (max-width:1200px) {
-    html{
-        font-size: 55%;
-    }
-}
-
-@media screen and (max-width: 991px){
-    section{
-        padding: 10rem 3% 2rem;
-    }
-    .euro-tour-header{
-        padding: 2rem 3%;
-    }
-    .footer{
-        padding: 2rem 3%;
-    }
-    .get-to-know-wrapper{
-        padding: 7rem;
-    }
-}
-
-@media screen and (max-width: 768px){
-    .navbar{
-        width: 100%;
-        display: flex;
-        justify-content: space-evenly;
-        flex-wrap: wrap;
-        align-items: center;
-    }
-    .euro-tour-header{
-        flex-direction: column;
-        gap: 2rem;
-    }
-    .layout-wrapper,
-    .get-to-know-wrapper{
-        flex-direction: column;
-        display: flex;
-    }
-    .layout-wrapper p{
-        font-size: 2.5rem;
-    }
-    .layout-wrapper h1{
-        font-size: 5rem;
-    }
-}
-
-@media screen and (max-width:576px) {
-    html{
-        font-size: 50%;
-    }
-}
-
-@media screen and (max-width:350px) {
-    .layout-wrapper img{
-        width: 90vw;
-    }
-    .footer{
-        flex-direction: column-reverse;
-    }
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .city-card {
-        flex: 0 1 calc(45% - 1rem); /* 2 cards per row on smaller screens */
-    }
-}
-
-@media (max-width: 576px) {
-    .city-card {
-        flex: 0 1 calc(100% - 1rem); /* 1 card per row on extra small screens */
-    }
-}
-
 .cities-list {
     display: flex;
     flex-wrap: wrap;
@@ -614,16 +540,98 @@ a img {
     color: #edf7fb;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
+@media screen and (max-width:1200px) {
+    .euro-tour-header{
+        padding: 2rem 3%;
+    }
+    .footer{
+        padding: 2rem 3%;
+    }
+    .search-by-tag-panel{
+      margin-top: 11rem;
+      min-width: 1000px
+    }
+    .city-tags-body-container{
+      min-width: 1200px;
+    }
+    .search-options-row .search-cities-text-col{
+      width: 100%;
+      justify-content: center;
+    }
+    .search-cities-text{
+      text-align: center;
+    }
+    .search-options-row .filter-options{
+      width: 100%;
+      justify-content: center;
+    }
+}
+
+@media screen and (max-width: 768px){
+    .navbar{
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    .euro-tour-header{
+        flex-direction: column;
+        gap: 0.7rem;
+        padding: 0.5rem ;
+    }
+    .navbar a{
+      font-size: 100%;
+    }
+    .navbar img{
+      max-width: 50%;
+    }
     .city-card {
         flex: 0 1 calc(45% - 1rem); /* 2 cards per row on smaller screens */
+    }
+    h2 {
+      display: flex;
+      justify-content: center;
+      margin-right: 6rem;
+    }
+    .selected-title-col{
+      width: 25%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding-left: 3rem;
+    }
+    .selected-tags-col{
+      width: 75%;
+    }
+    .col-with-clear-button{
+      padding-left: 3rem;
+    }
+    .city-img-wrapper{
+      max-width: 100px;
     }
 }
 
 @media (max-width: 576px) {
     .city-card {
         flex: 0 1 calc(100% - 1rem); /* 1 card per row on extra small screens */
+        flex-direction: row;
+        display: flex;
+        align-items: center;
+    }
+    .top-half-card{
+      gap: 1rem;
+      justify-content: space-between;
+      width: 40%;
+    }
+    .bottom-half-card{
+      width: 60%;
+    }
+}
+
+@media screen and (max-width:350px) {
+    .footer{
+        flex-direction: column-reverse;
     }
 }
 
