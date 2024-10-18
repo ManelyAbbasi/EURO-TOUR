@@ -50,7 +50,7 @@
     </b-col>
     </b-row>
     <b-row class="sort-row">
-      <b-col><h4>sort by:</h4></b-col>
+      <b-col><h4 id="sort-by">sort by:</h4></b-col>
       <b-col><button
       class="sort-by-button"
       @click="recordSortOption('desc')"
@@ -396,7 +396,10 @@ h4 {
     color: #045768;
     margin-top: 4rem;
     margin-left: 2rem;
+}
 
+#sort-by {
+  margin-left:7rem;
 }
 
 .sort-by-button {
@@ -734,6 +737,10 @@ a img {
     .search-options-row {
     flex-direction: column;
     gap: 0rem;
+    }
+
+    #sort-by {
+    margin-left:2rem;
     }
 
     .filter-options {
