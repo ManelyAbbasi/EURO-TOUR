@@ -71,6 +71,7 @@
                 </div>
                 <div class="read-more-wrapper">
                   <router-link :to="`/place/${place.address}`" class="place-link">read more</router-link>
+                  <button v-if="isAdmin" @click="deleteAllPlaces" class="delete-all-button">delete all places</button>
                 </div>
             </div>
           </div>
@@ -167,6 +168,21 @@ export default {
       } catch (error) {
         console.error('Error fetching places:', error)
         this.places = []
+      }
+    },
+    async deleteAllPlaces() {
+      const confirmed = confirm('Are you sure you want to delete this place?')
+      if (!confirmed) return
+      try {
+        const response = await Api.delete('/api/places', {
+          headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
+        })
+        if ((response.status === 200)) {
+          alert('Place deleted successfully')
+          window.location.reload()
+        }
+      } catch (error) {
+        console.error('Error deleting place:', error)
       }
     },
     toggleFavorite() {
@@ -371,6 +387,12 @@ export default {
     font-weight: bold;
 }
 
+.read-more-wrapper{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
 .read-more-wrapper a{
   color: #bc672a;
   text-decoration: none;
@@ -382,6 +404,22 @@ export default {
   text-decoration-line: underline;
   color: #acbbc1;
   transform: scale(1.05);
+}
+
+.delete-all-button{
+  border: aliceblue 2px solid;
+  background-color: #bc672a;
+  color: #edf7fb;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+
+.delete-all-button:hover{
+  background-color: orangered;
+  color: white;
+  border: 2px solid red;
+  transform: scale(1.04);
 }
 
 .mainplaces-right-side-panel {
