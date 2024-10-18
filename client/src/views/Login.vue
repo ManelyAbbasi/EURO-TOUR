@@ -64,36 +64,47 @@ export default {
   },
   methods: {
     async loginButton() {
-      // Reset error messages
       this.usernameError = ''
       this.passwordError = ''
 
       if (!this.isEmpty) {
+        const userCredentials = {
+          username: this.username,
+          password: this.password
+        }
+
         try {
-          const userCredentials = {
-            username: this.username,
-            password: this.password
-          }
+          const [userResponse, adminResponse] = await Promise.allSettled([
+            Api.post('/api/users/login', userCredentials),
+            Api.post('/api/admin/login', userCredentials)
+          ])
 
-          const response = await Api.post('/api/users/login', userCredentials)
-
-          const authToken = response.headers['x-auth-token']
-          if (authToken) {
-            localStorage.setItem('x-auth-token', authToken)
+          if (userResponse.status === 'fulfilled' && userResponse.value.headers['x-auth-token']) {
+            const userAuthToken = userResponse.value.headers['x-auth-token']
+            localStorage.setItem('x-auth-token', userAuthToken)
+            this.$router.push({ name: 'home' })
+          } else if (adminResponse.status === 'fulfilled' && adminResponse.value.headers['x-auth-token']) {
+            const adminAuthToken = adminResponse.value.headers['x-auth-token']
+            localStorage.setItem('x-auth-token', adminAuthToken)
             this.$router.push({ name: 'home' })
           } else {
-            console.error('login failed: no auth token received')
+            if (userResponse.status === 'rejected' && userResponse.reason.response && userResponse.reason.response.status === 404) {
+              this.usernameError = 'There is no account with this username (user)'
+            } else if (adminResponse.status === 'rejected' && adminResponse.reason.response && adminResponse.reason.response.status === 404) {
+              this.usernameError = 'There is no account with this username (admin)'
+            }
+
+            if (userResponse.status === 'rejected' && userResponse.reason.response && userResponse.reason.response.status === 401) {
+              this.passwordError = 'Password does not match the username (user)'
+            } else if (adminResponse.status === 'rejected' && adminResponse.reason.response && adminResponse.reason.response.status === 401) {
+              this.passwordError = 'Password does not match the username (admin)'
+            }
+
+            throw new Error('Login failed for both user and admin')
           }
         } catch (error) {
-          // Handle specific error cases
-          if (error.response && error.response.status === 404) {
-            this.usernameError = 'there in no account with this username'
-          } else if (error.response && error.response.status === 401) {
-            this.passwordError = 'password does not match the username'
-          } else {
-            console.error('login error:', error)
-            alert('login failed. please try again.')
-          }
+          console.error('login error:', error)
+          alert('Login failed. Please try again.')
         }
       }
     }
