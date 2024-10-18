@@ -172,7 +172,7 @@ async function deleteOneUser(req, res) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        if (currentUser.username !== req.params.username && !currentUser.isAdmin) {
+        if (currentUser.username !== req.params.username) {
             return res.status(403).json({ message: "You are not authorized to delete this user." });
         }
 

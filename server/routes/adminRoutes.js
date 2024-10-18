@@ -17,5 +17,7 @@ router.post('/', adminController.createAdmin);
 
 router.post('/login', adminController.login);
 
+router.delete('/:username', adminController.deleteOneAdmin);
+
 
 module.exports = router; 

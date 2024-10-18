@@ -208,6 +208,44 @@ async function getAllAdmins(req, res, next) {
     }
 }
 
+async function deleteOneAdmin(req, res, next) {
+    try{
+        const sessionKey = req.headers['x-auth-token'];
+        if (!sessionKey) {
+            return res.status(401).json({ message: "No session token provided, authorization denied" });
+        }
+
+        const currentAdmin = await adminsSchema.findOne({ 'session.key': sessionKey });
+        if (!currentAdmin) {
+            return res.status(401).json({ message: "Invalid session token" });
+        }
+
+        const adminToDelete = await adminsSchema.findOne({ username: req.params.username });
+        if (!adminToDelete) {
+            return res.status(404).json({ message: "Admin not found" });
+        }
+
+        if (currentAdmin.username !== req.params.username) {
+            return res.status(403).json({ message: "You are not authorized to delete this admin." });
+        }
+
+        if (!req.body.password) {
+            return res.status(400).json({ message: "Password is required for deletion." });
+        }
+        
+        if (currentAdmin.password !== req.body.password) {
+            return res.status(403).json({ message: "Passwords don't match." });
+        }
+        
+        await adminsSchema.deleteOne({ username: req.params.username });
+
+        res.status(200).json({ message: "User deleted successfully", username: adminToDelete.username });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
 
 module.exports ={
     patchAdmin,
@@ -216,5 +254,6 @@ module.exports ={
     verifyAdmin,
     createAdmin,
     login,
-    getAllAdmins
+    getAllAdmins,
+    deleteOneAdmin
 };
