@@ -10,4 +10,7 @@ router.get('/check-admin', adminController.checkIfAdmin);
 
 router.post('/', adminController.createAdmin);
 
+router.post('/login', adminController.login);
+
+
 module.exports = router; 

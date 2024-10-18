@@ -235,7 +235,6 @@ async function login(req, res, next) {
             message: "Login successful",
             user: {
                 username: user.username,
-                isAdmin: user.isAdmin,
             }
         });
     } catch (error) {

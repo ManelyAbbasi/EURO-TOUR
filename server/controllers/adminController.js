@@ -3,6 +3,8 @@ const PlacesToVisit = require("../models/placesToVisitModel");
 const UsersModel = require("../models/usersModel");
 const citiesModel = require("../models/citiesModel");
 const adminsSchema = require("../models/adminsModel");
+const mongoose = require("mongoose");
+
 
 async function patchAdmin(req, res, next) {
     try {
@@ -103,11 +105,60 @@ async function checkIfAdmin(req, res) {
     }
 }
 
+async function login(req, res, next) {
+    try {
+        const { username, password } = req.body;
 
+        if (typeof username !== 'string' || username.trim() === '') {
+            return res.status(400).json({ message: "Invalid username: must be a non-empty string" });
+        }
+        if (username.length > 20) {
+            return res.status(400).json({ message: 'Username cannot be longer than 20 characters' });
+        }
+
+        if (typeof password !== 'string' || password.trim() === '') {
+            return res.status(400).json({ message: "Invalid password: must be a non-empty string" });
+        }
+        if (password.length > 25) {
+            return res.status(400).json({ message: 'Password cannot be longer than 25 characters' });
+        }
+
+        const admin = await adminsSchema.findOne({ username });
+
+        if (!admin) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        if (password !== admin.password) {
+            return res.status(401).json({ message: "Invalid password" });
+        }
+
+        const sessionKey = new mongoose.Types.ObjectId();
+        const sessionExpiry = Date.now() + 60 * 60 * 1000;
+        admin.session = {
+            key: sessionKey,
+            expiry: sessionExpiry,
+        };
+
+        await admin.save();
+
+        res.set('x-auth-token', sessionKey);
+        res.status(200).json({
+            message: "Login successful",
+            admin: {
+                username: admin.username,
+            }
+        });
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
 
 module.exports ={
     patchAdmin,
     deleteCity,
     checkIfAdmin,
-    createAdmin
+    createAdmin,
+    login
 };
