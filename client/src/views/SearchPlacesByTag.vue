@@ -29,8 +29,8 @@
     </header>
 
     <b-container class="search-by-tag-panel">
-      <b-row>
-        <b-col col="4">
+      <b-row class="search-options-row">
+        <b-col col="4" class="search-tags-text-col">
           <h2 class="search-places-text">Search places to visit by:</h2>
         </b-col>
 
@@ -70,12 +70,12 @@
         </b-col>
       </b-row>
 
-      <b-row>
-        <b-col>
+      <b-row class="selecting-tags-row">
+        <b-col class="selected-title-col">
           <h2 class="result-text">selected tags:</h2>
         </b-col>
 
-        <b-col cols="7">
+        <b-col cols="7" class="selected-tags-col">
           <div class="selected-tags">
             <button
               v-for="tag in selectedTags"
@@ -87,7 +87,7 @@
           </div>
         </b-col>
 
-        <b-col>
+        <b-col class="col-with-clear-button">
           <button class="clear-button" @click="clearTags">clear all tags</button>
         </b-col>
       </b-row>
@@ -455,79 +455,6 @@ a img {
     color: #045768;
 }
 
-@media screen and (max-width:1200px) {
-    html{
-        font-size: 55%;
-    }
-}
-
-@media screen and (max-width: 991px){
-    section{
-        padding: 10rem 3% 2rem;
-    }
-    .euro-tour-header{
-        padding: 2rem 3%;
-    }
-    .footer{
-        padding: 2rem 3%;
-    }
-    .get-to-know-wrapper{
-        padding: 7rem;
-    }
-}
-
-@media screen and (max-width: 768px){
-    .navbar{
-        width: 100%;
-        display: flex;
-        justify-content: space-evenly;
-        flex-wrap: wrap;
-        align-items: center;
-    }
-    .euro-tour-header{
-        flex-direction: column;
-        gap: 2rem;
-    }
-    .layout-wrapper {
-        flex-direction: column;
-        display: flex;
-    }
-    .layout-wrapper p{
-        font-size: 2.5rem;
-    }
-    .layout-wrapper h1{
-        font-size: 5rem;
-    }
-}
-
-@media screen and (max-width:576px) {
-    html{
-        font-size: 50%;
-    }
-}
-
-@media screen and (max-width:350px) {
-    .layout-wrapper img{
-        width: 90vw;
-    }
-    .footer{
-        flex-direction: column-reverse;
-    }
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .place-card {
-        flex: 0 1 calc(45% - 1rem); /* 2 cards per row on smaller screens */
-    }
-}
-
-@media (max-width: 576px) {
-    .place-card {
-        flex: 0 1 calc(100% - 1rem); /* 1 card per row on extra small screens */
-    }
-}
-
 .places-list {
     display: flex;
     flex-wrap: wrap;
@@ -614,17 +541,123 @@ a img {
     color: #edf7fb;
 }
 
-/* Responsive adjustments */
+@media screen and (max-width:1200px) {
+   .euro-tour-header{
+        padding: 2rem 3%;
+    }
+
+    .footer{
+        padding: 2rem 3%;
+    }
+
+    .search-by-tag-panel{
+      margin-top: 11rem;
+      min-width: 1000px
+    }
+
+    .tag-places-body-container{
+      min-width: 1200px;
+    }
+
+    .search-options-row .search-tags-text-col{
+      width: 100%;
+      justify-content: center;
+    }
+
+    .search-tags-text{
+      text-align: center;
+    }
+
+    .search-options-row .filter-options{
+      width: 100%;
+      justify-content: center;
+    }
+
+}
+
 @media (max-width: 768px) {
-    .city-card {
+    .navbar{
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .euro-tour-header{
+        flex-direction: column;
+        gap: 0.7rem;
+        padding: 0.5rem ;
+    }
+
+    .navbar a{
+      font-size: 100%;
+    }
+    .navbar img{
+      max-width: 50%;
+    }
+
+    .place-card {
         flex: 0 1 calc(45% - 1rem); /* 2 cards per row on smaller screens */
     }
+
+    h2 {
+      display: flex;
+      justify-content: center;
+      margin-right: 6rem;
+    }
+
+    .selected-title-col{
+      width: 25%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding-left: 3rem;
+    }
+
+    .selected-tags-col{
+      width: 75%;
+    }
+
+    .col-with-clear-button{
+      padding-left: 3rem;
+    }
+
+    .place-img-wrapper{
+      max-width: 100px;
+    }
+
 }
 
 @media (max-width: 576px) {
-    .city-card {
-        flex: 0 1 calc(100% - 1rem); /* 1 card per row on extra small screens */
+    .place-card {
+       flex: 0 1 calc(100% - 1rem); /* 1 card per row on extra small screens */
+        flex-direction: row;
+        display: flex;
+        align-items: center;
     }
+
+    .top-half-card{
+      gap: 1rem;
+      justify-content: space-between;
+      width: 40%;
+    }
+
+    .bottom-half-card{
+      width: 60%;
+    }
+
+}
+
+@media screen and (max-width:350px) {
+    .footer{
+        flex-direction: column-reverse;
+    }
+
+    .container.search-by-tag-panel{
+      width: 900px
+    }
+
 }
 
 </style>
