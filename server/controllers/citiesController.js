@@ -2,12 +2,18 @@ const CitiesModel = require("../models/citiesModel");
 const placesToVisitSchema = require("../models/placesToVisitModel");
 const UsersModel = require("../models/usersModel");
 const citiesModel = require("../models/citiesModel");
+const adminsSchema = require("../models/adminsModel");
+const adminController = require("../controllers/adminController");
+
 
 
 async function createCity(req, res, next) {
     try {
-        if (!req.body.isAdmin) {
-            return res.status(403).json({ message: "Access denied. Only admins can create cities." });
+
+        const adminCheckResponse = await adminController.checkIfAdmin(req);
+
+        if (!adminCheckResponse.isAdmin) {
+            return res.status(403).json({ message: "Access denied. Only admins can delete a city." });
         }
 
         if (typeof req.body.cityName !== 'string' || req.body.cityName.trim() === "") {
@@ -49,8 +55,10 @@ async function createCity(req, res, next) {
 async function createPlaceInCity(req, res) {
     const cityId = req.params.id;
     try {
-        if (!req.body.isAdmin) {
-            return res.status(403).json({ message: "Access denied. Only admins can create cities." });
+        const adminCheckResponse = await adminController.checkIfAdmin(req);
+
+        if (!adminCheckResponse.isAdmin) {
+            return res.status(403).json({ message: "Access denied. Only admins can delete a city." });
         }
         const city = await CitiesModel.findById(cityId);
         if (!city) {
@@ -200,8 +208,10 @@ async function updateCity(req, res, next) {
     const cityId = req.params.id;
 
     try {
-        if (!req.body.isAdmin) {
-            return res.status(403).json({ message: "Access denied. Only admins can update cities." });
+        const adminCheckResponse = await adminController.checkIfAdmin(req);
+
+        if (!adminCheckResponse.isAdmin) {
+            return res.status(403).json({ message: "Access denied. Only admins can delete a city." });
         }
 
         const city = await CitiesModel.findById(cityId);
@@ -271,6 +281,12 @@ async function deleteOnePlaceFromCity(req, res) {
     const address = req.params.address;
 
     try {
+        const adminCheckResponse = await adminController.checkIfAdmin(req);
+
+        if (!adminCheckResponse.isAdmin) {
+            return res.status(403).json({ message: "Access denied. Only admins can delete a city." });
+        }
+        
         const city = await CitiesModel.findOne({ _id: cityId }).populate('placesToVisit');
         if (!city) {
             return res.status(404).json({ message: "City not found" });

@@ -3,30 +3,46 @@ const PlacesToVisit = require("../models/placesToVisitModel");
 const UsersModel = require("../models/usersModel");
 const citiesModel = require("../models/citiesModel");
 const adminsSchema = require("../models/adminsModel");
+const mongoose = require("mongoose");
+
+
 
 async function patchAdmin(req, res, next) {
     try {
-        const user = await UsersModel.findOne({ username: req.params.username });
+        const sessionKey = req.headers['x-auth-token'];
+        const { password } = req.body;
+        const username = req.params.name;
 
-        if (user == null) {
-            return res.status(404).json({ "message": "User not found" });
+        if (!sessionKey) {
+            return res.status(401).json({ message: "No session token provided, authorization denied" });
         }
 
-        if (req.body.username !== req.params.username && !req.body.isAdmin) {
-            return res.status(403).json({ "message": "You are not authorized to update this user." });
-        }
-    
         if (typeof password !== 'string' || password.trim() === '') {
-            return res.status(400).json({ message: 'Invalid password: must be a non-empty string' });
+            return res.status(400).json({ message: "Invalid password: must be a non-empty string" });
         }
-        user.password = req.body.password || user.password;
-        await user.save();
+        if (password.length < 6) {
+            return res.status(400).json({ message: "Password must be at least 6 characters long" });
+        }
+        if (password.length > 25) {
+            return res.status(400).json({ message: "Password cannot be longer than 25 characters" });
+        }
 
-        res.status(200).json(user); 
-    } catch (err) {
-        next(err);
+        const admin = await adminsSchema.findOne({ username, 'session.key': sessionKey });
+
+        if (!admin) {
+            return res.status(401).json({ message: "Invalid session token or username" });
+        }
+
+        admin.password = password;
+        await admin.save();
+
+        return res.status(200).json({ message: "Password updated successfully" });
+    } catch (error) {
+        console.error('Password update error:', error);
+        return res.status(500).json({ message: "Internal server error", error });
     }
 }
+
 
 async function createAdmin(req, res, next) {
     try {
@@ -63,8 +79,10 @@ async function createAdmin(req, res, next) {
 async function deleteCity(req, res) {
     const cityId = req.params.id;
     try {
-        if (!req.body.isAdmin) {
-            return res.status(403).json({ message: "Access denied. Admins only." });
+        const adminCheckResponse = await checkIfAdmin(req);
+
+        if (!adminCheckResponse.isAdmin) {
+            return res.status(403).json({ message: "Access denied. Only admins can delete a city." });
         }
 
         const deletedCity = await CitiesModel.findByIdAndDelete(cityId);
@@ -73,41 +91,169 @@ async function deleteCity(req, res) {
             return res.status(404).json({ message: "City not found" });
         }
 
-        res.status(200).json({ message: "City deleted successfully", city: deletedCity });
+        return res.status(200).json({ message: "City deleted successfully", city: deletedCity });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal server error" });
-    }
-}
-
-async function checkIfAdmin(req, res) {
-    try {
-        if (!req.headers['x-auth-token']) {
-            return res.status(401).json({ message: "Access denied. No token provided." });
-        }
-
-        const user = await UsersModel.findOne({ "session.key": req.headers['x-auth-token'] });
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        if (Date.now() > user.session.expiry) {
-            return res.status(401).json({ message: "Session expired" });
-        }
-
-        // Return the admin status
-        return res.status(200).json({ isAdmin: user.isAdmin });
-    } catch (err) {
-        console.error('Error checking admin status:', err);
+        console.error('Error deleting city:', error);
         return res.status(500).json({ message: "Internal server error" });
     }
 }
 
+async function checkIfAdmin(req) {
+    if (!req.headers['x-auth-token']) {
+        return { isAdmin: false, message: "Access denied. No token provided." };
+    }
+
+    const token = req.headers['x-auth-token'];
+
+    const admin = await adminsSchema.findOne({ "session.key": token });
+    if (admin) {
+        if (Date.now() > admin.session.expiry) {
+            return { isAdmin: false, message: "Session expired" };
+        }
+        return { isAdmin: true };
+    }
+
+    const user = await UsersModel.findOne({ "session.key": token });
+    if (user) {
+        if (Date.now() > user.session.expiry) {
+            return { isAdmin: false, message: "Session expired" };
+        }
+        return { isAdmin: false };
+    }
+
+    return { isAdmin: false, message: "User or admin not found" };
+}
+
+async function verifyAdmin(req, res) {
+    if (!req.headers['x-auth-token']) {
+        return { isAdmin: false, message: "Access denied. No token provided." };
+    }
+
+    const token = req.headers['x-auth-token'];
+
+    const admin = await adminsSchema.findOne({ "session.key": token });
+    if (admin) {
+        if (Date.now() > admin.session.expiry) {
+            return res.status(404).json({ isAdmin: false, message: "Session expired" });
+        }
+        return res.status(200).json({ isAdmin : true });
+    }
+
+    const user = await UsersModel.findOne({ "session.key": token });
+    if (user) {
+        if (Date.now() > user.session.expiry) {
+            return res.status(404).json({ isAdmin: false, message: "Session expired" });
+        }
+        return res.status(404).json({ isAdmin: false });
+    }
+    return res.status(404).json({ isAdmin: false, message: "User or admin not found" });
+}
+
+async function login(req, res, next) {
+    try {
+        const { username, password } = req.body;
+
+        if (typeof username !== 'string' || username.trim() === '') {
+            return res.status(400).json({ message: "Invalid username: must be a non-empty string" });
+        }
+        if (username.length > 20) {
+            return res.status(400).json({ message: 'Username cannot be longer than 20 characters' });
+        }
+
+        if (typeof password !== 'string' || password.trim() === '') {
+            return res.status(400).json({ message: "Invalid password: must be a non-empty string" });
+        }
+        if (password.length > 25) {
+            return res.status(400).json({ message: 'Password cannot be longer than 25 characters' });
+        }
+
+        const admin = await adminsSchema.findOne({ username });
+
+        if (!admin) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        if (password !== admin.password) {
+            return res.status(401).json({ message: "Invalid password" });
+        }
+
+        const sessionKey = new mongoose.Types.ObjectId();
+        const sessionExpiry = Date.now() + 60 * 60 * 1000;
+        admin.session = {
+            key: sessionKey,
+            expiry: sessionExpiry,
+        };
+
+        await admin.save();
+
+        res.set('x-auth-token', sessionKey);
+        res.status(200).json({
+            message: "Login successful",
+            admin: {
+                username: admin.username,
+            }
+        });
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+async function getAllAdmins(req, res, next) {
+    try {
+        const admins = await adminsSchema.find({});
+        res.status(200).json(admins);
+    } catch (err) {
+        next(err);
+    }
+}
+
+async function deleteOneAdmin(req, res, next) {
+    try{
+        const sessionKey = req.headers['x-auth-token'];
+        if (!sessionKey) {
+            return res.status(401).json({ message: "No session token provided, authorization denied" });
+        }
+
+        const currentAdmin = await adminsSchema.findOne({ 'session.key': sessionKey });
+        if (!currentAdmin) {
+            return res.status(401).json({ message: "Invalid session token" });
+        }
+
+        const adminToDelete = await adminsSchema.findOne({ username: req.params.username });
+        if (!adminToDelete) {
+            return res.status(404).json({ message: "Admin not found" });
+        }
+
+        if (currentAdmin.username !== req.params.username) {
+            return res.status(403).json({ message: "You are not authorized to delete this admin." });
+        }
+
+        if (!req.body.password) {
+            return res.status(400).json({ message: "Password is required for deletion." });
+        }
+        
+        if (currentAdmin.password !== req.body.password) {
+            return res.status(403).json({ message: "Passwords don't match." });
+        }
+        
+        await adminsSchema.deleteOne({ username: req.params.username });
+
+        res.status(200).json({ message: "User deleted successfully", username: adminToDelete.username });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
 
 
 module.exports ={
     patchAdmin,
     deleteCity,
-    checkIfAdmin,
-    createAdmin
+    checkIfAdmin, 
+    verifyAdmin,
+    createAdmin,
+    login,
+    getAllAdmins,
+    deleteOneAdmin
 };

@@ -43,6 +43,10 @@
           <span>new to euro trip? </span>
           <router-link to="/signup" class="create-account-link"> create an account</router-link>
         </div>
+        <div class="create-account-container">
+          <span>are you an admin? </span>
+          <router-link to="/AdminLogin" class="create-account-link"> admin login</router-link>
+        </div>
         </div>
       </div>
     </div>

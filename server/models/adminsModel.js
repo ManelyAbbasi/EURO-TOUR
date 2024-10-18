@@ -10,10 +10,6 @@ var adminsSchema = new Schema({
     password: {
         type: String
     },
-    isAdmin: {
-        type: Boolean,
-        default: true
-    },
     session: {
         key: {
             type: mongoose.SchemaTypes.ObjectId,

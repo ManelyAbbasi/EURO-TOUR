@@ -42,9 +42,6 @@ async function createUser(req, res, next) {
         if (!validGenders.includes(req.body.gender)) {
             return res.status(400).json({ message: 'Invalid gender value. Must be male, female, non-binary, or other.' });
         }
-        if (typeof req.body.isAdmin !== 'boolean') {
-            return res.status(400).json({ "message": "Invalid isAdmin: must be a boolean value" });
-        }
 
         const user = new usersModel(req.body);
         await user.save();
@@ -175,7 +172,7 @@ async function deleteOneUser(req, res) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        if (currentUser.username !== req.params.username && !currentUser.isAdmin) {
+        if (currentUser.username !== req.params.username) {
             return res.status(403).json({ message: "You are not authorized to delete this user." });
         }
 
@@ -238,7 +235,6 @@ async function login(req, res, next) {
             message: "Login successful",
             user: {
                 username: user.username,
-                isAdmin: user.isAdmin,
             }
         });
     } catch (error) {
