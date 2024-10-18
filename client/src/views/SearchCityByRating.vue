@@ -397,6 +397,10 @@ h4 {
 
 }
 
+#sort-by {
+  margin-left:7rem;
+}
+
 .sort-by-button {
     background-color: #8FC6DF;
     color: #42515e;
