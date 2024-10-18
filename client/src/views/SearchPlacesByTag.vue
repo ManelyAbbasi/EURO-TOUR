@@ -30,7 +30,7 @@
 
     <b-container class="search-by-tag-panel">
       <b-row class="search-options-row">
-        <b-col col="4" class="search-tags-text-col">
+        <b-col col="4" class="search-places-text-col">
           <h2 class="search-places-text">Search places to visit by:</h2>
         </b-col>
 
@@ -559,12 +559,12 @@ a img {
       min-width: 1200px;
     }
 
-    .search-options-row .search-tags-text-col{
+    .search-options-row .search-places-text-col{
       width: 100%;
       justify-content: center;
     }
 
-    .search-tags-text{
+    .search-places-text{
       text-align: center;
     }
 
