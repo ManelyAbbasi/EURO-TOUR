@@ -141,7 +141,7 @@ async function patchPlace(req, res) {
         const adminCheckResponse = await adminController.checkIfAdmin(req);
 
         if (!adminCheckResponse.isAdmin) {
-            return res.status(403).json({ message: "Access denied. Only admins can delete a city." });
+            return res.status(403).json({ message: "Access denied. Only admins can update a city." });
         }
 
         const placesToVisit = await PlacesToVisitModel.findOne({ address: req.params.address });
@@ -192,10 +192,33 @@ async function deleteOnePlace(req, res) {
     }
 }
 
+async function deleteAllPlaces(req, res) {
+    try {
+        const adminCheckResponse = await adminController.checkIfAdmin(req);
+
+        if (!adminCheckResponse.isAdmin) {
+            return res.status(403).json({ message: "Access denied. Only admins can delete places." });
+        }
+
+        const result = await PlacesToVisitModel.deleteMany({});
+        
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ message: "No places found to delete" });
+        }
+        
+        res.status(200).json({ message: "All places deleted successfully" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+
 module.exports = {
     getAllPlaces,
     getOnePlace,
     updatePlace,
     patchPlace,
     deleteOnePlace,
+    deleteAllPlaces
 }
