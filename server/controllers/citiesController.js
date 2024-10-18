@@ -208,8 +208,10 @@ async function updateCity(req, res, next) {
     const cityId = req.params.id;
 
     try {
-        if (!req.body.isAdmin) {
-            return res.status(403).json({ message: "Access denied. Only admins can update cities." });
+        const adminCheckResponse = await adminController.checkIfAdmin(req);
+
+        if (!adminCheckResponse.isAdmin) {
+            return res.status(403).json({ message: "Access denied. Only admins can delete a city." });
         }
 
         const city = await CitiesModel.findById(cityId);
@@ -279,6 +281,12 @@ async function deleteOnePlaceFromCity(req, res) {
     const address = req.params.address;
 
     try {
+        const adminCheckResponse = await adminController.checkIfAdmin(req);
+
+        if (!adminCheckResponse.isAdmin) {
+            return res.status(403).json({ message: "Access denied. Only admins can delete a city." });
+        }
+        
         const city = await CitiesModel.findOne({ _id: cityId }).populate('placesToVisit');
         if (!city) {
             return res.status(404).json({ message: "City not found" });
