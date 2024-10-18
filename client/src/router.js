@@ -12,6 +12,7 @@ import SearchPlacesByTag from './views/SearchPlacesByTag.vue'
 import SearchPlacesByRating from './views/SearchPlacesByRating.vue'
 import CityPage from './views/CityPage.vue'
 import PlacePage from './views/PlacePage.vue'
+import AdminLogin from './views/AdminLogin.vue'
 
 const routes = [
   { path: '/', name: 'home', component: Home },
@@ -25,7 +26,8 @@ const routes = [
   { path: '/SearchPlacesByTag', name: 'placestag', component: SearchPlacesByTag },
   { path: '/SearchPlacesByRating', name: 'placesrating', component: SearchPlacesByRating },
   { path: '/city/:cityid', component: CityPage },
-  { path: '/place/:address', component: PlacePage }
+  { path: '/place/:address', component: PlacePage },
+  { path: '/AdminLogin', name: 'adminlogin', component: AdminLogin }
 ]
 
 const router = createRouter({

@@ -135,12 +135,21 @@ export default {
   data() {
     return {
       message: 'none',
+      isAdmin: false,
       loggedInStatus: !!localStorage.getItem('x-auth-token') // Reactive property for login status
     }
   },
   computed: {
     isLoggedIn() {
       return this.loggedInStatus // Use reactive loggedInStatus property
+    }
+  },
+  async created() {
+    await this.checkIfAdmin()
+
+    // Check for admin status from route params
+    if (this.$route.params.isAdmin) {
+      this.isAdmin = true
     }
   },
   methods: {
@@ -152,6 +161,18 @@ export default {
         .catch((error) => {
           this.message = error
         })
+    },
+    async checkIfAdmin() {
+      try {
+        const response = await Api.get('/api/admin/verify-admin', {
+          headers: {
+            'x-auth-token': localStorage.getItem('x-auth-token')
+          }
+        })
+        this.isAdmin = response.data.isAdmin
+      } catch (error) {
+        console.error('Error checking admin status:', error)
+      }
     },
     logout() {
       localStorage.removeItem('x-auth-token')
