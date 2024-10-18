@@ -21,6 +21,9 @@
         <div class="container">
           <!-- Container for the form -->
           <div class="form-entries">
+            <div class="admin-login-row row-form">
+              <h3 class="admin-login-text">Admin Login</h3>
+            </div>
             <!-- 1st row: username -->
             <div class="row-form">
               <input class="input" name="username" id="usernameID" type="text" v-model="username" placeholder="username">
@@ -36,6 +39,11 @@
             <!-- Login button -->
             <div class="button-container">
               <button class="btn" type="button" @click="loginButton" :disabled="isEmpty">log in</button>
+            </div>
+
+            <div class="user-login-container">
+            <span>not an admin? </span>
+            <router-link to="/login" class="login-link">log in</router-link>
             </div>
 
           </div>
@@ -219,6 +227,26 @@ export default {
     color: #759CAB;
   }
 
+  .admin-login-text{
+    color: rgba(0, 0, 0, 0.301);
+  }
+
+.user-login-container {
+  text-align: center;
+  margin-top: 5px;
+  font-family: 'Lexend Deca', sans-serif;
+  color: #757575;
+}
+
+.login-link {
+  text-decoration: underline; /* Make the link underlined */
+  color: #757575;
+  transition: color 0.3s; /* Smooth transition for color change */
+}
+
+.login-link:hover {
+  color: #759CAB;
+}
   .error-message {
     color: #bc672a;
     font-family: 'Lexend Deca', sans-serif;
