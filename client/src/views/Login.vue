@@ -43,7 +43,7 @@
           <span>new to euro trip? </span>
           <router-link to="/signup" class="create-account-link"> create an account</router-link>
         </div>
-        <div class="create-account-container">
+        <div class="create-account-container admin-login-container">
           <span>are you an admin? </span>
           <router-link to="/AdminLogin" class="create-account-link"> admin login</router-link>
         </div>
@@ -224,6 +224,11 @@ button:active[disabled] {
 
 .create-account-link:hover {
   color: #759CAB;
+}
+
+.admin-login-container,
+.admin-login-container a{
+  color: rgba(0, 0, 0, 0.301);
 }
 
 .error-message {
