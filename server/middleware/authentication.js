@@ -14,15 +14,18 @@ module.exports = async function(req, res, next){
         const user = await User.findOne({"session.key": req.headers['x-auth-token']});
         const admin = await Admin.findOne({"session.key": req.headers['x-auth-token']});
         if (user) {
+            if(Date.now() > user.session.expiry ){
+                return res.status(401).json({"message": "Session expired"});
+            }
             next();
         } else if (admin) {
+            if(Date.now() > admin.session.expiry){
+                return res.status(401).json({"message": "Session expired"});
+            }
             next();
         }
         else if (!user || !admin){
             return res.status(404).json({"message": "User not found"})   
-        }
-        if(Date.now() > user.session.expiry){
-            return res.status(401).json({"message": "Session expired"});
         }
     }
 }

@@ -6,29 +6,43 @@ const adminsSchema = require("../models/adminsModel");
 const mongoose = require("mongoose");
 
 
+
 async function patchAdmin(req, res, next) {
     try {
-        const user = await UsersModel.findOne({ username: req.params.username });
+        const sessionKey = req.headers['x-auth-token'];
+        const { password } = req.body;
+        const username = req.params.name;
 
-        if (user == null) {
-            return res.status(404).json({ "message": "User not found" });
+        if (!sessionKey) {
+            return res.status(401).json({ message: "No session token provided, authorization denied" });
         }
 
-        if (req.body.username !== req.params.username && !req.body.isAdmin) {
-            return res.status(403).json({ "message": "You are not authorized to update this user." });
-        }
-    
         if (typeof password !== 'string' || password.trim() === '') {
-            return res.status(400).json({ message: 'Invalid password: must be a non-empty string' });
+            return res.status(400).json({ message: "Invalid password: must be a non-empty string" });
         }
-        user.password = req.body.password || user.password;
-        await user.save();
+        if (password.length < 6) {
+            return res.status(400).json({ message: "Password must be at least 6 characters long" });
+        }
+        if (password.length > 25) {
+            return res.status(400).json({ message: "Password cannot be longer than 25 characters" });
+        }
 
-        res.status(200).json(user); 
-    } catch (err) {
-        next(err);
+        const admin = await adminsSchema.findOne({ username, 'session.key': sessionKey });
+
+        if (!admin) {
+            return res.status(401).json({ message: "Invalid session token or username" });
+        }
+
+        admin.password = password;
+        await admin.save();
+
+        return res.status(200).json({ message: "Password updated successfully" });
+    } catch (error) {
+        console.error('Password update error:', error);
+        return res.status(500).json({ message: "Internal server error", error });
     }
 }
+
 
 async function createAdmin(req, res, next) {
     try {
@@ -155,10 +169,21 @@ async function login(req, res, next) {
     }
 }
 
+async function getAllAdmins(req, res, next) {
+    try {
+        const admins = await adminsSchema.find({});
+        res.status(200).json(admins);
+    } catch (err) {
+        next(err);
+    }
+}
+
+
 module.exports ={
     patchAdmin,
     deleteCity,
-    checkIfAdmin,
+    checkIfAdmin, 
     createAdmin,
-    login
+    login,
+    getAllAdmins
 };
