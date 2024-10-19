@@ -753,8 +753,7 @@ input[type="text"] {
   .edit-place-popup {
   width: 900px;
   max-width: 90%;
-  height:630px;
-  max-height: 90vh;
+  max-height: 130vh;
   margin-right: -16rem;
   }
 }
