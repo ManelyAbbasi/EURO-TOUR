@@ -59,7 +59,6 @@
       </div>
 
       <div class="overlay" v-if="showEditForm" @click="hideEditPlaceForm"></div>
-
       <!-- Edit Place Form Popup -->
       <div class="edit-place-popup" :class="{ show: showEditForm }" v-if="showEditForm">
         <div class="popup-header">
@@ -768,7 +767,7 @@ input[type="text"] {
   height:630px;
   max-height: 90vh;
   margin-right: -16rem;
-}
+  }
 }
 
 @media screen and (max-width: 376px){

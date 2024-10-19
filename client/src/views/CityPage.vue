@@ -85,47 +85,47 @@
             </div>
       </div>
 
-<!-- New City Form Popup -->
-<div class="new-place-popup" :class="{ show: showNewPlaceForm }" v-if="showNewPlaceForm">
-  <div class="popup-header">
-    <h3>Create New Place</h3>
-    <button class="close-button" @click="closeNewPlaceForm">X</button>
-  </div>
-  <div class="popup-body">
-    <form @submit.prevent="submitNewPlace">
-      <div class="form-layout">
-        <div class="form-left">
-          <label for="placeName">Place Name:</label>
-          <input type="text" id="placeName" v-model="newPlaceName" required />
-
-          <label for="address">Address:</label>
-          <input type="text" id="address" v-model="address" placeholder="Enter the address..." />
-
-          <label for="content">Content:</label>
-          <textarea id="content" v-model="content" placeholder="Enter important information..."></textarea>
-
-          <label for="rating">Rating:</label>
-          <input type="number" id="rating" v-model="rating" min="0" max="10" step="0.1" placeholder="Enter a rating (0-5)" />
-
-          <div class="submit-wrapper">
-            <button type="submit">Submit</button>
-          </div>
-        </div>
-        <div class="form-right">
-          <label for="tags">Tags:</label>
-          <div class="tags">
-            <label v-for="tag in tagOptions" :key="tag">
-              <input type="checkbox" :value="tag" v-model="selectedTags" />
-              {{ tag }}
-            </label>
-          </div>
-        </div>
+    <div class="overlay" v-if="showNewPlaceForm" @click="closeNewPlaceForm"></div>
+    <!-- New City Form Popup -->
+    <div class="new-place-popup" :class="{ show: showNewPlaceForm }" v-if="showNewPlaceForm">
+      <div class="popup-header">
+        <h3>Create New Place</h3>
+        <button class="close-button" @click="closeNewPlaceForm">X</button>
       </div>
-    </form>
-  </div>
-</div>
+      <div class="popup-body">
+        <form @submit.prevent="submitNewPlace">
+          <div class="form-layout">
+            <div class="form-left">
+              <label for="placeName">Place Name:</label>
+              <input type="text" id="placeName" v-model="newPlaceName" required />
 
-    </main>
+              <label for="address">Address:</label>
+              <input type="text" id="address" v-model="address" placeholder="Enter the address..." />
+
+              <label for="content">Content:</label>
+              <textarea id="content" v-model="content" placeholder="Enter important information..."></textarea>
+
+              <label for="rating">Rating:</label>
+              <input type="number" id="rating" v-model="rating" min="0" max="10" step="0.1" placeholder="Enter a rating (0-5)" />
+
+              <div class="submit-wrapper">
+                <button type="submit">Submit</button>
+              </div>
+            </div>
+            <div class="form-right">
+              <label for="tags">Tags:</label>
+              <div class="tags">
+                <label v-for="tag in tagOptions" :key="tag">
+                  <input type="checkbox" :value="tag" v-model="selectedTags" />
+                  {{ tag }}
+                </label>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
 
 <footer class="footer">
   <div class="footer-text">
@@ -588,6 +588,16 @@ a img {
   padding-left: 20px; /* Space between left and right sections */
 }
 
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9;
+}
+
 .new-place-popup form {
   display: flex;
   flex-direction: column;
@@ -794,6 +804,13 @@ input[type='checkbox'] {
   .city-layout-wrapper{
     margin: 13rem 2rem 2rem 3rem;
   }
+  .new-place-popup {
+    width: 900px;
+    max-width: 90%;
+    height:630px;
+    max-height: 90vh;
+    margin-right: -16rem;
+ }
 }
 
 @media screen and (max-width:350px) {
