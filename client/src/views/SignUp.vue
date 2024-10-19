@@ -1,75 +1,70 @@
 <template>
-    <!-- Parent container for the split layout -->
-    <div class="split-container">
-      <!-- Left side: light blue background -->
-      <div class="signup-left-side">
-        <!-- Logo section -->
-        <div class="signup-logo">
-          <router-link to="/">
-            <img src="@/assets/vertical-logo.png" alt="Euro Tour logo" draggable="false" class="signup-logo-img">
-          </router-link>
-        </div>
+  <div class="split-container">
+    <div class="signup-left-side">
+      <div class="signup-logo">
+        <router-link to="/">
+          <img src="@/assets/vertical-logo.png" alt="Euro Tour logo" draggable="false" class="signup-logo-img">
+        </router-link>
       </div>
+    </div>
 
-      <!-- Right side: Form with dark blue background -->
-      <div class="signup-right-side">
+    <div class="signup-right-side">
+      <img src="@/assets/vertical-logo.png" alt="Tablet Logo" class="signup-tablet-logo-img" draggable="false" />
+      <img src="@/assets/vertical-logo.png" alt="Mobile Logo" class="signup-mobile-logo-img" draggable="false" />
 
-        <img src="@/assets/vertical-logo.png" alt="Tablet Logo" class="signup-tablet-logo-img" draggable="false" />
-        <img src="@/assets/vertical-logo.png" alt="Mobile Logo" class="signup-mobile-logo-img" draggable="false" />
+      <div class="signup-container">
+        <!-- Container for the form -->
+        <div class="signup-form-entries">
+          <!-- 1st row: username -->
+          <div class="signup-row-form">
+            <input class="signup-input" name="username" id="usernameID" type="text" v-model="username" placeholder="username">
+          </div>
 
-        <div class="signup-container">
-          <!-- Container for the form -->
-          <div class="signup-form-entries">
-            <!-- 1st row: username -->
-            <div class="signup-row-form">
-              <input class="signup-input" name="username" id="usernameID" type="text" v-model="username" placeholder="username">
-            </div>
+          <!-- 2nd row: password -->
+          <div class="signup-row-form">
+            <input class="signup-input" name="password" id="passwordID" type="password" v-model="password" placeholder="password">
+          </div>
 
-            <!-- 2nd row: password -->
-            <div class="signup-row-form">
-              <input class="signup-input" name="password" id="passwordID" type="password" v-model="password" placeholder="password">
-            </div>
+          <!-- 3rd row: confirm password -->
+          <div class="signup-row-form">
+            <input class="signup-input" name="confirm password" id="confirmpasswordID" type="password" v-model="confirmpassword" placeholder="confirm password">
+          </div>
 
-            <!-- 3rd row: confirm password -->
-            <div class="signup-row-form">
-              <input class="signup-input" name="confirm password" id="confirmpasswordID" type="password" v-model="confirmpassword" placeholder="confirm password">
-            </div>
-
-            <!-- 4th row: date of birth -->
-            <div class="signup-row-form dob-row">
-             <label for="dob">date of birth</label><br />
-             <div class="dob-container">
+          <!-- 4th row: date of birth -->
+          <div class="signup-row-form dob-row">
+            <label for="dob">date of birth</label><br />
+            <div class="dob-container">
               <select v-model="birthDay" class="signup-input dob-select">
-              <option disabled value="">day</option>
-              <option v-for="day in days" :key="day" :value="day">{{ day }}</option>
-            </select>
+                <option disabled value="">day</option>
+                <option v-for="day in days" :key="day" :value="day">{{ day }}</option>
+              </select>
 
-            <select v-model="birthMonth" class="signup-input dob-select">
-              <option disabled value="">month</option>
-              <option v-for="(month, index) in months" :key="index" :value="index + 1">{{ month }}</option>
-            </select>
+              <select v-model="birthMonth" class="signup-input dob-select">
+                <option disabled value="">month</option>
+                <option v-for="(month, index) in months" :key="index" :value="index + 1">{{ month }}</option>
+              </select>
 
-            <select v-model="birthYear" class="signup-input dob-select">
-              <option disabled value="">year</option>
-              <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
-            </select>
-        </div>
-        </div>
-
-            <!-- Sign up button -->
-            <div class="signup-button-container">
-              <button class="signup-btn" type="button" @click="saveButton()" :disabled="isEmpty">sign up</button>
+              <select v-model="birthYear" class="signup-input dob-select">
+                <option disabled value="">year</option>
+                <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+              </select>
             </div>
+          </div>
 
-             <!-- Already have an account section -->
+          <!-- Sign up button -->
+          <div class="signup-button-container">
+            <button class="signup-btn" type="button" @click="saveButton()" :disabled="isEmpty">sign up</button>
+          </div>
+
+          <!-- Already have an account section -->
           <div class="signup-login-container">
             <span>already have an account? </span>
             <router-link to="/login" class="login-link">log in</router-link>
           </div>
-          </div>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -94,10 +89,41 @@ export default {
     }
   },
   methods: {
-    async saveButton() {
-      if (!this.isEmpty) {
-        console.log('Form submitted')
+    validateInputs() {
+      // Validate username
+      if (this.username.length > 20) {
+        alert('Username cannot be longer than 20 characters')
+        return false
+      } else if (this.username.trim() === '') {
+        alert('Username cannot be empty')
+        return false
       }
+
+      // Validate password
+      if (this.password.length > 25) {
+        alert('Password cannot be longer than 25 characters')
+        return false
+      } else if (this.password.trim() === '') {
+        alert('Password cannot be empty')
+        return false
+      }
+
+      // Validate confirm password
+      if (this.password !== this.confirmpassword) {
+        alert('Passwords do not match')
+        return false
+      }
+
+      return true // Return true if all validations pass
+    },
+
+    async saveButton() {
+      const isValid = this.validateInputs() // Validate inputs before submitting
+
+      if (!isValid || this.isEmpty) {
+        return // Stop the function if there are validation errors
+      }
+
       try {
         const birthDate = `${this.birthYear}-${this.birthMonth.toString().padStart(2, '0')}-${this.birthDay.toString().padStart(2, '0')}`
         console.log('Birth Date:', birthDate)
@@ -105,7 +131,7 @@ export default {
         const user = {
           username: this.username,
           password: this.password,
-          birthDate: birthDate,
+          birthDate,
           isLGBTQIA: false,
           gender: 'other',
           isAdmin: false
@@ -120,9 +146,6 @@ export default {
       } catch (error) {
         console.error(error)
       }
-      if (!this.isEmpty) {
-        console.log('Form submitted')
-      }
     }
   },
   computed: {
@@ -132,8 +155,7 @@ export default {
              this.confirmpassword === '' ||
              this.birthDay === '' ||
              this.birthMonth === '' ||
-             this.birthYear === '' ||
-             this.password !== this.confirmpassword
+             this.birthYear === ''
     }
   }
 }
