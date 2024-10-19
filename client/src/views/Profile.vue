@@ -764,8 +764,7 @@ p{
   .admin-text h1, .admin-text p{
     font-size: 1.8rem;
   }
-
-  }
+}
 
   @media screen and (max-width:350px) {
   .user-form{
@@ -835,6 +834,19 @@ p{
     width: 60%;
     font-size: 2rem;
 }
+
+ .admin-text{
+    margin-top: 12rem;
+    margin-bottom: 10rem;
+  }
+
+  .admin-text h1{
+    font-size: 5rem;
+  }
+
+  .admin-text p{
+    font-size: 3rem;
+  }
 
  .footer{
     flex-direction: column-reverse;
