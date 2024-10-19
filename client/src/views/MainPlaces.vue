@@ -89,17 +89,32 @@
                 <h2 class="mainplaces-admin-header">Admins Picks:</h2>
                 <div class="trending-places-wrapper">
                   <div class="trending-place-wrapper">
-                    <a class="admins-pick-item"><i class="fa-solid fa-medal" style="color: #D6AF36;"></i></a>
-                    <p class="mainplaces-trending-amst"> Amsterdam, The Netherlands</p>
+                  <a class="admins-pick-item"><i class="fa-solid fa-medal" style="color: #D6AF36;"></i></a>
+                  <div class="text-and-button">
+                    <p class="mainplaces-trending">Stockholm, Sweden</p>
+                    <button class="edit-admins-pick-button" v-if="isAdmin && !showEditForm" @click="showEditPlaceNameForm(place)">
+                      <i class="fa-solid fa-i-cursor fa-beat-fade" style="color: #bc672a;"></i>
+                    </button>
                   </div>
-                  <div class="admins-picks-wrapper trending-place-wrapper">
+                </div>
+                  <div class="trending-place-wrapper">
                     <a class="admins-pick-item"><i class="fa-solid fa-medal" style="color: #A7A7AD;"></i></a>
-                    <p class="mainplaces-trending-dublin"> Dublin, Republic of Ireland</p>
+                    <div class="text-and-button">
+                    <p class="mainplaces-trending"> Berlin, Germany</p>
+                    <button class="edit-admins-pick-button" v-if="isAdmin && !showEditForm" @click="showEditPlaceNameForm(place)">
+                      <i class="fa-solid fa-i-cursor fa-beat-fade" style="color: #bc672a;"></i>
+                    </button>
                   </div>
-                  <div class="admins-picks-wrapper trending-place-wrapper">
+                </div>
+                  <div class="trending-place-wrapper">
                     <a class="admins-pick-item"><i class="fa-solid fa-medal" style="color: #A77044;"></i></a>
-                    <p class="mainplaces-trending-paris"> Paris, France</p>
+                    <div class="text-and-button">
+                    <p class="mainplaces-trending"> Paris, France</p>
+                    <button class="edit-admins-pick-button" v-if="isAdmin && !showEditForm" @click="showEditPlaceNameForm(place)">
+                      <i class="fa-solid fa-i-cursor fa-beat-fade" style="color: #bc672a;"></i>
+                    </button>
                   </div>
+                </div>
                 </div>
               </div>
           </div>
@@ -486,12 +501,24 @@ export default {
 }
 
 .trending-place-wrapper p{
-  font-size: 1rem;
+  font-size: 1.2rem;
   align-content: center;
-  padding: 0.5rem;
   justify-items: center;
   margin: 0.5rem;
   color:#045768;
+
+}
+
+.text-and-button {
+  display: flex;
+  align-items: center;
+}
+
+.edit-admins-pick-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
 }
 
 .admins-pick-item{
