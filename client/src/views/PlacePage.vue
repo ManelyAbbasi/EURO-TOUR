@@ -58,6 +58,8 @@
         </div>
       </div>
 
+      <div class="overlay" v-if="showEditForm" @click="hideEditPlaceForm"></div>
+
       <!-- Edit Place Form Popup -->
       <div class="edit-place-popup" :class="{ show: showEditForm }" v-if="showEditForm">
         <div class="popup-header">
@@ -531,6 +533,16 @@ a img {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9;
 }
 
 /* Styling for the Edit Place Form */
