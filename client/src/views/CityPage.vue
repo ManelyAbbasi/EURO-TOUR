@@ -303,8 +303,6 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
 
-/*EVERY page stylings*/
-
 .city-page-body-container{
     margin: 0;
     padding: 0;
@@ -324,7 +322,7 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  padding: 1rem 5%; /* Adjust padding for more space */
+  padding: 1rem 5%;
   background-color: rgba(155, 169, 182, 1);
   display: flex;
   justify-content: space-between;
@@ -361,7 +359,7 @@ export default {
 }
 
 .navbar-item {
-  border: none; /* Remove borders to prevent overflow */
+  border: none;
   margin: 0 1rem;
   text-decoration: none;
 }
@@ -388,7 +386,6 @@ main{
   width: 100%;
 }
 
-/*city page stylings*/
 .city-layout-wrapper {
   display: flex;
   flex-direction: column;
@@ -453,7 +450,7 @@ main{
 }
 
 .star-rating i {
-  margin-right: 5px; /* Increase space between stars */
+  margin-right: 5px;
 }
 
 .rating-text {
@@ -563,15 +560,14 @@ a img {
 }
 
 /* pop up form */
-
 .form-layout {
-  display: flex; /* Flexbox for layout */
-  justify-content: space-between; /* Space between left and right sections */
+  display: flex;
+  justify-content: space-between;
 }
 
 /* Left side of the form */
 .form-left {
-  width: 60%; /* Take up 60% of the width */
+  width: 60%;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -582,10 +578,10 @@ a img {
   justify-content: center;
   margin: 3rem;
 }
-/* Right side of the form */
+
 .form-right {
-  width: 35%; /* Take up 35% of the width */
-  padding-left: 20px; /* Space between left and right sections */
+  width: 35%;
+  padding-left: 20px;
 }
 
 .overlay {
@@ -603,57 +599,53 @@ a img {
   flex-direction: column;
 }
 
-/* New Place Form Popup Styles */
 .new-place-popup {
   position: sticky;
   margin-top: -20rem;
   left: 50%;
-  transform: translate(-50%, -50%); /* Center the popup */
+  transform: translate(-50%, -50%);
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   color:#045768;
   z-index: 10;
-  width: 650px; /* Increased width */
-  max-width: 90%; /* Ensures the popup fits within smaller screens */
+  width: 650px;
+  max-width: 90%;
   height:630px;
-  max-height: 100vh; /* Ensures the popup doesn't go off the screen */
+  max-height: 100vh;
   padding: 20px;
-  overflow-y: auto; /* Allows scrolling if the content is too long */
+  overflow-y: auto;
   opacity: 0;
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* Show the popup with opacity */
 .new-place-popup.show {
-  opacity: 1; /* Fully visible */
-  transform: translate(-50%, -50%) scale(1.05); /* Slightly scale up on appearance */
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.05);
 }
 
-/* Ensure the popup header has consistent styling */
 .popup-header {
   position: sticky;
   top: 0;
   padding: 1px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
-  z-index: 2; /* Increased z-index to ensure it stays above the content */
+  z-index: 2;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 #rating {
-  width: 50%; /* Set the width to 100% of its container */
+  width: 50%;
   border-radius:4px;
-  padding-left: 5px; /* Add left padding to text fields as well */
+  padding-left: 5px;
   border: 1px solid #ccc;
 }
 
-/* Style for tags */
 .tags label {
-  display: block; /* Stack tags vertically */
-  margin: 4px 0; /* Margin for spacing between tags */
+  display: block;
+  margin: 4px 0;
   font-size: 0.8rem;
 }
 
@@ -665,29 +657,26 @@ a img {
   padding: 0.2rem;
 }
 
-/* Input Fields Styles */
 .new-place-popup input[type="text"],
 .new-place-popup textarea,
 #rating {
   color: #a7561c;
 }
 
-/* Change border color on focus */
 .new-place-popup input[type="text"]:focus,
 .new-place-popup textarea:focus,
 #rating:focus {
-  border-color: #BC672A; /* Darker shade on focus */
-  outline: none; /* Remove default outline */
+  border-color: #BC672A;
+  outline: none;
 }
 
-/* Style for the form inputs */
 input[type="text"],
 input[type="textarea"] {
-  width: calc(100% - 20px); /* Full width minus padding */
-  padding: 10px; /* Padding for input fields */
-  margin: 10px 0; /* Margin between fields */
-  border: 1px solid #ccc; /* Light grey border */
-  border-radius: 4px; /* Rounded corners */
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 input[type='checkbox'] {
@@ -709,7 +698,7 @@ input[type='checkbox'] {
 }
 
 .new-place-popup form button[type="submit"]:hover {
-  background-color: #a7561c; /* Darker on hover */
+  background-color: #a7561c;
 }
 
 .close-button {
@@ -719,8 +708,8 @@ input[type='checkbox'] {
   cursor: pointer;
   color: #fff;
   transition: color 0.3s ease;
-  width: 25px; /* Set width */
-  height: 25px; /* Set height */
+  width: 25px;
+  height: 25px;
 }
 
 .close-button:hover{
