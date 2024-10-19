@@ -50,7 +50,7 @@ app.get('/api', function(req, res) {
 
 // Define API routes
 app.use('/v1/api/cities', citiesRoutes);
-app.use('/v1/api/users', authentication, usersRoutes);
+app.use('/v2/api/users', authentication, usersRoutes);
 app.use('/v1/api/places', placesRoutes);
 app.use('/v1/api/admin', authentication, adminRoutes);
 

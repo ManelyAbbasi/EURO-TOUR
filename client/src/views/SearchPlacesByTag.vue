@@ -136,7 +136,7 @@
 </template>
 
 <script>
-import { Api } from '@/Api'
+import { ApiV1 } from '@/Api'
 
 export default {
   data() {
@@ -172,7 +172,7 @@ export default {
           tags: this.selectedTags.length ? this.selectedTags.join(',') : undefined
         }
 
-        const response = await Api.get('/api/places', { params })
+        const response = await ApiV1.get('/api/places', { params })
         if (response.data && response.data.placesToVisit) {
           this.places = response.data.placesToVisit
         } else {

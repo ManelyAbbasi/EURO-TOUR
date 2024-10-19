@@ -117,7 +117,7 @@
   </template>
 
 <script>
-import { Api } from '@/Api'
+import { ApiV1 } from '@/Api'
 
 export default {
   data() {
@@ -151,7 +151,7 @@ export default {
   methods: {
     async getPlaces() {
       try {
-        const response = await Api.get('/api/places')
+        const response = await ApiV1.get('/api/places')
         console.log('Fetched places:', response.data.placesToVisit)
         if (response.data && response.data.placesToVisit) {
           this.places = response.data.placesToVisit.map(place => ({
@@ -174,7 +174,7 @@ export default {
       const confirmed = confirm('Are you sure you want to delete this place?')
       if (!confirmed) return
       try {
-        const response = await Api.delete('/api/places', {
+        const response = await ApiV1.delete('/api/places', {
           headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
         })
         if ((response.status === 200)) {
@@ -189,7 +189,7 @@ export default {
       this.isFavorite = !this.isFavorite // Toggle between true and false
     },
     getMessage() {
-      Api.get('/api/')
+      ApiV1.get('/api/')
         .then(response => {
           this.message = response.data.message
         })
@@ -199,7 +199,7 @@ export default {
     },
     async checkIfAdmin() {
       try {
-        const response = await Api.get('/api/admin/verify-admin', {
+        const response = await ApiV1.get('/api/admin/verify-admin', {
           headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
         })
         this.isAdmin = response.data.isAdmin
@@ -229,7 +229,7 @@ export default {
         }
 
         // Make the API call to update the place
-        const response = await Api.patch(`/api/places/${address}`, updatedPlaceData, {
+        const response = await ApiV1.patch(`/api/places/${address}`, updatedPlaceData, {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }

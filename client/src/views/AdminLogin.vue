@@ -53,7 +53,7 @@
   </template>
 
 <script>
-import { Api } from '../Api'
+import { ApiV1 } from '../Api'
 
 export default {
   name: 'adminLogin',
@@ -78,7 +78,7 @@ export default {
             password: this.password
           }
 
-          const response = await Api.post('/api/admin/login', userCredentials)
+          const response = await ApiV1.post('/api/admin/login', userCredentials)
 
           const authToken = response.headers['x-auth-token']
           if (authToken) {
