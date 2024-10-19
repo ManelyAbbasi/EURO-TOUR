@@ -413,7 +413,8 @@
 
 <div class="new-city-popup" :class="{ show: showNewCityForm }" v-if="isLoggedIn && showNewCityForm">
   <div class="popup-header">
-    <h3>Create New City</h3>
+    <h3 v-if="!isEditing">Create New City</h3>
+    <h3 v-if="isEditing">Edit City</h3>
     <button class="close-button" @click="closeNewCityForm">X</button>
   </div>
   <div class="popup-body">
@@ -480,6 +481,8 @@ export default {
       showLoginMessage: false,
       isAdmin: false,
       showNewCityForm: false,
+      isEditing: false,
+      editCityId: null,
       newCityName: '',
       newCityCountry: '',
       goodToKnow: '',
@@ -596,15 +599,19 @@ export default {
     },
     async editCity(cityId) {
       this.showCityPopup = false
+      this.isEditing = true
+
       try {
         const response = await Api.get(`/api/cities/${cityId}`, {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }
         })
-
+        console.log(cityId)
+        console.log(response)
         if (response.data) {
           const cityData = response.data
+          console.log(cityData)
 
           this.newCityName = cityData.cityName
           this.newCityCountry = cityData.country
@@ -612,8 +619,8 @@ export default {
           this.stats = cityData.statistics
           this.facts = cityData.facts
           this.rating = cityData.rating
-          this.selectedTags = cityData.tags
-          this.isEditing = true
+          this.selectedTags = cityData.tags ? cityData.tags : []
+
           this.editCityId = cityId
           this.showNewCityForm = true
         }
