@@ -4,8 +4,51 @@ const UsersModel = require("../models/usersModel");
 const citiesModel = require("../models/citiesModel");
 const adminsSchema = require("../models/adminsModel");
 const adminController = require("../controllers/adminController");
+const axios = require('axios');
 
+//Our weather warning api key
+const API_KEY = '836280f4bf814195bb0dc1d7b406da98';
 
+async function getWeatherAlerts(cityName) {
+    const url = `https://api.weatherbit.io/v2.0/alerts?city=${encodeURIComponent(cityName)}&key=${API_KEY}`;
+    
+    try {
+        const response = await axios.get(url);
+        return response.data.alerts || [];
+    } catch (error) {
+        console.error(`Error fetching weather alerts for ${cityName}:`, error.message);
+        return [];
+    }
+}
+
+async function getCitiesWithWeatherWarnings(req, res) {
+    try {
+        const cities = await CitiesModel.find();
+
+        const citiesWithWarnings = await Promise.all(cities.map(async (city) => {
+            const weatherAlerts = await getWeatherAlerts(city.cityName);
+            if (weatherAlerts.length > 0) {
+                return {
+                    city: city.cityName,
+                    country: city.country,
+                    alerts: weatherAlerts
+                };
+            }
+            return null;
+        }));
+
+        const filteredCities = citiesWithWarnings.filter(city => city !== null);
+
+        if (filteredCities.length === 0) {
+            return res.status(200).json({ message: "No cities with active weather warnings found." });
+        }
+
+        res.status(200).json({ cities: filteredCities });
+    } catch (error) {
+        console.error('Error getting cities with weather warnings:', error);
+        res.status(500).json({ error: 'An error occurred while fetching cities with weather warnings.' });
+    }
+}
 
 async function createCity(req, res, next) {
     try {
@@ -319,5 +362,6 @@ module.exports = {
     getOneCity,
     getPlacesFromCity,
     updateCity,
-    deleteOnePlaceFromCity
+    deleteOnePlaceFromCity,
+    getCitiesWithWeatherWarnings
 }
