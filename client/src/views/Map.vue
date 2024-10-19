@@ -1122,7 +1122,7 @@ input[type="text"] {
 
 @media screen and (max-width: 768px) {
   .new-city-popup {
-    max-height: 100vh;
+    max-height: 140vh;
     margin-right: -25rem;
     width: 900px;
     max-width: 90%;
@@ -1134,7 +1134,7 @@ input[type="text"] {
 
 @media screen and (max-width: 1200px) {
   .new-city-popup {
-    max-height: 100vh;
+    max-height: 140vh;
     margin-right: -25rem;
     width: 900px;
     max-width: 90%;
