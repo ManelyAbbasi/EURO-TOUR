@@ -299,7 +299,7 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  padding: 1rem 5%; /* Adjust padding for more space */
+  padding: 1rem 5%;
   background-color: rgba(155, 169, 182, 1);
   display: flex;
   justify-content: space-between;
@@ -336,7 +336,7 @@ export default {
 }
 
 .navbar-item {
-  border: none; /* Remove borders to prevent overflow */
+  border: none;
   margin: 0 1rem;
   text-decoration: none;
 }
@@ -361,7 +361,7 @@ export default {
 
 .mainplaces-layout-wrapper {
   display: grid;
-  grid-template-columns: 2fr 1fr;  /* Create two equal columns */
+  grid-template-columns: 2fr 1fr;
   grid-gap: 20px;
   padding: 9rem 9% 2rem;
   width: 100%;
@@ -630,7 +630,7 @@ a img {
 }
 
 .star-rating i {
-  margin-right: 5px; /* Increase space between stars */
+  margin-right: 5px;
 }
 
 .rating-text {
@@ -639,7 +639,6 @@ a img {
   color: #42515E;
 }
 
-/* FORM STYLINGS */
 form {
   display:flex;
   flex-direction: row;
@@ -648,21 +647,20 @@ form {
 }
 
 input[type="text"]:focus{
-  border-color: #BC672A; /* Darker shade on focus */
-  outline: none; /* Remove default outline */
+  border-color: #BC672A;
+  outline: none;
 }
 
-/* Input Fields Styles */
 input[type="text"]{
   color: #a7561c;
 }
 
 input[type="text"] {
-  width: calc(100% - 20px); /* Full width minus padding */
-  padding: 10px; /* Padding for input fields */
-  margin: 10px 0; /* Margin between fields */
-  border: 1px solid #ccc; /* Light grey border */
-  border-radius: 4px; /* Rounded corners */
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .edit-placename-popup form button[type="submit"] {
@@ -679,11 +677,11 @@ input[type="text"] {
 }
 
 .edit-placename-popup form button[type="submit"]:hover {
-  background-color: #a7561c; /* Darker on hover */
+  background-color: #a7561c;
 }
 
 .popup-body button:hover {
-  background-color: #a7561c; /* Darker on hover */
+  background-color: #a7561c;
 }
 
 .close-button {
@@ -693,8 +691,8 @@ input[type="text"] {
   cursor: pointer;
   color: #fff;
   transition: color 0.3s ease;
-  width: 2.5rem; /* Set width */
-  height: 2.5rem; /* Set height */
+  width: 2.5rem;
+  height: 2.5rem;
   margin-right: 2rem;
 }
 
