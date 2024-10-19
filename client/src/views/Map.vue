@@ -627,6 +627,46 @@ export default {
     hideLoginMessage() {
       this.showLoginMessage = false
     },
+    validateCityForm() {
+      if (!this.newCityName) {
+        alert('City name is required.')
+        return false
+      }
+      if (this.newCityName.length > 30) {
+        alert('City name cannot be longer than 30 characters.')
+        return false
+      }
+      if (!this.newCityCountry) {
+        alert('Country is required.')
+        return false
+      }
+      if (!this.goodToKnow) {
+        alert('Good to know information is required.')
+        return false
+      }
+      if (!this.stats) {
+        alert('Statistics are required.')
+        return false
+      }
+      if (!this.facts) {
+        alert('Facts are required.')
+        return false
+      }
+      if (this.rating === null) {
+        alert('Rating is required.')
+        return false
+      }
+      if (this.rating > 5) {
+        alert('Rating cannot be more than 5. Please enter a valid rating.')
+        return false
+      }
+      if (this.selectedTags.length === 0) {
+        alert('At least one tag must be selected.')
+        return false
+      }
+
+      return true
+    },
     async editCity(cityId) {
       this.showCityPopup = false
       this.isEditing = true
@@ -741,9 +781,9 @@ export default {
     },
     async submitNewCity() {
       console.log('create new city')
-      if (this.rating > 5) {
-        alert('Rating cannot be more than 5. Please enter a valid rating.')
-        return
+
+      if (!this.validateCityForm()) {
+        return // Stop submission if validation fails
       }
       const cityData = this.prepareCityData()
 
@@ -766,8 +806,7 @@ export default {
     },
     async submitEditCity() {
       console.log('edit')
-      if (this.rating > 5) {
-        alert('Rating cannot be more than 5. Please enter a valid rating.')
+      if (!this.validateCityForm()) {
         return
       }
       const cityData = this.prepareCityData()
