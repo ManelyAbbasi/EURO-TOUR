@@ -99,14 +99,12 @@
 
       <section class="get-to-know-wrapper-in" v-if="isLoggedIn">
         <h2 class="home-heading">Weather warnings!</h2>
-        <div class="get-to-know-container-in">
           <!-- Conditionally Render "Why join us?" or Map -->
           <div class="get-to-know-box-in" v-if="isLoggedIn">
             <template v-if="isLoggedIn">
               <WeatherMap class="weather-map" />
             </template>
           </div>
-        </div>
       </section>
 
     </main>
@@ -387,21 +385,27 @@ li.dropdown-item.logout {
     border: 3px solid #045768;
 }
 
-.get-to-know-container-in .get-to-know-box-in{
+.get-to-know-box-in{
     background-color: #8FC6DF;
-    padding: 2rem 2rem 2rem;
     border-radius: 2rem;
+    padding: 2rem;
     text-align: center;
     transition: all 0.5s;
     width: 100%;
-    height: 50rem;
+    height: 35rem;
     border: 3px solid #045768;
+    margin-bottom: 4rem;
 }
 
 .weather-map {
   border-radius: 1.5rem;
-  height: 46rem;
-  max-height: 50rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;          /* Set height to fill the container */
+  max-height: 46rem;      /* Adjust max-height to ensure it doesn't stretch too much */
+  padding-bottom: 0;      /* Remove extra padding at the bottom */
+  margin-bottom: 0;       /* Ensure no extra margins below the map */
 }
 
 .get-to-know-container .get-to-know-box:hover{
@@ -409,7 +413,7 @@ li.dropdown-item.logout {
     transform: scale(1.03);
 }
 
-.get-to-know-container-in .get-to-know-box-in:hover{
+.get-to-know-box-in:hover{
     border-color: #bc672a;
     transform: scale(1.03);
 }
@@ -551,9 +555,8 @@ li.dropdown-item.logout {
         font-size: 5rem;
     }
 
-    .get-to-know-container-in .get-to-know-box-in{
-    padding: 2rem 2rem 2rem;
-    height: 44.5rem;
+    .get-to-know-box-in{
+    height: 500px;
   }
 }
 
@@ -636,6 +639,16 @@ li.dropdown-item.logout {
       font-size: 2.5rem;
   }
 
+}
+
+@media screen and (min-width: 1201px) {
+  .weather-map{
+    padding-bottom: 1rem;
+    max-height: 1000px;
+  }
+  .get-to-know-box-in {
+    max-height: 800px;
+  }
 }
 
 </style>
