@@ -315,7 +315,7 @@ export default {
     },
     async checkIfAdmin() {
       try {
-        const response = await Api.get('/api/admin/check-admin', {
+        const response = await Api.get('/api/admin/verify-admin', {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }
@@ -755,6 +755,16 @@ p{
       margin-top: 19rem;
       width: 55%;
     }
+
+    .admin-text{
+    margin-top: 0.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .admin-text h1, .admin-text p{
+    font-size: 1.8rem;
+  }
+
   }
 
   @media screen and (max-width:350px) {
