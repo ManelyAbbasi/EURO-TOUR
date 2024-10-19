@@ -41,6 +41,9 @@ var citiesSchema = new Schema({
     placesToVisit: { 
         type: [{ type: Schema.Types.ObjectId, ref: 'placesToVisit' }],
     },
+    alerts: {
+        type: [String],
+    }
 });
 
 module.exports = mongoose.model('cities', citiesSchema);
