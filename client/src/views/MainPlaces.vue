@@ -88,17 +88,17 @@
                 </div>
                 <h2 class="mainplaces-admin-header">Admins Picks:</h2>
                 <div class="trending-places-wrapper">
-                  <div class="mainplaces-amst-wrapper trending-place-wrapper">
-                    <img src="@/assets/Amsterdam.jpg" alt="Amsterdam city" class="trending-places-img"/>
-                    <p class="mainplaces-trending-amst">1. Amsterdam, The Netherlands</p>
+                  <div class="trending-place-wrapper">
+                    <a class="admins-pick-item"><i class="fa-solid fa-medal" style="color: #D6AF36;"></i></a>
+                    <p class="mainplaces-trending-amst"> Amsterdam, The Netherlands</p>
                   </div>
-                  <div class="mainplaces-dublin-wrapper trending-place-wrapper">
-                    <img src="@/assets/Dublin.jpg" alt="Dublin city" class="trending-places-img"/>
-                    <p class="mainplaces-trending-dublin">2. Dublin, Republic of Ireland</p>
+                  <div class="admins-picks-wrapper trending-place-wrapper">
+                    <a class="admins-pick-item"><i class="fa-solid fa-medal" style="color: #A7A7AD;"></i></a>
+                    <p class="mainplaces-trending-dublin"> Dublin, Republic of Ireland</p>
                   </div>
-                  <div class="mainplaces-paris-wrapper trending-place-wrapper">
-                    <img src="@/assets/Paris.jpg" alt="Paris city" class="trending-places-img"/>
-                    <p class="mainplaces-trending-paris">3. Paris, France</p>
+                  <div class="admins-picks-wrapper trending-place-wrapper">
+                    <a class="admins-pick-item"><i class="fa-solid fa-medal" style="color: #A77044;"></i></a>
+                    <p class="mainplaces-trending-paris"> Paris, France</p>
                   </div>
                 </div>
               </div>
@@ -491,15 +491,13 @@ export default {
   padding: 0.5rem;
   justify-items: center;
   margin: 0.5rem;
+  color:#045768;
 }
 
-.trending-places-img {
+.admins-pick-item{
   max-width: 35%;
   margin: 1rem;
-}
-
-.trending-place-wrapper img{
-  border: 1px solid #edf7fb;
+  font-size: 3.5rem;
 }
 
 .logo img{
