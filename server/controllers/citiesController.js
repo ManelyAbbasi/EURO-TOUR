@@ -25,23 +25,29 @@ async function getCityWeatherWarnings(req, res) {
     try {
         const cityId = req.params.id;
 
+        // Find the city by ID
         const city = await CitiesModel.findById(cityId);
         if (!city) {
             return res.status(404).json({ message: "City not found." });
         }
 
+        // Fetch weather alerts from external API
         const weatherAlerts = await getWeatherAlerts(city.cityName);
 
+        // If there are no alerts, return a message
         if (weatherAlerts.length === 0) {
             return res.status(200).json({ message: "No active weather warnings for this city." });
         }
 
+        // Store the weather alerts in the database
+        city.alerts = weatherAlerts.map(alert => alert.title);  // Just storing the titles
+        await city.save();
+
+        // Return the city and alerts in the response
         res.status(200).json({
             city: city.cityName,
             country: city.country,
-            alerts: weatherAlerts.map(alert => ({
-                title: alert.title
-            }))
+            alerts: city.alerts  // Now the alerts come from the database
         });
     } catch (error) {
         console.error('Error getting weather warnings for city:', error);
