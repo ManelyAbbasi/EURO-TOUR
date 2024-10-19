@@ -14,5 +14,6 @@ router.post('/login', adminController.login);
 
 router.delete('/:username', adminController.deleteOneAdmin);
 
+router.get('/', adminController.checkIfAdmin);
 
 module.exports = router; 

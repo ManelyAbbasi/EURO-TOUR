@@ -129,7 +129,7 @@ export default {
   methods: {
     async getCities() {
       try {
-        const response = await ApiV1.get('/api/cities')
+        const response = await ApiV1.get('/v1/api/cities')
         if (response.data && response.data.cities) {
           this.cities = response.data.cities.map(city => ({
             cityName: city.cityName,
@@ -155,7 +155,7 @@ export default {
       this.isFavorite = !this.isFavorite // Toggle between true and false
     },
     getMessage() {
-      ApiV1.get('/api/')
+      ApiV1.get('/v1/api/')
         .then(response => {
           this.message = response.data.message
         })

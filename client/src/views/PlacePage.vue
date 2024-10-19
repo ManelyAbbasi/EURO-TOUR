@@ -153,7 +153,7 @@ export default {
       try {
         const address = decodeURIComponent(this.$route.params.address)
         console.log('Place address:', address)
-        const response = await ApiV1.get(`/api/places/${address}`)
+        const response = await ApiV1.get(`/v1/api/places/${address}`)
         console.log('API Response:', response.data) // Log the entire response
 
         if (response.data && response.data.address) {
@@ -182,7 +182,7 @@ export default {
         const address = this.place.address
         const confirmed = confirm(`Are you sure you want to delete ${this.place.placeName}?`)
         if (confirmed) {
-          await ApiV1.delete(`/api/places/${address}`, {
+          await ApiV1.delete(`/v1/api/places/${address}`, {
             headers: {
               'x-auth-token': localStorage.getItem('x-auth-token')
             }
@@ -232,7 +232,7 @@ export default {
         }
 
         // Make the API call to update the place
-        const response = await ApiV1.put(`/api/places/${address}`, updatedPlaceData, {
+        const response = await ApiV1.put(`/v1/api/places/${address}`, updatedPlaceData, {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }
@@ -254,7 +254,7 @@ export default {
     },
     async checkIfAdmin() {
       try {
-        const response = await ApiV1.get('/api/admin/verify-admin', {
+        const response = await ApiV1.get('/v1/api/admin/verify-admin', {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }
