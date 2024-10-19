@@ -71,6 +71,16 @@ export default {
       this.usernameError = ''
       this.passwordError = ''
 
+      if (this.username.length > 20) {
+        alert('Username cannot be longer than 20 characters')
+        return
+      }
+
+      if (this.password.length > 25) {
+        alert('Password cannot be longer than 25 characters')
+        return
+      }
+
       if (!this.isEmpty) {
         try {
           const userCredentials = {
