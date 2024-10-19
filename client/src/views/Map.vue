@@ -394,17 +394,23 @@
   </div>
   <div class="popup-body">
     <ul>
-  <li v-for="city in filteredCities" :key="city._id || city.cityName">
-    <router-link :to="`/city/${city._id}`" class="city-link">
+    <li v-for="city in filteredCities" :key="city._id || city.cityName">
+      <div class ="city-row">
+      <router-link :to="`/city/${city._id}`" class="city-link">
       {{ city.cityName }}
-      <span class="weather-warning" v-if="city.alerts && city.alerts.length">
-        ({{ city.alerts.join(', ') }})
-      </span>
     </router-link>
+
+    <div class="weather-warning" v-if="city.alerts && city.alerts.length">
+      <i class="fa-solid fa-triangle-exclamation" style="color: #bc672a;"></i>
+      <span>{{ city.alerts.join(', ') }}</span>
+    </div>
+  </div>
+
     <admin-button>
       <button class="edit-button" v-if="isAdmin && city._id !== 'no-cities'" @click="editCity(city._id)">Edit</button>
       <button class="delete-button" v-if="isAdmin && city._id !== 'no-cities'" @click="deleteCity(city._id)">Delete</button>
     </admin-button>
+
   </li>
 </ul>
 
@@ -913,9 +919,17 @@ input[type='checkbox'] {
 .popup-body li{
   border-top: 1px solid #ddd;
   margin-top: 1rem;
-  display: flex;
   flex-direction: row;
   justify-content: space-between;
+  display: flex;
+  align-items: center;
+}
+
+.weather-warning {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #BC672A;
 }
 
 .popup-body a{
