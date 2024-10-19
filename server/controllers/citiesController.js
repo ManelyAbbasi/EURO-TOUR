@@ -119,13 +119,16 @@ async function getOneCity(req, res) {
     }
 
     try {
-        const city = await CitiesModel.findById(cityId);
+        const city = await CitiesModel.findById(cityId).populate({
+            path: 'placesToVisit',  
+            select: 'address' 
+        });
         if (!city) {
             return res.status(404).json({ message: "City not found" });
         }
 
         const links = {
-            placesToVisit: `/api/cities/${cityId}/placesToVisit`, // Link to places to visit in this city
+            placesToVisit: `/api/cities/${cityId}/placesToVisit`, 
         };
 
         res.status(200).json({
@@ -311,40 +314,6 @@ async function deleteOnePlaceFromCity(req, res) {
     }
 }
 
-async function deleteAllPlacesFromCity(req, res) {
-    const cityId = req.params.id;
-    try {
-        const adminCheckResponse = await adminController.checkIfAdmin(req);
-
-        if (!adminCheckResponse.isAdmin) {
-            return res.status(403).json({ message: "Access denied. Only admins can delete a city." });
-        }
-        
-        const city = await CitiesModel.findOne({ _id: cityId }).populate('placesToVisit');
-        if (!city) {
-            return res.status(404).json({ message: "City not found" });
-        }
-        
-        if (!city.placesToVisit || city.placesToVisit.length === 0) {
-            return res.status(404).json({ message: "No places found to delete" });
-        }
-
-        const result = await placesToVisitSchema.deleteMany({ _id: { $in: city.placesToVisit } });
-        
-        if (result.deletedCount === 0) {
-            return res.status(404).json({ message: "No places found to delete" });
-        }
-
-        city.placesToVisit = [];
-        await city.save();
-
-        res.status(200).json({ message: "All places in city deleted successfully" });
-    } catch (err) {
-        console.error("Error details:", err); 
-        res.status(500).json({ error: 'An error occurred while deleting the places.' });
-    }
-}
-
 module.exports = {
     createCity,
     createPlaceInCity,
@@ -352,6 +321,5 @@ module.exports = {
     getOneCity,
     getPlacesFromCity,
     updateCity,
-    deleteOnePlaceFromCity,
-    deleteAllPlacesFromCity
+    deleteOnePlaceFromCity
 }
