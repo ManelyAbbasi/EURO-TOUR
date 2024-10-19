@@ -601,8 +601,6 @@ export default {
       this.showCityPopup = false
       this.isEditing = true
 
-      console.log('Editing city with ID:', cityId)
-
       try {
         const response = await Api.get(`/api/cities/${cityId}`, {
           headers: {
@@ -610,12 +608,8 @@ export default {
           }
         })
 
-        console.log('City data fetched:', response)
-        console.log(cityId)
-        console.log(response)
-        if (response.data) {
-          const cityData = response.data
-          console.log(cityData)
+        if (response.data && response.data.city) {
+          const cityData = response.data.city
 
           this.newCityName = cityData.cityName
           this.newCityCountry = cityData.country
@@ -623,15 +617,16 @@ export default {
           this.stats = cityData.statistics
           this.facts = cityData.facts
           this.rating = cityData.rating
-          this.selectedTags = cityData.tags ? cityData.tags : []
+          this.selectedTags = cityData.tags || []
 
           this.editCityId = cityId
-          this.showNewCityForm = true
+          this.showNewCityForm = TextTrackCueList
         }
       } catch (error) {
         console.error('Error fetching city data:', error)
         alert('Failed to load city data for editing.')
       }
+
       await this.fetchCitiesInSystem()
     },
     async deleteCity(cityId) {
@@ -730,8 +725,7 @@ export default {
         statistics: this.stats,
         facts: this.facts,
         rating: this.rating,
-        tags: this.selectedTags,
-        isAdmin: this.isAdmin
+        tags: this.selectedTags
       }
     },
     resetForm() {
