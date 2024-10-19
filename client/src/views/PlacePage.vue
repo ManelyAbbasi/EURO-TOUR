@@ -761,6 +761,14 @@ input[type="text"] {
   .city-layout-wrapper{
     min-height: 60rem;
   }
+
+  .edit-place-popup {
+  width: 900px;
+  max-width: 90%;
+  height:630px;
+  max-height: 90vh;
+  margin-right: -16rem;
+}
 }
 
 @media screen and (max-width: 376px){
