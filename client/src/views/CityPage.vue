@@ -724,6 +724,17 @@ input[type='checkbox'] {
     }
 }
 
+@media screen and (max-width: 1070px){
+  .new-place-popup {
+    width: 900px;
+    max-width: 90%;
+    height:630px;
+    max-height: 90vh;
+    margin-right: -25rem;
+    margin-bottom: -15rem;
+ }
+}
+
 @media screen and (max-width: 1008px) {
   .city-layout-wrapper{
     margin-top: 13rem;
@@ -766,6 +777,10 @@ input[type='checkbox'] {
     .title-city{
     font-size: 3rem;
     }
+    .new-place-popup{
+      height:800px;
+      max-height: 110vh;
+    }
 }
 
 @media screen and (max-width:580px) {
@@ -796,8 +811,7 @@ input[type='checkbox'] {
   .new-place-popup {
     width: 900px;
     max-width: 90%;
-    height:630px;
-    max-height: 90vh;
+    max-height: 125vh;
     margin-right: -16rem;
  }
 }
@@ -828,5 +842,38 @@ input[type='checkbox'] {
     .main-cities-link-wrapper a{
     font-size: 1rem;
   }
+  .title-city{
+    text-align: center;
+    font-size: 1.5rem;
+  }
+  .star-rating{
+    display: flex;
+    justify-content: center;
+    font-size: 1rem;
+    align-items: center;
+  }
+  .new-place-popup{
+    gap: 1px;
+    height: 400px;
+  }
+  .new-place-popup .tags label{
+    font-size: 0.5rem;
+    margin: 0;
+  }
+  .new-place-popup .form-right{
+    padding: 0;
+  }
+  .new-place-popup .form-left{
+    font-size: 0.5rem;
+  }
+  .submit-wrapper button{
+    padding: 0.5rem;
+    font-size: 1rem;
+  }
+  .submit-wrapper{
+    margin-top: 2rem;
+    margin-right: 1rem;
+  }
+
 }
 </style>

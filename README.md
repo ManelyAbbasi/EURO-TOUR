@@ -80,6 +80,11 @@ Filter and Sort Pages: For both cities and places to visit, there will be pages 
 
 ### Proposal for a 5 (SVG-map)
 
+After discussing with Magnus, we agreed upon:  
+
+Moving the weather API integration to the backend of our project, therefore the different weather alerts would be extracted from the API to then be inputed into our CitiesModel. These weather warnings, known as alerts, after being handled in the backend will be given a visual representation in our frontend. 
+
+
 #### Frontend Aspects:
 **Interactive Map with Multiple Stages:**
 - Stage 1 (Hover Interaction): As users hover over the map, countries with cities in the system will light up in orange and become clickable, displaying the country's name. This immediate visual feedback helps users understand which countries are available for exploration.
