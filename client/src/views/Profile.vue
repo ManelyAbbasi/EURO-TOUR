@@ -228,7 +228,7 @@ export default {
           throw new Error('No auth token found. Please log in.')
         }
 
-        const response = await ApiV1.patch(`/api/admin/${this.username}`, userCredentials, {
+        const response = await ApiV1.patch(`/v1/api/admin/${this.username}`, userCredentials, {
           headers: {
             'x-auth-token': authToken // Set the token in the request headers
           }
@@ -318,7 +318,7 @@ export default {
     },
     async checkIfAdmin() {
       try {
-        const response = await ApiV1.get('/api/admin/verify-admin', {
+        const response = await ApiV1.get('/v1/api/admin/verify-admin', {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }
