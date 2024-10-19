@@ -413,11 +413,12 @@
 
 <div class="new-city-popup" :class="{ show: showNewCityForm }" v-if="isLoggedIn && showNewCityForm">
   <div class="popup-header">
-    <h3>Create New City</h3>
+    <h3 v-if="!isEditing">Create New City</h3>
+    <h3 v-if="isEditing">Edit City</h3>
     <button class="close-button" @click="closeNewCityForm">X</button>
   </div>
   <div class="popup-body">
-    <form @submit.prevent="submitNewCity">
+    <form @submit.prevent="isEditing ? submitEditCity() : submitNewCity()">
       <div class="form-layout">
         <div class="form-left">
           <label for="cityName">City Name:</label>
@@ -448,7 +449,7 @@
           </div>
         </div>
       </div>
-      <button type="submit">Submit</button>
+      <button type="submit">{{ isEditing ? 'Update City' : 'Create City' }}</button>
     </form>
   </div>
 </div>
@@ -460,7 +461,7 @@
 </template>
 
 <script>
-import { Api } from '@/Api'
+import { ApiV1 } from '@/Api'
 
 export default {
   name: 'EuropeMap',
@@ -480,6 +481,8 @@ export default {
       showLoginMessage: false,
       isAdmin: false,
       showNewCityForm: false,
+      isEditing: false,
+      editCityId: null,
       newCityName: '',
       newCityCountry: '',
       goodToKnow: '',
@@ -519,7 +522,7 @@ export default {
   methods: {
     async fetchCitiesInSystem() {
       try {
-        const response = await Api.get('/api/cities')
+        const response = await ApiV1.get('/api/cities')
         if (response.data && response.data.cities) {
           this.citiesInSystem = response.data.cities
         } else {
@@ -531,7 +534,7 @@ export default {
     },
     async loadCities() {
       try {
-        const response = await Api.get('/api/cities')
+        const response = await ApiV1.get('/api/cities')
         this.citiesInSystem = response.data
       } catch (error) {
         console.error('Error loading cities:', error)
@@ -543,7 +546,7 @@ export default {
     },
     async checkIfAdmin() {
       try {
-        const response = await Api.get('/api/admin/verify-admin', {
+        const response = await ApiV1.get('/api/admin/verify-admin', {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }
@@ -596,15 +599,17 @@ export default {
     },
     async editCity(cityId) {
       this.showCityPopup = false
+      this.isEditing = true
+
       try {
-        const response = await Api.get(`/api/cities/${cityId}`, {
+        const response = await ApiV1.get(`/api/cities/${cityId}`, {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }
         })
 
-        if (response.data) {
-          const cityData = response.data
+        if (response.data && response.data.city) {
+          const cityData = response.data.city
 
           this.newCityName = cityData.cityName
           this.newCityCountry = cityData.country
@@ -612,15 +617,16 @@ export default {
           this.stats = cityData.statistics
           this.facts = cityData.facts
           this.rating = cityData.rating
-          this.selectedTags = cityData.tags
-          this.isEditing = true
+          this.selectedTags = cityData.tags || []
+
           this.editCityId = cityId
-          this.showNewCityForm = true
+          this.showNewCityForm = TextTrackCueList
         }
       } catch (error) {
         console.error('Error fetching city data:', error)
         alert('Failed to load city data for editing.')
       }
+
       await this.fetchCitiesInSystem()
     },
     async deleteCity(cityId) {
@@ -634,7 +640,7 @@ export default {
         return
       }
       try {
-        const response = await Api.delete(`/api/admin/cities/${cityId}`, {
+        const response = await ApiV1.delete(`/api/admin/cities/${cityId}`, {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }
@@ -662,54 +668,65 @@ export default {
       this.selectedTags = []
     },
     async submitNewCity() {
+      console.log('create new city')
       if (this.rating > 5) {
         alert('Rating cannot be more than 5. Please enter a valid rating.')
         return
       }
-      const cityData = {
+      const cityData = this.prepareCityData()
+
+      try {
+        const response = await ApiV1.post('/api/cities', cityData, {
+          headers: {
+            'x-auth-token': localStorage.getItem('x-auth-token')
+          }
+        })
+
+        if (response.status === 201) {
+          alert('City successfully created!')
+          await this.fetchCitiesInSystem()
+          this.closeNewCityForm()
+        }
+      } catch (error) {
+        console.error('Error saving city:', error)
+        alert('Failed to save city: ' + (error.response?.data?.message || error.message))
+      }
+    },
+    async submitEditCity() {
+      console.log('edit')
+      if (this.rating > 5) {
+        alert('Rating cannot be more than 5. Please enter a valid rating.')
+        return
+      }
+      const cityData = this.prepareCityData()
+
+      try {
+        const response = await ApiV1.put(`/api/cities/${this.editCityId}`, cityData, {
+          headers: {
+            'x-auth-token': localStorage.getItem('x-auth-token')
+          }
+        })
+
+        if (response.status === 200) {
+          alert('City successfully updated!')
+          await this.fetchCitiesInSystem()
+          this.closeNewCityForm()
+        }
+      } catch (error) {
+        console.error('Error updating city:', error)
+        alert('Failed to update city: ' + (error.response?.data?.message || error.message))
+      }
+    },
+    prepareCityData() {
+      return {
         cityName: this.newCityName,
         country: this.newCityCountry,
         goodToKnow: this.goodToKnow,
         statistics: this.stats,
         facts: this.facts,
         rating: this.rating,
-        tags: this.selectedTags,
-        isAdmin: this.isAdmin
+        tags: this.selectedTags
       }
-
-      try {
-        if (this.isEditing) {
-          const response = await Api.put(`/api/cities/${this.editCityId}`, cityData, {
-            headers: {
-              'x-auth-token': localStorage.getItem('x-auth-token')
-            }
-          })
-
-          if (response.status === 200) {
-            alert('City successfully updated!')
-            this.loadCities()
-          }
-        } else {
-          const response = await Api.post('/api/cities', cityData, {
-            headers: {
-              'x-auth-token': localStorage.getItem('x-auth-token')
-            }
-          })
-
-          if (response.status === 201) {
-            alert('City successfully created!')
-            this.loadCities()
-          }
-        }
-      } catch (error) {
-        console.error('Error saving city:', error)
-        alert('Failed to save city: ' + (error.response?.data?.message || error.message))
-      }
-
-      this.resetForm()
-      this.closeNewCityForm()
-
-      await this.fetchCitiesInSystem()
     },
     resetForm() {
       this.newCityName = ''

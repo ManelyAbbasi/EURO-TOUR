@@ -54,7 +54,7 @@
       </b-row>
 
        <!-- Gender and LGBTQIA selection will only appear for non-admin users -->
-      <b-row v-if="!isAdmin">
+      <b-row v-if="!isAdmin" class="gender-row">
         <div class="gender-selection">
           <label for="gender">What is your gender?</label>
           <div class="gender-buttons">
@@ -98,7 +98,7 @@
         </div>
       </b-row>
 
-      <b-row v-if="!isAdmin">
+      <b-row v-if="!isAdmin" class="sexuality-row">
         <div class="sexuality-selection">
           <label for="lgbtqia">Are you a member of LGBTQIA+?</label>
           <div class="sexuality-buttons">
@@ -175,7 +175,10 @@
 </template>
 
 <script>
-import { Api } from '../Api' // Assuming your backend API call method is in Api.js
+// eslint-disable-next-line import/no-duplicates
+import { ApiV1 } from '../Api' // Assuming your backend API call method is in Api.js
+// eslint-disable-next-line import/no-duplicates
+import { ApiV2 } from '../Api'
 
 export default {
   data() {
@@ -225,7 +228,7 @@ export default {
           throw new Error('No auth token found. Please log in.')
         }
 
-        const response = await Api.patch(`/api/admin/${this.username}`, userCredentials, {
+        const response = await ApiV1.patch(`/api/admin/${this.username}`, userCredentials, {
           headers: {
             'x-auth-token': authToken // Set the token in the request headers
           }
@@ -266,7 +269,7 @@ export default {
           throw new Error('No auth token found. Please log in.')
         }
 
-        const response = await Api.put(`/api/users/${this.username}`, userCredentials, {
+        const response = await ApiV2.put(`/api/users/${this.username}`, userCredentials, {
           headers: {
             'x-auth-token': authToken // Set the token in the request headers
           }
@@ -292,7 +295,7 @@ export default {
       try {
         const authToken = localStorage.getItem('x-auth-token')
         if (!authToken) throw new Error('No auth token found. Please log in.')
-        const response = await Api.delete(`/api/users/${this.usernameDeleting}`, {
+        const response = await ApiV2.delete(`/api/users/${this.usernameDeleting}`, {
           headers: {
             'x-auth-token': authToken // Send token for authorization
           },
@@ -315,7 +318,7 @@ export default {
     },
     async checkIfAdmin() {
       try {
-        const response = await Api.get('/api/admin/check-admin', {
+        const response = await ApiV1.get('/api/admin/check-admin', {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }
@@ -542,7 +545,7 @@ label {
   padding: 0.3rem 1rem;
   font-size: 1rem;
   cursor: pointer;
-  margin-left:2rem;
+  margin-left:1rem;
 }
 
 .saved-message {
@@ -715,27 +718,27 @@ p{
 }
 
 @media screen and (max-width:1200px) {
-    html{
-        font-size: 55%;
+    .navbar{
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
     }
-}
 
-@media screen and (max-width: 991px){
-    section{
-        padding: 10rem 3% 2rem;
+    .maincities-body-container{
+      min-width: 1200px;
     }
-    .euro-tour-header{
-        padding: 2rem 3%;
+
+    .user-form{
+    margin-left: 14rem;
+    width: 70%;
     }
+
     .footer{
-        padding: 2rem 3%;
-    }
-    .get-to-know-wrapper{
-        padding: 7rem;
+        min-width: 1200px;
     }
 }
 
-@media screen and (max-width: 768px){
+@media (max-width: 768px) {
     .navbar{
         width: 100%;
         display: flex;
@@ -743,35 +746,115 @@ p{
         flex-wrap: wrap;
         align-items: center;
     }
+
     .euro-tour-header{
         flex-direction: column;
         gap: 2rem;
+        padding: 2rem 3%;
     }
-    .layout-wrapper,
-    .get-to-know-wrapper{
-        flex-direction: column;
-        display: flex;
+
+    .user-form{
+      margin-left: 17rem;
+      margin-top: 19rem;
+      width: 55%;
     }
-    .layout-wrapper p{
-        font-size: 2.5rem;
-    }
-    .layout-wrapper h1{
-        font-size: 5rem;
-    }
+
+    .admin-text{
+    margin-top: 0.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .admin-text h1, .admin-text p{
+    font-size: 1.8rem;
+  }
 }
 
-@media screen and (max-width:576px) {
-    html{
-        font-size: 50%;
+  @media screen and (max-width:350px) {
+  .user-form{
+      width: 60%;
+      margin-top: 25rem;
     }
+
+  #username.input-field, #password.input-field {
+    width: 80%;
+    padding: 12px 20px;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+  }
+
+  .gender-selection label, .sexuality-selection label,
+  label.gender.label, label.sexuality.label, label {
+    font-size: 2.2rem;
+  }
+
+  .gender-selection, .sexuality-selection,
+  div.gender-buttons, div.sexuality-buttons{
+    flex-direction: column;
+    margin-top: 1rem;
+  }
+
+  .gender-buttons, .sexuality-buttons {
+    margin-left: 0rem;
+    gap: 1rem;
+  }
+
+  .gender-button, .sexuality-button {
+    width: 1.9rem;
+    height: 1.9rem;
+ }
+
+  .delete-button-container, .save-message-container,
+  .save-button-container{
+    margin-top: 7rem;
+    margin-bottom: 39rem;
+  }
+
+  .delete-button {
+    font-size: 2rem;
+    margin-right: -5rem;
+  }
+
+  .save-button {
+    font-size: 2rem;
+    margin-left:-5rem;
+  }
+
+  .saved-message {
+    margin-left: -2rem;
+    margin-top: 2rem;
+    font-size: 2rem;
+  }
+
+  .gender-row, .sexuality-row{
+    margin-top: 3rem;
+  }
+
+  .delete-popup.show p {
+    font-size:2.5rem;
+  }
+
+  .popup-body button{
+    width: 60%;
+    font-size: 2rem;
 }
 
-@media screen and (max-width:350px) {
-    .layout-wrapper img{
-        width: 90vw;
-    }
-    .footer{
-        flex-direction: column-reverse;
-    }
+ .admin-text{
+    margin-top: 12rem;
+    margin-bottom: 10rem;
+  }
+
+  .admin-text h1{
+    font-size: 5rem;
+  }
+
+  .admin-text p{
+    font-size: 3rem;
+  }
+
+ .footer{
+    flex-direction: column-reverse;
+  }
+
 }
+
 </style>

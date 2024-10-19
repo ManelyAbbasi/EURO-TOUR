@@ -103,7 +103,7 @@
   </template>
 
 <script>
-import { Api } from '@/Api'
+import { ApiV1 } from '@/Api'
 
 export default {
   data() {
@@ -129,7 +129,7 @@ export default {
   methods: {
     async getCities() {
       try {
-        const response = await Api.get('/api/cities')
+        const response = await ApiV1.get('/api/cities')
         if (response.data && response.data.cities) {
           this.cities = response.data.cities.map(city => ({
             cityName: city.cityName,
@@ -155,7 +155,7 @@ export default {
       this.isFavorite = !this.isFavorite // Toggle between true and false
     },
     getMessage() {
-      Api.get('/api/')
+      ApiV1.get('/api/')
         .then(response => {
           this.message = response.data.message
         })
