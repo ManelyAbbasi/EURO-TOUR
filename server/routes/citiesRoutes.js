@@ -17,6 +17,6 @@ router.get('/:id/placesToVisit', citiesControllers.getPlacesFromCity);
 
 router.delete('/:id/placesToVisit/:address', authentication, citiesControllers.deleteOnePlaceFromCity);
 
-router.get('/weather-warnings/:id', citiesControllers.getCitiesWithWeatherWarnings);
+router.get('/weather-warnings/:id', citiesControllers.getCityWeatherWarnings);
 
 module.exports = router;

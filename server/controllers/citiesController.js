@@ -21,32 +21,31 @@ async function getWeatherAlerts(cityName) {
     }
 }
 
-async function getCitiesWithWeatherWarnings(req, res) {
+async function getCityWeatherWarnings(req, res) {
     try {
-        const cities = await CitiesModel.find();
+        const cityId = req.params.id;
 
-        const citiesWithWarnings = await Promise.all(cities.map(async (city) => {
-            const weatherAlerts = await getWeatherAlerts(city.cityName);
-            if (weatherAlerts.length > 0) {
-                return {
-                    city: city.cityName,
-                    country: city.country,
-                    alerts: weatherAlerts
-                };
-            }
-            return null;
-        }));
-
-        const filteredCities = citiesWithWarnings.filter(city => city !== null);
-
-        if (filteredCities.length === 0) {
-            return res.status(200).json({ message: "No cities with active weather warnings found." });
+        const city = await CitiesModel.findById(cityId);
+        if (!city) {
+            return res.status(404).json({ message: "City not found." });
         }
 
-        res.status(200).json({ cities: filteredCities });
+        const weatherAlerts = await getWeatherAlerts(city.cityName);
+
+        if (weatherAlerts.length === 0) {
+            return res.status(200).json({ message: "No active weather warnings for this city." });
+        }
+
+        res.status(200).json({
+            city: city.cityName,
+            country: city.country,
+            alerts: weatherAlerts.map(alert => ({
+                title: alert.title
+            }))
+        });
     } catch (error) {
-        console.error('Error getting cities with weather warnings:', error);
-        res.status(500).json({ error: 'An error occurred while fetching cities with weather warnings.' });
+        console.error('Error getting weather warnings for city:', error);
+        res.status(500).json({ error: 'An error occurred while fetching weather warnings for the city.' });
     }
 }
 
@@ -168,7 +167,7 @@ async function getOneCity(req, res) {
         }
 
         const links = {
-            placesToVisit: `/api/cities/${cityId}/placesToVisit`, // Link to places to visit in this city
+            placesToVisit: `/api/cities/${cityId}/placesToVisit`,
         };
 
         res.status(200).json({
@@ -363,5 +362,5 @@ module.exports = {
     getPlacesFromCity,
     updateCity,
     deleteOnePlaceFromCity,
-    getCitiesWithWeatherWarnings
+    getCityWeatherWarnings
 }
