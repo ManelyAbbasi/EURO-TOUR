@@ -105,7 +105,7 @@
 </template>
 
 <script>
-import { Api } from '@/Api'
+import { ApiV1 } from '@/Api'
 
 export default {
   data() {
@@ -152,7 +152,7 @@ export default {
       try {
         const address = decodeURIComponent(this.$route.params.address)
         console.log('Place address:', address)
-        const response = await Api.get(`/api/places/${address}`)
+        const response = await ApiV1.get(`/api/places/${address}`)
         console.log('API Response:', response.data) // Log the entire response
 
         if (response.data && response.data.address) {
@@ -181,7 +181,7 @@ export default {
         const address = this.place.address
         const confirmed = confirm(`Are you sure you want to delete ${this.place.placeName}?`)
         if (confirmed) {
-          await Api.delete(`/api/places/${address}`, {
+          await ApiV1.delete(`/api/places/${address}`, {
             headers: {
               'x-auth-token': localStorage.getItem('x-auth-token')
             }
@@ -231,7 +231,7 @@ export default {
         }
 
         // Make the API call to update the place
-        const response = await Api.put(`/api/places/${address}`, updatedPlaceData, {
+        const response = await ApiV1.put(`/api/places/${address}`, updatedPlaceData, {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }
@@ -253,7 +253,7 @@ export default {
     },
     async checkIfAdmin() {
       try {
-        const response = await Api.get('/api/admin/verify-admin', {
+        const response = await ApiV1.get('/api/admin/verify-admin', {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }
@@ -745,6 +745,18 @@ input[type="text"] {
     }
 }
 
+@media screen and (max-width: 580px){
+  .city-layout-wrapper{
+    min-height: 60rem;
+  }
+}
+
+@media screen and (max-width: 376px){
+  .city-layout-wrapper{
+    min-height: 75rem;
+  }
+}
+
 @media screen and (max-width:350px) {
     .footer{
         flex-direction: column-reverse;
@@ -754,7 +766,9 @@ input[type="text"] {
       justify-content: center;
     }
     .city-wrapper a,
-    .heading{
+    .heading,
+    h1,
+    .star-rating{
       justify-content: center;
       display: flex;
     }

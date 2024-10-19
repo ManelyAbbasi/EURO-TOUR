@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { Api } from '../Api'
+import { ApiV2 } from '../Api'
 
 export default {
   name: 'SignUp',
@@ -112,7 +112,7 @@ export default {
         }
 
         console.log('User object:', user)
-        const response = await Api.post('/api/users', user)
+        const response = await ApiV2.post('/api/users', user)
         console.log('response', response)
         console.log('header', response.headers)
         localStorage.setItem('x-auth-token', response.headers['x-auth-token'])
