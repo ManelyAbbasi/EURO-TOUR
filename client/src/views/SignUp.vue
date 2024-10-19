@@ -13,24 +13,19 @@
       <img src="@/assets/vertical-logo.png" alt="Mobile Logo" class="signup-mobile-logo-img" draggable="false" />
 
       <div class="signup-container">
-        <!-- Container for the form -->
         <div class="signup-form-entries">
-          <!-- 1st row: username -->
           <div class="signup-row-form">
             <input class="signup-input" name="username" id="usernameID" type="text" v-model="username" placeholder="username">
           </div>
 
-          <!-- 2nd row: password -->
           <div class="signup-row-form">
             <input class="signup-input" name="password" id="passwordID" type="password" v-model="password" placeholder="password">
           </div>
 
-          <!-- 3rd row: confirm password -->
           <div class="signup-row-form">
             <input class="signup-input" name="confirm password" id="confirmpasswordID" type="password" v-model="confirmpassword" placeholder="confirm password">
           </div>
 
-          <!-- 4th row: date of birth -->
           <div class="signup-row-form dob-row">
             <label for="dob">date of birth</label><br />
             <div class="dob-container">
@@ -51,12 +46,10 @@
             </div>
           </div>
 
-          <!-- Sign up button -->
           <div class="signup-button-container">
             <button class="signup-btn" type="button" @click="saveButton()" :disabled="isEmpty">sign up</button>
           </div>
 
-          <!-- Already have an account section -->
           <div class="signup-login-container">
             <span>already have an account? </span>
             <router-link to="/login" class="login-link">log in</router-link>
@@ -90,7 +83,6 @@ export default {
   },
   methods: {
     validateInputs() {
-      // Validate username
       if (this.username.length > 20) {
         alert('Username cannot be longer than 20 characters')
         return false
@@ -99,7 +91,6 @@ export default {
         return false
       }
 
-      // Validate password
       if (this.password.length > 25) {
         alert('Password cannot be longer than 25 characters')
         return false
@@ -108,20 +99,19 @@ export default {
         return false
       }
 
-      // Validate confirm password
       if (this.password !== this.confirmpassword) {
         alert('Passwords do not match')
         return false
       }
 
-      return true // Return true if all validations pass
+      return true
     },
 
     async saveButton() {
-      const isValid = this.validateInputs() // Validate inputs before submitting
+      const isValid = this.validateInputs()
 
       if (!isValid || this.isEmpty) {
-        return // Stop the function if there are validation errors
+        return
       }
 
       try {
@@ -144,6 +134,15 @@ export default {
         localStorage.setItem('x-auth-token', response.headers['x-auth-token'])
         this.$router.push({ name: 'home' })
       } catch (error) {
+        if (error.response && error.response.status === 400) {
+          if (error.response.data.message === 'User with this username already exists') {
+            alert('Username already exists. Please choose a different username.')
+          } else {
+            alert('An error occurred: ' + error.response.data.message)
+          }
+        } else {
+          alert('An unexpected error occurred. Please try again later.')
+        }
         console.error(error)
       }
     }
@@ -151,11 +150,11 @@ export default {
   computed: {
     isEmpty() {
       return this.username === '' ||
-             this.password === '' ||
-             this.confirmpassword === '' ||
-             this.birthDay === '' ||
-             this.birthMonth === '' ||
-             this.birthYear === ''
+          this.password === '' ||
+          this.confirmpassword === '' ||
+          this.birthDay === '' ||
+          this.birthMonth === '' ||
+          this.birthYear === ''
     }
   }
 }
