@@ -745,6 +745,18 @@ input[type="text"] {
     }
 }
 
+@media screen and (max-width: 580px){
+  .city-layout-wrapper{
+    min-height: 60rem;
+  }
+}
+
+@media screen and (max-width: 376px){
+  .city-layout-wrapper{
+    min-height: 75rem;
+  }
+}
+
 @media screen and (max-width:350px) {
     .footer{
         flex-direction: column-reverse;
@@ -754,7 +766,9 @@ input[type="text"] {
       justify-content: center;
     }
     .city-wrapper a,
-    .heading{
+    .heading,
+    h1,
+    .star-rating{
       justify-content: center;
       display: flex;
     }
