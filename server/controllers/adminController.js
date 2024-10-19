@@ -199,15 +199,6 @@ async function login(req, res, next) {
     }
 }
 
-async function getAllAdmins(req, res, next) {
-    try {
-        const admins = await adminsSchema.find({});
-        res.status(200).json(admins);
-    } catch (err) {
-        next(err);
-    }
-}
-
 async function deleteOneAdmin(req, res, next) {
     try{
         const sessionKey = req.headers['x-auth-token'];
@@ -250,10 +241,8 @@ async function deleteOneAdmin(req, res, next) {
 module.exports ={
     patchAdmin,
     deleteCity,
-    checkIfAdmin, 
     verifyAdmin,
     createAdmin,
     login,
-    getAllAdmins,
     deleteOneAdmin
 };

@@ -15,8 +15,8 @@
 					"script": {
 						"exec": [
 							"",
-							"pm.test(\"Response status code is 404\", function () {",
-							"  pm.expect(pm.response.code).to.equal(404);",
+							"pm.test(\"Response status code is 201\", function () {",
+							"  pm.expect(pm.response.code).to.equal(201);",
 							"});"
 						],
 						"type": "text/javascript",
@@ -35,7 +35,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"simon\",\r\n    \"password\": \"Food\",\r\n    \"birthDate\": \"1990-01-01\",\r\n    \"isLGBTQIA\": true,\r\n    \"gender\": \"non-binary\",\r\n    \"isAdmin\": true\r\n}\r\n",
+					"raw": "{\r\n    \"username\": \"miles\",\r\n    \"password\": \"Food\",\r\n    \"birthDate\": \"1990-01-01\",\r\n    \"isLGBTQIA\": true,\r\n    \"gender\": \"non-binary\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -43,15 +43,347 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/api/users",
+					"raw": "http://localhost:3000/v2/api/users",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
+						"v2",
 						"api",
 						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 201\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(201);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"afghan\",\r\n    \"password\": \"fr\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/v1/api/admin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"api",
+						"admin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"miles\",\r\n    \"password\": \"Food\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/v2/api/users/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v2",
+						"api",
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"afghan\",\r\n    \"password\": \"fr\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/v1/api/admin/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"api",
+						"admin",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update city",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 404\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(404);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "67111f103e868b9fbcae0ffe",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"cityName\": \"Gothenburg\",\r\n    \"country\": \"Sweden\",\r\n    \"statistics\": \"2nd largest city in Sweden\",\r\n    \"facts\": \"has trams\",\r\n    \"tags\": [\"beachy\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/v1/api/cities/670d0d53492c590b6b3779c4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"api",
+						"cities",
+						"670d0d53492c590b6b3779c4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update place",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 404\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(404);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "67127ff3a94d573ec41e688e",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"placeName\": \"this is a terrible name\",\r\n    \"tags\": [\"18+\", \"historical\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/v1/api/places/Djurgårdsvägen 68, 115 21 Stockholm",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"api",
+						"places",
+						"Djurgårdsvägen 68, 115 21 Stockholm"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteOnePlace",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 404\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(404);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "67127ff3a94d573ec41e688e",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/v1/api/places/Djurgårdsvägen 68, 115 21 Stockholm",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"api",
+						"places",
+						"Djurgårdsvägen 68, 115 21 Stockholm"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update placeName",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 404\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(404);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "67127ff3a94d573ec41e688e",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"placeName\": \"ABBA Museum\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/v1/api/places/Djurgårdsvägen 68, 115 21 Stockholm",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"api",
+						"places",
+						"Djurgårdsvägen 68, 115 21 Stockholm"
 					]
 				}
 			},
@@ -78,13 +410,13 @@
 				"header": [
 					{
 						"key": "x-auth-token",
-						"value": "671111a37ec29ef80b38baf9",
+						"value": "6712647c781d7d9a1aadfe8f",
 						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"password\": \"nornjkrngjkrngjkernjgknrjkngkjrengjknrjkgnrejngway\"\r\n}",
+					"raw": "{\r\n    \"password\": \"bonita\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -92,23 +424,24 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/api/admin/riley",
+					"raw": "http://localhost:3000/v1/api/admin/afghan",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
+						"v1",
 						"api",
 						"admin",
-						"riley"
+						"afghan"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "check-if-admin",
+			"name": "verify-admin",
 			"event": [
 				{
 					"listen": "test",
@@ -128,80 +461,22 @@
 				"header": [
 					{
 						"key": "x-auth-token",
-						"value": "671111a37ec29ef80b38baf9",
+						"value": "67127b9c3c1054f9566083ac",
 						"type": "text"
 					}
 				],
 				"url": {
-					"raw": "http://localhost:3000/api/admin/check-admin",
+					"raw": "http://localhost:3000/v1/api/admin/verify-admin",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
+						"v1",
 						"api",
 						"admin",
-						"check-admin"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "delete Place",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Response status code is 404\", function () {\r",
-							"  pm.expect(pm.response.code).to.equal(404);\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "x-auth-token",
-						"value": "670bc4e4489d2e203262b9b3",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:3000/api/cities/670bc516489d2e203262b9b6/placesToVisit/1441",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"api",
-						"cities",
-						"670bc516489d2e203262b9b6",
-						"placesToVisit",
-						"1441"
-					],
-					"query": [
-						{
-							"key": "x",
-							"value": null,
-							"disabled": true
-						}
+						"verify-admin"
 					]
 				}
 			},
@@ -228,7 +503,7 @@
 				"header": [
 					{
 						"key": "x-auth-token",
-						"value": "670c309ce6cf661f19fc37b8",
+						"value": "67126fa0591069c80d275d50",
 						"type": "text"
 					}
 				],
@@ -237,17 +512,18 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:3000/api/admin/cities/66febe2da8c2e1026444d892",
+					"raw": "http://localhost:3000/v1/api/admin/cities/6712595b09c41f036a79c7c4",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
+						"v1",
 						"api",
 						"admin",
 						"cities",
-						"66febe2da8c2e1026444d892"
+						"6712595b09c41f036a79c7c4"
 					]
 				}
 			},
@@ -274,13 +550,13 @@
 				"header": [
 					{
 						"key": "x-auth-token",
-						"value": "671116e1abbc47b2c145552b",
+						"value": "6712727bf905b96b1987223e",
 						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"cityName\": \"Gbg\",\r\n    \"country\": \"France\",\r\n    \"goodToKnow\": \"Was under construction due to the Olympics. People have been known to have the Paris syndrome when visiting that they experience great disappointment.\",\r\n    \"statistics\": \"The capital city of France. Hosted the 2024 summer Olympics \",\r\n    \"facts\": \"The city remarked as the city of love. Many historical iconic landmarks and museums.\",\r\n    \"rating\": 3.4,\r\n    \"tags\": [\"historical\", \"architecture\", \"popular\", \"warm weather\", \"party\"]\r\n}",
+					"raw": "{\r\n    \"cityName\": \"osl\",\r\n    \"country\": \"France\",\r\n    \"goodToKnow\": \"Was under construction due to the Olympics. People have been known to have the Paris syndrome when visiting that they experience great disappointment.\",\r\n    \"statistics\": \"The capital city of France. Hosted the 2024 summer Olympics \",\r\n    \"facts\": \"The city remarked as the city of love. Many historical iconic landmarks and museums.\",\r\n    \"rating\": 3.4,\r\n    \"tags\": [\"historical\", \"architecture\", \"popular\", \"warm weather\", \"party\"]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -288,13 +564,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/api/cities",
+					"raw": "http://localhost:3000/v1/api/cities",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
+						"v1",
 						"api",
 						"cities"
 					]
@@ -354,6 +631,66 @@
 			"response": []
 		},
 		{
+			"name": "delete Place from City",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 404\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(404);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "67127e16184a936795814d6f",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/v1/api/cities/670d02bee83178bad8ac9b10/placesToVisit/Piazza di Trevi, 00187 Roma RM, Italy",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"api",
+						"cities",
+						"670d02bee83178bad8ac9b10",
+						"placesToVisit",
+						"Piazza di Trevi, 00187 Roma RM, Italy"
+					],
+					"query": [
+						{
+							"key": "x",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "get all cities",
 			"event": [
 				{
@@ -380,74 +717,16 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:3000/api/cities?minRating=3.0&maxRating=5.0&sortByRating=desc",
+					"raw": "http://localhost:3000/v1/api/cities",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
+						"v1",
 						"api",
 						"cities"
-					],
-					"query": [
-						{
-							"key": "minRating",
-							"value": "3.0"
-						},
-						{
-							"key": "maxRating",
-							"value": "5.0"
-						},
-						{
-							"key": "sortByRating",
-							"value": "desc"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "login",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"\r",
-							"pm.test(\"Response status code is 404\", function () {\r",
-							"  pm.expect(pm.response.code).to.equal(404);\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"renaa\",\r\n    \"password\": \"Food\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:3000/api/users/login",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"api",
-						"users",
-						"login"
 					]
 				}
 			},
@@ -473,16 +752,17 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/cities/670db586757bb3ff2d423949",
+					"raw": "http://localhost:3000/v1/api/cities/670d0d53492c590b6b3779c4",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
+						"v1",
 						"api",
 						"cities",
-						"670db586757bb3ff2d423949"
+						"670d0d53492c590b6b3779c4"
 					]
 				}
 			},
@@ -589,7 +869,7 @@
 			"response": []
 		},
 		{
-			"name": "router.delete('/:username', usersControllers.deleteOneUser);",
+			"name": "delete admin",
 			"event": [
 				{
 					"listen": "test",
@@ -609,13 +889,13 @@
 				"header": [
 					{
 						"key": "x-auth-token",
-						"value": "66fe950f58c11835a2d97426",
+						"value": "67128220b8fd8119bcc1b72e",
 						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "",
+					"raw": "{\r\n    \"password\": \"malaysian\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -623,16 +903,58 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/api/users/renaa",
+					"raw": "http://localhost:3000/v1/api/admin/malay",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
+						"v1",
 						"api",
-						"users",
-						"renaa"
+						"admin",
+						"malay"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete all places",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 404\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(404);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "6712852e1dbb5c1649cdc3b3",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/v1/api/places",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"api",
+						"places"
 					]
 				}
 			},
@@ -673,200 +995,17 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/api/users/rile",
+					"raw": "http://localhost:3000/v2/api/users/rile",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
+						"v2",
 						"api",
 						"users",
 						"rile"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "update place",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Response status code is 404\", function () {\r",
-							"  pm.expect(pm.response.code).to.equal(404);\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "PUT",
-				"header": [
-					{
-						"key": "x-auth-token",
-						"value": "67112594b7c55e7825dc283a",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"placeName\": \"rkjfnkerjfnkjernfkjernfjknrjkfnj4knf43nklfnk4lnfkrnefklnrekfnreklnfkerlnf\",\r\n    \"tags\": [\"18+\", \"historical\"]\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:3000/api/places/St.EC4M 8AD, United Kingdom",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"api",
-						"places",
-						"St.EC4M 8AD, United Kingdom"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "update city",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Response status code is 404\", function () {\r",
-							"  pm.expect(pm.response.code).to.equal(404);\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "PUT",
-				"header": [
-					{
-						"key": "x-auth-token",
-						"value": "67111f103e868b9fbcae0ffe",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"cityName\": \"Gothenburg\",\r\n    \"country\": \"Sweden\",\r\n    \"statistics\": \"2nd largest city in Sweden\",\r\n    \"facts\": \"has trams\",\r\n    \"tags\": [\"beachy\"]\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:3000/api/cities/670d0d53492c590b6b3779c4",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"api",
-						"cities",
-						"670d0d53492c590b6b3779c4"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "deleteOnePlace",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Response status code is 404\", function () {\r",
-							"  pm.expect(pm.response.code).to.equal(404);\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "x-auth-token",
-						"value": "670ffc9b9de9179d7331d6b8",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "http://localhost:3000/api/places/Pl. Charles de Gaulle, 75008 Paris, France",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"api",
-						"places",
-						"Pl. Charles de Gaulle, 75008 Paris, France"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "create admin",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Response status code is 404\", function () {\r",
-							"  pm.expect(pm.response.code).to.equal(404);\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"njfrnkekfleökfleökfölekfölkeöfkeöfköekfeölkflöewkfjnbfkje\",\r\n    \"password\": \"123ferbfjkrbkfjberjkfbr\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:3000/api/admin",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"api",
-						"admin"
 					]
 				}
 			},
@@ -908,7 +1047,7 @@
 			"response": []
 		},
 		{
-			"name": "update placeName",
+			"name": "weather api by city id",
 			"event": [
 				{
 					"listen": "test",
@@ -924,17 +1063,54 @@
 				}
 			],
 			"request": {
-				"method": "PATCH",
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/v1/api/cities/weather-warnings/6712f26986b96257ab592066",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"api",
+						"cities",
+						"weather-warnings",
+						"6712f26986b96257ab592066"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 404\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(404);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
 				"header": [
 					{
 						"key": "x-auth-token",
-						"value": "6711267f686fe4abd68c990e",
+						"value": "6713940ced573e022a68f352",
 						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"placeName\": \"London eye\"\r\n}",
+					"raw": "{\r\n    \"password\": \"foo\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -942,16 +1118,17 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/api/places/St.EC4M 8AD, United Kingdom",
+					"raw": "http://localhost:3000/v2/api/users/riley",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
+						"v2",
 						"api",
-						"places",
-						"St.EC4M 8AD, United Kingdom"
+						"users",
+						"riley"
 					]
 				}
 			},
