@@ -139,7 +139,7 @@
   </template>
 
 <script>
-import { Api } from '@/Api'
+import { ApiV1 } from '@/Api'
 
 export default {
   data() {
@@ -183,7 +183,7 @@ export default {
     async getCityDetails() {
       try {
         const cityId = this.$route.params.cityid
-        const response = await Api.get(`/api/cities/${cityId}`)
+        const response = await ApiV1.get(`/api/cities/${cityId}`)
         if (response.data && response.data.city) {
           this.city = { ...response.data.city }
 
@@ -196,7 +196,7 @@ export default {
     },
     async getPlaces() {
       try {
-        const response = await Api.get(this.placesToVisitLink)
+        const response = await ApiV1.get(this.placesToVisitLink)
         if (Array.isArray(response.data)) {
           this.placesToVisit = response.data
         }
@@ -209,12 +209,12 @@ export default {
       if (!confirmed) return
       try {
         const cityId = this.$route.params.cityid
-        const response = await Api.delete(`/api/cities/${cityId}/placesToVisit/${address}`, {
+        const response = await ApiV1.delete(`/api/cities/${cityId}/placesToVisit/${address}`, {
           headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
         })
         if (response.status === 200) {
           this.placesToVisit = this.placesToVisit.filter(place => place.address !== address)
-          await Api.delete(`/api/places/${address}`, {
+          await ApiV1.delete(`/api/places/${address}`, {
             headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
           })
           alert('Place deleted successfully')
@@ -245,7 +245,7 @@ export default {
         tags: this.selectedTags
       }
       try {
-        const response = await Api.post(`/api/cities/${cityId}/placesToVisit`, placeData, {
+        const response = await ApiV1.post(`/api/cities/${cityId}/placesToVisit`, placeData, {
           headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
         })
         if (response.status === 201) {
@@ -259,7 +259,7 @@ export default {
     },
     async checkIfAdmin() {
       try {
-        const response = await Api.get('/api/admin/verify-admin', {
+        const response = await ApiV1.get('/api/admin/verify-admin', {
           headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
         })
         this.isAdmin = response.data.isAdmin

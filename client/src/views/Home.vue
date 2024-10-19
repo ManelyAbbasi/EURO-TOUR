@@ -122,7 +122,7 @@
 
 <script>
 // @ is an alias to /src
-import { Api } from '@/Api'
+import { ApiV1 } from '@/Api'
 import EuroMap from '@/views/Map.vue' // Adjust the path as necessary
 import WeatherMap from '@/components/Weather.vue'
 
@@ -154,7 +154,7 @@ export default {
   },
   methods: {
     getMessage() {
-      Api.get('/')
+      ApiV1.get('/')
         .then((response) => {
           this.message = response.data.message
         })
@@ -164,7 +164,7 @@ export default {
     },
     async checkIfAdmin() {
       try {
-        const response = await Api.get('/api/admin/verify-admin', {
+        const response = await ApiV1.get('/api/admin/verify-admin', {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }

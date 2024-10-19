@@ -175,7 +175,10 @@
 </template>
 
 <script>
-import { Api } from '../Api' // Assuming your backend API call method is in Api.js
+// eslint-disable-next-line import/no-duplicates
+import { ApiV1 } from '../Api' // Assuming your backend API call method is in Api.js
+// eslint-disable-next-line import/no-duplicates
+import { ApiV2 } from '../Api'
 
 export default {
   data() {
@@ -225,7 +228,7 @@ export default {
           throw new Error('No auth token found. Please log in.')
         }
 
-        const response = await Api.patch(`/api/admin/${this.username}`, userCredentials, {
+        const response = await ApiV1.patch(`/api/admin/${this.username}`, userCredentials, {
           headers: {
             'x-auth-token': authToken // Set the token in the request headers
           }
@@ -266,7 +269,7 @@ export default {
           throw new Error('No auth token found. Please log in.')
         }
 
-        const response = await Api.put(`/api/users/${this.username}`, userCredentials, {
+        const response = await ApiV2.put(`/api/users/${this.username}`, userCredentials, {
           headers: {
             'x-auth-token': authToken // Set the token in the request headers
           }
@@ -292,7 +295,7 @@ export default {
       try {
         const authToken = localStorage.getItem('x-auth-token')
         if (!authToken) throw new Error('No auth token found. Please log in.')
-        const response = await Api.delete(`/api/users/${this.usernameDeleting}`, {
+        const response = await ApiV2.delete(`/api/users/${this.usernameDeleting}`, {
           headers: {
             'x-auth-token': authToken // Send token for authorization
           },
@@ -315,7 +318,7 @@ export default {
     },
     async checkIfAdmin() {
       try {
-        const response = await Api.get('/api/admin/check-admin', {
+        const response = await ApiV1.get('/api/admin/check-admin', {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }

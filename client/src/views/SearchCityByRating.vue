@@ -229,7 +229,7 @@
   </template>
 
 <script>
-import { Api } from '@/Api'
+import { ApiV1 } from '@/Api'
 
 export default {
   data() {
@@ -268,7 +268,7 @@ export default {
         if (this.activeMaxRating) params.maxRating = this.activeMaxRating
         if (this.activeSort) params.sortByRating = this.activeSort
 
-        const response = await Api.get('/api/cities', { params })
+        const response = await ApiV1.get('/api/cities', { params })
 
         if (response.data && response.data.cities) {
           this.cities = response.data.cities
