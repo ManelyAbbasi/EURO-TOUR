@@ -4,8 +4,53 @@ const UsersModel = require("../models/usersModel");
 const citiesModel = require("../models/citiesModel");
 const adminsSchema = require("../models/adminsModel");
 const adminController = require("../controllers/adminController");
+const axios = require('axios');
 
+//Our weather warning api key
+const API_KEY = '836280f4bf814195bb0dc1d7b406da98';
 
+async function getWeatherAlerts(cityName) {
+    const url = `https://api.weatherbit.io/v2.0/alerts?city=${encodeURIComponent(cityName)}&key=${API_KEY}`;
+    
+    try {
+        const response = await axios.get(url);
+        return response.data.alerts || [];
+    } catch (error) {
+        console.error(`Error fetching weather alerts for ${cityName}:`, error.message);
+        return [];
+    }
+}
+
+async function getCityWeatherWarnings(req, res) {
+    try {
+        const cityId = req.params.id;
+
+        const city = await CitiesModel.findById(cityId);
+        if (!city) {
+            return res.status(404).json({ message: "City not found." });
+        }
+
+        const weatherAlerts = await getWeatherAlerts(city.cityName);
+
+        if (weatherAlerts.length === 0) {
+            return res.status(200).json({ message: "No active weather warnings for this city." });
+        }
+
+        const uniqueAlerts = Array.from(new Set(weatherAlerts.map(alert => alert.title)));
+
+        city.alerts = uniqueAlerts;
+        await city.save();
+
+        res.status(200).json({
+            city: city.cityName,
+            country: city.country,
+            alerts: city.alerts
+        });
+    } catch (error) {
+        console.error('Error getting weather warnings for city:', error);
+        res.status(500).json({ error: 'An error occurred while fetching weather warnings for the city.' });
+    }
+}
 
 async function createCity(req, res, next) {
     try {
@@ -128,7 +173,7 @@ async function getOneCity(req, res) {
         }
 
         const links = {
-            placesToVisit: `/api/cities/${cityId}/placesToVisit`, 
+            placesToVisit: `/v1/api/cities/${cityId}/placesToVisit`,
         };
 
         res.status(200).json({
@@ -321,5 +366,6 @@ module.exports = {
     getOneCity,
     getPlacesFromCity,
     updateCity,
-    deleteOnePlaceFromCity
+    deleteOnePlaceFromCity,
+    getCityWeatherWarnings
 }

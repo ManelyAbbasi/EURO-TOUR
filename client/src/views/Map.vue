@@ -394,14 +394,20 @@
   </div>
   <div class="popup-body">
     <ul>
-      <li v-for="city in filteredCities" :key="city._id || city.cityName">
-        <router-link :to="`/city/${city._id}`" class="city-link">{{ city.cityName }}</router-link>
-        <admin-button>
-        <button class="edit-button" v-if="isAdmin && city._id !== 'no-cities'" @click="editCity(city._id)">Edit</button>
-        <button class="delete-button" v-if="isAdmin && city._id !== 'no-cities'" @click="deleteCity(city._id)">Delete</button>
-      </admin-button>
-      </li>
-    </ul>
+  <li v-for="city in filteredCities" :key="city._id || city.cityName">
+    <router-link :to="`/city/${city._id}`" class="city-link">
+      {{ city.cityName }}
+      <span class="weather-warning" v-if="city.alerts && city.alerts.length">
+        ({{ city.alerts.join(', ') }})
+      </span>
+    </router-link>
+    <admin-button>
+      <button class="edit-button" v-if="isAdmin && city._id !== 'no-cities'" @click="editCity(city._id)">Edit</button>
+      <button class="delete-button" v-if="isAdmin && city._id !== 'no-cities'" @click="deleteCity(city._id)">Delete</button>
+    </admin-button>
+  </li>
+</ul>
+
   </div>
   <div v-if="isAdmin" class="popup-footer">
     <button @click="createNewCity">Create New City</button>
@@ -522,14 +528,32 @@ export default {
   methods: {
     async fetchCitiesInSystem() {
       try {
+        // Fetch all cities with their alerts
         const response = await ApiV1.get('/api/cities')
+
         if (response.data && response.data.cities) {
-          this.citiesInSystem = response.data.cities
+          this.citiesInSystem = response.data.cities // cities now have alerts in the response
         } else {
           console.error('No cities found')
         }
       } catch (error) {
         console.error('Error fetching cities:', error)
+      }
+    },
+    async getWeatherWarnings(cityId) {
+      try {
+        // Fetch weather warnings by city ID
+        const response = await ApiV1.get(`/api/cities/${cityId}/weather-warnings`, {
+          headers: {
+            'x-auth-token': localStorage.getItem('x-auth-token')
+          }
+        })
+
+        // Return the alert titles from the API response
+        return response.data.alerts.map(alert => alert.title) || []
+      } catch (error) {
+        console.error('Error fetching weather warnings:', error)
+        return []
       }
     },
     async loadCities() {

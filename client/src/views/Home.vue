@@ -249,7 +249,7 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  padding: 1rem 5%; /* Adjust padding for more space */
+  padding: 1rem 5%;
   background-color: rgba(155, 169, 182, 1);
   display: flex;
   justify-content: space-between;
@@ -286,7 +286,7 @@ export default {
 }
 
 .navbar-item {
-  border: none; /* Remove borders to prevent overflow */
+  border: none;
   margin: 0 1rem;
   text-decoration: none;
 }
@@ -312,15 +312,15 @@ li.dropdown-item.logout {
   padding-left: 2rem;
   padding-right: 2rem;
   display: flex;
-  flex-direction: column;   /* Stack items vertically */
-  text-align: center;       /* Center the text within the container */
+  flex-direction: column;
+  text-align: center;
   margin-bottom: 7rem;
 }
 
 .home-layout-wrapper {
   display: grid;
   grid-template-columns: 1fr 2fr;
-  grid-gap: 20px;  /* Optional: Add some space between columns */
+  grid-gap: 20px;
   padding: 7rem 2rem;
   width: 100%;
   align-content: center;
@@ -402,10 +402,10 @@ li.dropdown-item.logout {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;          /* Set height to fill the container */
-  max-height: 46rem;      /* Adjust max-height to ensure it doesn't stretch too much */
-  padding-bottom: 0;      /* Remove extra padding at the bottom */
-  margin-bottom: 0;       /* Ensure no extra margins below the map */
+  height: 100%;
+  max-height: 46rem;
+  padding-bottom: 0;
+  margin-bottom: 0;
 }
 
 .get-to-know-container .get-to-know-box:hover{
@@ -448,7 +448,7 @@ li.dropdown-item.logout {
 .hello {
   position: relative;
   font-size: 3rem;
-  white-space: nowrap; /* Ensure the text doesn't break */
+  white-space: nowrap;
   overflow: hidden;
   display: inline-block;
 }
@@ -463,11 +463,11 @@ li.dropdown-item.logout {
   height: 100%;
   background-color: #42515e;
   border-left: 2px solid #bc672a;
-  display: none; /* Initially hidden */
+  display: none;
 }
 
 .hello.active:before {
-  display: block; /* Only display when the animation starts */
+  display: block;
   animation: typewriterAnimate 4s steps(12);
 }
 

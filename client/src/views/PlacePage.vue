@@ -59,7 +59,6 @@
       </div>
 
       <div class="overlay" v-if="showEditForm" @click="hideEditPlaceForm"></div>
-
       <!-- Edit Place Form Popup -->
       <div class="edit-place-popup" :class="{ show: showEditForm }" v-if="showEditForm">
         <div class="popup-header">
@@ -292,8 +291,6 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
 
-/*EVERY page stylings*/
-
 .place-page-body-container{
     margin: 0;
     padding: 0;
@@ -313,7 +310,7 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  padding: 1rem 5%; /* Adjust padding for more space */
+  padding: 1rem 5%;
   background-color: rgba(155, 169, 182, 1);
   display: flex;
   justify-content: space-between;
@@ -350,7 +347,7 @@ export default {
 }
 
 .navbar-item {
-  border: none; /* Remove borders to prevent overflow */
+  border: none;
   margin: 0 1rem;
   text-decoration: none;
 }
@@ -373,7 +370,6 @@ export default {
     color: #bc672a!important;
 }
 
-/*city page stylings*/
 .city-layout-wrapper {
   display: flex;
   flex-direction: column;
@@ -419,7 +415,7 @@ export default {
 }
 
 .star-rating i {
-  margin-right: 5px; /* Increase space between stars */
+  margin-right: 5px;
 }
 
 .rating-text {
@@ -545,7 +541,6 @@ a img {
   z-index: 9;
 }
 
-/* Styling for the Edit Place Form */
 .edit-place-popup {
   position: sticky;
   margin-top: -20rem;
@@ -565,20 +560,18 @@ a img {
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* Show the popup with opacity */
 .edit-place-popup.show {
-  opacity: 1; /* Fully visible */
-  transform: translate(-45%, -140%) scale(1.05); /* Slightly scale up on appearance */
+  opacity: 1;
+  transform: translate(-45%, -140%) scale(1.05);
 }
 
-/* Ensure the popup header has consistent styling */
 .popup-header {
   position: sticky;
   top: 0;
   padding: 1px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
-  z-index: 2; /* Increased z-index to ensure it stays above the content */
+  z-index: 2;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -589,16 +582,15 @@ input[type='checkbox'] {
 }
 
 #rating {
-  width: 50%; /* Set the width to 100% of its container */
+  width: 50%;
   border-radius:4px;
-  padding-left: 5px; /* Add left padding to text fields as well */
+  padding-left: 5px;
   border: 1px solid #ccc;
 }
 
-/* Style for tags */
 .tags label {
-  display: block; /* Stack tags vertically */
-  margin: 4px 0; /* Margin for spacing between tags */
+  display: block;
+  margin: 4px 0;
   font-size: 0.8rem;
 }
 
@@ -611,13 +603,12 @@ input[type='checkbox'] {
 }
 
 .form-layout {
-  display: flex; /* Flexbox for layout */
-  justify-content: space-between; /* Space between left and right sections */
+  display: flex;
+  justify-content: space-between;
 }
 
-/* Left side of the form */
 .form-left {
-  width: 60%; /* Take up 60% of the width */
+  width: 60%;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -628,13 +619,11 @@ input[type='checkbox'] {
   justify-content: center;
 }
 
-/* Right side of the form */
 .form-right {
-  width: 35%; /* Take up 35% of the width */
-  padding-left: 20px; /* Space between left and right sections */
+  width: 35%;
+  padding-left: 20px;
 }
 
-/* Style for the form content */
 .popup-body {
   display: flex;
   flex-direction: column;
@@ -644,20 +633,19 @@ input[type='checkbox'] {
   width: 100%;
   min-height: 225px;
   padding: 10px;
-  border: 1px solid #ccc; /* Light grey border */
-  border-radius: 4px; /* Rounded corners */
-  color: #a7561c; /* Text color */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: #a7561c;
 }
 
 /* Change border color on focus */
 .edit-place-popup input[type="text"]:focus,
 .popup-body textarea:focus,
 #rating:focus {
-  border-color: #BC672A; /* Darker shade on focus */
-  outline: none; /* Remove default outline */
+  border-color: #BC672A;
+  outline: none;
 }
 
-/* Input Fields Styles */
 .edit-place-popup input[type="text"],
 .edit-place-popup textarea,
 #rating {
@@ -665,11 +653,11 @@ input[type='checkbox'] {
 }
 
 input[type="text"] {
-  width: calc(100% - 20px); /* Full width minus padding */
-  padding: 10px; /* Padding for input fields */
-  margin: 10px 0; /* Margin between fields */
-  border: 1px solid #ccc; /* Light grey border */
-  border-radius: 4px; /* Rounded corners */
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .popup-body button {
@@ -682,7 +670,7 @@ input[type="text"] {
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  align-self: flex-end; /* Align button to the right */
+  align-self: flex-end;
 }
 
 .edit-place-popup form button[type="submit"] {
@@ -695,16 +683,16 @@ input[type="text"] {
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-top: -30px; /* Adjust this value to move it upwards */
+  margin-top: -30px;
   margin-right: 4rem;
 }
 
 .edit-place-popup form button[type="submit"]:hover {
-  background-color: #a7561c; /* Darker on hover */
+  background-color: #a7561c;
 }
 
 .popup-body button:hover {
-  background-color: #a7561c; /* Darker on hover */
+  background-color: #a7561c;
 }
 
 .close-button {
@@ -714,8 +702,8 @@ input[type="text"] {
   cursor: pointer;
   color: #fff;
   transition: color 0.3s ease;
-  width: 25px; /* Set width */
-  height: 25px; /* Set height */
+  width: 25px;
+  height: 25px;
 }
 
 .close-button:hover {
@@ -760,6 +748,14 @@ input[type="text"] {
 @media screen and (max-width: 580px){
   .city-layout-wrapper{
     min-height: 60rem;
+  }
+
+  .edit-place-popup {
+  width: 900px;
+  max-width: 90%;
+  height:630px;
+  max-height: 90vh;
+  margin-right: -16rem;
   }
 }
 

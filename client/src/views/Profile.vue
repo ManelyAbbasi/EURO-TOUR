@@ -183,15 +183,15 @@ import { ApiV2 } from '../Api'
 export default {
   data() {
     return {
-      username: '', // Add username field to bind to the input
-      password: '', // Add password field to bind to the input
-      activeGender: null, // Initialize active gender
-      activeLGBTQIA: null, // Initialize active LGBTQIA status
-      isSaved: false, // Track if the "saved!" message should be shown
+      username: '',
+      password: '',
+      activeGender: null,
+      activeLGBTQIA: null,
+      isSaved: false,
       deleteInProcess: false,
-      usernameDeleting: '', // For delete popup
-      passwordDeleting: '', // For delete popup
-      isAdmin: false // Add isAdmin field to track admin status
+      usernameDeleting: '',
+      passwordDeleting: '',
+      isAdmin: false
     }
   },
   computed: {
@@ -362,7 +362,7 @@ export default {
     font-family: "Lexend Deca", sans-serif;
     background-color: #42515e;
     display: flex;
-    flex-wrap: wrap; /* Allow wrapping of items */
+    flex-wrap: wrap;
 }
 
 .euro-tour-header {
@@ -370,7 +370,7 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  padding: 1rem 5%; /* Adjust padding for more space */
+  padding: 1rem 5%;
   background-color: rgba(155, 169, 182, 1);
   display: flex;
   justify-content: space-between;
@@ -379,11 +379,11 @@ export default {
 }
 
 .b-dropdown .dropdown-menu {
-  width: auto; /* Ensure the width adjusts to content */
-  white-space: nowrap; /* Prevent wrapping of text inside dropdown */
-  padding: 0; /* Ensure padding doesn't push content */
+  width: auto;
+  white-space: nowrap;
+  padding: 0;
   margin: 0;
-  border: 1px solid rgba(0, 0, 0, 0.15); /* Consistent border */
+  border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 0.25rem;
 }
 
@@ -392,7 +392,7 @@ export default {
   width: 100%;
   padding: 0.5rem 1rem;
   text-align: inherit;
-  border: none; /* Remove border */
+  border: none;
 }
 
 .dropdown-icon {
@@ -400,7 +400,7 @@ export default {
 }
 
 .navbar-item {
-  border: none; /* Remove borders to prevent overflow */
+  border: none;
   margin: 0 1rem;
   text-decoration: none;
 }
@@ -473,7 +473,7 @@ label {
 }
 
 .non-binary-label {
-  white-space: nowrap; /* Prevents breaking non-binary across lines */
+  white-space: nowrap;
 }
 
 .sexuality-selection {
@@ -490,7 +490,7 @@ label {
 
 .gender-buttons, .sexuality-buttons {
     display: flex;
-    gap: 4rem; /* Space between buttons */
+    gap: 4rem;
     margin-left: 2rem;
 }
 
@@ -505,8 +505,8 @@ label {
     height: 1.2rem;
     background-color: rgba(0, 0, 0, 0.301);
     cursor: pointer;
-    border: 2px solid transparent; /* For a smooth transition */
-    transition: background-color 0.3s, border-color 0.3s; /* Transition effect */
+    border: 2px solid transparent;
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 .gender-button:hover, .sexuality-button:hover {
@@ -519,14 +519,14 @@ label {
 
 .delete-button-container {
   display: flex;
-  align-items: center; /* Aligns button vertically */
+  align-items: center;
   margin-top: 3rem;
   margin-bottom: 5rem;
 }
 
 .save-message-container{
   display: flex;
-  align-items: center; /* Aligns message vertically */
+  align-items: center;
   margin-top: 3.3rem;
   margin-bottom: 5rem;
 }
@@ -569,12 +569,12 @@ label {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -35%); /* Center the popup */
-  background-color: #fff; /* White background */
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Shadow for depth */
-  z-index: 10; /* Place above the overlay */
-  min-width: 300px; /* Set a width for the popup */
+  transform: translate(-50%, -35%);
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  min-width: 300px;
   max-width: 600px;
 }
 
@@ -584,13 +584,13 @@ label {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7); /* Dark semi-transparent background */
-  z-index: 9; /* Place it above other content */
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9;
 }
 
 .delete-popup.show {
-  opacity: 1; /* Fully visible */
-  transform: translate(-50%, -50%) scale(1.05); /* Slightly scale up on appearance */
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.05);
 }
 
 .popup-header {
@@ -598,13 +598,13 @@ label {
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  background-color: #bc672a; /* Light grey background */
-  border-top-left-radius: 8px; /* Round corners for the header */
-  border-top-right-radius: 8px; /* Round corners for the header */
+  background-color: #bc672a;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
 
 .popup-header button{
-  margin-left: auto; /* Ensures the button is pushed to the right */
+  margin-left: auto;
   border: none;
   display: flex;
   justify-content: flex-end;
@@ -612,16 +612,16 @@ label {
 }
 
 .popup-body label {
-  list-style-type: none; /* Remove the default bullets */
-  padding: 0; /* Remove default padding */
-  margin: 0; /* Remove default margin */
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
   color: #045768;
 }
 
 .popup-body p {
-  list-style-type: none; /* Remove the default bullets */
-  padding: 0; /* Remove default padding */
-  margin: 0; /* Remove default margin */
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
   color: #045768;
   margin-bottom: 1rem;
 }
