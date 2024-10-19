@@ -70,8 +70,8 @@
                   <p>{{ place.address }}</p>
                 </div>
                 <div class="read-more-wrapper">
-                  <router-link :to="`/place/${place.address}`" class="place-link">read more</router-link>
                   <button v-if="isAdmin" @click="deleteAllPlaces" class="delete-all-button">delete all places</button>
+                  <router-link :to="`/place/${place.address}`" class="place-link">read more</router-link>
                 </div>
             </div>
           </div>
@@ -728,9 +728,6 @@ input[type="text"] {
 
 }
 
-@media screen and (max-width: 1024px){
-}
-
 @media screen and (max-width: 768px){
     .euro-tour-header{
         padding: 2rem 3%;
@@ -815,6 +812,16 @@ input[type="text"] {
     }
     .trending-place-wrapper img{
       min-width: 10rem;
+    }
+
+    div.read-more-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    a.place-link {
+      font-size: 1.5rem;
     }
 }
 
