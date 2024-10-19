@@ -164,13 +164,16 @@ async function getOneCity(req, res) {
     }
 
     try {
-        const city = await CitiesModel.findById(cityId);
+        const city = await CitiesModel.findById(cityId).populate({
+            path: 'placesToVisit',  
+            select: 'address' 
+        });
         if (!city) {
             return res.status(404).json({ message: "City not found" });
         }
 
         const links = {
-            placesToVisit: `/api/cities/${cityId}/placesToVisit`,
+            placesToVisit: `/v1/api/cities/${cityId}/placesToVisit`,
         };
 
         res.status(200).json({
@@ -355,7 +358,6 @@ async function deleteOnePlaceFromCity(req, res) {
         res.status(500).json({ error: 'An error occurred while deleting the place.' });
     }
 }
-
 
 module.exports = {
     createCity,

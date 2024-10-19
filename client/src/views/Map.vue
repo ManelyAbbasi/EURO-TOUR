@@ -654,7 +654,7 @@ export default {
       await this.fetchCitiesInSystem()
     },
     async deleteCity(cityId) {
-      const confirmed = confirm('Are you sure you want to delete this city?')
+      const confirmed = confirm('Are you sure you want to delete this city and all its associated places?')
       if (!confirmed) {
         return
       }
@@ -663,21 +663,63 @@ export default {
         console.error('City ID is undefined')
         return
       }
+
       try {
-        const response = await ApiV1.delete(`/api/admin/cities/${cityId}`, {
-          headers: {
-            'x-auth-token': localStorage.getItem('x-auth-token')
-          }
+        // Fetch the city details to get places to visit
+        const cityResponse = await ApiV1.get(`/api/cities/${cityId}`, {
+          headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
         })
-        if (response.status === 200) {
+
+        if (cityResponse.status !== 200) {
+          console.error('Failed to fetch city details:', cityResponse.data.message)
+          return
+        }
+
+        const city = cityResponse.data.city // Assuming the city object is in data.city
+        const placesToVisit = city.placesToVisit || [] // Places should already be populated with full place details
+        console.log('City:', city)
+        console.log('Places to Visit:', placesToVisit)
+
+        // Iterate over the places and delete each one using its address
+        for (const place of placesToVisit) {
+          const placeAddress = place.address
+          console.log(placeAddress)
+
+          if (placeAddress) {
+            try {
+              const deleteResponse = await ApiV1.delete(`/api/places/${placeAddress}`, {
+                headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
+              })
+
+              if (deleteResponse.status === 200) {
+                console.log(`Deleted place at address ${placeAddress} successfully.`)
+              } else {
+                console.error(`Failed to delete place at address ${placeAddress}:`, deleteResponse.data.message)
+              }
+            } catch (error) {
+              console.error(`Error deleting place at address ${placeAddress}:`, error)
+            }
+          } else {
+            console.error('Place does not have a valid address:', place)
+          }
+        }
+
+        // Now delete the city itself
+        const deleteCityResponse = await ApiV1.delete(`/api/admin/cities/${cityId}`, {
+          headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
+        })
+
+        if (deleteCityResponse.status === 200) {
           this.filteredCities = this.filteredCities.filter(city => city._id !== cityId)
-          alert(response.data.message)
+          alert('City and all associated places deleted successfully.')
         } else {
-          console.error('Failed to delete city:', response.data.message)
+          console.error('Failed to delete city:', deleteCityResponse.data.message)
         }
       } catch (error) {
         console.error('Error deleting city:', error)
       }
+
+      // Fetch the updated list of cities
       await this.fetchCitiesInSystem()
     },
     createNewCity() {
