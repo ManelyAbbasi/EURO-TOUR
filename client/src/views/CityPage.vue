@@ -384,6 +384,12 @@ export default {
     color: #bc672a!important;
 }
 
+main{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
 /*city page stylings*/
 .city-layout-wrapper {
   display: flex;
@@ -394,6 +400,8 @@ export default {
   margin: 10rem 7rem 4rem 7rem;
   padding: 3rem;
   gap: 1.5rem;
+  min-width: 80vw;
+  max-width:85vw;
 }
 
 .city-layout-wrapper p{
