@@ -385,8 +385,6 @@ export default {
 }
 
 main{
-  display: flex;
-  justify-content: center;
   width: 100%;
 }
 
@@ -727,6 +725,12 @@ input[type='checkbox'] {
     }
 }
 
+@media screen and (max-width: 1008px) {
+  .city-layout-wrapper{
+    margin-top: 13rem;
+  }
+}
+
 @media screen and (max-width: 768px){
     .footer{
         padding: 2rem 3%;
@@ -750,7 +754,7 @@ input[type='checkbox'] {
         padding: 0.5rem ;
     }
     .city-layout-wrapper{
-      margin: 12.5rem 2rem 4rem 2rem;
+      margin: 12.5rem 2rem 4rem 3.5rem;
       display: flex;
       justify-content: center;
     }
@@ -787,6 +791,9 @@ input[type='checkbox'] {
   .admin-buttons button {
     font-size: 1.3rem;
   }
+  .city-layout-wrapper{
+    margin: 13rem 2rem 2rem 3rem;
+  }
 }
 
 @media screen and (max-width:350px) {
@@ -794,7 +801,7 @@ input[type='checkbox'] {
         flex-direction: column-reverse;
     }
     .city-layout-wrapper{
-      margin: 1rem 1rem 1rem 1rem;
+      margin: 1.5rem;
       display: flex;
       justify-content: center;
       padding: 1rem;
