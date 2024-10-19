@@ -817,6 +817,15 @@ p{
     margin-top: 3rem;
   }
 
+  .delete-popup.show p {
+    font-size:2.5rem;
+  }
+
+  .popup-body button{
+    width: 60%;
+    font-size: 2rem;
+}
+
  .footer{
     flex-direction: column-reverse;
   }
