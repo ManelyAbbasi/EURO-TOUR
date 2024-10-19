@@ -318,7 +318,7 @@ export default {
     },
     async checkIfAdmin() {
       try {
-        const response = await ApiV1.get('/api/admin/check-admin', {
+        const response = await ApiV1.get('/api/admin/verify-admin', {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }
@@ -772,8 +772,13 @@ p{
   @media screen and (max-width:350px) {
   .user-form{
       width: 60%;
-      margin-top: 25rem;
+      margin-top: 20rem;
     }
+  .delete-button-container, .save-message-container,
+  .save-button-container{
+    margin-top: 7rem;
+    margin-bottom: 20rem;
+  }
 
   #username.input-field, #password.input-field {
     width: 80%;
@@ -806,7 +811,7 @@ p{
   .delete-button-container, .save-message-container,
   .save-button-container{
     margin-top: 7rem;
-    margin-bottom: 39rem;
+    margin-bottom: 5rem;
   }
 
   .delete-button {
