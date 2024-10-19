@@ -728,9 +728,6 @@ input[type="text"] {
 
 }
 
-@media screen and (max-width: 1024px){
-}
-
 @media screen and (max-width: 768px){
     .euro-tour-header{
         padding: 2rem 3%;
