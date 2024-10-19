@@ -535,7 +535,7 @@ export default {
     async fetchCitiesInSystem() {
       try {
         // Fetch all cities with their alerts
-        const response = await ApiV1.get('/api/cities')
+        const response = await ApiV1.get('/v1/api/cities')
 
         if (response.data && response.data.cities) {
           this.citiesInSystem = response.data.cities // cities now have alerts in the response
@@ -549,7 +549,7 @@ export default {
     async getWeatherWarnings(cityId) {
       try {
         // Fetch weather warnings by city ID
-        const response = await ApiV1.get(`/api/cities/${cityId}/weather-warnings`, {
+        const response = await ApiV1.get(`/v1/api/cities/${cityId}/weather-warnings`, {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }
@@ -564,7 +564,7 @@ export default {
     },
     async loadCities() {
       try {
-        const response = await ApiV1.get('/api/cities')
+        const response = await ApiV1.get('/v1/api/cities')
         this.citiesInSystem = response.data
       } catch (error) {
         console.error('Error loading cities:', error)
@@ -576,7 +576,7 @@ export default {
     },
     async checkIfAdmin() {
       try {
-        const response = await ApiV1.get('/api/admin/verify-admin', {
+        const response = await ApiV1.get('/v1/api/admin/verify-admin', {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }
@@ -632,7 +632,7 @@ export default {
       this.isEditing = true
 
       try {
-        const response = await ApiV1.get(`/api/cities/${cityId}`, {
+        const response = await ApiV1.get(`/v1/api/cities/${cityId}`, {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }
@@ -672,7 +672,7 @@ export default {
 
       try {
         // Fetch the city details to get places to visit
-        const cityResponse = await ApiV1.get(`/api/cities/${cityId}`, {
+        const cityResponse = await ApiV1.get(`/v1/api/cities/${cityId}`, {
           headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
         })
 
@@ -693,7 +693,7 @@ export default {
 
           if (placeAddress) {
             try {
-              const deleteResponse = await ApiV1.delete(`/api/places/${placeAddress}`, {
+              const deleteResponse = await ApiV1.delete(`/v1/api/places/${placeAddress}`, {
                 headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
               })
 
@@ -711,7 +711,7 @@ export default {
         }
 
         // Now delete the city itself
-        const deleteCityResponse = await ApiV1.delete(`/api/admin/cities/${cityId}`, {
+        const deleteCityResponse = await ApiV1.delete(`/v1/api/admin/cities/${cityId}`, {
           headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
         })
 
@@ -748,7 +748,7 @@ export default {
       const cityData = this.prepareCityData()
 
       try {
-        const response = await ApiV1.post('/api/cities', cityData, {
+        const response = await ApiV1.post('/v1/api/cities', cityData, {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }
@@ -773,7 +773,7 @@ export default {
       const cityData = this.prepareCityData()
 
       try {
-        const response = await ApiV1.put(`/api/cities/${this.editCityId}`, cityData, {
+        const response = await ApiV1.put(`/v1/api/cities/${this.editCityId}`, cityData, {
           headers: {
             'x-auth-token': localStorage.getItem('x-auth-token')
           }

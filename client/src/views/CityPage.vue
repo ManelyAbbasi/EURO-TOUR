@@ -183,7 +183,7 @@ export default {
     async getCityDetails() {
       try {
         const cityId = this.$route.params.cityid
-        const response = await ApiV1.get(`/api/cities/${cityId}`)
+        const response = await ApiV1.get(`/v1/api/cities/${cityId}`)
         if (response.data && response.data.city) {
           this.city = { ...response.data.city }
 
@@ -209,12 +209,12 @@ export default {
       if (!confirmed) return
       try {
         const cityId = this.$route.params.cityid
-        const response = await ApiV1.delete(`/api/cities/${cityId}/placesToVisit/${address}`, {
+        const response = await ApiV1.delete(`/v1/api/cities/${cityId}/placesToVisit/${address}`, {
           headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
         })
         if (response.status === 200) {
           this.placesToVisit = this.placesToVisit.filter(place => place.address !== address)
-          await ApiV1.delete(`/api/places/${address}`, {
+          await ApiV1.delete(`/v1/api/places/${address}`, {
             headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
           })
           alert('Place deleted successfully')
@@ -245,7 +245,7 @@ export default {
         tags: this.selectedTags
       }
       try {
-        const response = await ApiV1.post(`/api/cities/${cityId}/placesToVisit`, placeData, {
+        const response = await ApiV1.post(`/v1/api/cities/${cityId}/placesToVisit`, placeData, {
           headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
         })
         if (response.status === 201) {
@@ -259,7 +259,7 @@ export default {
     },
     async checkIfAdmin() {
       try {
-        const response = await ApiV1.get('/api/admin/verify-admin', {
+        const response = await ApiV1.get('/v1/api/admin/verify-admin', {
           headers: { 'x-auth-token': localStorage.getItem('x-auth-token') }
         })
         this.isAdmin = response.data.isAdmin

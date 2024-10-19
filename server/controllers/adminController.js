@@ -244,5 +244,6 @@ module.exports ={
     verifyAdmin,
     createAdmin,
     login,
-    deleteOneAdmin
+    deleteOneAdmin,
+    checkIfAdmin
 };
