@@ -52,47 +52,85 @@ async function createUser(req, res, next) {
 };
 
 async function addToFavorites(req, res) {
-    const username = req.params.username;
+    const sessionKey = req.headers['x-auth-token'];
     const { cityId, address } = req.body;
 
     try {
-        const user = await UsersModel.findOne({ username });
+        const user = await UsersModel.findOne({ "session.key": sessionKey });
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
+        let addedFavorite = null;
+
         if (cityId) {
-            const cityExists = await CitiesModel.findById(cityId);
-            if (!cityExists) {
+            const city = await CitiesModel.findById(cityId);
+
+            if (!city) {
                 return res.status(404).json({ message: "City not found" });
             }
-            user.favourites.push({ city: cityId, places: [] });
+
+            const cityAlreadyFavorited = user.cityFavs.includes(city._id);
+
+            if (!cityAlreadyFavorited) {
+                user.cityFavs.push(city._id);
+                addedFavorite = { type: "city", cityName: city.cityName, country: city.country };
+            }
         }
 
         if (address) {
-            const placeExists = await PlacesToVisitSchema.findOne({ address });
-            if (!placeExists) {
+            const place = await PlacesToVisitSchema.findOne({ address }).populate('city', 'cityName');
+
+            if (!place) {
                 return res.status(404).json({ message: "Place not found" });
             }
 
-            const favouriteCity = user.favourites.find(fav => fav.city.toString() === placeExists.city.toString());
-            if (favouriteCity) {
-                if (!favouriteCity.places.includes(placeExists._id)) {
-                    favouriteCity.places.push(placeExists._id); 
-                }
-            } else {
-                user.favourites.push({ city: placeExists.city, places: [placeExists._id] });
+            const placeAlreadyFavorited = user.placeFavs.includes(place._id);
+
+            if (!placeAlreadyFavorited) {
+                user.placeFavs.push(place._id);
+                addedFavorite = { type: "place", placeName: place.placeName, cityName: place.city.cityName, address: place.address };
             }
         }
 
         await user.save();
-        res.status(200).json({ message: "Added to favorites successfully", favourites: user.favourites });
+
+        const favouriteCities = [];
+        const favouritePlaces = [];
+
+        for (const cityId of user.cityFavs) {
+            const city = await CitiesModel.findById(cityId);
+            favouriteCities.push({
+                cityId: city._id,
+                cityName: city.cityName,
+                country: city.country
+            });
+        }
+
+        for (const placeId of user.placeFavs) {
+            const place = await PlacesToVisitSchema.findById(placeId).populate('city', 'cityName');
+            favouritePlaces.push({
+                placeId: place._id,
+                placeName: place.placeName,
+                cityName: place.city.cityName,
+                address: place.address
+            });
+        }
+
+        res.status(200).json({
+            message: addedFavorite
+                ? `${addedFavorite.type === 'city' ? 'City' : 'Place'} added to favorites successfully`
+                : "No new favorites added",
+            favouriteCities,
+            favouritePlaces
+        });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Internal server error" });
     }
 }
+
 
 async function updateUser(req, res, next) {
     try {
@@ -244,11 +282,11 @@ async function login(req, res, next) {
 }
 
 async function removeFromFavorites(req, res) {
-    const username = req.params.username;
+    const sessionKey = req.headers['x-auth-token'];
     const { cityId, address } = req.body;
 
     try {
-        const user = await UsersModel.findOne({ username });
+        const user = await UsersModel.findOne({ "session.key": sessionKey });
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
@@ -257,84 +295,97 @@ async function removeFromFavorites(req, res) {
         let removedCityMessage = null;
         let removedPlaceMessage = null;
 
-        if (cityId && address) {
-            const favouriteCity = user.favourites.find(fav => fav.city.toString() === cityId);
-            if (favouriteCity) {
-                const originalLength = favouriteCity.places.length;
-                favouriteCity.places = favouriteCity.places.filter(place => place.address !== address);
-                
-                if (favouriteCity.places.length < originalLength) {
-                    removedPlaceMessage = "Place removed from favorites.";
-                } else {
-                    removedPlaceMessage = "Place not found in favorites."; 
-                }
-                
-                if (favouriteCity.places.length === 0) {
-                    user.favourites = user.favourites.filter(fav => fav.city.toString() !== cityId);
-                    removedCityMessage = "City removed from favorites.";
-                }
+        if (cityId) {
+            const cityIndex = user.cityFavs.indexOf(cityId);
+            if (cityIndex > -1) {
+                user.cityFavs.splice(cityIndex, 1);
+                removedCityMessage = "City removed from favorites.";
             } else {
                 removedCityMessage = "City not found in favorites.";
             }
-        } 
-        
-        else if (cityId) {
-            const favouriteCity = user.favourites.find(fav => fav.city.toString() === cityId);
-            if (favouriteCity) {
-                user.favourites = user.favourites.filter(fav => fav.city.toString() !== cityId);
-                removedCityMessage = "City removed from favorites.";
+        }
+
+        if (address) {
+            const place = await PlacesToVisitSchema.findOne({ address });
+            if (!place) {
+                return res.status(404).json({ message: "Place not found" });
+            }
+
+            const placeIndex = user.placeFavs.indexOf(place._id);
+            if (placeIndex > -1) {
+                user.placeFavs.splice(placeIndex, 1);
+                removedPlaceMessage = "Place removed from favorites.";
             } else {
-                return res.status(404).json({ message: "City not found in favorites." });
-            }
-        } 
-        
-        else if (address) {
-            let placeRemoved = false;
-            for (const favourite of user.favourites) {
-                if (favourite.places.some(place => place.address === address)) {
-                    favourite.places = favourite.places.filter(place => place.address !== address);
-                    placeRemoved = true;
-                    removedPlaceMessage = "Place removed from favorites.";
-                    break;
-                }
-            }
-            if (!placeRemoved) {
-                return res.status(404).json({ message: "Place not found in favorites." });
+                removedPlaceMessage = "Place not found in favorites.";
             }
         }
+
         await user.save();
-        
+
         const responseMessages = [];
         if (removedCityMessage) responseMessages.push(removedCityMessage);
         if (removedPlaceMessage) responseMessages.push(removedPlaceMessage);
 
-        res.status(200).json({ 
+        res.status(200).json({
             message: responseMessages.length > 0 ? responseMessages.join(' ') : "No changes made.",
-            favourites: user.favourites 
+            cityFavs: user.cityFavs,
+            placeFavs: user.placeFavs
         });
+
     } catch (err) {
-        console.error(err);
+        console.error("Error in removeFromFavorites:", err.message, err.stack);
         res.status(500).json({ message: "Internal server error" });
     }
 }
 
 
 async function getFavorites(req, res) {
-    const username = req.params.username;
+    const sessionKey = req.headers['x-auth-token'];
 
     try {
-        const user = await UsersModel.findOne({ username });
+        const user = await UsersModel.findOne({ "session.key": sessionKey });
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        res.status(200).json({ favourites: user.favourites });
+        const favouriteCities = [];
+        const favouritePlaces = [];
+
+        for (const cityId of user.cityFavs) {
+            const city = await CitiesModel.findById(cityId);
+            if (city) {
+                favouriteCities.push({
+                    cityId: city._id,
+                    cityName: city.cityName,
+                    country: city.country
+                });
+            }
+        }
+
+        for (const placeId of user.placeFavs) {
+            const place = await PlacesToVisitSchema.findById(placeId).populate('city', 'cityName');
+            if (place) {
+                favouritePlaces.push({
+                    placeId: place._id,
+                    placeName: place.placeName,
+                    cityName: place.city.cityName,
+                    address: place.address
+                });
+            }
+        }
+
+        res.status(200).json({
+            favouriteCities,
+            favouritePlaces
+        });
+
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Internal server error" });
     }
 }
+
 
 module.exports = {
     createUser,
@@ -343,5 +394,6 @@ module.exports = {
     deleteOneUser,
     login,
     removeFromFavorites,
-    getFavorites
+    getFavorites,
+    addToFavorites
 }

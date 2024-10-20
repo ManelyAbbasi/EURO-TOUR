@@ -865,8 +865,8 @@ export default {
 }
 
 svg path {
-  fill: #8FC6DF; /* Color of the countries */
-  stroke: #BC672A; /* Border between countries */
+  fill: #8FC6DF;
+  stroke: #BC672A;
   stroke-width: 0.25;
 }
 
@@ -907,7 +907,7 @@ input[type='checkbox'] {
 }
 
 .tags label {
-  display: block; /* Stack tags vertically */
+  display: block;
   margin: 5px 0;
 }
 
@@ -938,18 +938,18 @@ input[type='checkbox'] {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /* Center the popup */
+  transform: translate(-50%, -50%);
   background-color: #fff;
   color: #045768;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  z-index: 10; /* Place above the overlay */
+  z-index: 10;
   width: 500px;
   padding: 20px;
 }
 
 .popup-body ul {
-  list-style-type: none; /* Remove the default bullets */
+  list-style-type: none;
   padding: 0;
   margin: 0;
   font-size: 1.2rem;

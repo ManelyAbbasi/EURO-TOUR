@@ -7,9 +7,6 @@
         </router-link>
       </div>
       <nav class="navbar">
-        <router-link to="/favourites" class="navbar-item">
-          <i class="fa-regular fa-heart"></i> favourites
-        </router-link>
         <router-link to="/maincities" class="navbar-item">
           <i class="fa-solid fa-city"></i> cities
         </router-link>

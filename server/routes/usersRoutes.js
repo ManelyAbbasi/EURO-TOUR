@@ -16,9 +16,9 @@ router.delete('/:username', usersControllers.deleteOneUser);
 
 router.post('/login', usersControllers.login);
 
-router.delete('/:username/favorites', usersControllers.removeFromFavorites);
+router.delete('/cities&places/favorites', usersControllers.removeFromFavorites);
 
-router.get('/:username/favorites', usersControllers.getFavorites);
+router.get('/favorites', usersControllers.getFavorites);
 
 router.post('/:username/favorites', usersControllers.addToFavorites);
 

@@ -182,7 +182,7 @@ export default {
 }
 
 .signup-logo {
-  margin-bottom: 20px;            /* Space between logo and form */
+  margin-bottom: 20px;
 }
 
 .signup-logo-img {
@@ -222,7 +222,7 @@ export default {
 
 .dob-container {
   display: flex;
-  justify-content: space-between;  /* Evenly space the selects */
+  justify-content: space-between;
   width: 85%;
   margin-top: -30px;
   margin-left: 150px;
@@ -306,9 +306,9 @@ button:active[disabled] {
 }
 
 .login-link {
-  text-decoration: underline; /* Make the link underlined */
+  text-decoration: underline;
   color: #757575;
-  transition: color 0.3s; /* Smooth transition for color change */
+  transition: color 0.3s;
 }
 
 .login-link:hover {

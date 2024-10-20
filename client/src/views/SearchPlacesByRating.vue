@@ -7,7 +7,6 @@
           </router-link>
         </div>
         <nav class="navbar">
-          <a href="#favourites" class="navbar-item"><i class="fa-regular fa-heart" style="color: #edf7fb;"></i> favourites</a>
           <router-link to="/maincities" class="navbar-item"
             ><i class="fa-solid fa-city"></i> cities</router-link>
           <router-link to="/mainplaces" class="navbar-item mainplaces-navbar-item"><i class="fa-solid fa-map-pin"></i> places to visit</router-link>
@@ -516,7 +515,7 @@ h4 {
 
 .reset-options-button{
   padding: 0.5rem;
-  background-color: #233341; /* Red color */
+  background-color: #233341;
   color: #edf7fb;
   border: none;
   border-radius: 5px;
@@ -657,7 +656,7 @@ a img {
     border-radius: 8px;
     padding: 1rem;
     margin: 0.5rem;
-    flex: 0 1 calc(30% - 1rem); /* Flex item: grow, shrink, basis (30% width minus margin) */
+    flex: 0 1 calc(30% - 1rem);
     text-align: center;
 }
 
