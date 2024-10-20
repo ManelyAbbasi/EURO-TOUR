@@ -81,7 +81,7 @@
                 <i class="fa-solid fa-medal" style="color: #D6AF36;"></i>
               </a>
               <div class="text-and-button">
-                <p class="maincities-trending">{{ topCities[0]?.cityName }}</p>
+                <p class="maincities-trending">{{ topCities[0]?.cityName }}, {{ topCities[0]?.country }}</p>
               </div>
             </div>
 
@@ -91,7 +91,7 @@
                 <i class="fa-solid fa-medal" style="color: #A7A7AD;"></i>
               </a>
               <div class="text-and-button">
-                <p class="maincities-trending">{{ topCities[1]?.cityName }}</p>
+                <p class="maincities-trending">{{ topCities[1]?.cityName }}, {{ topCities[1]?.country }}</p>
               </div>
             </div>
 
@@ -101,7 +101,7 @@
                 <i class="fa-solid fa-medal" style="color: #A77044;"></i>
               </a>
               <div class="text-and-button">
-                <p class="maincities-trending">{{ topCities[2]?.cityName }}</p>
+                <p class="maincities-trending">{{ topCities[2]?.cityName }}, {{ topCities[2]?.country }}</p>
               </div>
                   </div>
 
@@ -182,7 +182,8 @@ export default {
         if (response.data && response.data.cities) {
           // Get only the top 3 cities by rating
           this.topCities = response.data.cities.slice(0, 3).map(city => ({
-            cityName: city.cityName
+            cityName: city.cityName,
+            country: city.country
           }))
         }
       } catch (error) {
