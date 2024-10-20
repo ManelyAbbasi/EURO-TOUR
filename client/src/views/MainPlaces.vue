@@ -40,6 +40,11 @@
           </div>
 
           <div id="place-slide">
+            <div v-if="places.length === 0" class="no-places-message">
+              <h2 class="slide-title no-place-title">No places available to visit</h2>
+            </div>
+            <div v-else>
+            </div>
             <div v-for="place in paginatedPlaces" :key="place.placeName" class="place-item">
               <div class="detail-about-place">
                 <div class="slide-title-wrapper">
@@ -380,6 +385,11 @@ export default {
   flex-direction: row;
   background-color: #edf7fb;
   min-width: 643px;
+}
+
+.no-place-title{
+  color: #045768;
+  text-align: center;
 }
 
 .heading {
