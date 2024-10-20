@@ -64,39 +64,45 @@
 
         </div>
 
-          <div class="maincities-right-side-panel">
-                <!--search and trending-->
-                <h2 class="maincities-search-title">Search cities by: <i class="fa-solid fa-filter" style="color: #045768;"></i></h2>
+        <div class="maincities-right-side-panel">
+          <!--search and trending-->
+          <h2 class="maincities-search-title">Search cities by: <i class="fa-solid fa-filter" style="color: #045768;"></i></h2>
                 <div class="maincities-button-wrapper">
                   <router-link to="/searchCityByTag" class="maincities-tags-btn">tags</router-link>
                     <h4 class="maincities-or">or</h4>
                     <router-link to="/SearchCityByRating" class="maincities-ratings-btn">ratings</router-link>
                 </div>
-                <h2 class="maincities-search-title">Top rated cities:</h2>
-                <div class="trending-cities-wrapper">
+          <h2 class="maincities-search-title">Top rated cities:</h2>
+          <div class="trending-cities-wrapper">
 
-                    <!-- Top 1 (Gold) -->
-                    <div class="trending-city-wrapper">
-                      <a class="admins-pick-item"><i class="fa-solid fa-medal" style="color: #D6AF36;"></i></a>
-                      <div class="text-and-button">
-                      <p class="maincities-trending">{{ topCities[0]?.cityName }}</p>
-                      </div>
-                    </div>
+            <!-- Top 1 (Gold) -->
+            <div class="trending-city-wrapper">
+              <a class="admins-pick-item">
+                <i class="fa-solid fa-medal" style="color: #D6AF36;"></i>
+              </a>
+              <div class="text-and-button">
+                <p class="maincities-trending">{{ topCities[0]?.cityName }}</p>
+              </div>
+            </div>
 
-                    <!-- Top 2 (Silver) -->
-                  <div class="trending-city-wrapper">
-                    <a class="admins-pick-item"><i class="fa-solid fa-medal" style="color: #A7A7AD;"></i></a>
-                      <div class="text-and-button">
-                      <p class="maincities-trending">{{ topCities[1]?.cityName }}</p>
-                      </div>
-                  </div>
+            <!-- Top 2 (Silver) -->
+            <div class="trending-city-wrapper">
+              <a class="admins-pick-item">
+                <i class="fa-solid fa-medal" style="color: #A7A7AD;"></i>
+              </a>
+              <div class="text-and-button">
+                <p class="maincities-trending">{{ topCities[1]?.cityName }}</p>
+              </div>
+            </div>
 
-                  <!-- Top 3 (Bronze) -->
-                  <div class="trending-city-wrapper">
-                    <a class="admins-pick-item"><i class="fa-solid fa-medal" style="color: #A77044;"></i></a>
-                      <div class="text-and-button">
-                      <p class="maincities-trending">{{ topCities[2]?.cityName }}</p>
-                      </div>
+            <!-- Top 3 (Bronze) -->
+            <div class="trending-city-wrapper">
+              <a class="admins-pick-item">
+                <i class="fa-solid fa-medal" style="color: #A77044;"></i>
+              </a>
+              <div class="text-and-button">
+                <p class="maincities-trending">{{ topCities[2]?.cityName }}</p>
+              </div>
                   </div>
 
                 </div>
@@ -122,12 +128,16 @@ export default {
   data() {
     return {
       cities: [],
+      topCities: [],
       message: 'none',
       loggedInStatus: !!localStorage.getItem('x-auth-token'), // Reactive property for login status
       rows: 100,
       currentPage: 1,
       perPage: 1
     }
+  },
+  async created() {
+    await this.fetchTopRatedCities()
   },
   computed: {
     isLoggedIn() {
@@ -162,6 +172,21 @@ export default {
       } catch (error) {
         console.error('Error fetching cities:', error)
         this.cities = []
+      }
+    },
+    async fetchTopRatedCities() {
+      try {
+        // Fetch top cities sorted by rating in descending order
+        const response = await ApiV1.get('/v1/api/cities?sortByRating=Desc')
+
+        if (response.data && response.data.cities) {
+          // Get only the top 3 cities by rating
+          this.topCities = response.data.cities.slice(0, 3).map(city => ({
+            cityName: city.cityName
+          }))
+        }
+      } catch (error) {
+        console.error('Error fetching top-rated cities:', error)
       }
     },
     toggleFavorite() {

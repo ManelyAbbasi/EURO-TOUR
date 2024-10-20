@@ -147,7 +147,6 @@ export default {
       editPlaceName: '',
       selectedPlace: null,
       isAdmin: false,
-
       placeName: ''
     }
   },
