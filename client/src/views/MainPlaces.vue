@@ -7,7 +7,6 @@
         </router-link>
       </div>
       <nav class="navbar">
-        <a href="#favourites" class="navbar-item"><i class="fa-regular fa-heart" style="color: #edf7fb;"></i> favourites</a>
         <router-link to="/maincities" class="navbar-item"
           ><i class="fa-solid fa-city" ></i> cities</router-link>
       <router-link to="/mainplaces" class="navbar-item mainplaces-navbar-item"><i class="fa-solid fa-map-pin" style="color: #edf7fb;"></i> places to visit</router-link>
@@ -40,9 +39,14 @@
         </div>
 
         <div id="place-slide">
-          <div v-for="place in paginatedPlaces" :key="place.placeName" class="place-item">
-            <div class="detail-about-place">
-              <div class="slide-title-wrapper">
+          <div v-if="places.length === 0" class="no-places-message">
+              <h2 class="slide-title no-place-title">No places available to visit</h2>
+            </div>
+            <div v-else>
+            </div>
+            <div v-for="place in paginatedPlaces" :key="place.placeName" class="place-item">
+              <div class="detail-about-place">
+                <div class="slide-title-wrapper">
                 <span class="slide-title" v-if="!showEditForm" >{{ place.placeName }}</span>
                 <input type="text" id="placeName" v-model="editPlaceName" required v-else/>
                 <div class="edit-placename-popup" :class="{ show: showEditForm }" v-if="showEditForm">
@@ -640,6 +644,11 @@ align-items: center;
 padding-bottom: 1rem;
 }
 
+.no-place-title{
+  color: #045768;
+  text-align: center;
+}
+
 #place-slide{
 order: 1;
 padding: 1.5rem;
@@ -884,4 +893,3 @@ background-color: #a7561c;
   }
 }
 </style>
-ad
