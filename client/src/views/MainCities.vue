@@ -66,7 +66,7 @@
 
         <div class="maincities-right-side-panel">
           <!--search and trending-->
-          <h2 class="maincities-search-title">Search cities by: <i class="fa-solid fa-filter" style="color: #045768;"></i></h2>
+          <h3 class="maincities-search-title">Search cities by: <i class="fa-solid fa-filter" style="color: #045768;"></i></h3>
                 <div class="maincities-button-wrapper">
                   <router-link to="/searchCityByTag" class="maincities-tags-btn">tags</router-link>
                     <h4 class="maincities-or">or</h4>
@@ -344,11 +344,17 @@ export default {
     min-width: 35vw;
 }
 
-.maincities-right-side-panel h2 {
-    color: #045768;
-    font-size: 2rem;
-    padding: 0.5rem;
-    margin: 1rem 0;
+.maincities-right-side-panel h3{
+font-size: 1.5rem;
+color: #045768;
+padding: 0.5rem;
+margin: 1rem 0;
+}
+
+.maincities-right-side-panel h2{
+color: #045768;
+margin: 2rem 0;
+margin-bottom:-0.5rem;
 }
 
 .maincities-right-side-panel h4 {
