@@ -525,8 +525,8 @@ margin: 1rem 0;
 
 .mainplaces-right-side-panel h2{
 color: #045768;
-margin: 1.5rem 0;
-margin-bottom: 0rem;
+margin: 2rem 0;
+margin-bottom:-0.5rem;
 }
 
 .trending-place-wrapper {

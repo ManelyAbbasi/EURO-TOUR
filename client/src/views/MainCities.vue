@@ -72,20 +72,33 @@
                     <h4 class="maincities-or">or</h4>
                     <router-link to="/SearchCityByRating" class="maincities-ratings-btn">ratings</router-link>
                 </div>
-                <h2 class="maincities-search-title">Admins Picks:</h2>
+                <h2 class="maincities-search-title">Top rated cities:</h2>
                 <div class="trending-cities-wrapper">
-                  <div class="maincities-amst-wrapper trending-city-wrapper">
-                    <img src="@/assets/Amsterdam.jpg" alt="Amsterdam city" class="trending-cities-img"/>
-                    <p class="maincities-trending-amst">1. Amsterdam, The Netherlands</p>
+
+                    <!-- Top 1 (Gold) -->
+                    <div class="trending-city-wrapper">
+                      <a class="admins-pick-item"><i class="fa-solid fa-medal" style="color: #D6AF36;"></i></a>
+                      <div class="text-and-button">
+                      <p class="maincities-trending">{{ topCities[0]?.cityName }}</p>
+                      </div>
+                    </div>
+
+                    <!-- Top 2 (Silver) -->
+                  <div class="trending-city-wrapper">
+                    <a class="admins-pick-item"><i class="fa-solid fa-medal" style="color: #A7A7AD;"></i></a>
+                      <div class="text-and-button">
+                      <p class="maincities-trending">{{ topCities[1]?.cityName }}</p>
+                      </div>
                   </div>
-                  <div class="maincities-dublin-wrapper trending-city-wrapper">
-                    <img src="@/assets/Dublin.jpg" alt="Dublin city" class="trending-cities-img"/>
-                    <p class="maincities-trending-dublin">2. Dublin, Republic of Ireland</p>
+
+                  <!-- Top 3 (Bronze) -->
+                  <div class="trending-city-wrapper">
+                    <a class="admins-pick-item"><i class="fa-solid fa-medal" style="color: #A77044;"></i></a>
+                      <div class="text-and-button">
+                      <p class="maincities-trending">{{ topCities[2]?.cityName }}</p>
+                      </div>
                   </div>
-                  <div class="maincities-paris-wrapper trending-city-wrapper">
-                    <img src="@/assets/Paris.jpg" alt="Paris city" class="trending-cities-img"/>
-                    <p class="maincities-trending-paris">3. Paris, France</p>
-                  </div>
+
                 </div>
               </div>
           </div>
