@@ -15,8 +15,12 @@ router.post('/:id/placesToVisit', authentication, citiesControllers.createPlaceI
 
 router.get('/:id/placesToVisit', citiesControllers.getPlacesFromCity);
 
+router.get('/:id/placesToVisit/:address', citiesControllers.getOnePlaceFromCity);
+
 router.delete('/:id/placesToVisit/:address', authentication, citiesControllers.deleteOnePlaceFromCity);
 
 router.get('/weather-warnings/:id', citiesControllers.getCityWeatherWarnings);
+
+router.delete('/', authentication, citiesControllers.deleteAllCities)
 
 module.exports = router;
