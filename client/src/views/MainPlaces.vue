@@ -38,18 +38,27 @@
           </div>
         </div>
 
-        <div id="place-slide">
-          <div v-for="place in paginatedPlaces" :key="place.placeName" class="place-item">
-            <div class="detail-about-place">
-              <div class="slide-title-wrapper">
-                <span class="slide-title" v-if="!showEditForm" >{{ place.placeName }}</span>
-                <input type="text" id="placeName" v-model="editPlaceName" required v-else/>
-                <div class="edit-placename-popup" :class="{ show: showEditForm }" v-if="showEditForm">
-                    <form @submit.prevent="submitNewPlaceName">
-                      <input type="text" id="placeName" v-model="editPlaceName" required class="hidden-input"/>
-                      <button type="submit">Save</button>
-                      <button class="close-button" @click="closeEditForm">X</button>
-                    </form>
+          <div id="place-slide">
+            <div v-if="places.length === 0" class="no-places-message">
+              <h2 class="slide-title no-place-title">No places available to visit</h2>
+            </div>
+            <div v-else>
+            </div>
+            <div v-for="place in paginatedPlaces" :key="place.placeName" class="place-item">
+              <div class="detail-about-place">
+                <div class="slide-title-wrapper">
+                  <span class="slide-title" v-if="!showEditForm" >{{ place.placeName }}</span>
+                  <input type="text" id="placeName" v-model="editPlaceName" required v-else/>
+                  <div class="edit-placename-popup" :class="{ show: showEditForm }" v-if="showEditForm">
+                      <form @submit.prevent="submitNewPlaceName">
+                        <input type="text" id="placeName" v-model="editPlaceName" required class="hidden-input"/>
+                        <button type="submit">Save</button>
+                        <button class="close-button" @click="closeEditForm">X</button>
+                      </form>
+                  </div>
+                  <button class="edit-placename-button" v-if="isAdmin&&!showEditForm" @click="showEditPlaceNameForm(place)">
+                    <i class="fa-solid fa-i-cursor fa-beat-fade" style="color: #bc672a;"></i>
+                  </button>
                 </div>
                 <button class="edit-placename-button" v-if="isAdmin&&!showEditForm" @click="showEditPlaceNameForm(place)">
                   <i class="fa-solid fa-i-cursor fa-beat-fade" style="color: #bc672a;"></i>
@@ -426,6 +435,11 @@ display: flex;
 flex-direction: row;
 background-color: #edf7fb;
 min-width: 643px;
+}
+
+.no-place-title{
+  color: #045768;
+  text-align: center;
 }
 
 .heading {

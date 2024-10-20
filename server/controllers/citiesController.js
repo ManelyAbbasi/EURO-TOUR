@@ -73,6 +73,9 @@ async function createCity(req, res, next) {
         if (req.body.country.length > 25) {
             return res.status(400).json({ message: 'Country name cannot be longer than 25 characters' });
         }
+        if (typeof req.body.rating !== 'number' || req.body.rating < 0 || req.body.rating > 5) {
+            return res.status(400).json({ message: "Invalid rating: must be a number between 0 and 5" });
+        }
         if (typeof req.body.goodToKnow !== 'string' || req.body.country.trim() === "") {
             return res.status(400).json({ message: "Invalid good to know: must be a non-empty string" });
         }
@@ -252,6 +255,28 @@ async function getPlacesFromCity(req, res){
     }
 }
 
+async function getOnePlaceFromCity(req, res){
+    const cityId = req.params.id;
+    const placeAddress = req.params.address;
+    try{
+        const city = await CitiesModel.findOne({ _id: cityId }).populate('placesToVisit');
+        if (!city){
+            return res.status(404).json({ message: "City not found" });
+        }
+        if (!city.placesToVisit || city.placesToVisit.length === 0){
+            return res.status(404).json({ message: "No places are found" });
+        }
+        const specificPlace = await placesToVisitSchema.findOne({address: placeAddress});
+        if (!specificPlace) {
+            return res.status(404).json({ message: "Place not found" });
+        }
+        res.status(200).json(specificPlace);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred while fetching the places.' });
+    }
+}
+
 async function updateCity(req, res, next) {
     const cityId = req.params.id;
 
@@ -359,13 +384,36 @@ async function deleteOnePlaceFromCity(req, res) {
     }
 }
 
+async function deleteAllCities(req, res) {
+    try {
+        const adminCheckResponse = await adminController.checkIfAdmin(req);
+
+        if (!adminCheckResponse.isAdmin) {
+            return res.status(403).json({ message: "Access denied. Only admins can delete cities." });
+        }
+
+        const result = await CitiesModel.deleteMany({});
+        
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ message: "No cities found to delete" });
+        }
+        
+        res.status(200).json({ message: "All cities deleted successfully" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
 module.exports = {
     createCity,
     createPlaceInCity,
     getAllCities,
     getOneCity,
     getPlacesFromCity,
+    getOnePlaceFromCity,
     updateCity,
     deleteOnePlaceFromCity,
-    getCityWeatherWarnings
+    getCityWeatherWarnings,
+    deleteAllCities
 }

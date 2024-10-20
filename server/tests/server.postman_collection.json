@@ -3,8 +3,8 @@
 		"_postman_id": "03672d73-f921-4a52-af7e-a4cf2fbb6805",
 		"name": "Final tests",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "37686512",
-		"_collection_link": "https://group08.postman.co/workspace/group08-Workspace~58ff352a-546b-49cd-a5e8-b697b0fb499d/collection/37686512-03672d73-f921-4a52-af7e-a4cf2fbb6805?action=share&source=collection_link&creator=37686512"
+		"_exporter_id": "38092742",
+		"_collection_link": "https://group08.postman.co/workspace/group08-Workspace~58ff352a-546b-49cd-a5e8-b697b0fb499d/collection/37686512-03672d73-f921-4a52-af7e-a4cf2fbb6805?action=share&source=collection_link&creator=38092742"
 	},
 	"item": [
 		{
@@ -524,6 +524,85 @@
 						"admin",
 						"cities",
 						"6712595b09c41f036a79c7c4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete all cities",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 404\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(404);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "671517ef82dc9b5e24cb0051",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/v1/api/cities",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"api",
+						"cities"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get one place from city",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 404\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(404);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/v1/api/cities/67151ad517184d1cf2690fd9/placesToVisit/London",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"api",
+						"cities",
+						"67151ad517184d1cf2690fd9",
+						"placesToVisit",
+						"London"
 					]
 				}
 			},
