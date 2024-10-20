@@ -91,6 +91,10 @@ async function createCity(req, res, next) {
 
         const city = new CitiesModel(req.body);
         await city.save();
+
+        const weatherAlerts = await getWeatherAlerts(city.cityName);
+        city.alerts = Array.from(new Set(weatherAlerts.map(alert => alert.title)));
+        await city.save();
         res.status(201).json(city);
     } catch (err) {
         if (err.name === 'ValidationError' && err.errors && err.errors.tags) {
@@ -339,6 +343,10 @@ async function updateCity(req, res, next) {
             }
             city.tags = req.body.tags;
         }
+        await city.save();
+
+        const weatherAlerts = await getWeatherAlerts(city.cityName);
+        city.alerts = Array.from(new Set(weatherAlerts.map(alert => alert.title)));
         await city.save();
         res.status(200).json(city);
     } catch (err) {

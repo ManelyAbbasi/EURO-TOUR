@@ -546,22 +546,6 @@ export default {
         console.error('Error fetching cities:', error)
       }
     },
-    async getWeatherWarnings(cityId) {
-      try {
-        // Fetch weather warnings by city ID
-        const response = await ApiV1.get(`/v1/api/cities/${cityId}/weather-warnings`, {
-          headers: {
-            'x-auth-token': localStorage.getItem('x-auth-token')
-          }
-        })
-
-        // Return the alert titles from the API response
-        return response.data.alerts.map(alert => alert.title) || []
-      } catch (error) {
-        console.error('Error fetching weather warnings:', error)
-        return []
-      }
-    },
     async loadCities() {
       try {
         const response = await ApiV1.get('/v1/api/cities')
