@@ -220,6 +220,11 @@ export default {
         return
       }
 
+      if (this.selectedTags.length === 0) {
+        alert('At least one tag must be selected.')
+        return false
+      }
+
       try {
         const address = this.place.address
 
