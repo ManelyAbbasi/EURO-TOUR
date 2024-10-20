@@ -345,7 +345,7 @@ export default {
 }
 
 .maincities-right-side-panel h3{
-font-size: 1.5rem;
+font-size: 2rem;
 color: #045768;
 padding: 0.5rem;
 margin: 1rem 0;
@@ -638,7 +638,8 @@ a img {
     .maincities-right-side-panel{
       padding: 1.5rem 2rem;
     }
-    .maincities-right-side-panel h2{
+    .maincities-right-side-panel h2,
+    .maincities-right-side-panel h3{
       font-size: 3.5rem;
       padding: 0.5rem;
     }
