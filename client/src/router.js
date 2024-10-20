@@ -7,7 +7,6 @@ import MainCities from './views/MainCities.vue'
 import searchCityByTag from './views/searchCityByTag.vue'
 import SearchCityByRating from './views/SearchCityByRating.vue'
 import Profile from './views/Profile.vue'
-import Favourites from './views/Favourites.vue'
 
 const routes = [
   { path: '/', name: 'home', component: Home },
@@ -16,8 +15,7 @@ const routes = [
   { path: '/login', name: 'login', component: Login },
   { path: '/searchCityByTag', name: 'citytag', component: searchCityByTag },
   { path: '/Profile', name: 'profile', component: Profile },
-  { path: '/SearchCityByRating', name: 'cityrating', component: SearchCityByRating },
-  { path: '/Favourites', name: 'favourites', component: Favourites }
+  { path: '/SearchCityByRating', name: 'cityrating', component: SearchCityByRating }
 ]
 
 const router = createRouter({
