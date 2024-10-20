@@ -1,141 +1,65 @@
 <template>
   <div class="mainplaces-body-container">
     <header class="euro-tour-header">
-      <div class="logo-wrapper">
-        <router-link to="/" class="logo">
-          <img src="@/assets/horizontal-logo.png" alt="Euro Tour logo" />
-        </router-link>
-      </div>
-      <nav class="navbar">
-        <router-link to="/maincities" class="navbar-item"
-          ><i class="fa-solid fa-city" ></i> cities</router-link>
-      <router-link to="/mainplaces" class="navbar-item mainplaces-navbar-item"><i class="fa-solid fa-map-pin" style="color: #edf7fb;"></i> places to visit</router-link>
-        <b-dropdown
-          size="lg"
-          variant="link"
-          toggle-class="text-decoration-none"
-          no-caret
-          class="navbar-item dropdown"
-        >
-          <template #button-content>
-            <img src="@/assets/signed-in-icon.png" alt="Signed In" class="dropdown-icon" />
-          </template>
-          <!-- Dropdown items -->
-          <b-dropdown-item class="dropdown-item logout" @click="logout">Log out</b-dropdown-item>
-          <b-dropdown-item class="dropdown-item" to="/profile">Profile</b-dropdown-item>
-        </b-dropdown>
-      </nav>
+      <!-- Header content here -->
     </header>
-
     <main>
       <div class="mainplaces-layout-wrapper">
         <div class="mainplaces-left-side-panel">
-
-          <!-- display new text for each slide -->
           <div class="pagination-wrapper">
-          <div class="mt-3">
-            <b-pagination v-model="currentPage" pills :total-rows="places.length" :per-page="perPage"></b-pagination>
+            <div class="mt-3">
+              <b-pagination v-model="currentPage" pills :total-rows="places.length" :per-page="perPage"></b-pagination>
+            </div>
           </div>
-        </div>
 
           <div id="place-slide">
             <div v-if="places.length === 0" class="no-places-message">
               <h2 class="slide-title no-place-title">No places available to visit</h2>
             </div>
             <div v-else>
+              <div v-for="place in paginatedPlaces" :key="place.placeName" class="place-item">
+                <!-- Place item content here -->
+              </div>
             </div>
-            <div v-for="place in paginatedPlaces" :key="place.placeName" class="place-item">
-              <div class="detail-about-place">
-                <div class="slide-title-wrapper">
-                  <span class="slide-title" v-if="!showEditForm" >{{ place.placeName }}</span>
-                  <input type="text" id="placeName" v-model="editPlaceName" required v-else/>
-                  <div class="edit-placename-popup" :class="{ show: showEditForm }" v-if="showEditForm">
-                      <form @submit.prevent="submitNewPlaceName">
-                        <input type="text" id="placeName" v-model="editPlaceName" required class="hidden-input"/>
-                        <button type="submit">Save</button>
-                        <button class="close-button" @click="closeEditForm">X</button>
-                      </form>
-                  </div>
-                  <button class="edit-placename-button" v-if="isAdmin&&!showEditForm" @click="showEditPlaceNameForm(place)">
-                    <i class="fa-solid fa-i-cursor fa-beat-fade" style="color: #bc672a;"></i>
-                  </button>
-                </div>
-                <button class="edit-placename-button" v-if="isAdmin&&!showEditForm" @click="showEditPlaceNameForm(place)">
-                  <i class="fa-solid fa-i-cursor fa-beat-fade" style="color: #bc672a;"></i>
-                </button>
+          </div>
+        </div>
+
+        <div class="mainplaces-right-side-panel">
+          <!-- Right side panel content -->
+          <div class="trending-places-wrapper">
+            <!-- Trending places -->
+            <div class="trending-place-wrapper">
+              <a class="admins-pick-item"><i class="fa-solid fa-medal" style="color: #D6AF36;"></i></a>
+              <div class="text-and-button">
+                <p class="mainplaces-trending">{{ topPlaces[0]?.placeName }}</p>
               </div>
-              <div class="star-rating">
-                <i v-for="n in Math.floor(place.rating)" :key="n" class="fa-solid fa-star" style="color: #bc672a;"></i>
-                <i v-for="n in 5 - Math.floor(place.rating)" :key="'empty-' + n" class="fa-regular fa-star" style="color: #bc672a;"></i>
-                <span class="rating-text">{{ place.rating }}/5.0</span>
+            </div>
+
+            <div class="trending-place-wrapper">
+              <a class="admins-pick-item"><i class="fa-solid fa-medal" style="color: #A7A7AD;"></i></a>
+              <div class="text-and-button">
+                <p class="mainplaces-trending">{{ topPlaces[1]?.placeName }}</p>
               </div>
-              <div class="detail-item">
-                <p><strong class="heading">City:</strong></p>
-                <router-link :to="`/city/${place.city._id}`" class="city-link">{{ place.city.cityName }}</router-link>
+            </div>
+
+            <div class="trending-place-wrapper">
+              <a class="admins-pick-item"><i class="fa-solid fa-medal" style="color: #A77044;"></i></a>
+              <div class="text-and-button">
+                <p class="mainplaces-trending">{{ topPlaces[2]?.placeName }}</p>
               </div>
-              <div class="detail-item">
-                <p><strong class="heading">Address:</strong></p>
-                <p>{{ place.address }}</p>
-              </div>
-              <div class="read-more-wrapper">
-                <button v-if="isAdmin" @click="deleteAllPlaces" class="delete-all-button">delete all places</button>
-                <router-link :to="`/place/${place.address}`" class="place-link">read more</router-link>
-              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-
-                  <div class="mainplaces-right-side-panel">
-                  <!--search and trending-->
-                  <h3 class="mainplaces-search-title">
-                    Search places to visit by: <i class="fa-solid fa-filter" style="color: #045768;"></i>
-                  </h3>
-                  <div class="mainplaces-button-wrapper">
-                    <router-link to="/SearchPlacesByTag" class="mainplaces-tags-btn">tags</router-link>
-                    <h4 class="mainplaces-or">or</h4>
-                    <router-link to="/SearchPlacesByRating" class="mainplaces-ratings-btn">ratings</router-link>
-                  </div>
-                  <h2 class="mainplaces-admin-header">Top rated places to visit:</h2>
-                  <div class="trending-places-wrapper">
-
-                    <!-- Top 1 (Gold) -->
-                    <div class="trending-place-wrapper">
-                      <a class="admins-pick-item"><i class="fa-solid fa-medal" style="color: #D6AF36;"></i></a>
-                      <div class="text-and-button">
-                        <p class="mainplaces-trending">{{ topPlaces[0]?.placeName }}</p>
-                      </div>
-                    </div>
-
-                    <!-- Top 2 (Silver) -->
-                    <div class="trending-place-wrapper">
-                      <a class="admins-pick-item"><i class="fa-solid fa-medal" style="color: #A7A7AD;"></i></a>
-                      <div class="text-and-button">
-                        <p class="mainplaces-trending">{{ topPlaces[1]?.placeName }}</p>
-                      </div>
-                    </div>
-
-                    <!-- Top 3 (Bronze) -->
-                    <div class="trending-place-wrapper">
-                      <a class="admins-pick-item"><i class="fa-solid fa-medal" style="color: #A77044;"></i></a>
-                      <div class="text-and-button">
-                        <p class="mainplaces-trending">{{ topPlaces[2]?.placeName }}</p>
-                      </div>
-              </div>
-
-              </div>
-            </div>
-        </div>
     </main>
-
-<footer class="footer">
-<div class="footer-text">
-  <p> &copy; 2024 copyright: eurotrip.com</p>
-</div>
-<div class="top-icon">
-  <a href="#"><i class="fa-solid fa-caret-up"></i></a>
-</div>
-</footer>
+    <footer class="footer">
+      <div class="footer-text">
+        <p> &copy; 2024 copyright: eurotrip.com</p>
+      </div>
+      <div class="top-icon">
+        <a href="#"><i class="fa-solid fa-caret-up"></i></a>
+      </div>
+    </footer>
   </div>
 </template>
 
