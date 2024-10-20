@@ -64,28 +64,47 @@
 
         </div>
 
-          <div class="maincities-right-side-panel">
-                <!--search and trending-->
-                <h2 class="maincities-search-title">Search cities by: <i class="fa-solid fa-filter" style="color: #045768;"></i></h2>
+        <div class="maincities-right-side-panel">
+          <!--search and trending-->
+          <h3 class="maincities-search-title">Search cities by: <i class="fa-solid fa-filter" style="color: #045768;"></i></h3>
                 <div class="maincities-button-wrapper">
                   <router-link to="/searchCityByTag" class="maincities-tags-btn">tags</router-link>
                     <h4 class="maincities-or">or</h4>
                     <router-link to="/SearchCityByRating" class="maincities-ratings-btn">ratings</router-link>
                 </div>
-                <h2 class="maincities-search-title">Admins Picks:</h2>
-                <div class="trending-cities-wrapper">
-                  <div class="maincities-amst-wrapper trending-city-wrapper">
-                    <img src="@/assets/Amsterdam.jpg" alt="Amsterdam city" class="trending-cities-img"/>
-                    <p class="maincities-trending-amst">1. Amsterdam, The Netherlands</p>
+          <h2 class="maincities-search-title">Top rated cities:</h2>
+          <div class="trending-cities-wrapper">
+
+            <!-- Top 1 (Gold) -->
+            <div class="trending-city-wrapper">
+              <a class="admins-pick-item">
+                <i class="fa-solid fa-medal" style="color: #D6AF36;"></i>
+              </a>
+              <div class="text-and-button">
+                <p class="maincities-trending">{{ topCities[0]?.cityName }}, {{ topCities[0]?.country }}</p>
+              </div>
+            </div>
+
+            <!-- Top 2 (Silver) -->
+            <div class="trending-city-wrapper">
+              <a class="admins-pick-item">
+                <i class="fa-solid fa-medal" style="color: #A7A7AD;"></i>
+              </a>
+              <div class="text-and-button">
+                <p class="maincities-trending">{{ topCities[1]?.cityName }}, {{ topCities[1]?.country }}</p>
+              </div>
+            </div>
+
+            <!-- Top 3 (Bronze) -->
+            <div class="trending-city-wrapper">
+              <a class="admins-pick-item">
+                <i class="fa-solid fa-medal" style="color: #A77044;"></i>
+              </a>
+              <div class="text-and-button">
+                <p class="maincities-trending">{{ topCities[2]?.cityName }}, {{ topCities[2]?.country }}</p>
+              </div>
                   </div>
-                  <div class="maincities-dublin-wrapper trending-city-wrapper">
-                    <img src="@/assets/Dublin.jpg" alt="Dublin city" class="trending-cities-img"/>
-                    <p class="maincities-trending-dublin">2. Dublin, Republic of Ireland</p>
-                  </div>
-                  <div class="maincities-paris-wrapper trending-city-wrapper">
-                    <img src="@/assets/Paris.jpg" alt="Paris city" class="trending-cities-img"/>
-                    <p class="maincities-trending-paris">3. Paris, France</p>
-                  </div>
+
                 </div>
               </div>
           </div>
@@ -109,12 +128,16 @@ export default {
   data() {
     return {
       cities: [],
+      topCities: [],
       message: 'none',
       loggedInStatus: !!localStorage.getItem('x-auth-token'), // Reactive property for login status
       rows: 100,
       currentPage: 1,
       perPage: 1
     }
+  },
+  async created() {
+    await this.fetchTopRatedCities()
   },
   computed: {
     isLoggedIn() {
@@ -149,6 +172,22 @@ export default {
       } catch (error) {
         console.error('Error fetching cities:', error)
         this.cities = []
+      }
+    },
+    async fetchTopRatedCities() {
+      try {
+        // Fetch top cities sorted by rating in descending order
+        const response = await ApiV1.get('/v1/api/cities?sortByRating=Desc')
+
+        if (response.data && response.data.cities) {
+          // Get only the top 3 cities by rating
+          this.topCities = response.data.cities.slice(0, 3).map(city => ({
+            cityName: city.cityName,
+            country: city.country
+          }))
+        }
+      } catch (error) {
+        console.error('Error fetching top-rated cities:', error)
       }
     },
     toggleFavorite() {
@@ -306,11 +345,17 @@ export default {
     min-width: 35vw;
 }
 
-.maincities-right-side-panel h2 {
-    color: #045768;
-    font-size: 2rem;
-    padding: 0.5rem;
-    margin: 1rem 0;
+.maincities-right-side-panel h3{
+font-size: 1.5rem;
+color: #045768;
+padding: 0.5rem;
+margin: 1rem 0;
+}
+
+.maincities-right-side-panel h2{
+color: #045768;
+margin: 2rem 0;
+margin-bottom:-0.5rem;
 }
 
 .maincities-right-side-panel h4 {
@@ -359,20 +404,23 @@ export default {
 }
 
 .trending-city-wrapper p{
-  font-size: 1rem;
+  font-size: 1.2rem;
   align-content: center;
   padding: 0.5rem;
   justify-items: center;
   margin: 0.5rem;
+  color: #045768;
 }
 
-.trending-cities-img {
+.text-and-button {
+  display: flex;
+  align-items: center;
+}
+
+.admins-pick-item{
   max-width: 35%;
   margin: 1rem;
-}
-
-.trending-city-wrapper img{
-  border: 1px solid #edf7fb;
+  font-size: 3.5rem;
 }
 
 .logo img{
