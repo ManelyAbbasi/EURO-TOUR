@@ -397,20 +397,23 @@ export default {
 }
 
 .trending-city-wrapper p{
-  font-size: 1rem;
+  font-size: 1.2rem;
   align-content: center;
   padding: 0.5rem;
   justify-items: center;
   margin: 0.5rem;
+  color: #045768;
 }
 
-.trending-cities-img {
+.text-and-button {
+  display: flex;
+  align-items: center;
+}
+
+.admins-pick-item{
   max-width: 35%;
   margin: 1rem;
-}
-
-.trending-city-wrapper img{
-  border: 1px solid #edf7fb;
+  font-size: 3.5rem;
 }
 
 .logo img{

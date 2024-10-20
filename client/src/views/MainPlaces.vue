@@ -90,6 +90,7 @@
                   </div>
                   <h2 class="mainplaces-admin-header">Top rated places to visit:</h2>
                   <div class="trending-places-wrapper">
+
                     <!-- Top 1 (Gold) -->
                     <div class="trending-place-wrapper">
                       <a class="admins-pick-item"><i class="fa-solid fa-medal" style="color: #D6AF36;"></i></a>
@@ -543,19 +544,11 @@ align-content: center;
 justify-items: center;
 margin: 0.5rem;
 color:#045768;
-
 }
 
 .text-and-button {
 display: flex;
 align-items: center;
-}
-
-.edit-admins-pick-button {
-background-color: transparent;
-border: none;
-cursor: pointer;
-font-size: 1.5rem;
 }
 
 .admins-pick-item{
