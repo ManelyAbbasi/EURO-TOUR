@@ -45,7 +45,7 @@
             <button class="ratings-button">ratings</button>
         </router-link>
 
-        <i class="fa-solid fa-filter"></i>
+        <i class="fa-solid fa-filter" style="color: #045768;"></i>
         </div>
     </b-col>
     </b-row>

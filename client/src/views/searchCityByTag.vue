@@ -227,7 +227,7 @@ export default {
 
 .search-by-tag-panel {
     background-color: #759cab;
-    width: 80%;
+    width: 100rem;
     min-height: 50rem;
     margin-bottom: 35px;
     margin-top: 9rem;
@@ -632,6 +632,9 @@ a img {
 @media screen and (max-width:350px) {
     .footer{
         flex-direction: column-reverse;
+    }
+    .container.search-by-tag-panel{
+      width: 900px
     }
 }
 
