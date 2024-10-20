@@ -39,6 +39,10 @@
           <p><strong class="heading">City:</strong></p>
           <router-link :to="`/city/${place.cityId}`" class="city-link detail-text">{{ place.cityName }}</router-link>
         </div>
+        <div class="address-wrapper">
+          <p><strong class="heading">Address:</strong></p>
+          <router-link :to="`/city/${place.cityId}`" class="city-link detail-text">{{ place.address }}</router-link>
+        </div>
         <div class="content-wrapper">
           <p><strong class="heading">Content:</strong></p>
           <p class="detail-text">{{ place.content }}</p>
