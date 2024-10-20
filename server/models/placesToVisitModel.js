@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 var placesToVisitSchema = new Schema({
     placeName: { type: String, required: true },
     address: { type: String, required: true, unique: true, sparse: true },
-    rating: { type: Number, min: 0.0, max: 5.0 },
+    rating: { type: Number, required: true, min: 0.0, max: 5.0 },
     content: { type: String, required: true },
     tags: {
         type: [String], 

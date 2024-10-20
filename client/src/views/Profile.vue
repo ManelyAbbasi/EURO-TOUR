@@ -47,10 +47,10 @@
       </b-row>
         <!-- Admins only see the password field -->
       <b-row v-if="isAdmin">
-        <label for="username">username</label>
-        <input type="text" id="username" class="input-field" v-model="username" />
-        <label for="password">password</label>
-        <input type="password" id="password" class="input-field" v-model="password" />
+        <label for="adminUsername">username</label>
+        <input type="text" id="adminUsername" class="input-field" v-model="adminUsername" />
+        <label for="adminPassword">password</label>
+        <input type="password" id="adminPassword" class="input-field" v-model="adminPassword" />
       </b-row>
 
        <!-- Gender and LGBTQIA selection will only appear for non-admin users -->
@@ -185,6 +185,8 @@ export default {
     return {
       username: '',
       password: '',
+      adminUsername: '',
+      adminPassword: '',
       activeGender: null,
       activeLGBTQIA: null,
       isSaved: false,
@@ -217,9 +219,24 @@ export default {
       event.preventDefault() // Prevent form submission
 
       // Create userCredentials object
-      const userCredentials = {
-        username: this.username,
-        password: this.password
+      const adminCredentials = {
+        username: this.adminUsername,
+        password: this.adminPassword
+      }
+
+      if (this.adminPassword.length > 25) {
+        alert('Password cannot exceed 25 characters')
+        return (this.isSaved = false)
+      }
+
+      if (this.adminPassword.length === 0) {
+        alert('Password cannot be empty')
+        return (this.isSaved = false)
+      }
+
+      if (this.adminPassword.length < 6) {
+        alert('Password cannot be less than 6 characters')
+        return (this.isSaved = false)
       }
 
       try {
@@ -228,7 +245,7 @@ export default {
           throw new Error('No auth token found. Please log in.')
         }
 
-        const response = await ApiV1.patch(`/v1/api/admin/${this.username}`, userCredentials, {
+        const response = await ApiV1.patch(`/v1/api/admin/${this.adminUsername}`, adminCredentials, {
           headers: {
             'x-auth-token': authToken // Set the token in the request headers
           }
@@ -240,7 +257,7 @@ export default {
         }
       } catch (error) {
         console.error('Update error:', error)
-        alert('You are not allowed to change your username, and password cannot be empty.')
+        alert('This is not your username.')
       }
     },
 
@@ -263,6 +280,21 @@ export default {
         userCredentials.isLGBTQIA = this.activeLGBTQIA === 'yes'
       }
 
+      if (this.password.length > 25) {
+        alert('Password cannot exceed 25 characters')
+        return (this.isSaved = false)
+      }
+
+      if (this.password.length === 0) {
+        alert('Password cannot be empty')
+        return (this.isSaved = false)
+      }
+
+      if (this.password.length < 6) {
+        alert('Password cannot be less than 6 characters')
+        return (this.isSaved = false)
+      }
+
       try {
         const authToken = localStorage.getItem('x-auth-token')
         if (!authToken) {
@@ -281,7 +313,7 @@ export default {
         }
       } catch (error) {
         console.error('Update error:', error)
-        alert('You are not allowed to change your username, and password cannot be empty.')
+        alert('This is not your username.')
       }
     },
     deletePopUp() {
@@ -330,7 +362,7 @@ export default {
     }
   },
   mounted() {
-    // Check login status when the component is mounted
+  // Check login status when the component is mounted
     const loggedInStatus = !!localStorage.getItem('x-auth-token')
     console.log('User logged in status:', loggedInStatus)
     // Check if the user is an admin
@@ -552,7 +584,7 @@ label {
   color: #8FC6DF;
   font-size: 1rem;
   font-family: 'Lexend Deca', sans-serif;
-  margin-left: 9rem;
+  margin-left: 5rem;
 }
 
 .delete-button {

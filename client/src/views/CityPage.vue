@@ -236,6 +236,9 @@ export default {
       this.resetForm()
     },
     async submitNewPlace() {
+      if (!this.validateForm()) {
+        return // Stop submission if validation fails
+      }
       const cityId = this.$route.params.cityid
       const placeData = {
         placeName: this.newPlaceName,
@@ -273,6 +276,43 @@ export default {
       this.address = ''
       this.rating = null
       this.selectedTags = []
+    },
+    validateForm() {
+      if (!this.newPlaceName) {
+        alert('Place name is required.')
+        return false
+      }
+      if (this.newPlaceName.length > 30) {
+        alert('Place name cannot be longer than 30 characters.')
+        return false
+      }
+      if (!this.address) {
+        alert('Address is required.')
+        return false
+      }
+      const isAddressTaken = this.placesToVisit.some(place => place.address === this.address)
+      if (isAddressTaken) {
+        alert('This address already exists for another place. Please enter a unique address.')
+        return false
+      }
+      if (!this.content) {
+        alert('Content information is required.')
+        return false
+      }
+      if (this.rating === null) {
+        alert('Rating is required.')
+        return false
+      }
+      if (this.rating > 5) {
+        alert('Rating cannot be more than 5. Please enter a valid rating.')
+        return false
+      }
+      if (this.selectedTags.length === 0) {
+        alert('At least one tag must be selected.')
+        return false
+      }
+
+      return true
     },
     logout() {
       // Remove the authentication token from localStorage

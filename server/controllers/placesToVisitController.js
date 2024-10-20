@@ -100,12 +100,15 @@ async function updatePlace(req, res, next) {
                 return res.status(400).json({ message: "Invalid address: must be a non-empty string" });
             }
             if (req.body.address.length > 60) {
-                return res.status(400).json({ message: 'address cannot be longer than 60 characters' });
+                return res.status(400).json({ message: 'Address cannot be longer than 60 characters' });
             }
             placesToVisit.address = req.body.address;
         }
 
         if (req.body.rating !== undefined) {
+            if (typeof req.body.rating !== 'number'){
+                return res.status(400).json({ message: "Invalid rating: must be a number"})
+            }
             if (req.body.rating < 0.0 || req.body.rating > 5.0) {
                 return res.status(400).json({ message: "Invalid rating: must be between 0.0 and 5.0" });
             }

@@ -216,8 +216,8 @@ export default {
       this.showEditForm = true
     },
     async submitNewPlaceName() {
-      if (!this.editPlaceName) {
-        alert('You cannot change the Place Name to be empty.')
+      if (this.editPlaceName.length > 25) {
+        alert('Place name cannot exceed 25 characters')
         return
       }
       try {
