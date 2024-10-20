@@ -243,7 +243,7 @@ export default {
 
 .filter-options {
   display: flex;
-  gap: 4rem; /* Adds space between the buttons */
+  gap: 4rem;
   margin-right: 10rem;
 }
 
@@ -312,14 +312,14 @@ export default {
 
 .selected-tags {
   display: flex;
-  flex-direction: row; /* Arrange in a row */
-  flex-wrap: wrap; /* Allow tags to wrap to the next line */
-  gap: 10px; /* Space between tags */
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
   margin-top: 4.4rem;
 }
 
 .tag-button-selected {
-  min-width: 150px; /* Set a consistent width for each tag */
+  min-width: 150px;
   padding: 10px 20px;
   background-color: #8FC6DF;
   color: #42515e;
@@ -467,7 +467,7 @@ a img {
     border-radius: 8px;
     padding: 1rem;
     margin: 0.5rem;
-    flex: 0 1 calc(30% - 1rem); /* Flex item: grow, shrink, basis (30% width minus margin) */
+    flex: 0 1 calc(30% - 1rem);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
@@ -597,7 +597,7 @@ a img {
     }
 
     .place-card {
-        flex: 0 1 calc(45% - 1rem); /* 2 cards per row on smaller screens */
+        flex: 0 1 calc(45% - 1rem);
     }
 
     h2 {
@@ -630,7 +630,7 @@ a img {
 
 @media (max-width: 576px) {
     .place-card {
-       flex: 0 1 calc(100% - 1rem); /* 1 card per row on extra small screens */
+       flex: 0 1 calc(100% - 1rem);
         flex-direction: row;
         display: flex;
         align-items: center;

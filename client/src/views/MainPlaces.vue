@@ -504,7 +504,7 @@ transform: scale(1.04);
   text-align: center;
   transition: 0.8s all;
   max-width: 7rem;
-  text-decoration: none; /* Removes underline from links */
+  text-decoration: none;
 
 }
 

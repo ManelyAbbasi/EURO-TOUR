@@ -655,7 +655,7 @@ a img {
     border-radius: 8px;
     padding: 1rem;
     margin: 0.5rem;
-    flex: 0 1 calc(30% - 1rem); /* Flex item: grow, shrink, basis (30% width minus margin) */
+    flex: 0 1 calc(30% - 1rem);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
