@@ -6,50 +6,61 @@
       </div>
 
       <nav class="navbar">
-        <router-link to="/Favourites" class="navbar-item" v-if="isLoggedIn">
-          <i class="fa-solid fa-heart" style="color: #edf7fb;"></i> favourites
-      </router-link>
-      <router-link to="/maincities" class="navbar-item" v-if="isLoggedIn">
-          <i class="fa-solid fa-city" style="color: #edf7fb;"></i> cities
-      </router-link>
-      <a href="#placesToVisit" class="navbar-item" v-if="isLoggedIn">
-          <i class="fa-solid fa-map-pin" style="color: #edf7fb;"></i> places to visit
-      </a>
-      <b-dropdown size="lg" variant="link" toggle-class="text-decoration-none" no-caret class="navbar-item dropdown" v-if="!isLoggedIn">
-        <template #button-content>
-          <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
-        </template>
-        <b-dropdown-item class="dropdown-item" to="/login">Log in</b-dropdown-item>
-        <b-dropdown-item class="dropdown-item" to="/signup">Sign up</b-dropdown-item>
-      </b-dropdown>
-      <b-dropdown size="lg" variant="link" toggle-class="text-decoration-none" no-caret class="navbar-item dropdown" v-if="isLoggedIn">
-        <template #button-content>
-          <img src="@/assets/signed-in-icon.png" alt="Sign In" class="dropdown-icon" />
-        </template>
-        <b-dropdown-item class="dropdown-item logout" @click="logout">Log out</b-dropdown-item>
-        <b-dropdown-item class="dropdown-item" to="/profile">Profile</b-dropdown-item>
-      </b-dropdown>
-  </nav>
-
+        <router-link to="/maincities" class="navbar-item" v-if="isLoggedIn"><i class="fa-solid fa-city" style="color: #edf7fb;"></i> cities</router-link>
+        <router-link to="/mainplaces" class="navbar-item" v-if="isLoggedIn"><i class="fa-solid fa-map-pin" style="color: #edf7fb;"></i> places to visit</router-link>
+        <b-dropdown
+          size="lg"
+          variant="link"
+          toggle-class="text-decoration-none"
+          no-caret
+          class="navbar-item dropdown"
+          v-if="!isLoggedIn"
+        >
+          <template #button-content>
+            <img src="@/assets/sign-in-icon.png" alt="Sign In" class="dropdown-icon" />
+          </template>
+          <b-dropdown-item class="dropdown-item" to="/login">Log in</b-dropdown-item>
+          <b-dropdown-item class="dropdown-item" to="/signup">Sign up</b-dropdown-item>
+        </b-dropdown>
+        <b-dropdown
+          size="lg"
+          variant="link"
+          toggle-class="text-decoration-none"
+          no-caret
+          class="navbar-item dropdown"
+          v-if="isLoggedIn"
+        >
+          <template #button-content>
+            <img src="@/assets/signed-in-icon.png" alt="Sign In" class="dropdown-icon" />
+          </template>
+          <b-dropdown-item class="dropdown-item logout" @click="logout">Log out</b-dropdown-item>
+          <b-dropdown-item class="dropdown-item" to="/profile">Profile</b-dropdown-item>
+        </b-dropdown>
+      </nav>
     </header>
     <main>
       <div class="home-layout-wrapper">
-        <div class="home-right-side-panel">
-          <h1 class="typewriter-hello hello" v-if="!isLoggedIn"></h1>
-          <h1 class="hello" v-if="isLoggedIn">Welcome back traveler!</h1>
-          <p class="welcome-text" v-if="!isLoggedIn">Make the most of your upcoming travels!</p>
-          <p class="welcome-text" v-if="isLoggedIn">Let's plan for your next travels</p>
-          <p class="welcome-text" v-if="!isLoggedIn">
-            With your <b>preferences</b> and our <b>recommendations</b> you will have the experience of a <b>lifetime</b>
-          </p>
-        </div>
-        <div class="home-left-side-panel">
-          <!-- map -->
-          <EuroMap class="euromap" />
-        </div>
+    <div class="home-right-side-panel">
+      <div class="welcome-back-container" v-if="isLoggedIn">
+        <h1 class="hello-in">Welcome back traveler!</h1>
+        <p class="welcome-text-in">Let's plan for your next travels</p>
       </div>
+      <div class="welcome-container" v-if="!isLoggedIn">
+        <h1 class="typewriter-hello hello"></h1>
+        <p class="welcome-text">Make the most of your upcoming travels!</p>
+        <p class="welcome-text">
+          With your <b>preferences</b> and our <b>recommendations</b> you will have the experience of a <b>lifetime</b>
+        </p>
+      </div>
+    </div>
 
-      <section class="get-to-know-wrapper">
+    <div class="home-left-side-panel">
+      <!-- map -->
+      <EuroMap class="euromap" />
+    </div>
+  </div>
+
+  <section class="get-to-know-wrapper" v-if="!isLoggedIn">
         <h2 class="home-heading">Get to know us!</h2>
         <div class="get-to-know-container">
           <div class="get-to-know-box">
@@ -73,29 +84,29 @@
               <p>We intend for our travelers to be able to make the most of their time in a new city.</p>
             </div>
           </div>
-
-          <!-- Conditionally Render "Why join us?" or Map -->
           <div class="get-to-know-box">
-            <!-- If not logged in, show "Why Join Us?" section -->
-            <template v-if="!isLoggedIn">
               <h3>Why join us?</h3>
               <div class="get-to-wrapper-text">
                 <p>With an account you can:</p>
                 <p>• Discover cities to travel to</p>
                 <p>• Look for places to visit in cities</p>
-                <p>• Favourite cities and places</p>
                 <p>• Find cities and places to visit based on your preferences</p>
+                <p>• Stay updated on your destination's weather to ensure a safe journey every time</p>
               </div>
-            </template>
-
-            <!-- If logged in, show the Weather Map -->
-            <template v-else>
-              <h3 class="weather-warning-title">Weather warnings</h3> <!-- Added header here -->
-              <WeatherMap class="weather-map" />
-            </template>
           </div>
         </div>
       </section>
+
+      <section class="get-to-know-wrapper-in" v-if="isLoggedIn">
+        <h2 class="home-heading">Weather warnings!</h2>
+          <!-- Conditionally Render "Why join us?" or Map -->
+          <div class="get-to-know-box-in" v-if="isLoggedIn">
+            <template v-if="isLoggedIn">
+              <WeatherMap class="weather-map" />
+            </template>
+          </div>
+      </section>
+
     </main>
     <footer class="footer">
       <div class="footer-text">
@@ -105,12 +116,13 @@
         <a href="#"><i class="fa-solid fa-caret-up"></i></a>
       </div>
     </footer>
+
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import { Api } from '@/Api'
+import { ApiV1 } from '@/Api'
 import EuroMap from '@/views/Map.vue' // Adjust the path as necessary
 import WeatherMap from '@/components/Weather.vue'
 
@@ -123,6 +135,7 @@ export default {
   data() {
     return {
       message: 'none',
+      isAdmin: false,
       loggedInStatus: !!localStorage.getItem('x-auth-token') // Reactive property for login status
     }
   },
@@ -131,9 +144,17 @@ export default {
       return this.loggedInStatus // Use reactive loggedInStatus property
     }
   },
+  async created() {
+    await this.checkIfAdmin()
+
+    // Check for admin status from route params
+    if (this.$route.params.isAdmin) {
+      this.isAdmin = true
+    }
+  },
   methods: {
     getMessage() {
-      Api.get('/')
+      ApiV1.get('/')
         .then((response) => {
           this.message = response.data.message
         })
@@ -141,10 +162,23 @@ export default {
           this.message = error
         })
     },
+    async checkIfAdmin() {
+      try {
+        const response = await ApiV1.get('/v1/api/admin/verify-admin', {
+          headers: {
+            'x-auth-token': localStorage.getItem('x-auth-token')
+          }
+        })
+        this.isAdmin = response.data.isAdmin
+      } catch (error) {
+        console.error('Error checking admin status:', error)
+      }
+    },
     logout() {
       localStorage.removeItem('x-auth-token')
       this.loggedInStatus = false
       this.$router.push('/')
+      window.location.reload() // careful with this, can create infinite loop
     },
     textLoad() {
       const textElement = document.querySelector('.typewriter-hello')
@@ -175,6 +209,7 @@ export default {
       textElement.classList.add('active')
     }
   },
+
   mounted() {
     const link = document.createElement('link')
     link.rel = 'stylesheet'
@@ -194,21 +229,19 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
 
 .home-body-container{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    list-style-type: none;
-    text-decoration: none;
-    border: none;
-    outline: none;
-    font-family: "Lexend Deca", sans-serif;
-    color: #bc672a;
-}
-
-.home-body-container{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style-type: none;
+  text-decoration: none;
+  border: none;
+  outline: none;
+  font-family: "Lexend Deca", sans-serif;
+  color: #bc672a;
   display: flex;
   flex-wrap: wrap;
   background-color: #42515e;
+  min-width: 1200px;
 }
 
 .euro-tour-header {
@@ -216,7 +249,7 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  padding: 1rem 5%; /* Adjust padding for more space */
+  padding: 1rem 5%;
   background-color: rgba(155, 169, 182, 1);
   display: flex;
   justify-content: space-between;
@@ -253,7 +286,7 @@ export default {
 }
 
 .navbar-item {
-  border: none; /* Remove borders to prevent overflow */
+  border: none;
   margin: 0 1rem;
   text-decoration: none;
 }
@@ -274,12 +307,23 @@ li.dropdown-item.logout {
   color: #bc672a !important;
 }
 
+.welcome-back-container {
+  padding: 9rem 2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin-bottom: 7rem;
+}
+
 .home-layout-wrapper {
   display: grid;
-  grid-template-columns: 1fr 1fr;  /* Create two equal columns */
-  grid-gap: 20px;  /* Optional: Add some space between columns */
-  padding: 7rem 9% 2rem;
+  grid-template-columns: 1fr 2fr;
+  grid-gap: 20px;
+  padding: 7rem 2rem;
   width: 100%;
+  align-content: center;
 }
 
 .home-left-side-panel, .home-right-side-panel {
@@ -303,8 +347,21 @@ li.dropdown-item.logout {
     padding: 4rem 9% 2rem;
 }
 
-.get-to-know-wrapper h2{
+.get-to-know-wrapper-in{
+    min-height: 100vh;
+    padding: 2rem 9% 1rem;
+}
+
+.get-to-know-wrapper-in h2 {
     margin-bottom: 3rem;
+    margin-left: 23rem;
+    margin-right: 20rem;
+    font-size: 3rem;
+}
+
+.get-to-know-wrapper h2 {
+    margin-bottom: 3rem;
+    margin-left: 25rem;
     font-size: 3rem;
 }
 
@@ -328,7 +385,35 @@ li.dropdown-item.logout {
     border: 3px solid #045768;
 }
 
+.get-to-know-box-in{
+    background-color: #8FC6DF;
+    border-radius: 2rem;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.5s;
+    width: 100%;
+    height: 35rem;
+    border: 3px solid #045768;
+    margin-bottom: 4rem;
+}
+
+.weather-map {
+  border-radius: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  max-height: 46rem;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
 .get-to-know-container .get-to-know-box:hover{
+    border-color: #bc672a;
+    transform: scale(1.03);
+}
+
+.get-to-know-box-in:hover{
     border-color: #bc672a;
     transform: scale(1.03);
 }
@@ -337,10 +422,6 @@ li.dropdown-item.logout {
     font-size: 2rem;
     color: #045768;
     margin-bottom: 2rem;
-}
-.get-to-know-box h3.weather-warning-title {
-  font-size: 1.5rem;
-  margin-bottom: 0.4rem;
 }
 
 .get-to-know-box p{
@@ -367,7 +448,7 @@ li.dropdown-item.logout {
 .hello {
   position: relative;
   font-size: 3rem;
-  white-space: nowrap; /* Ensure the text doesn't break */
+  white-space: nowrap;
   overflow: hidden;
   display: inline-block;
 }
@@ -382,11 +463,11 @@ li.dropdown-item.logout {
   height: 100%;
   background-color: #42515e;
   border-left: 2px solid #bc672a;
-  display: none; /* Initially hidden */
+  display: none;
 }
 
 .hello.active:before {
-  display: block; /* Only display when the animation starts */
+  display: block;
   animation: typewriterAnimate 4s steps(12);
 }
 
@@ -399,13 +480,8 @@ li.dropdown-item.logout {
   }
 }
 
-.welcome-text {
-  font-size: 2rem;
-  border: 2rem;;
-}
-
 .euromap{
-  width: 150%
+  width: 100%
 }
 
 .footer{
@@ -444,65 +520,135 @@ li.dropdown-item.logout {
     color: #045768;
 }
 
-@media screen and (max-width:1200px) {
-    html{
-        font-size: 55%;
-    }
-}
-
-@media screen and (max-width: 991px){
-    .get-to-know-wrapper{
-        padding: 10rem 3% 2rem;
-    }
-    .euro-tour-header{
-        padding: 2rem 3%;
-    }
-    .footer{
-        padding: 2rem 3%;
-    }
-    .get-to-know-wrapper{
-        padding: 7rem;
-    }
-}
-
-@media screen and (max-width: 768px){
-    .navbar{
+@media screen and (max-width: 768px) {
+  .navbar{
         width: 100%;
         display: flex;
         justify-content: space-evenly;
         flex-wrap: wrap;
         align-items: center;
     }
+
     .euro-tour-header{
         flex-direction: column;
         gap: 2rem;
     }
-    .home-layout-wrapper,
-    .get-to-know-wrapper{
-        flex-direction: column;
-        display: flex;
+
+    .home-layout-wrapper{
+      max-width: 768px;
     }
+
+    .home-right-side-panel{
+      margin: 11rem 0 0 0;
+    }
+
+    .welcome-back-container p{
+      display: flex;
+      justify-content: center;
+    }
+
     .home-layout-wrapper p{
         font-size: 2.5rem;
     }
+
     .home-layout-wrapper h1{
         font-size: 5rem;
     }
+
+    .get-to-know-box-in{
+    height: 500px;
+  }
 }
 
-@media screen and (max-width:576px) {
-    html{
-        font-size: 50%;
+@media screen and (max-width: 1200px) {
+  .navbar{
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+        align-items: center;
     }
+
+    .euro-tour-header{
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .home-layout-wrapper{
+      max-width: 1200px;
+      flex-direction: column;
+      display: flex;
+    }
+
+    .home-right-side-panel{
+      margin: 11rem 0 0 0;
+    }
+
+    .home-layout-wrapper, .get-to-know-wrapper-in {
+    width: 120%;
+    align-content: center;
+    }
+
+    .home-layout-wrapper p{
+        font-size: 2.5rem;
+    }
+
+    .home-layout-wrapper h1{
+        font-size: 5rem;
+    }
+
+    .welcome-container p {
+      font-size: 2rem;
+    }
+
+    .welcome-back-container {
+    padding: 3rem 2rem;
+    margin-bottom: 0rem;
+   }
+
+  .welcome-back-container h1 {
+    font-size: 4rem;
+  }
+
+  .welcome-back-container p{
+      display: flex;
+      justify-content: center;
+    }
+
+    .get-to-know-container-in .get-to-know-box-in{
+    background-color: #8FC6DF;
+    padding: 2rem 2rem 2rem;
+    height: 44.5rem;
+    margin: 2rem;
+    }
+
+    .get-to-know-wrapper h2{
+      margin-left: 19rem;
+      font-size: 3rem;
+  }
+
+    .get-to-wrapper-text p{
+      font-size: 0.9rem;
+
+  }
+
+  .get-to-know-wrapper-in h2{
+      margin-bottom: 3rem;
+      margin-left: 18rem;
+      margin-right: 18rem;
+      font-size: 2.5rem;
+  }
+
 }
 
-@media screen and (max-width:350px) {
-    .home-layout-wrapper img{
-        width: 90vw;
-    }
-    .footer{
-        flex-direction: column-reverse;
-    }
+@media screen and (min-width: 1201px) {
+  .weather-map{
+    padding-bottom: 1rem;
+    max-height: 1000px;
+  }
+  .get-to-know-box-in {
+    max-height: 800px;
+  }
 }
 
 </style>

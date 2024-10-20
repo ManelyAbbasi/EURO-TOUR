@@ -13,6 +13,11 @@
 
     <!-- Right side: Form with dark blue background -->
     <div class="right-side">
+
+    <!-- Display for small screens -->
+    <img src="@/assets/vertical-logo.png" alt="Tablet Logo" class="tablet-logo-img" draggable="false" />
+    <img src="@/assets/vertical-logo.png" alt="Mobile Logo" class="mobile-logo-img" draggable="false" />
+
       <div class="container">
         <!-- Container for the form -->
         <div class="form-entries">
@@ -38,6 +43,10 @@
           <span>new to euro trip? </span>
           <router-link to="/signup" class="create-account-link"> create an account</router-link>
         </div>
+        <div class="create-account-container admin-login-container">
+          <span>are you an admin? </span>
+          <router-link to="/AdminLogin" class="create-account-link"> admin login</router-link>
+        </div>
         </div>
       </div>
     </div>
@@ -45,7 +54,7 @@
 </template>
 
 <script>
-import { Api } from '../Api'
+import { ApiV2 } from '../Api'
 
 export default {
   name: 'login',
@@ -63,6 +72,16 @@ export default {
       this.usernameError = ''
       this.passwordError = ''
 
+      if (this.username.length > 20) {
+        alert('Username cannot be longer than 20 characters')
+        return
+      }
+
+      if (this.password.length > 25) {
+        alert('Password cannot be longer than 25 characters')
+        return
+      }
+
       if (!this.isEmpty) {
         try {
           const userCredentials = {
@@ -70,7 +89,7 @@ export default {
             password: this.password
           }
 
-          const response = await Api.post('/users/login', userCredentials)
+          const response = await ApiV2.post('/api/users/login', userCredentials)
 
           const authToken = response.headers['x-auth-token']
           if (authToken) {
@@ -128,12 +147,20 @@ export default {
 .logo-img {
   width: 80%;
   max-width: 500px;
-  margin-top: 30%;
+  margin-top: 40%;
+  margin-left: 9%;
+}
+
+.tablet-logo-img {
+  display: none;
+}
+
+.mobile-logo-img {
+  display: none;
 }
 
 .row-form {
   display: flex;
-
   align-items: center;
   flex-direction: column;
 }
@@ -202,18 +229,123 @@ button:active[disabled] {
 .create-account-link {
   text-decoration: underline;
   color: #757575;
-  transition: color 0.3s; /* Smooth transition for color change */
+  transition: color 0.3s;
 }
 
 .create-account-link:hover {
   color: #759CAB;
 }
 
+.admin-login-container,
+.admin-login-container a{
+  color: rgba(0, 0, 0, 0.301);
+}
+
 .error-message {
   color: #bc672a;
   font-family: 'Lexend Deca', sans-serif;
   font-size: 12px;
-  margin-left: 13rem;
+  margin-left: 12rem;
+}
+
+@media screen and (max-width: 320px) {
+  .mobile-logo-img {
+    display: block;
+    width: 70%;
+    margin-bottom: 1rem;
+  }
+
+  .tablet-logo-img {
+    display: none !important;
+  }
+
+  .btn {
+    width: 30%;
+  }
+
+  .input {
+    width: 85%;
+  }
+
+  .create-account-container {
+    font-size:smaller;
+  }
+
+  .error-message {
+  font-size: 0.6rem;
+}
+
+}
+
+@media screen and (max-width: 768px) {
+.split-container {
+  flex-direction: column;
+}
+
+.left-side {
+  display: none;
+}
+
+.right-side {
+  background-color: #759CAB;
+}
+
+.container {
+  margin-bottom:7rem;
+}
+
+.tablet-logo-img {
+  display: block;
+  width: 40%;
+  margin-bottom: 1rem;
+}
+
+.input {
+  color: #0c556a;
+}
+
+::placeholder {
+  color: #42515e;
+  opacity: 1;
+}
+
+.btn {
+  color: #EDF7FB;
+  border: #0c556a;
+  background-color: #0c556a;
+}
+
+.btn:disabled {
+  border: 2px solid #0c556a;
+  background-color: #759CAB;
+}
+
+.create-account-container {
+  color: #0c556a;
+}
+
+.create-account-link {
+  color: #0c556a;
+}
+
+.create-account-link:hover {
+  color: #EDF7FB;
+}
+
+.error-message {
+  margin-right: 0rem;
+}
+
+}
+
+@media screen and (max-width: 1200px){
+  .logo-img {
+  margin-top: 50%;
+}
+
+.error-message {
+  margin-left: 4rem;
+}
 }
 
 </style>

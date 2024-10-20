@@ -1,75 +1,67 @@
 <template>
-    <!-- Parent container for the split layout -->
-    <div class="split-container">
-      <!-- Left side: light blue background -->
-      <div class="signup-left-side">
-        <!-- Logo section -->
-        <div class="signup-logo">
-          <router-link to="/">
-            <img src="@/assets/vertical-logo.png" alt="Euro Tour logo" draggable="false" class="signup-logo-img">
-          </router-link>
-        </div>
+  <div class="split-container">
+    <div class="signup-left-side">
+      <div class="signup-logo">
+        <router-link to="/">
+          <img src="@/assets/vertical-logo.png" alt="Euro Tour logo" draggable="false" class="signup-logo-img">
+        </router-link>
       </div>
+    </div>
 
-      <!-- Right side: Form with dark blue background -->
-      <div class="signup-right-side">
-        <div class="signup-container">
-          <!-- Container for the form -->
-          <div class="signup-form-entries">
-            <!-- 1st row: username -->
-            <div class="signup-row-form">
-              <input class="signup-input" name="username" id="usernameID" type="text" v-model="username" placeholder="username">
-            </div>
+    <div class="signup-right-side">
+      <img src="@/assets/vertical-logo.png" alt="Tablet Logo" class="signup-tablet-logo-img" draggable="false" />
+      <img src="@/assets/vertical-logo.png" alt="Mobile Logo" class="signup-mobile-logo-img" draggable="false" />
 
-            <!-- 2nd row: password -->
-            <div class="signup-row-form">
-              <input class="signup-input" name="password" id="passwordID" type="password" v-model="password" placeholder="password">
-            </div>
+      <div class="signup-container">
+        <div class="signup-form-entries">
+          <div class="signup-row-form">
+            <input class="signup-input" name="username" id="usernameID" type="text" v-model="username" placeholder="username">
+          </div>
 
-            <!-- 3rd row: confirm password -->
-            <div class="signup-row-form">
-              <input class="signup-input" name="confirm password" id="confirmpasswordID" type="password" v-model="confirmpassword" placeholder="confirm password">
-            </div>
+          <div class="signup-row-form">
+            <input class="signup-input" name="password" id="passwordID" type="password" v-model="password" placeholder="password">
+          </div>
 
-            <!-- 4th row: date of birth -->
-            <div class="signup-row-form dob-row">
-             <label for="dob">date of birth</label><br />
-             <div class="dob-container">
+          <div class="signup-row-form">
+            <input class="signup-input" name="confirm password" id="confirmpasswordID" type="password" v-model="confirmpassword" placeholder="confirm password">
+          </div>
+
+          <div class="signup-row-form dob-row">
+            <label for="dob">date of birth</label><br />
+            <div class="dob-container">
               <select v-model="birthDay" class="signup-input dob-select">
-              <option disabled value="">day</option>
-              <option v-for="day in days" :key="day" :value="day">{{ day }}</option>
-            </select>
+                <option disabled value="">day</option>
+                <option v-for="day in days" :key="day" :value="day">{{ day }}</option>
+              </select>
 
-            <select v-model="birthMonth" class="signup-input dob-select">
-              <option disabled value="">month</option>
-              <option v-for="(month, index) in months" :key="index" :value="index + 1">{{ month }}</option>
-            </select>
+              <select v-model="birthMonth" class="signup-input dob-select">
+                <option disabled value="">month</option>
+                <option v-for="(month, index) in months" :key="index" :value="index + 1">{{ month }}</option>
+              </select>
 
-            <select v-model="birthYear" class="signup-input dob-select">
-              <option disabled value="">year</option>
-              <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
-            </select>
-        </div>
-        </div>
-
-            <!-- Sign up button -->
-            <div class="signup-button-container">
-              <button class="signup-btn" type="button" @click="saveButton()" :disabled="isEmpty">sign up</button>
+              <select v-model="birthYear" class="signup-input dob-select">
+                <option disabled value="">year</option>
+                <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+              </select>
             </div>
+          </div>
 
-             <!-- Already have an account section -->
+          <div class="signup-button-container">
+            <button class="signup-btn" type="button" @click="saveButton()" :disabled="isEmpty">sign up</button>
+          </div>
+
           <div class="signup-login-container">
             <span>already have an account? </span>
             <router-link to="/login" class="login-link">log in</router-link>
           </div>
-          </div>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
-import { Api } from '../Api'
+import { ApiV2 } from '../Api'
 
 export default {
   name: 'SignUp',
@@ -90,10 +82,38 @@ export default {
     }
   },
   methods: {
-    async saveButton() {
-      if (!this.isEmpty) {
-        console.log('Form submitted')
+    validateInputs() {
+      if (this.username.length > 20) {
+        alert('Username cannot be longer than 20 characters')
+        return false
+      } else if (this.username.trim() === '') {
+        alert('Username cannot be empty')
+        return false
       }
+
+      if (this.password.length > 25) {
+        alert('Password cannot be longer than 25 characters')
+        return false
+      } else if (this.password.trim() === '') {
+        alert('Password cannot be empty')
+        return false
+      }
+
+      if (this.password !== this.confirmpassword) {
+        alert('Passwords do not match')
+        return false
+      }
+
+      return true
+    },
+
+    async saveButton() {
+      const isValid = this.validateInputs()
+
+      if (!isValid || this.isEmpty) {
+        return
+      }
+
       try {
         const birthDate = `${this.birthYear}-${this.birthMonth.toString().padStart(2, '0')}-${this.birthDay.toString().padStart(2, '0')}`
         console.log('Birth Date:', birthDate)
@@ -101,34 +121,40 @@ export default {
         const user = {
           username: this.username,
           password: this.password,
-          birthDate: birthDate,
+          birthDate,
           isLGBTQIA: false,
           gender: 'other',
           isAdmin: false
         }
 
         console.log('User object:', user)
-        const response = await Api.post('/users', user)
+        const response = await ApiV2.post('/api/users', user)
         console.log('response', response)
         console.log('header', response.headers)
         localStorage.setItem('x-auth-token', response.headers['x-auth-token'])
         this.$router.push({ name: 'home' })
       } catch (error) {
+        if (error.response && error.response.status === 400) {
+          if (error.response.data.message === 'User with this username already exists') {
+            alert('Username already exists. Please choose a different username.')
+          } else {
+            alert('An error occurred: ' + error.response.data.message)
+          }
+        } else {
+          alert('An unexpected error occurred. Please try again later.')
+        }
         console.error(error)
-      }
-      if (!this.isEmpty) {
-        console.log('Form submitted')
       }
     }
   },
   computed: {
     isEmpty() {
       return this.username === '' ||
-             this.password === '' ||
-             this.confirmpassword === '' ||
-             this.birthDay === '' ||
-             this.birthMonth === '' ||
-             this.birthYear === ''
+          this.password === '' ||
+          this.confirmpassword === '' ||
+          this.birthDay === '' ||
+          this.birthMonth === '' ||
+          this.birthYear === ''
     }
   }
 }
@@ -137,7 +163,7 @@ export default {
 <style scoped>
 /* Split container for vertical layout */
 .split-container {
-  display: flex;                /* Horizontal layout */
+  display: flex;
   height: 100vh;
 }
 
@@ -162,7 +188,16 @@ export default {
 .signup-logo-img {
   width: 80%;
   max-width: 500px;
-  margin-top: 30%;
+  margin-top: 35%;
+  margin-left: 9%;
+}
+
+.signup-tablet-logo-img {
+  display: none;
+}
+
+.signup-mobile-logo-img {
+  display: none;
 }
 
 /* Styling for the row of the name, username and password */
@@ -224,6 +259,7 @@ export default {
   gap: 30px;
   justify-content: center;
   padding-top: 2%;
+  font-family: 'Lexend Deca', sans-serif;
 }
 
 /* Click animation for the button */
@@ -277,6 +313,108 @@ button:active[disabled] {
 
 .login-link:hover {
   color: #759CAB;
+}
+
+@media screen and (max-width: 320px) {
+
+.signup-mobile-logo-img {
+  display: block;
+  width: 70%;
+  margin-bottom: 1rem;
+}
+
+.signup-tablet-logo-img {
+  display: none !important;
+}
+
+.signup-input {
+  width: 80%;
+}
+
+.dob-container {
+  width: 81%;
+  margin-top: -10px;
+  margin-left: 4px;
+}
+
+.signup-row-form label {
+  left: -60px;
+  top: 10px;
+}
+}
+
+@media screen and (max-width: 768px) {
+
+.signup-left-side {
+  display: none;
+}
+
+.signup-right-side {
+  background-color: #759CAB;
+}
+
+.split-container {
+    flex-direction: column;
+  }
+
+.signup-tablet-logo-img {
+  display: block;
+  width: 40%;
+  margin-bottom: 1rem;
+}
+
+::placeholder {
+  color: #42515e;
+  opacity: 1;
+}
+
+.signup-row-form label {
+  color: #42515e;
+  opacity: 1;
+}
+
+.dob-container select {
+  color:#42515e;
+}
+
+.dob-container select:focus {
+  color: #0c556a;
+}
+
+.signup-input {
+  color: #0c556a;
+  text-decoration-color: #42515e;
+}
+
+.signup-btn {
+  color: #EDF7FB;
+  border: #0c556a;
+  background-color: #0c556a;
+  margin-top:1rem;
+}
+
+.signup-btn:disabled {
+  border: 2px solid #0c556a;
+  background-color: #759CAB;
+}
+
+.signup-login-container {
+  color: #0c556a;
+}
+
+.login-link {
+  color: #0c556a;
+}
+
+.login-link:hover {
+  color: #EDF7FB;
+}
+}
+
+@media screen and (max-width: 1200px){
+  .signup-logo {
+    margin-top: 10%;
+  }
 }
 
 </style>

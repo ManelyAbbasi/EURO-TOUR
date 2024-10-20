@@ -1,5 +1,6 @@
 const User = require('../models/usersModel');
 const mongoose = require('mongoose');
+const Admin = require('../models/adminsModel');
 
 module.exports = async function(req, res, next){
     if (!req.headers['x-auth-token']){
@@ -11,13 +12,20 @@ module.exports = async function(req, res, next){
         next();
     } else {
         const user = await User.findOne({"session.key": req.headers['x-auth-token']});
-        if(!user){
-            return res.status(404).json({"message": "User not found"})
+        const admin = await Admin.findOne({"session.key": req.headers['x-auth-token']});
+        if (user) {
+            if(Date.now() > user.session.expiry ){
+                return res.status(401).json({"message": "Session expired"});
+            }
+            next();
+        } else if (admin) {
+            if(Date.now() > admin.session.expiry){
+                return res.status(401).json({"message": "Session expired"});
+            }
+            next();
         }
-        if(Date.now() > user.session.expiry){
-            return res.status(401).json({"message": "Session expired"});
+        else if (!user || !admin){
+            return res.status(404).json({"message": "User not found"})   
         }
-        req.body.isAdmin = user.isAdmin;
-        next();
     }
 }

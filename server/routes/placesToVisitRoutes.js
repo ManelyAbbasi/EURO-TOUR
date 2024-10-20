@@ -13,4 +13,6 @@ router.patch('/:address', authentication, placesToVisitControllers.patchPlace);
 
 router.delete('/:address', authentication, placesToVisitControllers.deleteOnePlace);
 
+router.delete('/', authentication, placesToVisitControllers.deleteAllPlaces);
+
 module.exports = router;

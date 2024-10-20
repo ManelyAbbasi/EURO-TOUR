@@ -11,14 +11,12 @@ router.get('/:id', citiesControllers.getOneCity);
 
 router.put('/:id', authentication, citiesControllers.updateCity);
 
-router.patch('/:id', authentication, citiesControllers.patchCity);
-
-router.delete('/:id', authentication, citiesControllers.deleteOneCity);
-
 router.post('/:id/placesToVisit', authentication, citiesControllers.createPlaceInCity);
 
 router.get('/:id/placesToVisit', citiesControllers.getPlacesFromCity);
 
-router.get('/:id/placesToVisit/:address', citiesControllers.getOnePlaceFromCity);
+router.delete('/:id/placesToVisit/:address', authentication, citiesControllers.deleteOnePlaceFromCity);
+
+router.get('/weather-warnings/:id', citiesControllers.getCityWeatherWarnings);
 
 module.exports = router;

@@ -62,21 +62,56 @@ Open the `server` and `client` in separate VSCode workspaces or open the combine
 
 ### Purpose
 
-The main purpose of our system is to make it easier for aspiring travelers to find destinations that are best suited for their travel desires and needs. Based on users' selected preferences and personal details, our system aims to find places to visit - attractions, restaurants, historical sites etc. - for the specified city that the user is choosing. Another main feature of our system is that the user can both read and leave reviews for sharing their own personal experiences that help may future travelers. The system will be maintained by admins to ensure good language in reviews and that the content is up to date.  
+The main purpose of our system is to make it easier for aspiring travelers to find destinations that are best suited for their travel desires and needs. Based on users' selected preferences and personal details, our system aims to find places to visit - attractions, restaurants, historical sites etc. - for the specified city that the user is choosing. Another main feature of our system is that we will provide live weather warnings, giving insight to travelers as to what they can expect in whichever destination they are considering. The system will be maintained by admins to add, update, and delete cities as well as places to visit.  
 
 ### Pages
 
-Home: This will be the first page visited by users, it will have a large clickable map where users can see travel destinations and select. On the side of the page it will highlight popular/trending destinations. This page will feature a navigation bar of sorts to link users to the other pages, a search bar, and also have the login/sign up available.
+Home: This will be the first page visited by users, it will have a large clickable map where users can see travel destinations which are selectable. This page will feature a navigation bar of sorts to link users to the other pages once they have been successfully logged in. To log in and sign up, that will be available on the navigation bar, prior to being logged in.
 
-Login/Sign Up: This page will allow for users to either login with their username and password, or choose to create an account for the first time. When creating an account, users will not only input their information and pick preferences known as tags that will help them receive better personalized recommendations. 
+Login/Sign Up: This page will allow for users to either login with their username and password, or choose to create an account for the first time. 
 
-City Page: When a user selects a city, images of the city will be displayed as well as a neatly organized description of said city, including tags about the city. There will be a list of places to visit the user can preview that if they want to read more about it will be linked. Reviews of the city will be viewable on this page as well as the option for users to leave reviews. 
+Profile: This page is offered once the user has signed in, and here they are able to include additional information about themselves or even update their password. Here is also where the user can delete their account.
 
-Places to Visit Page: Once a user has clicked on the place that they would like to visit and know more about, they will be lead to this page which has more informations about each individual place to visit. The information that can be included are opening hours, links, pictures, ratings, and last but not least reviews. 
+City Page: Cities will be displayed in a carousel type fashion, a neatly organized description of said city, including tags about the city will be provided. There will be a list of places to visit the user can preview that if they want to read more about it will be linked. On a side panel, there will be an option to search and filter through the cities.
 
-Profile: Here the user can edit their creditentials as well as delete their account.
+Places to Visit Page: Once a user has clicked on the place that they would like to visit and know more about, they will be lead to this page which has more informations about each individual place to visit. The information that can be included are opening hours, links, and ratings. It is structured similarly to the cities page, so the filtering options are also present.
 
-Favourites: When a user favourites a city or a place they would like to visit, it will be saved on this page for easy access and traceability. It can be readjusted to the users' liking. git 
+Filter and Sort Pages: For both cities and places to visit, there will be pages to either sort and filter by ratings or filter by tags.
+
+### Proposal for a 5 (SVG-map)
+
+After discussing with Magnus, we agreed upon:  
+
+Moving the weather API integration to the backend of our project, therefore the different weather alerts would be extracted from the API to then be inputed into our CitiesModel. These weather warnings, known as alerts, after being handled in the backend will be given a visual representation in our frontend. 
+
+
+#### Frontend Aspects:
+**Interactive Map with Multiple Stages:**
+- Stage 1 (Hover Interaction): As users hover over the map, countries with cities in the system will light up in orange and become clickable, displaying the country's name. This immediate visual feedback helps users understand which countries are available for exploration.
+- Stage 2 (Unauthenticated Users): If someone isn't logged in, clicking on any country will trigger a pop-up saying, "You need to log in to see this feature."
+- Stage 3 (Admin vs Regular Users): Once logged in, regular users can see a list of available cities, while admins get additional features like creating, editing, and deleting cities.
+
+**City Management UI for Admins:**
+- Admins have direct access to city management features from the city pop-up interface:
+- Create New Cities: Admins can fill out a form with details like city name, country, good-to-know info, statistics, facts, rating (0-5 scale), and tags.
+- Edit Existing Cities: Admins can click the "Edit" button next to the city name to open the same form, pre-filled with the city's current information.
+- Delete Cities: Admins can instantly remove cities from the system. These features are hidden from regular users, ensuring a role-specific interface.
+
+#### Backend Aspects:
+**Fetching City Data:**
+- GET /cities: This route retrieves all cities stored in the system. It populates the map and the city lists for both admin and regular users, ensuring the map is always updated with the latest data.
+- GET /cities/${cityId}: When an admin clicks on a city to edit, this route is used to fetch all the relevant data for that city (city name, country, stats, etc.).
+
+**Checking Admin Privileges:**
+- GET /admin/check-admin: For role-based access control we use this route to check if the logged-in user has admin privileges. It is triggered when the page is loaded to conditionally render the admin-only buttons for creating, editing, and deleting cities.
+
+**Managing Cities (Admin Only):**
+- Create: POST /cities: When an admin submits the city creation form, this route is triggered. The new city data is sent to the backend, where it is validated and stored in the database.
+- Edit: PUT /cities/${this.editCityId}:  This route is used when an admin updates an existing city. The backend processes the update request, modifies the existing city data, and returns a success response if the operation is successful.
+- Delete: DELETE /admin/cities/${cityId}: Admins can delete a city using this route. Upon confirmation, the backend removes the specified city from the database and sends a response indicating the outcome.
+
+**Authentication and Security:**
+- All backend routes that modify city data (create, edit, delete) are protected by an authentication token (x-auth-token). For regular users, the routes are read-only, preventing unauthorized data manipulation.
 
 ### Entity-Relationship (ER) Diagram
 

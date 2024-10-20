@@ -7,6 +7,12 @@ import MainCities from './views/MainCities.vue'
 import searchCityByTag from './views/searchCityByTag.vue'
 import SearchCityByRating from './views/SearchCityByRating.vue'
 import Profile from './views/Profile.vue'
+import MainPlaces from './views/MainPlaces.vue'
+import SearchPlacesByTag from './views/SearchPlacesByTag.vue'
+import SearchPlacesByRating from './views/SearchPlacesByRating.vue'
+import CityPage from './views/CityPage.vue'
+import PlacePage from './views/PlacePage.vue'
+import AdminLogin from './views/AdminLogin.vue'
 
 const routes = [
   { path: '/', name: 'home', component: Home },
@@ -14,8 +20,14 @@ const routes = [
   { path: '/maincities', name: 'maincities', component: MainCities },
   { path: '/login', name: 'login', component: Login },
   { path: '/searchCityByTag', name: 'citytag', component: searchCityByTag },
+  { path: '/SearchCityByRating', name: 'cityrating', component: SearchCityByRating },
   { path: '/Profile', name: 'profile', component: Profile },
-  { path: '/SearchCityByRating', name: 'cityrating', component: SearchCityByRating }
+  { path: '/MainPlaces', name: 'mainplaces', component: MainPlaces },
+  { path: '/SearchPlacesByTag', name: 'placestag', component: SearchPlacesByTag },
+  { path: '/SearchPlacesByRating', name: 'placesrating', component: SearchPlacesByRating },
+  { path: '/city/:cityid', component: CityPage },
+  { path: '/place/:address', component: PlacePage },
+  { path: '/AdminLogin', name: 'adminlogin', component: AdminLogin }
 ]
 
 const router = createRouter({

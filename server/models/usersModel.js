@@ -1,10 +1,7 @@
-// imports the mongoose library
 var mongoose = require('mongoose');
-// extracts the Schema constructor from Mongoose
 var Schema = mongoose.Schema;
 
 
-// new schema is being defined 
 var usersSchema = new Schema({
     username: { type: String, required: true, unique: true }, 
     password: { type: String },
@@ -15,7 +12,6 @@ var usersSchema = new Schema({
         enum: ['male', 'female', 'non-binary', 'other'], 
         default: 'other'  
     },
-    isAdmin: { type: Boolean, default: false },
     session: {
         key: {
             type: mongoose.SchemaTypes.ObjectId,
@@ -26,8 +22,10 @@ var usersSchema = new Schema({
         expiry: {type: Date,
             required: true}
     },
-    cityFavs: [{ type: Schema.Types.ObjectId, ref: 'cities' }],  // Separate array for favorite cities
-    placeFavs: [{ type: Schema.Types.ObjectId, ref: 'placesToVisit' }] // Separate array for favorite places
+    favourites: [{ 
+        city: { type: Schema.Types.ObjectId, ref: 'cities', required: true },
+        places: [{ type: Schema.Types.ObjectId, ref: 'placesToVisit' }]
+    }]
 }, {
     toJSON: {
         transform: function(doc, ret) {
@@ -40,6 +38,3 @@ var usersSchema = new Schema({
 });
 
 module.exports = mongoose.model('users', usersSchema);
-
-
-

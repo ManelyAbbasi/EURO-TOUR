@@ -7,11 +7,9 @@
           </router-link>
         </div>
         <nav class="navbar">
-          <a href="#favourites" class="navbar-item"><i class="fa-regular fa-heart" style="color: #edf7fb;"></i> favourites</a>
           <router-link to="/maincities" class="navbar-item maincities-navbar-item"
             ><i class="fa-solid fa-city"></i> cities</router-link>
-          <a href="#placesToVisit" class="navbar-item"
-            ><i class="fa-solid fa-map-pin"></i> places to visit</a>
+          <router-link to="/mainplaces" class="navbar-item"><i class="fa-solid fa-map-pin" style="color: #edf7fb;"></i> places to visit</router-link>
           <b-dropdown
             size="lg"
             variant="link"
@@ -33,91 +31,82 @@
         <div class="maincities-layout-wrapper">
           <div class="maincities-left-side-panel">
 
-            <!-- carousel of cities -->
-            <div class="carousel-container">
-                <b-carousel id="carousel" v-model="slide" :interval="4000" controls>
-                <!--images -->
-                <b-carousel-slide img-src="https://picsum.photos/600/600/?image=52"></b-carousel-slide>
-                <b-carousel-slide img-src="https://picsum.photos/600/600/?image=54"></b-carousel-slide>
-                <b-carousel-slide img-src="https://picsum.photos/600/600/?image=58"></b-carousel-slide>
-
-              </b-carousel>
-
             <!-- display new text for each slide -->
-            <p class="under-pic">
-            {{ captions[slide] }} <!-- this will dynamically change based on the active slide -->
-            </p>
+              <div class="pagination-wrapper">
+                <div class="mt-3">
+                  <b-pagination v-model="currentPage" pills :total-rows="cities.length" :per-page="perPage"></b-pagination>
+                </div>
+              </div>
 
-           <!-- Star Icons -->
-          <div class="star-rating">
-            <i
-              v-for="index in 5"
-              :key="index"
-              :class="index <= 3 ? 'fa-solid fa-star' : 'fa-regular fa-star'"
-              style="color: #bc672a;"
-            ></i>
-            <span class="rating-text">3.1/5.0</span>
+            <!-- City slide -->
+      <div id="city-slide">
+        <div v-for="city in paginatedCities" :key="city.cityName" class="city-item">
+          <div class="detail-about-city">
+            <span class="slide-title">{{ city.cityName }}, {{ city.country }}</span>
+              <div class="star-rating">
+               <!-- Display filled stars -->
+               <i v-for="n in Math.floor(city.rating)" :key="n" class="fa-solid fa-star" style="color: #bc672a;"></i>
+                <!-- Display empty stars for remaining ones -->
+                <i v-for="n in 5 - Math.floor(city.rating)" :key="'empty-' + n" class="fa-regular fa-star" style="color: #bc672a;"></i>
+              <span class="rating-text">{{ city.rating }}/5.0</span>
+            </div>
+            <div class="detail-item">
+              <p><strong class="facts-heading">Facts:</strong></p>
+              <p>{{ city.facts }}</p>
+            </div>
+            <div class="read-more-wrapper">
+              <router-link :to="`/city/${city.id}`" class="city-link">read more</router-link>
+            </div>
           </div>
-            </div>
-
-            <div class="detail-about-city">
-            <div class="detail-item">
-                <p><strong class="heading">Good to know:</strong></p>
-                <p>{{ goodToKnow[slide] }}</p>
-            </div>
-            <div class="detail-item">
-                <p><strong class="heading">Facts:</strong></p>
-                <p>{{ facts[slide] }}</p>
-            </div>
-            <div class="detail-item">
-                <p><strong class="heading">Stats:</strong></p>
-                <p>{{ stats[slide] }}</p>
-            </div>
-            <div class="detail-item">
-                <p><strong class="heading">Tags:</strong></p>
-                <p>{{ tags[slide] }}</p>
-            </div>
-            <router-link to="/citiesmore" class="read-more">read more</router-link>
         </div>
-
-            <!-- Heart Icon -->
-            <div class="heart-icon-container">
-            <i :class="isFavorite ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"
-              class="favorite-icon"
-              style="color: #bc672a;"
-              @click="toggleFavorite">
-            </i>
-          </div>
+      </div>
 
         </div>
 
-          <div class="maincities-right-side-panel">
-            <div class="maincities-right-side-panel">
-                <!--search and trending-->
-                <h2 class="maincities-search-title">Search cities by: <i class="fa-solid fa-filter" style="color: #045768;"></i></h2>
+        <div class="maincities-right-side-panel">
+          <!--search and trending-->
+          <h3 class="maincities-search-title">Search cities by: <i class="fa-solid fa-filter" style="color: #045768;"></i></h3>
                 <div class="maincities-button-wrapper">
                   <router-link to="/searchCityByTag" class="maincities-tags-btn">tags</router-link>
                     <h4 class="maincities-or">or</h4>
                     <router-link to="/SearchCityByRating" class="maincities-ratings-btn">ratings</router-link>
                 </div>
-                <h2 class="maincities-search-title">Trending Cities:</h2>
-                <div class="trending-cities-wrapper">
-                  <div class="maincities-amst-wrapper trending-city-wrapper">
-                    <img src="@/assets/Amsterdam.jpg" alt="Amsterdam city" class="trending-cities-img"/>
-                    <p class="maincities-trending-amst">1. Amsterdam, The Netherlands</p>
+          <h2 class="maincities-search-title">Top rated cities:</h2>
+          <div class="trending-cities-wrapper">
+
+            <!-- Top 1 (Gold) -->
+            <div class="trending-city-wrapper">
+              <a class="admins-pick-item">
+                <i class="fa-solid fa-medal" style="color: #D6AF36;"></i>
+              </a>
+              <div class="text-and-button">
+                <p class="maincities-trending">{{ topCities[0]?.cityName }}, {{ topCities[0]?.country }}</p>
+              </div>
+            </div>
+
+            <!-- Top 2 (Silver) -->
+            <div class="trending-city-wrapper">
+              <a class="admins-pick-item">
+                <i class="fa-solid fa-medal" style="color: #A7A7AD;"></i>
+              </a>
+              <div class="text-and-button">
+                <p class="maincities-trending">{{ topCities[1]?.cityName }}, {{ topCities[1]?.country }}</p>
+              </div>
+            </div>
+
+            <!-- Top 3 (Bronze) -->
+            <div class="trending-city-wrapper">
+              <a class="admins-pick-item">
+                <i class="fa-solid fa-medal" style="color: #A77044;"></i>
+              </a>
+              <div class="text-and-button">
+                <p class="maincities-trending">{{ topCities[2]?.cityName }}, {{ topCities[2]?.country }}</p>
+              </div>
                   </div>
-                  <div class="maincities-dublin-wrapper trending-city-wrapper">
-                    <img src="@/assets/Dublin.jpg" alt="Dublin city" class="trending-cities-img"/>
-                    <p class="maincities-trending-dublin">2. Dublin, Republic of Ireland</p>
-                  </div>
-                  <div class="maincities-paris-wrapper trending-city-wrapper">
-                    <img src="@/assets/Paris.jpg" alt="Paris city" class="trending-cities-img"/>
-                    <p class="maincities-trending-paris">3. Paris, France</p>
-                  </div>
+
                 </div>
-            </div>
-            </div>
-            </div>
+              </div>
+          </div>
       </main>
 
       <footer class="footer">
@@ -132,49 +121,79 @@
   </template>
 
 <script>
-import { Api } from '@/Api'
+import { ApiV1 } from '@/Api'
 
 export default {
   data() {
     return {
-      isFavorite: false,
-      slide: 0,
-      captions: [
-        'London, United Kingdom',
-        'Paris, France',
-        'Dublin, Ireland'
-      ],
-      goodToKnow: [
-        'London is the capital of the United Kingdom.',
-        'Paris is famous for its café culture and iconic landmarks.',
-        'Dublin is known for its literary history and vibrant nightlife.'
-      ],
-      facts: [
-        'Population: 8.9 million',
-        'Population: 2.1 million',
-        'Population: 1.2 million'
-      ],
-      stats: [
-        'Area: 1,572 km²',
-        'Area: 105.4 km²',
-        'Area: 318 km²'
-      ],
-      tags: [],
+      cities: [],
+      topCities: [],
       message: 'none',
-      loggedInStatus: !!localStorage.getItem('x-auth-token') // Reactive property for login status
+      loggedInStatus: !!localStorage.getItem('x-auth-token'), // Reactive property for login status
+      rows: 100,
+      currentPage: 1,
+      perPage: 1
     }
+  },
+  async created() {
+    await this.fetchTopRatedCities()
   },
   computed: {
     isLoggedIn() {
       return this.loggedInStatus // Use reactive `loggedInStatus` property
+    },
+    paginatedCities() {
+      const start = (this.currentPage - 1) * this.perPage
+      const end = start + this.perPage
+      return this.cities.slice(start, end) // Slicing based on the current page and per page count
     }
   },
   methods: {
+    async getCities() {
+      try {
+        const response = await ApiV1.get('/v1/api/cities')
+        if (response.data && response.data.cities) {
+          this.cities = response.data.cities.map(city => ({
+            cityName: city.cityName,
+            country: city.country,
+            rating: city.rating,
+            goodToKnow: city.goodToKnow,
+            facts: city.facts,
+            statistics: city.statistics,
+            tags: city.tags,
+            placesToVisit: city.placesToVisit.map(place => place.placeName),
+            id: city._id
+          }))
+          console.log(this.cities)
+        } else {
+          this.cities = []
+        }
+      } catch (error) {
+        console.error('Error fetching cities:', error)
+        this.cities = []
+      }
+    },
+    async fetchTopRatedCities() {
+      try {
+        // Fetch top cities sorted by rating in descending order
+        const response = await ApiV1.get('/v1/api/cities?sortByRating=Desc')
+
+        if (response.data && response.data.cities) {
+          // Get only the top 3 cities by rating
+          this.topCities = response.data.cities.slice(0, 3).map(city => ({
+            cityName: city.cityName,
+            country: city.country
+          }))
+        }
+      } catch (error) {
+        console.error('Error fetching top-rated cities:', error)
+      }
+    },
     toggleFavorite() {
       this.isFavorite = !this.isFavorite // Toggle between true and false
     },
     getMessage() {
-      Api.get('/')
+      ApiV1.get('/v1/api/')
         .then(response => {
           this.message = response.data.message
         })
@@ -193,6 +212,7 @@ export default {
     }
   },
   mounted() {
+    this.getCities()
     // Create a link element
     const link = document.createElement('link')
     link.rel = 'stylesheet'
@@ -221,6 +241,7 @@ export default {
     background-color: #42515e;
     display: flex;
     flex-wrap: wrap;
+    min-width: 1200px;
 }
 
 .euro-tour-header {
@@ -292,8 +313,9 @@ export default {
   display: grid;
   grid-template-columns: 2fr 1fr;  /* Create two equal columns */
   grid-gap: 20px;
-  padding: 7rem 9% 2rem;
+  padding: 9rem 9% 2rem;
   width: 100%;
+  justify-content: center;
 }
 
 .maincities-right-side-panel .maincities-left-side-panel {
@@ -306,84 +328,12 @@ export default {
   display: flex;
   flex-direction: row;
   background-color: #edf7fb;
-
+  min-width: 643px;
 }
 
-.carousel-container{
-    width: 100%;
-    margin: 30px;
-    margin-left: 30px;
-}
-
-.under-pic{
-    margin-block: 2px;
-    font-weight: bold;
-    font-size: 2em;
-    text-align: left;
-    color: #759CAB
-}
-
-.star-rating{
-  text-align: left;
-  font-size: 2.5em;
-}
-
-.star-rating i {
-  margin-right: 5px; /* Increase space between stars */
-}
-
-.rating-text {
-  margin-left: 0.5rem;
-  font-size: 0.6em;
-  color: #42515E;
-}
-
-.read-more {
-  font-size: 1.2rem;
-  color: #bc672a;
-  text-decoration: underline;
-  cursor: pointer;
-  margin-left: 9rem; /* Increase margin-left for more right alignment */
-  margin-top: 7.5rem;  /* Add margin-top to move it further down */
-  display: inline-block; /* Ensure margin-top works properly */
-}
-
-.detail-about-city {
-    width: 60%;
-    color: #759CAB;
-    font-size: 1em;
-    margin-right: 20px;
-}
-
-.detail-about-city p {
-  text-align: left;
-  margin: 0.1px;
-  color: #759CAB;
-}
-
-.detail-item {
-    margin-top: 40px; /* Space between items */
-}
-
-.heading {
+.facts-heading {
     font-size: 1.5em;
     font-weight: bold;
-}
-
-.heart-icon-container {
-  margin-right: 25px;
-  margin-block: 20px;
-
-}
-
-.heart-icon-container i {
-  font-size: 3em;
-  cursor: pointer;
-  transition: transform 0.3s ease; /* Add smooth transition on click or hover */
-}
-
-.heart-icon-container i:hover {
-  transform: scale(1.1); /* Slightly enlarge the heart on hover */
 }
 
 .maincities-right-side-panel {
@@ -391,13 +341,20 @@ export default {
     flex-direction: column;
     display: flex;
     align-items: center;
+    min-width: 35vw;
 }
 
-.maincities-right-side-panel h2 {
-    color: #045768;
-    font-size: 2rem;
-    padding: 0.5rem;
-    margin: 1rem 0;
+.maincities-right-side-panel h3{
+font-size: 1.5rem;
+color: #045768;
+padding: 0.5rem;
+margin: 1rem 0;
+}
+
+.maincities-right-side-panel h2{
+color: #045768;
+margin: 2rem 0;
+margin-bottom:-0.5rem;
 }
 
 .maincities-right-side-panel h4 {
@@ -446,20 +403,23 @@ export default {
 }
 
 .trending-city-wrapper p{
-  font-size: 1rem;
+  font-size: 1.2rem;
   align-content: center;
   padding: 0.5rem;
   justify-items: center;
   margin: 0.5rem;
+  color: #045768;
 }
 
-.trending-cities-img {
+.text-and-button {
+  display: flex;
+  align-items: center;
+}
+
+.admins-pick-item{
   max-width: 35%;
   margin: 1rem;
-}
-
-.trending-city-wrapper img{
-  border: 1px solid #edf7fb;
+  font-size: 3.5rem;
 }
 
 .logo img{
@@ -507,28 +467,124 @@ a img {
     color: #045768;
 }
 
-@media screen and (max-width:1200px) {
-    html{
-        font-size: 55%;
-    }
+.slide-title{
+  font-size: 3rem;
+  text-decoration: none;
+  transition: all 0.5s;
+  color: #759CAB;
 }
 
-@media screen and (max-width: 991px){
-    section{
-        padding: 10rem 3% 2rem;
+.maincities-left-side-panel{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 50vw;
+  align-content: flex-start;
+}
+
+.pagination-wrapper{
+  order: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 1rem;
+}
+
+#city-slide{
+  order: 1;
+  padding: 1.5rem;
+}
+
+.detail-about-city{
+    color: #759CAB;
+    font-size: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.detail-item{
+  padding: 1rem 0;
+}
+
+.detail-about-city p,
+.places-list li a{
+  text-align: left;
+  margin: 0.1px;
+  color: #759CAB;
+  font-size: 1.1rem;
+}
+
+.read-more-wrapper a{
+  color: #bc672a;
+  text-decoration: none;
+  transition: all 0.5s;
+  font-size: 1.6rem;
+}
+
+.read-more-wrapper a:hover{
+  text-decoration-line: underline;
+  color: #acbbc1;
+  transform: scale(1.05);
+}
+
+.star-rating{
+  text-align: left;
+  font-size: 2rem;
+}
+
+.star-rating i {
+  margin-right: 5px; /* Increase space between stars */
+}
+
+.rating-text {
+  margin-left: 0.5rem;
+  font-size: 0.6em;
+  color: #42515E;
+}
+
+.tag-bubble{
+  background-color: #CAC4D0;
+  color: #edf7fb;
+  border-radius: 5px;
+  border: 3px solid white;
+  padding: 10px 30px;
+  margin: 12px;
+  font-size: 0.8rem;
+}
+
+.tag-container{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+@media screen and (max-width:1200px) {
+    .navbar{
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
     }
+    .maincities-left-side-panel{
+      min-width: 643px;
+    }
+    .maincities-right-side-panel{
+      min-width: 35vw;
+    }
+    .maincities-layout-wrapper{
+      justify-content: center;
+    }
+
+}
+
+@media screen and (max-width: 768px){
     .euro-tour-header{
         padding: 2rem 3%;
     }
     .footer{
         padding: 2rem 3%;
     }
-    .get-to-know-wrapper{
-        padding: 7rem;
-    }
-}
-
-@media screen and (max-width: 768px){
     .navbar{
         width: 100%;
         display: flex;
@@ -540,29 +596,75 @@ a img {
         flex-direction: column;
         gap: 2rem;
     }
-    .layout-wrapper,
-    .get-to-know-wrapper{
+    .maincities-layout-wrapper{
         flex-direction: column;
         display: flex;
+        min-width: 1200px;
+        justify-content: center;
     }
-    .layout-wrapper p{
+    .detail-about-city .slide-title{
+      font-size: 3.5rem;
+    }
+    .maincities-layout-wrapper p,
+    .rating-text,
+    .star-rating i,
+    .read-more-wrapper a{
+        font-size: 2rem;
+    }
+    .maincities-layout-wrapper .facts-heading{
         font-size: 2.5rem;
+        font-weight: 400;
     }
-    .layout-wrapper h1{
-        font-size: 5rem;
+    .read-more-wrapper{
+      display: flex;
+      justify-content: end;
+      margin-right: 2rem;
     }
-}
+    .maincities-left-side-panel{
+      min-width: 984px;
+      justify-content: center;
 
-@media screen and (max-width:576px) {
-    html{
-        font-size: 50%;
+    }
+    .maincities-right-side-panel{
+      width: 100%;
+      min-width: 984px;
+      justify-content: center;
+
+    }
+    .maincities-left-side-panel{
+      margin: 9rem 0 2rem 0;
+    }
+    .maincities-left-side-panel,
+    .maincities-right-side-panel{
+      padding: 1.5rem 2rem;
+    }
+    .maincities-right-side-panel h2{
+      font-size: 3.5rem;
+      padding: 0.5rem;
+    }
+    .maincities-button-wrapper{
+      margin: 2.5rem;
+    }
+    h4.maincities-or {
+      font-size: 2.5rem;
+    }
+    .maincities-button-wrapper a{
+      padding: 2rem;
+      font-size: 2rem;
+      min-width: 15rem;
+    }
+    .trending-city-wrapper{
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      justify-content: space-between;
+      min-width: 45rem;
+    }
+    .trending-city-wrapper img{
+      min-width: 10rem;
     }
 }
 
 @media screen and (max-width:350px) {
-    .layout-wrapper img{
-        width: 90vw;
-    }
     .footer{
         flex-direction: column-reverse;
     }

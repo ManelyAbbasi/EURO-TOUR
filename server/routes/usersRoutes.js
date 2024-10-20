@@ -3,23 +3,16 @@ var router = express.Router();
 var usersControllers = require('../controllers/usersController');
 const authentication = require('../middleware/authentication');
 
-router.post('/', usersControllers.createUser);
-
-router.post('/favorites', usersControllers.addToFavorites);
-
-router.get('/', usersControllers.getAllUsers);
+router.post('/', (req, res, next) => {
+    if (req.headers['x-http-method-override']) {
+        req.method = req.headers['x-http-method-override'].toUpperCase();
+    }
+    next();
+}, usersControllers.createUser);
 
 router.put('/:username', usersControllers.updateUser);
 
-router.patch('/:username', usersControllers.patchUser);
-
 router.delete('/:username', usersControllers.deleteOneUser);
-
-router.delete('/user/:username', usersControllers.deleteUserByAdmin); 
-
-router.delete('/placesToVisit/:address', usersControllers.deletePlaceViaAdmin);
-
-router.delete('/cities/:id', usersControllers.deleteCityViaAdmin);
 
 router.post('/login', usersControllers.login);
 
@@ -27,5 +20,6 @@ router.delete('/cities&places/favorites', usersControllers.removeFromFavorites);
 
 router.get('/favorites', usersControllers.getFavorites);
 
+router.post('/:username/favorites', usersControllers.addToFavorites);
 
 module.exports = router;

@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 var placesToVisitSchema = new Schema({
     placeName: { type: String, required: true },
     address: { type: String, required: true, unique: true, sparse: true },
-    rating: { type: Number, min: 0.0, max: 5.0 },
+    rating: { type: Number, required: true, min: 0.0, max: 5.0 },
     content: { type: String, required: true },
     tags: {
         type: [String], 
@@ -22,8 +22,11 @@ var placesToVisitSchema = new Schema({
                     'nature',
                     'beachy', 
                     'popular', 
-                    'cheap', 
+                    'affordable', 
                     'high-end', 
+                    'quiet',
+                    'shopping',
+                    '18+'
                 ];
                 return tags.every(tag => allowedTags.includes(tag));
             },
@@ -33,5 +36,4 @@ var placesToVisitSchema = new Schema({
     city: { type: Schema.Types.ObjectId, ref: 'cities', required: true },
 });
 
-// Export the model based on the schema
 module.exports = mongoose.model('placesToVisit', placesToVisitSchema);
