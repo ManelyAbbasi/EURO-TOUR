@@ -80,7 +80,7 @@ Filter and Sort Pages: For both cities and places to visit, there will be pages 
 
 ### Proposal for a 5 (SVG-map)
 
-After discussing with Magnus, we agreed upon:  
+After discussing with Our Professor, Magnus Ågren, we agreed upon:  
 
 Moving the weather API integration to the backend of our project, therefore the different weather alerts would be extracted from the API to then be inputed into our CitiesModel. These weather warnings, known as alerts, after being handled in the backend will be given a visual representation in our frontend. 
 
